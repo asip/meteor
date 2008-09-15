@@ -3927,15 +3927,9 @@ module Meteor
               elm.attributes.gsub!(replaceRegex,replaceUpdate)
             end
           elsif isMatch(FALSE,attrValue) then
-
-            @res = match_p.match(elm.attributes)
-
             #attrName属性が存在するなら削除
-            if @res then
-              #属性の置換
-              elm.attributes.gsub!(replaceRegex, EMPTY)
-              #else
-            end
+            #属性の置換
+            elm.attributes.gsub!(replaceRegex, EMPTY)
           end
           
         end

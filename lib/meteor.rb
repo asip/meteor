@@ -3159,12 +3159,7 @@ module Meteor
               #else
             end
           elsif isMatch(FALSE, attrValue) then
-            @res = match_p.match(elm.attributes)
-
-            if @res then
-              elm.attributes.gsub!(replace,EMPTY)
-              #else
-            end
+            elm.attributes.gsub!(replace,EMPTY)
           end
 
         end

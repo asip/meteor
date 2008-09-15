@@ -71,8 +71,6 @@ module Meteor
     # @param [Meteor::Element] elm 要素
     #
     def initialize_e(elm)
-      #elm.parser = nil
-      #elm = Marshal.load(Marshal.dump(elm))
       @name = elm.name
       @attributes = String.new(elm.attributes)
       @mixed_content = String.new(elm.mixed_content)
@@ -106,25 +104,6 @@ module Meteor
     def attribute(*args)
       @parser.attribute(self,*args)
     end
-    
-    ##
-    ## 属性を編集する
-    ##
-    ## @param [Array] args 引数配列
-    ##
-    #def setAttribute(*args)
-    #  @parser.setAttribute(self,*args)
-    #end
-    
-    ##
-    ## 属性の値を取得する
-    ## 
-    ## @param [Array] args 引数配列
-    ## @param [String] 属性の値
-    ##
-    #def getAttributeValue(*args)
-    #  @parser.getAttributeValue(self,*args)
-    #end
 
     #
     # 属性マップを取得する
@@ -144,24 +123,6 @@ module Meteor
     def content(*args)
       @parser.content(self,*args)
     end
-    
-    ##
-    ## 内容をセットする
-    ##
-    ## @param [Array] args 引数配列
-    ##
-    #def setContent(*args)
-    #  @parser.setContent(self,*args)
-    #end
-
-    ##
-    ## 内容を取得する
-    ##
-    ## @return [String] 内容
-    ##
-    #def getContent
-    #  @parser.getContent(self)
-    #end
 
     #
     # 属性を編集するor内容をセットする
@@ -171,10 +132,8 @@ module Meteor
     #
     def []=(name,value)
       if !name.kind_of?(String) || name != ':content' then
-        #self.setAttribute(name,value)
         self.attribute(name,value)
       else
-        #self.setContent(value)
         self.content(value)
       end
     end
@@ -189,8 +148,7 @@ module Meteor
       if !name.kind_of?(String) || name != ':content' then
         self.getAttributeValue(name)
       else
-        #return self.getContent
-        self.content
+        self.content()
       end
     end
     
@@ -1015,32 +973,6 @@ module Meteor
       def element_1(elmName)
 
         @_elmName = escapeRegex(elmName)
-
-        #内容あり要素検索用パターン
-        #@pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_3
-        #@pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-
-        #内容あり要素検索
-        #@res = @pattern.match(self.document)
-
-        #if @res then
-        #  空要素検索用パターン
-        #  @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_3
-        #  
-        #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        #  空要素検索
-        #  @res = @pattern.match(self.document)
-        #  elm = elementWithoutContent_1(elmName)
-        #else
-        #  @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_1 << elmName
-        #  @pattern_cc << TAG_SEARCH_1_2 << @_elmName << TAG_CLOSE
-        #
-        #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        #
-        #  内容あり要素検索
-        #  @res = @pattern.match(self.document)
-        #  elm = elementWithContent_1(elmName)
-        #end
         
         #空要素検索用パターン
         @pattern_cc_1 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_3
@@ -1075,8 +1007,7 @@ module Meteor
           @res = @res2
           @pattern_cc = @pattern_cc_2
           elm = elementWithContent_1(elmName)
-        elsif !@res1 && !@res2 then
-          
+        elsif !@res1 && !@res2 then  
         end
         
         elm
@@ -1148,36 +1079,6 @@ module Meteor
         @_attrName = escapeRegex(attrName)
         @_attrValue = escapeRegex(attrValue)
 
-        #内容あり要素検索用パターン
-        #@pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
-        #@pattern_cc << @_attrValue << TAG_SEARCH_2_4_2
-
-        #@pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-
-        #内容あり要素検索
-        #@res = @pattern.match(self.document)
-
-        #if @res then
-          #内容あり要素検索パターン
-        #  @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
-        #  @pattern_cc << @_attrValue << TAG_SEARCH_2_2 << @_elmName
-        #  @pattern_cc << TAG_SEARCH_1_2 << @_elmName << TAG_CLOSE
-        #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-          #内容あり要素検索
-        #  @res = @pattern.match(self.document)
-        #  
-        #  elm = elementWithContent_3(elmName, attrName, attrValue)
-        #else
-          #空要素検索用パターン
-        #  @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
-        #  @pattern_cc << @_attrValue << TAG_SEARCH_2_3_2
-        #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        #  
-          #空要素検索
-        #  @res = @pattern.match(self.document)
-        #  elm = elementWithoutContent_3(elmName, attrName, attrValue);
-        #end
-
         #空要素検索用パターン
         @pattern_cc_1 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
         @pattern_cc_1 << @_attrValue << TAG_SEARCH_2_3_2
@@ -1217,43 +1118,11 @@ module Meteor
           @pattern_cc = @pattern_cc_2
           elm = elementWithContent_3_1(elmName)
         elsif !@res1 && !@res2 then
-          #elm = elementWithContent_3_2(elmName)
         end
         
-        #@res = nil
         elm
       end
       private :element_3
-
-      #def elementWithContent_3(elmName)
-
-      #  if @res then
-      #    #要素
-      #    elm = Element.new(elmName)
-      #    #属性
-      #    elm.attributes = @res[1]
-      #    #内容
-      #    elm.mixed_content = @res[2]
-      #    #全体
-      #    elm.document = @res[0]
-      #    #内容あり要素検索用パターン
-      #    @pattern_cc = ''<< TAG_OPEN << @_elmName << TAG_SEARCH_NC_2_1 << @_attrName << ATTR_EQ
-      #    @pattern_cc << @_attrValue << TAG_SEARCH_NC_2_2 << @_elmName
-      #    @pattern_cc << TAG_SEARCH_NC_1_2 << @_elmName << TAG_CLOSE
-      #    elm.pattern = @pattern_cc
-
-      #    elm.empty = true
-
-      #    elm.parser=self
-      #  else
-      #    @res = elementWithContent_3_2(elmName)
-      #    
-      #    
-      #  end
-
-      #  elm
-      #end
-      #private :elementWithContent_3
 
       def elementWithContent_3_1(elmName)
 
@@ -1326,7 +1195,6 @@ module Meteor
         
         @sbuf = '';
         
-        #todo
         if RUBY_VERSION >= '1.9.0' then
           
           @position = 0
@@ -1586,7 +1454,6 @@ module Meteor
           elm = elementWithoutContent_2(attrName, attrValue)
         end
         
-        #@res = nil
         elm
       end
       private :element_2
@@ -1625,43 +1492,6 @@ module Meteor
         @_attrName2 = escapeRegex(attrName2)
         @_attrValue1 = escapeRegex(attrValue1)
         @_attrValue2 = escapeRegex(attrValue2)
-
-        #内容あり要素検索用パターン
-        #@pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
-        #@pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
-        #@pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
-        #@pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
-        #@pattern_cc << @_attrValue1 << TAG_SEARCH_2_4_2_2
-
-        #@pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-
-        #内容あり要素検索
-        #@res = @pattern.match(self.document)
-
-        #if @res then
-          #内容あり要素検索パターン
-        #  @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
-        #  @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
-        #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
-        #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
-        #  @pattern_cc << @_attrValue1 << TAG_SEARCH_2_2_2 << @_elmName
-        #  @pattern_cc << TAG_SEARCH_1_2 << @_elmName << TAG_CLOSE
-        #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-          #内容あり要素検索
-        #  @res = @pattern.match(self.document)
-        #  elm = elementWithContent_5(elmName, attrName1, attrValue1,attrName2,attrValue2)
-        #else
-          #空要素検索用パターン
-        #  @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
-        #  @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
-        #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
-        #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
-        #  @pattern_cc << @_attrValue1 << closer
-        #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-          #空要素検索
-        #  @res = @pattern.match(self.document)
-        #  elm = elementWithoutContent_5(elmName, attrName1, attrValue1,attrName2,attrValue2)
-        #end
 
         #空要素検索用パターン
         @pattern_cc_1 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
@@ -1708,38 +1538,11 @@ module Meteor
           @pattern_cc = @pattern_cc_2
           elm = elementWithContent_5_1(elmName)
         elsif !@res1 && !@res2 then
-          #elm = elementWithContent_5_2(elmName)
         end
-      
-        #@res = nil
+        
         elm
       end
       private :element_5
-
-      #def elementWithContent_5(elmName)
-      #  
-      #  if @res then
-      #    #要素
-      #    elm = Element.new(elmName)
-      #    #属性
-      #    elm.attributes = @res[1]
-      #    #内容
-      #    elm.mixed_content = @res[2]
-      #    #全体
-      #    elm.document = @res[0]
-      #    #内容あり要素検索用パターン
-      #    elm.pattern = @pattern_cc
-      #    #
-      #    elm.empty = true
-      #    
-      #    elm.parser = self
-      #  else
-      #    elm = elementWithContent_5_2(elmName)
-      #  end
-      #  
-      #  elm
-      #end
-      #private :elementWithContent_5
       
       def elementWithContent_5_1(elmName)
         
@@ -2091,7 +1894,6 @@ module Meteor
           elm = elementWithoutContent_4(attrName1, attrValue1,attrName2, attrValue2);
         end
 
-        #@res = nil
         elm
       end
       private :element_4
@@ -2139,21 +1941,6 @@ module Meteor
           raise ArgumentError
         end
       end
-      
-      ##
-      ## 要素の属性を編集する
-      ## @param [Array] args 引数配列
-      ##
-      #def setAttribute(*args)
-      #  case args.length
-      #  when 2
-      #    setAttribute_2_m(args[0],args[1])
-      #  when 3
-      #    setAttribute_3(args[0],args[1],args[2])
-      #  else
-      #    raise ArgumentError
-      #  end
-      #end
 
       #
       # 要素の属性を編集する
@@ -2189,25 +1976,18 @@ module Meteor
           @_attrValue = attrValue
           replace2Regex(@_attrValue)
           #属性の置換
-          #@_attributes = elm.attributes.gsub(@pattern,attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
           elm.attributes.gsub!(@pattern,'' << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
         else
           #属性文字列の最後に新規の属性を追加する
           if EMPTY != elm.attributes && EMPTY != elm.attributes.strip then
-            #@_attributes = SPACE << elm.attributes.strip
             elm.attributes = '' << SPACE << elm.attributes.strip
           else
-            #@_attributes = EMPTY
             elm.attributes = ''
           end
 
-          #@_attributes << SPACE << attrName << ATTR_EQ << attrValue << DOUBLE_QUATATION
           elm.attributes << SPACE << attrName << ATTR_EQ << attrValue << DOUBLE_QUATATION
         end
-
-        #@res = nil
-        #elm.attributes = @_attributes
-        #return attrValue
+        
       end
       private :editAttributes_
 
@@ -2251,19 +2031,6 @@ module Meteor
         end
       end
       private :editPattern_
-
-      ##
-      ## 要素の属性値を取得する
-      ##
-      ## @param [Array] args 引数配列
-      ## @return [String] 属性値
-      ##
-      #def getAttributeValue(*args)
-      #  case args.length
-      #  when 2
-      #    return getAttributeValue_2(args[0],args[1])
-      #  end
-      #end
 
       #
       # 要素の属性値を取得する
@@ -2363,20 +2130,6 @@ module Meteor
           setContent_3(args[0],args[1],args[2])
         end
       end
-      
-      #
-      # 要素の内容をセットする
-      # 
-      # @param [Array] args 引数配列
-      #
-      #def setContent(*args)
-      #  case args.lengh
-      #  when 2
-      #    setContent_2(args[0],args[1])
-      #  when 3
-      #    setContent_3(args[0],args[1],args[2])
-      #  end
-      #end
 
       #
       # 要素の内容をセットする
@@ -2443,22 +2196,6 @@ module Meteor
       end
       private :setContent_2
 
-      #
-      # 要素の内容を取得する
-      # 
-      # @param [Meteor::Element] elm 要素
-      # @return [String] 要素の内容
-      #
-      #def getContent(elm)
-      #  if !elm.cx then
-      #    if elm.empty then
-      #      unescapeContent(elm.mixed_content,elm.name)
-      #    end
-      #  end
-      #
-      #  return nil
-      #end
-
       def getContent_1(elm)
         if !elm.cx then
           if elm.empty then
@@ -2495,24 +2232,8 @@ module Meteor
 
           #属性検索用パターン
           @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << ERASE_ATTR_1)
-          #属性検索
-          #@res = @pattern.match(elm.attributes)
-
-          #検索対象属性の存在判定
-          #if @res then
           #属性の置換
           elm.attributes.sub!(@pattern,EMPTY)
-          #else
-          #  #属性検索用パターン
-          #  @pattern = Meteor::Core::Util::PatternCache.get(attrName << SET_ATTR_1)
-          #  #属性検索
-          #  @res = @pattern.match(elm.attributes)
-          #  # 検索対象属性の存在判定
-          #  if @res then
-          #    #属性の置換
-          #    elm.attributes.sub!(@pattern,@EMPTY)
-          #  end
-          #end
 
           if !@parent then
             #タグ置換用パターン
@@ -2520,7 +2241,7 @@ module Meteor
             
             if elm.empty then
               #内容あり要素の場合
-              #@_mixed_content = elm.mixed_content
+              #@_content = elm.mixed_content
               
               @pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE
               @pattern_cc << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
@@ -2746,7 +2467,6 @@ module Meteor
         if element.include?(EN_1) then
           element.gsub!(@@pattern_sub_regex1,SUB_REGEX2)
         end
-        #return element
       end
       private :replace2Regex
       
@@ -2754,7 +2474,6 @@ module Meteor
         if element.include?(EN_1) then
           element.gsub!(@@pattern_sub_regex1,SUB_REGEX3)
         end
-        #return element
       end
       private :replace4Regex
       
@@ -2835,7 +2554,6 @@ module Meteor
           pif = nil
         end
 
-        #return pif
       end
       private :create
       
@@ -2846,10 +2564,8 @@ module Meteor
       #
       def []=(name,value)
         if !name.kind_of?(String)|| name != ':content' then
-          #setAttribute(name,value)
           attribute(name,value)
         else
-          #setContent(value)
           content(value)
         end
       end
@@ -2861,11 +2577,9 @@ module Meteor
       #
       def [](name)  
         if !name.kind_of?(String)|| name != ':content' then
-          #getAttributeValue(name)
           attribute(name)
         else
-          #getContent
-          content
+          content()
         end
       end
     end
@@ -3102,7 +2816,7 @@ module Meteor
         #
         # パーサをコピーする
         # 
-        # @return [Meteor::Parser] パーサ
+        # @param [Meteor::Parser] パーサ
         # @return [Meteor::Parser] パーサ
         #
         def self.copy(pif)
@@ -3134,7 +2848,7 @@ module Meteor
         # ドキュメントをパースする
         #
         def analyzeML()
-          #mixed_content-typeの取得
+          #content-typeの取得
           analyzeContentType()
           #改行コードの取得
           analyzeKaigyoCode()
@@ -3162,7 +2876,6 @@ module Meteor
           end
 
           if elm then
-            #@root.contentType = self.getAttributeValue(elm,CONTENT)
             @root.contentType = elm.attribute(CONTENT)
           else
             @root.contentType = EMPTY
@@ -3195,7 +2908,6 @@ module Meteor
 
           #空要素の場合(<->内容あり要素の場合)
           if isMatch(MATCH_TAG,elmName) then
-            #空要素の場合
             #空要素検索用パターン
             @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_4_2
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -3216,11 +2928,6 @@ module Meteor
           elm
         end
         private :element_1
-
-        #def elementWithContent_1(elmName)
-        #  super(elmName)
-        #end
-        #private :elementWithContent_1
 
         def elementWithoutContent_1(elmName)
           if @res then
@@ -3278,11 +2985,6 @@ module Meteor
         end
         private :element_3
 
-        #def elementWithContent_3(elmName)
-        #  super(elmName)
-        #end
-        #private :elementWithContent_3
-
         def elementWithoutContent_3(elmName)
           elementWithoutContent_3_1(elmName,TAG_SEARCH_NC_2_4_3)
         end
@@ -3307,7 +3009,6 @@ module Meteor
           if @res then
             elm = element_3(@res[1],attrName,attrValue)
           else
-
           end
 
           elm
@@ -3358,11 +3059,6 @@ module Meteor
           elm
         end
         private :element_5
-
-        #def elementWithContent_5(elmName)
-        #  super(elmName)
-        #end
-        #private :elementWithContent_5
         
         def elementWithoutContent_5(elmName)
           elementWithoutContent_5_1(elmName,TAG_SEARCH_NC_2_4_3_2)
@@ -3397,7 +3093,6 @@ module Meteor
           if @res then
             elm = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
           else
-
           end
 
           elm
@@ -3430,40 +3125,6 @@ module Meteor
             raise ArgumentError
           end
         end
-        
-        ##
-        ## 要素の属性を編集する
-        ##
-        ## @param [Array] args 引数配列
-        ##
-        #def setAttribute(*args)
-        #  case args.length
-        #  when 2
-        #    if args[0].kind_of?(String) && args[1].kind_of?(String) then
-        #      setAttribute_2(args[0],args[1])
-        #    elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
-        #      setAttribute_2_m(args[0],args[1])
-        #    else
-        #      raise ArgumentError
-        #    end
-        #  when 3
-        #    setAttribute_3(args[0],args[1],args[2])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # 要素の属性を編集する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        #
-        #def setAttribute_3(elm,attrName,attrValue)
-        #  super(elm, attrName, attrValue)
-        #end
-        #private :setAttribute_3
 
         def editAttributes_(elm,attrName,attrValue)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
@@ -3479,8 +3140,6 @@ module Meteor
           else
             super(elm,attrName,attrValue)
           end
-
-          #return attrValue
         end
         private :editAttributes_
 
@@ -3492,32 +3151,22 @@ module Meteor
 
             if !@res then
               if !EMPTY.eql?(elm.attributes) && !EMPTY.eql?(elm.attributes.strip) then
-                #@_attributes = SPACE << elm.attributes.strip
                 elm.attributes = '' << SPACE << elm.attributes.strip
               else
-                #@_attributes = EMPTY
                 elm.attributes = ''
               end
-              #@_attributes << SPACE << attrName
               elm.attributes << SPACE << attrName
             else
-              #@_attributes = elm.attributes
             end
           elsif isMatch(FALSE, attrValue) then
             @res = match_p.match(elm.attributes)
 
             if @res then
-              @pattern = replace
-
-              #@_attributes = elm.attributes.gsub(@pattern,EMPTY)
-              elm.attributes.gsub!(@pattern,EMPTY)
+              elm.attributes.gsub!(replace,EMPTY)
             else
-              #@_attributes = elm.attributes
             end
           end
 
-          #elm.attributes=@_attributes
-          #return attrValue
         end
         private :editAttributes_5
 
@@ -3538,35 +3187,6 @@ module Meteor
           end
         end
         private :setAttribute_2
-
-        ##
-        ## 要素の属性値を取得する
-        ##
-        ## @param [Array] args 引数配列
-        ## @return [String] 属性値
-        ##
-        #def getAttributeValue(*args)
-        #  case args.length
-        #  when 1
-        #    getAttributeValue_1(args[0])
-        #  when 2
-        #    return getAttributeValue_2(args[0],args[1])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # 要素の属性値を取得する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        # @return [String] 属性値
-        #
-        #def getAttributeValue_2(elm,attrName)
-        #  super(elm, attrName)
-        #end
-        #private :getAttributeValue_2
 
         def getAttributeValue_(elm,attrName)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
@@ -3690,35 +3310,21 @@ module Meteor
         def removeAttribute_2(elm,attrName)
 
           if !elm.cx then
-            #@_attributes = elm.attributes
-            #属性検索用パターン
-            #属性検索
-            #@res = @pattern.match(elm.attributes)
-            #検索対象属性の存在判定
+            #検索対象属性の論理型是非判定
             if !isMatch(ATTR_LOGIC,attrName) then
-              #属性の置換
-              #@_attributes = elm.attributes.sub(@pattern, EMPTY)
+              #属性検索用パターン
               @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << ERASE_ATTR_1)
               elm.attributes.sub!(@pattern, EMPTY)
             else
-              #属性検索
-              #@res = @pattern.match(elm.attributes)
-              #検索対象属性の存在判定
-              #if @res then
-              #属性の置換
-              #@_attributes = elm.attributes.sub(@pattern, EMPTY)
               #属性検索用パターン
               @pattern = Meteor::Core::Util::PatternCache.get(attrName)  
               elm.attributes.sub!(@pattern, EMPTY)
               #end
             end
-            #elm.attributes = @_attributes
             
             if !@parent then
               #要素検索用パターン
               @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-              #要素検索
-              #@res = @pattern.match(self.document)
               
               if elm.empty then
                 #内容あり要素の場合
@@ -3779,38 +3385,6 @@ module Meteor
             setContent_3(args[0],args[1],args[2])
           end
         end
-        
-        ##
-        ## 要素の内容を編集する
-        ##
-        ## @param [Array] args 引数配列
-        ##
-        #def setContent(*args)
-        #  case args.length
-        #  when 1
-        #    setContent_1(args[0])
-        #  when 2
-        #    if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-        #      setContent_2_s(args[0],args[1])
-        #    elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of_?(FalseClsss)) then
-        #      setContent_2_b(args[0],args[1])
-        #    end
-        #  when 3
-        #    setContent_3(args[0],args[1],args[2])
-        #  end
-        #end
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] mixed_content 内容
-        # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
-        #
-        #def setContent_3(elm,content,entityRef=true)
-        #  super(elm, content, entityRef)
-        #end
-        #private :setContent_3
 
         #
         # 要素の内容を編集する
@@ -3849,65 +3423,6 @@ module Meteor
         private :setContent_1
 
         #
-        # 要素の内容を取得する
-        # 
-        # @param [Meteor::Element] 要素
-        # @return [String] 内容
-        #
-        #def getContent(elm)
-        #  return super(elm)
-        #end
-
-        #
-        # 要素を消す
-        # 
-        # @param [Meteor::Element] 要素
-        #
-        #def removeElement(elm)
-        #  super(elm)
-        #end
-
-        #
-        # CX(コメント拡張)タグを取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag(*args)
-        #  case args.length
-        #  when 1
-        #    cxtag_1(args[0])
-        #  when 2
-        #    cxtag_2(args[0],args[1])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # タグ名とID属性値で検索し、CX(コメント拡張)タグを取得する
-        # 
-        # @param [String] elmName タグ名
-        # @param [String] id ID属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag_2(elmName,id)
-        #  super(elmName, id)
-        #end
-        #private :cxtag_2
-
-        #
-        # ID属性値で検索し、CX(コメント拡張)タグを取得する
-        # 
-        # @param [String] id ID属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag_1(id)
-        #  super(id)
-        #end
-        #private :cxtag_1
-
-        #
         # 出力する
         #
         def print
@@ -3923,7 +3438,6 @@ module Meteor
             self.rootElement.mutableElement = Element.new(self.rootElement.element)
           else
             if self.monoHook then
-              #self.rootElement.hookDocument << self.document
               if self.rootElement.element.cx then
                 @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
                 @root.hookDocument << @root.mutableElement.attributes << SET_CX_2
@@ -3935,7 +3449,6 @@ module Meteor
                 @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
               end
               @root.mutableElement = Element.new(@root.element)
-              #self.document = String.new(@root.element.mixed_content)
             else
               #フック判定がFALSEの場合
               clean
@@ -3975,13 +3488,9 @@ module Meteor
           if elm.empty then
             setMonoInfo(elm)
 
-            #@res = nil
-            #@pattern = nil
-            #@pattern_cc = nil
             pif2 = create(self)
             
             elm.parent=true
-            #elm.parser = nil
             pif2.parent = self
             pif2.rootElement.element = elm
             pif2.rootElement.mutableElement = Element.new(elm)
@@ -3989,7 +3498,6 @@ module Meteor
 
             if elm.mono then
               #内容あり要素の場合
-              #pif2.rootElement.document = String.new(elm.document)
               pif2.rootElement.monoHook = true
 
               pif2
@@ -4337,7 +3845,6 @@ module Meteor
           end
 
           if elm then
-            #@root.contentType = self.getAttributeValue(elm,CONTENT)
             @root.contentType = elm.attribute(CONTENT)
           else
             @root.contentType = EMPTY
@@ -4358,71 +3865,6 @@ module Meteor
           end
         end
         private :analyzeKaigyoCode
-
-        #
-        # 要素名で検索し、要素を取得する
-        # 
-        # @param [String] elmName 要素名
-        # @return [Meteor::Element] 要素
-        #
-        #def element_1(elmName)
-        #  super(elmName)
-        #end
-        #private :element_1
-
-        #
-        # 要素名と属性(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param [String] elmName 要素名
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def element_3(elmName,attrName,attrValue)
-        #  super(elmName, attrName, attrValue)
-        #end
-        #private :element_3
-
-        #
-        # 属性(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def element_2(attrName,attrValue)
-        #  super(attrName, attrValue)
-        #end
-        #private :element_2
-
-        #
-        # 要素名と属性1・属性2(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param elmName 要素名
-        # @param attrName1 属性名1
-        # @param attrValue1 属性値1
-        # @param attrName2 属性名2
-        # @param attrValue2 属性値2
-        # @return [Meteor::Element] 要素
-        #
-        #def element_5(elmName,attrName1,attrValue1,attrName2,attrValue2)
-        #  super(elmName, attrName1, attrValue1, attrName2, attrValue2)
-        #end
-        #private :element_5
-
-        #
-        # 属性1・属性2(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param attrName1 属性名1
-        # @param attrValue1 属性値1
-        # @param attrName2 属性名2
-        # @param attrValue2 属性値2
-        # @return [Meteor::Element] 要素
-        #
-        #def element_4(attrName1,attrValue1,attrName2,attrValue2)
-        #  super(attrName1, attrValue1, attrName2, attrValue2)
-        #end
-        #private :element_4
 
         #
         # 要素の属性をセットする or 属性の値を取得する
@@ -4450,40 +3892,6 @@ module Meteor
             raise ArgumentError
           end
         end
-        
-        ##
-        ## 要素の属性を編集する
-        ##
-        ## @param [Array] args 引数配列
-        ##
-        #def setAttribute(*args)
-        #  case args.length
-        #  when 2
-        #    if args[0].kind_of?(String) && args[1].kind_of?(String) then
-        #      setAttribute_2(args[0],args[1])
-        #    elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
-        #      setAttribute_2_m(args[0],args[1])
-        #    else
-        #      raise ArgumentError
-        #    end
-        #  when 3
-        #    setAttribute_3(args[0],args[1],args[2])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # 要素の属性を編集する
-        # 
-        # @param [Meteor::Element] 要素
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        #
-        #def setAttribute_3(elm,attrName,attrValue)
-        #  super(elm, attrName, attrValue)
-        #end
-        #private :setAttribute_3
 
         def editAttributes_(elm,attrName,attrValue)
 
@@ -4501,7 +3909,6 @@ module Meteor
             super(elm,attrName,attrValue)
           end
 
-          #return attrValue
         end
         private :editAttributes_
 
@@ -4516,16 +3923,12 @@ module Meteor
             if !@res then
               #属性文字列の最後に新規の属性を追加する
               if elm.attributes != EMPTY then
-                #@_attributes = SPACE << elm.attributes.strip
                 elm.attributes = '' << SPACE << elm.attributes.strip
               else
-                #@_attributes = elm.attributes
               end
-              #@_attributes << SPACE << replaceUpdate
               elm.attributes << SPACE << replaceUpdate
             else
               #属性の置換
-              #@_attributes = elm.attributes.gsub(replaceRegex,replaceUpdate)
               elm.attributes.gsub!(replaceRegex,replaceUpdate)
             end
           elsif isMatch(FALSE,attrValue) then
@@ -4535,15 +3938,11 @@ module Meteor
             #attrName属性が存在するなら削除
             if @res then
               #属性の置換
-              #@_attributes = elm.attributes.gsub(replaceRegex, EMPTY)
               elm.attributes.gsub!(replaceRegex, EMPTY)
             else
-              #@_attributes = elm.attributes
             end
           end
-          #elm.attributes = @_attributes
-
-          #return attrValue
+          
         end
         private :editAttributes_5
 
@@ -4559,33 +3958,6 @@ module Meteor
           end
         end
         private :setAttribute_2
-
-        ##
-        ## 要素の属性値を取得する
-        ##
-        ## @param [Array] args 引数配列
-        ## @return [String] 属性値
-        ##
-        #def getAttributeValue(*args)
-        #  case args.length
-        #  when 1
-        #    getAttributeValue_1(args[0])
-        #  when 2
-        #    return getAttributeValue_2(args[0],args[1])
-        #  end
-        #end
-
-        #
-        # 要素の属性値を取得する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        # @return [String] 属性値
-        #
-        #def getAttributeValue_2(elm,attrName)
-        #  super(elm, attrName)
-        #end
-        #private :getAttributeValue_2
         
         def getAttributeValue_(elm,attrName)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name)  then
@@ -4686,17 +4058,6 @@ module Meteor
         #
         # 要素の属性マップを取得する
         # 
-        # @param [Meteor::Element] elm 要素
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        #def getAttributeMap_1(elm)
-        #  super(elm)
-        #end
-        #private :getAttributeMap_1
-
-        #
-        # 要素の属性マップを取得する
-        # 
         # @return [Meteor::AttributeMap] 属性マップ
         #
         def getAttributeMap_0()
@@ -4721,17 +4082,6 @@ module Meteor
             removeAttribute_2(args[0],args[1])
           end
         end
-
-        #
-        # 要素の属性を消す
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        #
-        #def removeAttribute_2(elm,attrName)
-        #  super(elm, attrName)
-        #end
-        #private :removeAttribute_2
 
         #
         # 要素の属性を消す
@@ -4773,38 +4123,6 @@ module Meteor
             raise ArgumentError
           end
         end
-        
-        ##
-        ## 要素の内容を編集する
-        ##
-        ## @param [Array] args 引数配列
-        ##
-        #def setContent(*args)
-        #  case args.length
-        #  when 1
-        #    setContent_1(args[0])
-        #  when 2
-        #    if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-        #      setContent_2_s(args[0],args[1])
-        #    elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClsss)) then
-        #      setContent_2_b(args[0],args[1])
-        #    end
-        #  when 3
-        #    setContent_3(args[0],args[1],args[2])
-        #  end
-        #end
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] mixed_content 内容
-        # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
-        #
-        #def setContent_3(elm,content,entityRef=true)
-        #  super(elm, content, entityRef)
-        #end
-        #private :setContent_3
 
         #
         # 要素の内容を編集する
@@ -4842,64 +4160,6 @@ module Meteor
         end
         private :setContent_1
 
-        ##
-        ## 要素の内容を取得する
-        ##
-        ## @return [Meteor::Element] 要素
-        ##
-        #def getContent(elm)
-        #  super(elm)
-        #end
-
-        #
-        # 要素を消す
-        # 
-        # @param [Meteor::Element] elm 要素
-        #
-        #def removeElement(elm)
-        #  super(elm)
-        #end
-
-        #
-        # CX(コメント拡張)タグを取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag(*args)
-        #  case args.length
-        #  when 1
-        #    cxtag_1(args[0])
-        #  when 2
-        #    cxtag_2(args[0],args[1])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # タグ名とID属性で検索し、CX(コメント確証)タグを取得する
-        # 
-        # @param [String] elmName タグ名
-        # @param [String] id ID属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag_2(elmName,id)
-        #  super(elmName,id)
-        #end
-        #private :cxtag_2
-
-        #
-        # ID属性で検索し、CX(コメント確証)タグを取得する
-        # 
-        # @param [String] id ID属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag_1(id)
-        #  super(id)
-        #end
-        #private :cxtag_1
-
         #
         # 出力する
         #
@@ -4916,7 +4176,6 @@ module Meteor
             self.rootElement.mutableElement = Element.new(self.rootElement.element)
           else
             if self.monoHook then
-              #self.rootElement.hookDocument << self.document
               if self.rootElement.element.cx then
                 @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
                 @root.hookDocument << @root.mutableElement.attributes << SET_CX_2
@@ -4928,7 +4187,6 @@ module Meteor
                 @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
               end
               @root.mutableElement = Element.new(@root.element)
-              #self.document = String.new(@root.element.mixed_content)
             else
               #フック判定がFALSEの場合
               clean
@@ -4968,13 +4226,9 @@ module Meteor
           if elm.empty then
             setMonoInfo(elm)
 
-            #@res = nil
-            #@pattern = nil
-            #@pattern_cc = nil
             pif2 = create(self)
             
             elm.parent=true
-            #elm.parser = nil
             pif2.parent = self
             pif2.rootElement.element = elm
             pif2.rootElement.mutableElement = Element.new(elm)
@@ -4982,7 +4236,6 @@ module Meteor
 
             if elm.mono then
               #内容あり要素の場合
-              #pif2.rootElement.document = String.new(elm.document)
               pif2.rootElement.monoHook = true
 
               pif2
@@ -5159,12 +4412,10 @@ module Meteor
         # @param [Meteor::Parser] ps パーサ
         #
         def initialize_1(ps)
-          #ps = Marshal.load(Marshal.dump(ps))
           self.document = String.new(ps.document)
           self.hookDocument = String.new(ps.hookDocument)
           self.hook = ps.hook
           self.monoHook = ps.monoHook
-          #self.element = ps.element
           @root.contentType = String.new(ps.contentType);
         end
 
@@ -5215,71 +4466,6 @@ module Meteor
         end
 
         #
-        # 要素名で検索し、要素を取得する
-        # 
-        # @param [String] elmName 要素名
-        # @return [Meteor::Element] 要素
-        #
-        #def element_1(elmName)
-        #  super(elmName)
-        #end
-        #private :element_1
-
-        #
-        # 要素名と属性(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param [String] elmName 要素名
-        # @param [String] attrName 属性名
-        # @param [string] attrValue 属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def element_3(elmName,attrName,attrValue)
-        #  super(elmName, attrName, attrValue)
-        #end
-        #private :element_3
-
-        #
-        # 属性(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param [String] attrName 属性名
-        # @param [string] attrValue 属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def element_2(attrName,attrValue)
-        #  super(attrName,attrValue)
-        #end
-        #private :element_2
-
-        #
-        # 要素名と属性1・属性2(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param [String] elmName 属性名
-        # @param [String] attrName1 属性名1
-        # @param [String] attrValue1 属性値1
-        # @param [String] attrName2 属性名2
-        # @param [String] attrValue2 属性値2
-        # @return [Meteor::Element] 要素
-        #
-        #def element_5(elmName,attrName1,attrValue1,attrName2,attrValue2)
-        #  super(elmName, attrName1, attrValue1, attrName2, attrValue2)
-        #end
-        #private :element_5
-
-        #
-        # 属性1・属性2(属性名="属性値")で検索し、要素を取得する
-        # 
-        # @param [String] attrName1 属性名1
-        # @param [String] attrValue1 属性値1
-        # @param [String] attrName2 属性名2
-        # @param [String] attrValue2 属性値2
-        # @return [Meteor::Element] 要素
-        #
-        #def element_4(attrName1,attrValue1,attrName2,attrValue2)
-        #  super(attrName1, attrValue1, attrName2, attrValue2)
-        #end
-        #private :element_4
-
-        #
         # 要素の属性をセットする or 属性の値を取得する
         # 
         # @param [Array] args 引数配列
@@ -5305,18 +4491,6 @@ module Meteor
         #
         # 要素の属性を編集する
         # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        #
-        #def setAttribute_3(elm,attrName,attrValue)
-        #  super(elm, attrName, attrValue)
-        #end
-        #private :setAttribute_3
-
-        #
-        # 要素の属性を編集する
-        # 
         # @param [String] attrName 属性名
         # @param [String] attrValue 属性値
         #
@@ -5326,35 +4500,6 @@ module Meteor
           end
         end
         private :setAttribute_2
-
-        ##
-        ## 要素の属性値を取得する
-        ## 
-        ## @param [Array] args 引数配列
-        ## @return [String] 属性値
-        ##
-        #def getAttributeValue(*args)
-        #  case args.length
-        #  when 1
-        #    getAttributeValue_1(args[0])
-        #  when 2
-        #    getAttributeValue_2(args[0],args[1])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # 要素の属性値を取得する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        # @return [String] 属性値
-        #
-        #def getAttributeValue_2(elm,attrName)
-        #  super(elm, attrName)
-        #end
-        #private :getAttributeValue_2
 
         #
         # 要素の属性値を取得する
@@ -5432,17 +4577,6 @@ module Meteor
         #
         # 要素の属性を消す
         # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        #
-        #def removeAttribute_2(elm,attrName)
-        #  super(elm, attrName)
-        #end
-        #private :removeAttribute_2
-
-        #
-        # 要素の属性を消す
-        # 
         # @param [String] attrName 属性名
         #
         def removeAttribute_1(attrName)
@@ -5480,30 +4614,6 @@ module Meteor
             raise ArgumentError
           end
         end
-        
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [Array] args 引数配列
-        #
-        #def setContent(*args)
-        #  case args.length
-        #  when 1
-        #    setContent_1(args[0])
-        #  when 2
-        #    if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-        #      setContent_2_s(args[0],args[1])
-        #    elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClsss)) then
-        #      setContent_2_b(args[0],args[1])
-        #    else
-        #      raise ArgumentError
-        #    end
-        #  when 3
-        #    setContent_3(args[0],args[1],args[2])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
 
         #
         # 要素の内容を編集する
@@ -5553,72 +4663,6 @@ module Meteor
         end
         private :setContent_2_b
 
-        ##
-        ## 要素の内容を取得する
-        ##
-        ## @param [Meteor::Element] elm 要素
-        ## @return [String] 内容
-        ##
-        #def getContent(elm)
-        #  super(elm)
-        #end
-
-        #
-        # 要素を消す
-        # 
-        # @param [Meteor::Element] elm
-        #
-        #def removeElement(elm)
-        #  super(elm)
-        #end
-
-        #
-        # CX(コメント拡張)タグを取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag(*args)
-        #  case args.length
-        #  when 1
-        #    cxtag_1(args[0])
-        #  when 2
-        #    cxtag_2(args[0],args[1])
-        #  else
-        #    raise ArgumentError
-        #  end
-        #end
-
-        #
-        # タグ名とID属性で検索し、CX(コメント拡張)タグを取得する
-        # 
-        # @param elmName タグ名
-        # @param id ID属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag_2(elmName,id)
-        #  super(elmName, id)
-        #end
-        #private :cxtag_2
-
-        #
-        # ID属性で検索し、CX(コメント拡張)タグを取得する
-        # 
-        # @param id ID属性値
-        # @return [Meteor::Element] 要素
-        #
-        #def cxtag_1(id)
-        #  super(id)
-        #end
-        #private :cxtag_1
-
-        #
-        # 出力する
-        #
-        #def print
-        #  super
-        #end
-
         #
         #
         #
@@ -5654,20 +4698,15 @@ module Meteor
             #内容あり要素の場合
             setMonoInfo(elm)
 
-            #@res=nil
-            #@pattern = nil
-            #@pattern_cc = nil
             pif2 = create(self)
 
             elm.parent=true
-            #elm.parser = nil
             pif2.parent = self
             pif2.rootElement.element = elm
             pif2.rootElement.mutableElement = Element.new(elm)
             pif2.rootElement.kaigyoCode = self.rootElement.kaigyoCode
 
             if elm.mono then
-              #pif2.rootElement.document = String.new(elm.document)
               pif2.rootElement.monoHook = true
 
               pif2
@@ -5733,8 +4772,6 @@ module Meteor
           if element.include?(AP_1) then
             element.gsub!(@@pattern_ap_1,AP_2)
           end
-          #「 」->「&nbsp;」
-          #element = element.gsub(@@pattern_space_1,NBSP_2)
 
           element
         end

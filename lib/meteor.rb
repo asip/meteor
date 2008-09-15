@@ -1467,7 +1467,7 @@ module Meteor
         
         if @res then
           elm = element_3(@res[1], attrName, attrValue);
-        else
+          #else
           #throw new NoSuchElementException(attrName,attrValue);
         end
         
@@ -2936,7 +2936,7 @@ module Meteor
             elm.attributes = @res[1]
             #空要素検索用パターン
             elm.pattern = @pattern_cc
-          else
+            #else
           end
 
           elm
@@ -3008,7 +3008,7 @@ module Meteor
 
           if @res then
             elm = element_3(@res[1],attrName,attrValue)
-          else
+            #else
           end
 
           elm
@@ -3092,7 +3092,7 @@ module Meteor
 
           if @res then
             elm = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
-          else
+            #else
           end
 
           elm
@@ -3156,14 +3156,14 @@ module Meteor
                 elm.attributes = ''
               end
               elm.attributes << SPACE << attrName
-            else
+              #else
             end
           elsif isMatch(FALSE, attrValue) then
             @res = match_p.match(elm.attributes)
 
             if @res then
               elm.attributes.gsub!(replace,EMPTY)
-            else
+              #else
             end
           end
 
@@ -3924,7 +3924,7 @@ module Meteor
               #属性文字列の最後に新規の属性を追加する
               if elm.attributes != EMPTY then
                 elm.attributes = '' << SPACE << elm.attributes.strip
-              else
+                #else
               end
               elm.attributes << SPACE << replaceUpdate
             else
@@ -3939,7 +3939,7 @@ module Meteor
             if @res then
               #属性の置換
               elm.attributes.gsub!(replaceRegex, EMPTY)
-            else
+              #else
             end
           end
           
@@ -4810,7 +4810,7 @@ module Meteor
         private :unescape
 
         def unescapeContent(element,elmName)
-         unescape(element)
+          unescape(element)
         end
         private :unescapeContent
 

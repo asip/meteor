@@ -20,6 +20,10 @@
 # @author Yasumasa Ashida
 # @version 0.9.0
 #
+if RUBY_VERSION < '1.9.0' then
+  require 'kconv'
+end
+
 
 module Meteor
 
@@ -189,7 +193,11 @@ module Meteor
       @characterEncoding=''
 
       #フックドキュメント
-      @hookDocument =''
+      if RUBY_VERSION >= "1.9.0" then
+        @hookDocument =''
+      else
+        @hookDocument = []
+      end
       #フック判定フラグ
       #@hook = false
       #単一要素フック判定フラグ
@@ -492,7 +500,7 @@ module Meteor
         if elm.empty then
           pif2 = pif.child(elm)
           execute(pif2)
-          pif.replace(elm, pif2.rootElement.hookDocument)
+          pif2.flush
         end
       end
 
@@ -523,7 +531,7 @@ module Meteor
             end
             execute(pif2,item)
           }
-          pif.replace(elm, pif2.rootElement.hookDocument)
+          pif2.flush
         end
       end
 
@@ -889,19 +897,9 @@ module Meteor
           str = io.read
         else
           #読込及び格納
-          require 'kconv'
-          to_enc = get_encoding(encoding)
           io = open(filePath,'r')
-          io.each do |line|
-            if str then
-              str << line
-            else
-              str = line
-            end
-          end
-
-          str = str.kconv(to_enc, Kconv.guess(str))
-
+          str = io.read
+          str = str.kconv(get_encoding(encoding), Kconv.guess(str))
         end
 
         #ファイルのクローズ
@@ -2372,43 +2370,68 @@ module Meteor
         #タグ置換
         self.document.sub!(@pattern,replaceDocument)
       end
-
+      
       #
       # 出力する
       #
       def print
-        if self.hook then
-          @_attributes = @root.mutableElement.attributes
-          replace2Regex(@_attributes)
-          if self.rootElement.element.cx then
-            @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-            @root.hookDocument << @_attributes << SET_CX_2
-            @root.hookDocument << self.document << SET_CX_3
-            @root.hookDocument << @root.mutableElement.name << SET_CX_4
-          else
-            @root.hookDocument << TAG_OPEN << @root.mutableElement.name
-            @root.hookDocument << @_attributes << TAG_CLOSE << self.document
-            @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-          end
-          @root.mutableElement = Element.new(@root.element)
-          self.document = String.new(@root.element.mixed_content)
-        else
-          if self.monoHook then
-            #@root.hookDocument << self.document
+        if RUBY_VERSION >= "1.9.0" then
+          if self.hook then
+            @_attributes = @root.mutableElement.attributes
+            replace2Regex(@_attributes)
             if self.rootElement.element.cx then
               @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-              @root.hookDocument << @root.mutableElement.attributes << SET_CX_2
-              @root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
+              @root.hookDocument << @_attributes << SET_CX_2
+              @root.hookDocument << self.document << SET_CX_3
               @root.hookDocument << @root.mutableElement.name << SET_CX_4
             else
               @root.hookDocument << TAG_OPEN << @root.mutableElement.name
-              @root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
+              @root.hookDocument << @_attributes << TAG_CLOSE << self.document
               @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
             end
             @root.mutableElement = Element.new(@root.element)
+            self.document = String.new(@root.element.mixed_content)
           else
-            #フック判定がFALSEの場合
-            clean
+            if self.monoHook then
+              if self.rootElement.element.cx then
+                @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
+                @root.hookDocument << @root.mutableElement.attributes << SET_CX_2
+                @root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
+                @root.hookDocument << @root.mutableElement.name << SET_CX_4
+              else
+                @root.hookDocument << TAG_OPEN << @root.mutableElement.name
+                @root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
+                @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
+              end
+              @root.mutableElement = Element.new(@root.element)
+            else
+              #フック判定がFALSEの場合
+              clean
+            end
+          end
+        else
+          if self.hook then
+            @_attributes = @root.mutableElement.attributes
+            replace2Regex(@_attributes)
+            if self.rootElement.element.cx then
+              @root.hookDocument.push(SET_CX_1,@root.mutableElement.name,SPACE,@_attributes,SET_CX_2,self.document,SET_CX_3,@root.mutableElement.name,SET_CX_4)
+            else
+              @root.hookDocument.push(TAG_OPEN,@root.mutableElement.name,@_attributes,TAG_CLOSE,self.document,TAG_OPEN3,@root.mutableElement.name,TAG_CLOSE)
+            end
+            @root.mutableElement = Element.new(@root.element)
+            self.document = String.new(@root.element.mixed_content)
+          else
+            if self.monoHook then
+              if self.rootElement.element.cx then
+                @root.hookDocument.push(SET_CX_1,@root.mutableElement.name,SPACE,@root.mutableElement.attributes,SET_CX_2,@root.mutableElement.mixed_content,SET_CX_3,@root.mutableElement.name,SET_CX_4)
+              else
+                @root.hookDocument.push(TAG_OPEN,@root.mutableElement.name,@root.mutableElement.attributes,TAG_CLOSE,@root.mutableElement.mixed_content,TAG_OPEN3,@root.mutableElement.name,TAG_CLOSE)
+              end
+              @root.mutableElement = Element.new(@root.element)
+            else
+              #フック判定がFALSEの場合
+              clean
+            end
           end
         end
       end
@@ -2796,7 +2819,11 @@ module Meteor
         def initialize_1(ps)
           #ps = Marshal.load(Marshal.dump(ps))
           self.document = String.new(ps.document)
-          self.hookDocument = String.new(ps.hookDocument)
+          if RUBY_VERSION >= "1.9.0" then
+            self.hookDocument = String.new(ps.hookDocument)
+          else
+            self.hookDocument = Array.new(ps.hookDocument)
+          end
           self.hook = ps.hook
           self.monoHook = ps.monoHook
           #self.element = ps.element
@@ -3418,40 +3445,6 @@ module Meteor
         private :setContent_1
 
         #
-        # 出力する
-        #
-        def print
-          if self.hook then
-            #フック判定がTRUEの場合
-            @_attributes = self.rootElement.mutableElement.attributes
-            replace2Regex(@_attributes)
-            if self.rootElement.element.cx then
-              self.rootElement.hookDocument << SET_CX_1 << self.rootElement.mutableElement.name << SPACE << @_attributes << SET_CX_2 << self.document << SET_CX_3 << self.rootElement.mutableElement.name << SET_CX_4
-            else
-              self.rootElement.hookDocument << TAG_OPEN << self.rootElement.mutableElement.name << @_attributes << TAG_CLOSE << self.document << TAG_OPEN3 << self.rootElement.mutableElement.name << TAG_CLOSE
-            end
-            self.rootElement.mutableElement = Element.new(self.rootElement.element)
-          else
-            if self.monoHook then
-              if self.rootElement.element.cx then
-                @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-                @root.hookDocument << @root.mutableElement.attributes << SET_CX_2
-                @root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
-                @root.hookDocument << @root.mutableElement.name << SET_CX_4
-              else
-                @root.hookDocument << TAG_OPEN << @root.mutableElement.name
-                @root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
-                @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-              end
-              @root.mutableElement = Element.new(@root.element)
-            else
-              #フック判定がFALSEの場合
-              clean
-            end
-          end
-        end
-
-        #
         #
         #
         def execute(*args)
@@ -3530,8 +3523,12 @@ module Meteor
         #
         def flush
           if self.rootElement.hook || self.rootElement.monoHook then
-            if self.rootElement.element != nil then
-              self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+            if self.rootElement.element then
+              if RUBY_VERSION >= "1.9.0" then
+                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+              else
+                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
+              end
             end
           end
         end
@@ -3760,7 +3757,11 @@ module Meteor
         def initialize_1(ps)
           #ps = Marshal.load(Marshal.dump(ps))
           self.document = String.new(ps.document)
-          self.hookDocument = String.new(ps.hookDocument)
+          if RUBY_VERSION >= "1.9.0" then
+            self.hookDocument = String.new(ps.hookDocument)
+          else
+            self.hookDocument = Array.new(ps.hookDocument)
+          end
           self.hook = ps.hook
           self.monoHook = ps.monoHook
           #self.element = ps.element
@@ -4150,40 +4151,6 @@ module Meteor
         private :setContent_1
 
         #
-        # 出力する
-        #
-        def print
-          if self.hook then
-            #フック判定がTRUEの場合
-            @_attributes = self.rootElement.mutableElement.attributes
-            replace2Regex(@_attributes)
-            if self.rootElement.element.cx then
-              self.rootElement.hookDocument << SET_CX_1 << self.rootElement.mutableElement.name << SPACE << @_attributes << SET_CX_2 << self.document << SET_CX_3 << self.rootElement.mutableElement.name << SET_CX_4
-            else
-              self.rootElement.hookDocument << TAG_OPEN << self.rootElement.mutableElement.name << @_attributes << TAG_CLOSE << self.document << TAG_OPEN3 << self.rootElement.mutableElement.name << TAG_CLOSE
-            end
-            self.rootElement.mutableElement = Element.new(self.rootElement.element)
-          else
-            if self.monoHook then
-              if self.rootElement.element.cx then
-                @root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-                @root.hookDocument << @root.mutableElement.attributes << SET_CX_2
-                @root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
-                @root.hookDocument << @root.mutableElement.name << SET_CX_4
-              else
-                @root.hookDocument << TAG_OPEN << @root.mutableElement.name
-                @root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
-                @root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-              end
-              @root.mutableElement = Element.new(@root.element)
-            else
-              #フック判定がFALSEの場合
-              clean
-            end
-          end
-        end
-
-        #
         #
         #
         def execute(*args)
@@ -4262,8 +4229,12 @@ module Meteor
         #
         def flush
           if self.rootElement.hook || self.rootElement.monoHook then
-            if self.rootElement.element != nil then
-              self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+            if self.rootElement.element then
+              if RUBY_VERSION >= "1.9.0" then
+                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+              else
+                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
+              end
             end
           end
         end
@@ -4402,7 +4373,11 @@ module Meteor
         #
         def initialize_1(ps)
           self.document = String.new(ps.document)
-          self.hookDocument = String.new(ps.hookDocument)
+          if RUBY_VERSION >= "1.9.0" then
+            self.hookDocument = String.new(ps.hookDocument)
+          else
+            self.hookDocument = Array.new(ps.hookDocument)
+          end
           self.hook = ps.hook
           self.monoHook = ps.monoHook
           @root.contentType = String.new(ps.contentType);
@@ -4734,7 +4709,11 @@ module Meteor
         def flush
           if self.rootElement.hook || self.rootElement.monoHook then
             if self.rootElement.element then
-              self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+              if RUBY_VERSION >= "1.9.0" then
+                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+              else
+                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
+              end
             end
           end
         end

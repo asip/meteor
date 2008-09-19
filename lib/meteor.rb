@@ -1015,7 +1015,6 @@ module Meteor
 
       def elementWithContent_1(elmName)
 
-        #if @res then
         elm = Element.new(elmName)
         #属性
         elm.attributes = @res[1]
@@ -1033,17 +1032,13 @@ module Meteor
         elm.empty=true
         
         elm.parser=self
-        #else
-        #  throw new NoSuchElementException(elmName);
-        #end
 
         elm
       end
       private :elementWithContent_1
 
       def elementWithoutContent_1(elmName)
-        
-        #if @res then
+        #要素
         elm = Element.new(elmName)
         #属性
         elm.attributes = @res[1]
@@ -1056,9 +1051,6 @@ module Meteor
         elm.empty = false
         
         elm.parser=self
-        #else
-        #  throw new NoSuchElementException(elmName);
-        #end
 
         elm
       end
@@ -1116,7 +1108,7 @@ module Meteor
           @res = @res2
           @pattern_cc = @pattern_cc_2
           elm = elementWithContent_3_1(elmName)
-        elsif !@res1 && !@res2 then
+        #elsif !@res1 && !@res2 then
         # throw new NoSuchElementException(elmName,attrName,attrValue);
         end
         
@@ -1125,8 +1117,6 @@ module Meteor
       private :element_3
 
       def elementWithContent_3_1(elmName)
-
-        #if @res then
           
         if @res.captures.length == 4 then
           #要素
@@ -1163,7 +1153,6 @@ module Meteor
           
           elm.parser = self
         end
-        #end
 
         elm
       end
@@ -1408,7 +1397,6 @@ module Meteor
       
       def elementWithoutContent_3_1(elmName,closer)
         
-        #if @res then
         #要素
         elm = Element.new(elmName)
         #属性
@@ -1421,9 +1409,6 @@ module Meteor
         elm.pattern = @pattern_cc
         
         elm.parser = self
-        #else
-        #  throw new NoSuchElementException(elmName,attrName,attrValue);
-        #end
         
         elm
       end
@@ -1545,8 +1530,6 @@ module Meteor
       
       def elementWithContent_5_1(elmName)
         
-        #if @res then
-        
         if @res.captures.length == 4 then
           #要素
           elm = Element.new(elmName)
@@ -1584,10 +1567,7 @@ module Meteor
           elm.empty = true
           
           elm.parser = self
-          #else
-          #  throw new NoSuchElementException(elmName,attrName1,attrValue1,attrName2,attrValue2);
         end
-        #end
         
         elm
       end
@@ -1838,7 +1818,7 @@ module Meteor
 
       def elementWithoutContent_5_1(elmName,closer)
 
-        #if @res then
+        #要素
         elm = Element.new(elmName)
         #属性
         elm.attributes = @res[1]
@@ -1853,9 +1833,6 @@ module Meteor
         elm.pattern = @pattern_cc
         
         elm.parser = self
-        #else
-        #  throw new NoSuchElementException(elmName,attrName1,attrValue1,attrName2,attrValue2);
-        #end
 
         elm
       end

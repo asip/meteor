@@ -407,15 +407,15 @@ module Meteor
 
       case type
       when Parser.HTML then
-        html = Meteor::Core::Html::ParserImpl.getParser
+        html = Meteor::Core::Html::ParserImpl.new()
         html.read(path, encoding)
         psf.setParser(html)
       when Parser.XHTML then
-        xhtml = Meteor::Core::Xhtml::ParserImpl.getParser
+        xhtml = Meteor::Core::Xhtml::ParserImpl.new()
         xhtml.read(path, encoding)
         psf.setParser(xhtml)
       when Parser.XML then
-        xml = Meteor::Core::Xml::ParserImpl.getParser
+        xml = Meteor::Core::Xml::ParserImpl.new()
         xml.read(path, encoding)
         psf.setParser(xml)
       end
@@ -436,15 +436,15 @@ module Meteor
 
       case type
       when Parser.HTML then
-        html = Meteor::Core::Html::ParserImpl.getParser
+        html = Meteor::Core::Html::ParserImpl.new()
         html.parse(document)
         psf.setParser(html)
       when Parser.XHTML then
-        xhtml = Meteor::Core::Xhtml::ParserImpl.getParser
+        xhtml = Meteor::Core::Xhtml::ParserImpl.new()
         xhtml.parse(document)
         psf.setParser(xhtml)
       when Parser.XML then
-        xml = Meteor::Core::Xml::ParserImpl.getParser
+        xml = Meteor::Core::Xml::ParserImpl.new()
         xml.parse(document)
         psf.setParser(xml)
       end
@@ -470,11 +470,11 @@ module Meteor
     def getParser
 
       if @pif.instance_of?(Meteor::Core::Html::ParserImpl) then
-        pif2 = Meteor::Core::Html::ParserImpl.copy(@pif)
+        pif2 = Meteor::Core::Html::ParserImpl.new(@pif)
       elsif @pif.instance_of?(Meteor::Core::Xhtml::ParserImpl) then
-        pif2 = Meteor::Core::Xhtml::ParserImpl.copy(@pif)
+        pif2 = Meteor::Core::Xhtml::ParserImpl.new(@pif)
       elsif @pif.instance_of?(Meteor::Core::Xml::ParserImpl) then
-        pif2 = Meteor::Core::Xml::ParserImpl.copy(@pif)
+        pif2 = Meteor::Core::Xml::ParserImpl.new(@pif)
       end
 
       pif2
@@ -2424,7 +2424,82 @@ module Meteor
         #self.document = self.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
       end
       private :clean
+      
+      #
+      # 子パーサを取得する
+      # 
+      # @param [Meteor::Element] elm 要素
+      # @return [Meteor::Parser] 子パーサ
+      #
+      def child(elm)
+        if elm.empty then
+          #内容あり要素の場合
+          setMonoInfo(elm)
+          
+          pif2 = create(self)
+          
+          elm.parent=true
+          pif2.parent = self
+          pif2.rootElement.element = elm
+          pif2.rootElement.mutableElement = Element.new(elm)
+          pif2.rootElement.kaigyoCode = self.rootElement.kaigyoCode
+          
+          if elm.mono then
+            pif2.rootElement.monoHook = true
+            
+            pif2
+          else
+            pif2.rootElement.document = String.new(elm.mixed_content)
+            pif2.rootElement.hook = true
+            
+            pif2
+          end
+        end
+      end
+      
+      def setMonoInfo
+      end
+      private :setMonoInfo
+      
+      #
+      # 反映する
+      #
+      def flush
+        if self.rootElement.hook || self.rootElement.monoHook then
+          if self.rootElement.element then
+            if RUBY_VERSION >= "1.9.0" then
+              self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
+            else
+              self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
+            end
+          end
+        end
+      end
 
+      #
+      #
+      #
+      def execute(*args)
+        case args.length
+        when 1
+          execute_2(args[0],args[1])
+        when 2
+          execute_3(args[0],args[1],args[2])
+        else
+          raise ArgumentError
+        end
+      end
+      
+      def execute_2(elm,hook)
+        hook.doAction(elm, self)
+      end
+      private :execute_2
+      
+      def execute_3(elm,loop,list)
+        loop.doAction(elm, this, list)
+      end
+      private :execute_3
+      
       #
       # 正規表現対象文字を置換する
       #
@@ -2808,25 +2883,6 @@ module Meteor
           @root.contentType = String.new(ps.contentType);
         end
         private :initialize_1
-
-        #
-        # パーサを取得する
-        # 
-        # @return [Meteor::Parser] パーサ
-        #
-        def self.getParser()
-          ParserImpl.new()
-        end
-
-        #
-        # パーサをコピーする
-        # 
-        # @param [Meteor::Parser] パーサ
-        # @return [Meteor::Parser] パーサ
-        #
-        def self.copy(pif)
-          ParserImpl.new(pif)
-        end
 
         #
         # ドキュメントをパーサにセットする
@@ -3422,60 +3478,6 @@ module Meteor
         end
         private :setContent_1
 
-        #
-        #
-        #
-        def execute(*args)
-          case args.length
-          when 2
-            execute_2(args[0],args[1])
-          when 3
-            execute_3(args[0],args[1],args[2])
-          end
-        end
-
-        def execute_2(elm,hook)
-          hook.doAction(elm, self)
-        end
-        private :execute_2
-
-        def execute_3(elm,loop,list)
-          loop.doAction(elm, this, list)
-        end
-        private :execute_3
-
-        #
-        # 子パーサを取得する
-        # 
-        # @param [Meteor::Element] 要素
-        # @return [Meteor::Parser] 子パーサ
-        #
-        def child(elm)
-          if elm.empty then
-            setMonoInfo(elm)
-
-            pif2 = create(self)
-            
-            elm.parent=true
-            pif2.parent = self
-            pif2.rootElement.element = elm
-            pif2.rootElement.mutableElement = Element.new(elm)
-            pif2.rootElement.kaigyoCode = self.rootElement.kaigyoCode
-
-            if elm.mono then
-              #内容あり要素の場合
-              pif2.rootElement.monoHook = true
-
-              pif2
-            else
-              pif2.rootElement.document = String.new(elm.mixed_content)
-              pif2.rootElement.hook = true
-
-              pif2
-            end
-          end
-        end
-
         def setMonoInfo(elm)
 
           @res = @@pattern_set_mono1.match(elm.mixed_content)
@@ -3495,21 +3497,6 @@ module Meteor
           end
         end
         private :setMonoInfo
-
-        #
-        # 反映する
-        #
-        def flush
-          if self.rootElement.hook || self.rootElement.monoHook then
-            if self.rootElement.element then
-              if RUBY_VERSION >= "1.9.0" then
-                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
-              else
-                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
-              end
-            end
-          end
-        end
 
         def escape(element)
           #特殊文字の置換
@@ -3746,25 +3733,6 @@ module Meteor
           @root.contentType = String.new(ps.contentType);
         end
         private :initialize_1
-        
-        #
-        # パーサを取得する
-        # 
-        # @return [Meteor::Parser] パーサ
-        #
-        def self.getParser()
-          ParserImpl.new()
-        end
-
-        #
-        # パーサをコピーする
-        # 
-        # @param [Meteor::Parser] pif パーサ
-        # @return [Meteor::Parser] パーサ
-        #
-        def self.copy(pif)
-          ParserImpl.new(pif)
-        end
 
         #
         # ドキュメントをパーサにセットする
@@ -4128,60 +4096,6 @@ module Meteor
         end
         private :setContent_1
 
-        #
-        #
-        #
-        def execute(*args)
-          case args.length
-          when 2
-            execute_2(args[0],args[1])
-          when 3
-            execute_3(args[0],args[1],args[2])
-          end
-        end
-
-        def execute_2(elm,hook)
-          hook.doAction(elm, self)
-        end
-        private :execute_2
-
-        def execute_3(elm,loop,list)
-          loop.doAction(elm, this, list)
-        end
-        private :execute_3
-
-        #
-        # 子パーサを取得する
-        # 
-        # @param [Meteor::Element] 要素
-        # @return [Meteor::Parser] 子パーサ
-        #
-        def child(elm)
-          if elm.empty then
-            setMonoInfo(elm)
-
-            pif2 = create(self)
-            
-            elm.parent=true
-            pif2.parent = self
-            pif2.rootElement.element = elm
-            pif2.rootElement.mutableElement = Element.new(elm)
-            pif2.rootElement.kaigyoCode = self.rootElement.kaigyoCode
-
-            if elm.mono then
-              #内容あり要素の場合
-              pif2.rootElement.monoHook = true
-
-              pif2
-            else
-              pif2.rootElement.document = String.new(elm.mixed_content)
-              pif2.rootElement.hook = true
-
-              pif2
-            end
-          end
-        end
-
         def setMonoInfo(elm)
 
           @res = @@pattern_set_mono1.match(elm.mixed_content)
@@ -4201,21 +4115,6 @@ module Meteor
           end
         end
         private :setMonoInfo
-
-        #
-        # 反映する
-        #
-        def flush
-          if self.rootElement.hook || self.rootElement.monoHook then
-            if self.rootElement.element then
-              if RUBY_VERSION >= "1.9.0" then
-                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
-              else
-                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
-              end
-            end
-          end
-        end
 
         def escape(element)
           #特殊文字の置換
@@ -4359,24 +4258,6 @@ module Meteor
           self.hook = ps.hook
           self.monoHook = ps.monoHook
           @root.contentType = String.new(ps.contentType);
-        end
-
-        #
-        # パーサを取得する
-        # 
-        # @return [Meteor::Parser] パーサ
-        #
-        def self.getParser()
-          ParserImpl.new()
-        end
-
-        #
-        # パーサをコピーする
-        # 
-        # @return [Meteor::Parser] パーサ
-        #
-        def self.copy(pif)
-          ParserImpl.new(pif)
         end
 
         #
@@ -4560,18 +4441,6 @@ module Meteor
         #
         # 要素の内容を編集する
         # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] mixed_content 内容
-        # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
-        #
-        def setContent_3(elm,content,entityRef=true)
-          super(elm, content, entityRef)
-        end
-        private :setContent_3
-
-        #
-        # 要素の内容を編集する
-        # 
         # @param [Meteor::Element] 要素
         # @param [String] mixed_content 要素
         #
@@ -4605,62 +4474,6 @@ module Meteor
         end
         private :setContent_2_b
 
-        #
-        #
-        #
-        def execute(*args)
-          case args.length
-          when 1
-            execute_2(args[0],args[1])
-          when 2
-            execute_3(args[0],args[1],args[2])
-          else
-            raise ArgumentError
-          end
-        end
-
-        def execute_2(elm,hook)
-          hook.doAction(elm, self)
-        end
-        private :execute_2
-
-        def execute_3(elm,loop,list)
-          loop.doAction(elm, this, list)
-        end
-        private :execute_3
-
-        #
-        # 子パーサを取得する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @return [Meteor::Parser] 子パーサ
-        #
-        def child(elm)
-          if elm.empty then
-            #内容あり要素の場合
-            setMonoInfo(elm)
-
-            pif2 = create(self)
-
-            elm.parent=true
-            pif2.parent = self
-            pif2.rootElement.element = elm
-            pif2.rootElement.mutableElement = Element.new(elm)
-            pif2.rootElement.kaigyoCode = self.rootElement.kaigyoCode
-
-            if elm.mono then
-              pif2.rootElement.monoHook = true
-
-              pif2
-            else
-              pif2.rootElement.document = String.new(elm.mixed_content)
-              pif2.rootElement.hook = true
-
-              pif2
-            end
-          end
-        end
-
         def setMonoInfo(elm)
 
           @res = @@pattern_set_mono1.match(elm.mixed_content)
@@ -4680,21 +4493,6 @@ module Meteor
           end
         end
         private :setMonoInfo
-
-        #
-        # 反映する
-        #
-        def flush
-          if self.rootElement.hook || self.rootElement.monoHook then
-            if self.rootElement.element then
-              if RUBY_VERSION >= "1.9.0" then
-                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument)
-              else
-                self.parent.replace(self.rootElement.element, self.rootElement.hookDocument.join)
-              end
-            end
-          end
-        end
 
         def escape(element)
           #特殊文字の置換

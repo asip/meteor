@@ -249,6 +249,7 @@ module Meteor
         attr.value = value
         if @recordable then
           attr.changed = true
+          attr.removed = false
         end
         @map[name] = attr
         if RUBY_VERSION < "1.9.0"
@@ -259,6 +260,7 @@ module Meteor
         if @recordable then
           if attr.value != value then
             attr.changed = true
+            attr.removed = false
           end
         end
         attr.value = value
@@ -286,18 +288,45 @@ module Meteor
     # @return [String] 属性値
     #
     def fetch(name)
-      @map[name].value
+      if @map[name] && !@map[name].removed then
+        @map[name].value
+      end
     end
 
+    #
+    # 属性名に対応した属性を削除する
+    #
+    # @param name 属性名
+    #
+    def delete(name)
+      if @map[name] then
+        @map[name].removed = true
+        @map[name].changed = false
+      end
+    end
+    
     #
     # 属性名で属性の変更状況を取得する
     # 
     # @return [TrueClass][FalseClass] 属性の変更状況
     #
     def changed(name)
-      @map[name].changed
+      if @map[name] then
+        @map[name].changed
+      end
     end
 
+    #
+    # 属性名で属性の削除状況を取得する
+    # 
+    # @return [TrueClass][FalseClass] 属性の削除状況
+    #
+    def removed(name)
+      if @map[name] then
+        @map[name].removed
+      end
+    end
+    
     attr_accessor :map
     attr_accessor :recordable
 
@@ -334,11 +363,13 @@ module Meteor
       #@name = nil
       #@value = nil
       #@changed = false
+      #@removed = false
     end
 
     attr_accessor :name
     attr_accessor :value
     attr_accessor :changed
+    attr_accessor :removed
 
   end
 
@@ -991,68 +1022,68 @@ module Meteor
           if @res1.end(0) < @res2.end(0) then
             @res = @res1
             @pattern_cc = @pattern_cc_1
-            elm = elementWithoutContent_1(elmName)
+            @elm_ = elementWithoutContent_1(elmName)
           elsif @res1.end(0) > @res2.end(0)
             @res = @res2
             @pattern_cc = @pattern_cc_2
-            elm = elementWithContent_1(elmName)
+            @elm_ = elementWithContent_1(elmName)
           end
         elsif @res1 && !@res2 then
           @res = @res1
           @pattern_cc = @pattern_cc_1
-          elm = elementWithoutContent_1(elmName)
+          @elm_ = elementWithoutContent_1(elmName)
         elsif !@res1 && @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
-          elm = elementWithContent_1(elmName)
+          @elm_ = elementWithContent_1(elmName)
         #elsif !@res1 && !@res2 then
-        #  throw new NoSuchElementException(elmName);
+        #  raise NoSuchElementException.new(elmName);
         end
         
-        elm
+        @elm_
       end
       private :element_1
 
       def elementWithContent_1(elmName)
 
-        elm = Element.new(elmName)
+        @elm_ = Element.new(elmName)
         #属性
-        elm.attributes = @res[1]
+        @elm_.attributes = @res[1]
         #内容
-        elm.mixed_content = @res[2]
+        @elm_.mixed_content = @res[2]
         #全体
-        elm.document = @res[0]
+        @elm_.document = @res[0]
         
         @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_NC_1_1 << elmName
         @pattern_cc << TAG_SEARCH_NC_1_2 << @_elmName << TAG_CLOSE
         
         #内容あり要素検索用パターン
-        elm.pattern = @pattern_cc
+        @elm_.pattern = @pattern_cc
         
-        elm.empty=true
+        @elm_.empty=true
         
-        elm.parser=self
+        @elm_.parser=self
 
-        elm
+        @elm_
       end
       private :elementWithContent_1
 
       def elementWithoutContent_1(elmName)
         #要素
-        elm = Element.new(elmName)
+        @elm_ = Element.new(elmName)
         #属性
-        elm.attributes = @res[1]
+        @elm_.attributes = @res[1]
         #全体
-        elm.document = @res[0]
+        @elm_.document = @res[0]
         #空要素検索用パターン
         @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_NC_1_3
-        elm.pattern = @pattern_cc
+        @elm_.pattern = @pattern_cc
         
-        elm.empty = false
+        @elm_.empty = false
         
-        elm.parser=self
+        @elm_.parser=self
 
-        elm
+        @elm_
       end
       private :elementWithoutContent_1
 
@@ -1094,25 +1125,25 @@ module Meteor
           if @res1.begin(0) < @res2.begin(0) then
             @res = @res1
             @pattern_cc = @pattern_cc_1
-            elm = elementWithoutContent_3(elmName)
+            elementWithoutContent_3(elmName)
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             @pattern_cc = @pattern_cc_2
-            elm = elementWithContent_3_1(elmName)
+            elementWithContent_3_1(elmName)
           end
         elsif @res1 && !@res2 then
           @res = @res1
           @pattern_cc = @pattern_cc_1
-          elm = elementWithoutContent_3(elmName)
+          elementWithoutContent_3(elmName)
         elsif !@res1 && @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
-          elm = elementWithContent_3_1(elmName)
+          elementWithContent_3_1(elmName)
         #elsif !@res1 && !@res2 then
-        # throw new NoSuchElementException(elmName,attrName,attrValue);
+        # raise NoSuchElementException.new(elmName,attrName,attrValue);
         end
         
-        elm
+        @elm_
       end
       private :element_3
 
@@ -1120,41 +1151,39 @@ module Meteor
           
         if @res.captures.length == 4 then
           #要素
-          elm = Element.new(elmName)
+          @elm_ = Element.new(elmName)
           #属性
-          elm.attributes = @res[1]
+          @elm_.attributes = @res[1]
           #内容
-          elm.mixed_content = @res[2]
+          @elm_.mixed_content = @res[2]
           #全体
-          elm.document = @res[0]
+          @elm_.document = @res[0]
           #内容あり要素検索用パターン
           @pattern_cc = ''<< TAG_OPEN << @_elmName << TAG_SEARCH_NC_2_1 << @_attrName << ATTR_EQ
           @pattern_cc << @_attrValue << TAG_SEARCH_NC_2_2 << @_elmName
           @pattern_cc << TAG_SEARCH_NC_1_2 << @_elmName << TAG_CLOSE
-          elm.pattern = @pattern_cc
+          @elm_.pattern = @pattern_cc
           
-          elm.empty = true
+          @elm_.empty = true
           
-          elm.parser=self
+          @elm_.parser=self
           
         elsif @res.captures.length == 6 then
           #内容
-          elm = Element.new(elmName)
+          @elm_ = Element.new(elmName)
           #属性
-          elm.attributes = @res[1].chop
+          @elm_.attributes = @res[1].chop
           #内容
-          elm.mixed_content = @res[3]
+          @elm_.mixed_content = @res[3]
           #全体
-          elm.document = @res[0]
+          @elm_.document = @res[0]
           #内容あり要素検索用パターン
-          elm.pattern = @pattern_cc
+          @elm_.pattern = @pattern_cc
           
-          elm.empty = true
+          @elm_.empty = true
           
-          elm.parser = self
+          @elm_.parser = self
         end
-
-        elm
       end
       private :elementWithContent_3_1
       
@@ -1379,7 +1408,7 @@ module Meteor
         @pattern_cc = @sbuf
         
         if @sbuf.length == 0 || @cnt != 0 then
-          #  throw new NoSuchElementException(elmName,attrName,attrValue);
+          #  raise NoSuchElementException.new(elmName,attrName,attrValue);
           return nil;
         end
         
@@ -1398,19 +1427,17 @@ module Meteor
       def elementWithoutContent_3_1(elmName,closer)
         
         #要素
-        elm = Element.new(elmName)
+        @elm_ = Element.new(elmName)
         #属性
-        elm.attributes = @res[1];
+        @elm_.attributes = @res[1];
         #全体
-        elm.document = @res[0]
+        @elm_.document = @res[0]
         #空要素検索用パターン
         @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_NC_2_1 << @_attrName << ATTR_EQ
         @pattern_cc << @_attrValue << closer
-        elm.pattern = @pattern_cc
+        @elm_.pattern = @pattern_cc
         
-        elm.parser = self
-        
-        elm
+        @elm_.parser = self
       end
       private :elementWithoutContent_3_1
       
@@ -1432,12 +1459,12 @@ module Meteor
         @res = @pattern.match(self.document)
         
         if @res then
-          elm = element_3(@res[1], attrName, attrValue)
+          @elm_ = element_3(@res[1], attrName, attrValue)
         else
-          elm = elementWithoutContent_2(attrName, attrValue)
+          elementWithoutContent_2(attrName, attrValue)
         end
         
-        elm
+        @elm_
       end
       private :element_2
       
@@ -1449,12 +1476,10 @@ module Meteor
         @res = @pattern.match(self.document)
         
         if @res then
-          elm = element_3(@res[1], attrName, attrValue);
+          @elm_ = element_3(@res[1], attrName, attrValue);
           #else
-          #throw new NoSuchElementException(attrName,attrValue);
+          # raise NoSuchElementException.new(attrName,attrValue);
         end
-        
-        elm
       end
       private :elementWithoutContent_2
       
@@ -1506,25 +1531,25 @@ module Meteor
           if @res1.begin(0) < @res2.begin(0) then
             @res = @res1
             @pattern_cc = @pattern_cc_1
-            elm = elementWithoutContent_5(elmName)
+            elementWithoutContent_5(elmName)
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             @pattern_cc = @pattern_cc_2
-            elm = elementWithContent_5_1(elmName)
+            elementWithContent_5_1(elmName)
           end
         elsif @res1 && !@res2 then
           @res = @res1
           @pattern_cc = @pattern_cc_1
-          elm = elementWithoutContent_5(elmName)
+          elementWithoutContent_5(elmName)
         elsif !@res1 && @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
-          elm = elementWithContent_5_1(elmName)
+          elementWithContent_5_1(elmName)
         #elsif !@res1 && !@res2 then
-        #  throw new NoSuchElementException(elmName,attrName1,attrValue1,attrName2,attrValue2);
+        #  raise NoSuchElementException.new(elmName,attrName1,attrValue1,attrName2,attrValue2);
         end
         
-        elm
+        @elm_
       end
       private :element_5
       
@@ -1532,13 +1557,13 @@ module Meteor
         
         if @res.captures.length == 4 then
           #要素
-          elm = Element.new(elmName)
+          @elm_ = Element.new(elmName)
           #属性
-          elm.attributes = @res[1]
+          @elm_.attributes = @res[1]
           #内容
-          elm.mixed_content = @res[2]
+          @elm_.mixed_content = @res[2]
           #全体
-          elm.document = @res[0]
+          @elm_.document = @res[0]
           #内容あり要素検索用パターン
           @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_NC_2_1_2 << @_attrName1 << ATTR_EQ
           @pattern_cc << @_attrValue1 << TAG_SEARCH_NC_2_6 << @_attrName2 << ATTR_EQ
@@ -1546,30 +1571,28 @@ module Meteor
           @pattern_cc << @_attrValue2 << TAG_SEARCH_NC_2_6 << @_attrName1 << ATTR_EQ
           @pattern_cc << @_attrValue1 << TAG_SEARCH_NC_2_2_2 << @_elmName
           @pattern_cc << TAG_SEARCH_NC_1_2 << @_elmName << TAG_CLOSE
-          elm.pattern = @pattern_cc
+          @elm_.pattern = @pattern_cc
           #
-          elm.empty = true
+          @elm_.empty = true
           
-          elm.parser = self
+          @elm_.parser = self
           
         elsif @res.captures.length == 6 then
           
-          elm = Element.new(elmName)
+          @elm_ = Element.new(elmName)
           #属性
-          elm.attributes = @res[1].chop
+          @elm_.attributes = @res[1].chop
           #要素
-          elm.mixed_content = @res[3]
+          @elm_.mixed_content = @res[3]
           #全体
-          elm.document = @res[0]
+          @elm_.document = @res[0]
           #要素ありタグ検索用パターン
-          elm.pattern = @pattern_cc
+          @elm_.pattern = @pattern_cc
           
-          elm.empty = true
+          @elm_.empty = true
           
-          elm.parser = self
+          @elm_.parser = self
         end
-        
-        elm
       end
       private :elementWithContent_5_1
       
@@ -1800,7 +1823,7 @@ module Meteor
         @pattern_cc = @sbuf
         
         if @sbuf.length == 0 || @cnt != 0 then
-          #  throw new NoSuchElementException(elmName,attrName1,attrValue1,attrName2,attrValue2);
+          #  raise NoSuchElementException.new(elmName,attrName1,attrValue1,attrName2,attrValue2);
           return nil
         end
         
@@ -1819,22 +1842,20 @@ module Meteor
       def elementWithoutContent_5_1(elmName,closer)
 
         #要素
-        elm = Element.new(elmName)
+        @elm_ = Element.new(elmName)
         #属性
-        elm.attributes = @res[1]
+        @elm_.attributes = @res[1]
         #全体
-        elm.document = @res[0]
+        @elm_.document = @res[0]
         #空要素検索用パターン
         @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_NC_2_1_2 << @_attrName1 << ATTR_EQ
         @pattern_cc << @_attrValue1 << TAG_SEARCH_NC_2_6 << @_attrName2 << ATTR_EQ
         @pattern_cc << @_attrValue2 << TAG_SEARCH_NC_2_7 << @_attrName2 << ATTR_EQ
         @pattern_cc << @_attrValue2 << TAG_SEARCH_NC_2_6 << @_attrName1 << ATTR_EQ
         @pattern_cc << @_attrValue1 << closer
-        elm.pattern = @pattern_cc
+        @elm_.pattern = @pattern_cc
         
-        elm.parser = self
-
-        elm
+        @elm_.parser = self
       end
       private :elementWithoutContent_5_1
 
@@ -1865,12 +1886,12 @@ module Meteor
         @res = @pattern.match(self.document)
 
         if @res then
-          elm = element_5(@res[1], attrName1, attrValue1,attrName2, attrValue2);
+          @elm_ = element_5(@res[1], attrName1, attrValue1,attrName2, attrValue2);
         else
-          elm = elementWithoutContent_4(attrName1, attrValue1,attrName2, attrValue2);
+          elementWithoutContent_4(attrName1, attrValue1,attrName2, attrValue2);
         end
 
-        elm
+        @elm_
       end
       private :element_4
 
@@ -1887,13 +1908,10 @@ module Meteor
         @res = @pattern.match(self.document)
 
         if @res then
-          elm = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
+          @elm_ = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
           #else
-          #  throw new NoSuchElementException(attrName1,attrValue1,attrName2,attrValue2);
+          #  raise NoSuchElementException.new(attrName1,attrValue1,attrName2,attrValue2);
         end
-
-        elm
-
       end
       private :elementWithoutContent_4
 
@@ -2973,7 +2991,7 @@ module Meteor
             @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_4_2
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             @res = @pattern.match(self.document)
-            elm = elementWithoutContent_1(elmName)
+            elementWithoutContent_1(elmName)
           else
             #内容あり要素検索用パターン
             @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_1 << elmName
@@ -2983,24 +3001,22 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(self.document)
             #内容あり要素の場合
-            elm = elementWithContent_1(elmName)
+            elementWithContent_1(elmName)
           end
 
-          elm
+          @elm_
         end
         private :element_1
 
         def elementWithoutContent_1(elmName)
           if @res then
-            elm = Element.new(elmName)
+            @elm_ = Element.new(elmName)
             #属性
-            elm.attributes = @res[1]
+            @elm_.attributes = @res[1]
             #空要素検索用パターン
-            elm.pattern = @pattern_cc
+            @elm_.pattern = @pattern_cc
             #else
           end
-
-          elm
         end
         private :elementWithoutContent_1
 
@@ -3025,7 +3041,7 @@ module Meteor
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             #空要素検索
             @res = @pattern.match(self.document)
-            elm = elementWithoutContent_3(elmName)
+            elementWithoutContent_3(elmName)
           else
             #内容あり要素検索パターン
             @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
@@ -3039,10 +3055,10 @@ module Meteor
               @res = elementWithContent_3_2(elmName)
             end
             
-            elm = elementWithContent_3_1(elmName)
+            elementWithContent_3_1(elmName)
           end
 
-          elm
+          @elm_
         end
         private :element_3
 
@@ -3068,11 +3084,11 @@ module Meteor
           @res = @pattern.match(self.document)
 
           if @res then
-            elm = element_3(@res[1],attrName,attrValue)
+            @elm_ = element_3(@res[1],attrName,attrValue)
             #else
           end
 
-          elm
+          @elm_
         end
         private :element_2
 
@@ -3095,9 +3111,18 @@ module Meteor
           @_attrValue2 = escapeRegex(attrValue2)
 
           #空要素の場合(<->内容あり要素の場合)
-
           if isMatch(MATCH_TAG,elmName) then
-            elm = elementWithoutContent_5(elmName)
+            #空要素検索パターン
+            @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
+            @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
+            @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
+            @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
+            @pattern_cc << @_attrValue1 << TAG_SEARCH_2_4_3_2
+            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+            #空要素検索
+            @res = @pattern.match(self.document)
+            
+            elementWithoutContent_5(elmName)
           else
             #内容あり要素検索パターン
             @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
@@ -3114,10 +3139,10 @@ module Meteor
               @res = elementWithContent_5_2(elmName)
             end
             
-            elm = elementWithContent_5_1(elmName)
+            elementWithContent_5_1(elmName)
           end
 
-          elm
+          @elm_
         end
         private :element_5
         
@@ -3152,11 +3177,11 @@ module Meteor
           @res = @pattern.match(self.document)
 
           if @res then
-            elm = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
+            @elm_ = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
             #else
           end
 
-          elm
+          @elm_
         end
         private :element_4
         

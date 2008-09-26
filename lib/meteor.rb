@@ -2005,8 +2005,8 @@ module Meteor
           @pattern_cc = '' << attrName << SET_ATTR_1
           #@pattern_cc = "#{attrName}=\"[^\"]*\""
           @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-          elm.pattern.sub!(@pattern,'' << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
-          #elm.pattern.sub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
+          elm.pattern.gsub!(@pattern,'' << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
+          #elm.pattern.gsub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
         end
       end
       private :editPattern_
@@ -2237,7 +2237,7 @@ module Meteor
             @pattern_cc = '' << attrName << SET_ATTR_1
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             
-            elm.pattern.sub!(@pattern,EMPTY)
+            elm.pattern.gsub!(@pattern,EMPTY)
           end
         end
       end
@@ -3436,7 +3436,7 @@ module Meteor
               #パターンの更新
               @pattern_cc = '' << attrName << SET_ATTR_1
               @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-              elm.pattern.sub!(@pattern, EMPTY)
+              elm.pattern.gsub!(@pattern, EMPTY)
             end
           end
         end

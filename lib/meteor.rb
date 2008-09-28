@@ -182,8 +182,6 @@ module Meteor
   #
   class RootElement
 
-    #EMPTY = ''
-
     #
     # イニシャライザ
     #
@@ -196,11 +194,7 @@ module Meteor
       @characterEncoding=''
 
       #フックドキュメント
-      #if RUBY_VERSION >= "1.9.0" then
-        @hookDocument =''
-      #else
-      #  @hookDocument = []
-      #end
+      @hookDocument =''
       #フック判定フラグ
       #@hook = false
       #単一要素フック判定フラグ
@@ -559,7 +553,7 @@ module Meteor
           list.each { |item|
             if pif2.rootElement.hook then
               pif2.rootElement.document = elm.mixed_content
-            elsif pif2.rootElement.monoHook then
+            #elsif pif2.rootElement.monoHook then
             end
             execute(pif2,item)
           }
@@ -932,7 +926,7 @@ module Meteor
         if RUBY_VERSION >= '1.9.0' then
           io = File.open(filePath,'r:' << encoding)
           #読込及び格納
-          self.document = io.read
+          @root.document = io.read
         else
           #読込及び格納
           io = open(filePath,'r')
@@ -1015,7 +1009,7 @@ module Meteor
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         #空要素検索
-        @res1 = @pattern.match(self.document)
+        @res1 = @pattern.match(@root.document)
         
         #内容あり要素検索用パターン
         @pattern_cc_2 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_1 << elmName
@@ -1114,7 +1108,7 @@ module Meteor
         @pattern_cc_1 << @_attrValue << TAG_SEARCH_2_3_2
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         #空要素検索
-        @res1 = @pattern.match(self.document)
+        @res1 = @pattern.match(@root.document)
         
         #内容あり要素検索パターン
         @pattern_cc_2 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
@@ -1229,7 +1223,7 @@ module Meteor
           
           @position = 0
           
-          while (@res = @pattern.match(self.document,@position)) || @cnt > 0
+          while (@res = @pattern.match(@root.document,@position)) || @cnt > 0
             
             if @res then
               
@@ -1296,7 +1290,7 @@ module Meteor
             else
               
               @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-              @res = @pattern.match(self.document,@position)
+              @res = @pattern.match(@root.document,@position)
               
               if @res then
                 @cnt -= 1
@@ -1427,7 +1421,7 @@ module Meteor
         end
         
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        @res = @pattern.match(self.document)
+        @res = @pattern.match(@root.document)
         
         @res
       end
@@ -1471,34 +1465,17 @@ module Meteor
         @pattern_cc = '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_2_4_2_3
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         
-        @res = @pattern.match(self.document)
+        @res = @pattern.match(@root.document)
         
         if @res then
           @elm_ = element_3(@res[1], attrName, attrValue)
         else
-          #elementWithoutContent_2(attrName, attrValue)
           @elm_ = nil
         end
         
         @elm_
       end
       private :element_2
-      
-      #def elementWithoutContent_2(attrName,attrValue)
-      #  
-      #  @pattern_cc= '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_3_2
-      #  
-      #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-      #  @res = @pattern.match(@root.document)
-      #  
-      #  if @res then
-      #    @elm_ = element_3(@res[1], attrName, attrValue);
-      #  else
-      #    @elm_ = nil
-      #    #raise NoSuchElementException.new(attrName,attrValue);
-      #  end
-      #end
-      #private :elementWithoutContent_2
       
       #
       # 要素名と属性1・属性2で検索し、要素を取得する
@@ -1526,7 +1503,7 @@ module Meteor
         @pattern_cc_1 << @_attrValue1 << TAG_SEARCH_2_3_2_2
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         #空要素検索
-        @res1 = @pattern.match(self.document)
+        @res1 = @pattern.match(@root.document)
         
         #内容あり要素検索パターン
         @pattern_cc_2 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
@@ -1654,7 +1631,7 @@ module Meteor
           
           @position = 0
           
-          while (@res = @pattern.match(self.document,@position)) || @cnt > 0
+          while (@res = @pattern.match(@root.document,@position)) || @cnt > 0
             
             if @res then
               
@@ -1720,7 +1697,7 @@ module Meteor
             else
               
               @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-              @res = @pattern.match(self.document,@position)
+              @res = @pattern.match(@root.document,@position)
               
               if @res then
                 
@@ -1852,7 +1829,7 @@ module Meteor
         end
         
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        @res = @pattern.match(self.document)
+        @res = @pattern.match(@root.document)
         
         @res
       end
@@ -1907,39 +1884,17 @@ module Meteor
 
         @pattern = PatternCache.get(@pattern_cc)
 
-        @res = @pattern.match(self.document)
+        @res = @pattern.match(@root.document)
 
         if @res then
           @elm_ = element_5(@res[1], attrName1, attrValue1,attrName2, attrValue2);
         else
           @elm_ = nil
-          #elementWithoutContent_4(attrName1, attrValue1,attrName2, attrValue2);
         end
 
         @elm_
       end
       private :element_4
-
-      #def elementWithoutContent_4(attrName1,attrValue1,attrName2,attrValue2)
-      #
-      #  @pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attrName1 << ATTR_EQ
-      #  @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
-      #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
-      #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
-      #  @pattern_cc << @_attrValue1 << TAG_SEARCH_3_2_2_2
-      #
-      #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-      #
-      #  @res = @pattern.match(@root.document)
-      #
-      #  if @res then
-      #    @elm_ = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
-      #  else
-      #    @elm_ = nil
-      #    #raise NoSuchElementException.new(attrName1,attrValue1,attrName2,attrValue2);
-      #  end
-      #end
-      #private :elementWithoutContent_4
 
       #
       # 要素の属性をセットする or 属性の値を取得する
@@ -1979,11 +1934,6 @@ module Meteor
           end
           
           @e_cache.store(elm.object_id, elm)
-          
-          #ドキュメントの更新
-          #editDocument_1(elm)
-          #パターンの更新
-          #editPattern_(elm)
         end
       end
       private :setAttribute_3
@@ -2047,8 +1997,8 @@ module Meteor
               
               #タグ検索用パターン
               @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-              self.document.sub!(@pattern,'' << TAG_OPEN << elm.name << @_attributes << TAG_CLOSE << @_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
-              #self.document.sub!(@pattern,"<#{elm.name}#{@_attributes}>#{@_content}</#{elm.name}>")
+              @root.document.sub!(@pattern,'' << TAG_OPEN << elm.name << @_attributes << TAG_CLOSE << @_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
+              #@root.document.sub!(@pattern,"<#{elm.name}#{@_attributes}>#{@_content}</#{elm.name}>")
             else
               #空要素の場合
               #タグ置換用パターン
@@ -2120,10 +2070,7 @@ module Meteor
         @res = @pattern.match(elm.attributes)
 
         if @res then
-          #@_attrValue = unescape(@res[1])
           unescape(@res[1])
-          #@res = nil
-          #return @_attrValue
         else
           nil
         end
@@ -2216,43 +2163,6 @@ module Meteor
         
         @e_cache.store(elm.object_id,elm)
         
-        #editDocument_1(elm)
-#        if !elm.parent then
-#          if !elm.cx then
-#            
-#            #内容あり要素の場合
-#            if elm.empty then
-#              
-#              @_content = content
-#              if elm.parser.rootElement.hook || elm.parser.rootElement.monoHook then
-#                replace4Regex(@_content)
-#              else
-#                replace2Regex(@_content)
-#              end
-#              
-#              #タグ検索パターン
-#              @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-#              #タグ置換
-#              self.document.sub!(@pattern,'' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << @_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
-#              #self.document.sub!(@pattern,"<#{elm.name}#{elm.attributes}>#{@_content}</#{elm.name}>")
-#            end
-#          else
-#            @_content = content
-#            if elm.parser.rootElement.hook || elm.parser.rootElement.monoHook then
-#              replace4Regex(@_content)
-#            else
-#              replace2Regex(@_content)
-#            end
-#            
-#            @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-#            
-#            #タグ置換
-#            @pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2
-#            @pattern_cc << @_content << SET_CX_3 << elm.name << SET_CX_4
-#            #@pattern_cc = "<!-- @#{elm.name} #{elm.attributes}-->#{@_content}<!-- /@#{elm.name} -->"
-#            @root.document.sub!(@pattern,@pattern_cc)
-#          end
-#        end
       end
       private :setContent_3
 
@@ -2357,7 +2267,7 @@ module Meteor
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         #CXタグ検索
-        @res = @pattern.match(self.document)
+        @res = @pattern.match(@root.document)
 
         if @res then
           #要素
@@ -2396,7 +2306,7 @@ module Meteor
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
-        @res = @pattern.match(self.document)
+        @res = @pattern.match(@root.document)
 
         if @res then
           @elm_ = cxtag(@res[1],id)
@@ -2440,79 +2350,54 @@ module Meteor
       #
       def print
         reflect()
-        #if RUBY_VERSION >= "1.9.0" then
-          if self.hook then
-            @_attributes = @root.mutableElement.attributes
-            replace2Regex(@_attributes)
+        
+        if @root.hook then
+          @_attributes = @root.mutableElement.attributes
+          replace2Regex(@_attributes)
+          if @root.element.cx then
+            #@root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
+            #@root.hookDocument << @_attributes << SET_CX_2
+            #@root.hookDocument << @root.document << SET_CX_3
+            #@root.hookDocument << @root.mutableElement.name << SET_CX_4
+            @root.hookDocument << "<!-- @#{@root.mutableElement.name} #{@_attributes}-->#{@root.document}<!-- /@#{@root.mutableElement.name} -->"
+          else
+            #@root.hookDocument << TAG_OPEN << @root.mutableElement.name
+            #@root.hookDocument << @_attributes << TAG_CLOSE << @root.document
+            #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
+            @root.hookDocument << "<#{@root.mutableElement.name}#{@_attributes}>#{@root.document}</#{@root.mutableElement.name}>"
+          end
+          @root.mutableElement = Element.new(@root.element)
+          @root.document = String.new(@root.element.mixed_content)
+        else
+          if @root.monoHook then
             if @root.element.cx then
               #@root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-              #@root.hookDocument << @_attributes << SET_CX_2
-              #@root.hookDocument << @root.document << SET_CX_3
+              #@root.hookDocument << @root.mutableElement.attributes << SET_CX_2
+              #@root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
               #@root.hookDocument << @root.mutableElement.name << SET_CX_4
-              @root.hookDocument << "<!-- @#{@root.mutableElement.name} #{@_attributes}-->#{@root.document}<!-- /@#{@root.mutableElement.name} -->"
+              @root.hookDocument << "<!-- @#{@root.mutableElement.name} #{@root.mutableElement.attributes}-->#{@root.mutableElement.mixed_content}<!-- /@#{@root.mutableElement.name} -->"
             else
               #@root.hookDocument << TAG_OPEN << @root.mutableElement.name
-              #@root.hookDocument << @_attributes << TAG_CLOSE << self.document
+              #@root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
               #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-              @root.hookDocument << "<#{@root.mutableElement.name}#{@_attributes}>#{@root.document}</#{@root.mutableElement.name}>"
+              @root.hookDocument << "<#{@root.mutableElement.name}#{@root.mutableElement.attributes}>#{@root.mutableElement.mixed_content}</#{@root.mutableElement.name}>"
             end
             @root.mutableElement = Element.new(@root.element)
-            @root.document = String.new(@root.element.mixed_content)
           else
-            if self.monoHook then
-              if @root.element.cx then
-                #@root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-                #@root.hookDocument << @root.mutableElement.attributes << SET_CX_2
-                #@root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
-                #@root.hookDocument << @root.mutableElement.name << SET_CX_4
-                @root.hookDocument << "<!-- @#{@root.mutableElement.name} #{@root.mutableElement.attributes}-->#{@root.mutableElement.mixed_content}<!-- /@#{@root.mutableElement.name} -->"
-              else
-                #@root.hookDocument << TAG_OPEN << @root.mutableElement.name
-                #@root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
-                #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-                @root.hookDocument << "<#{@root.mutableElement.name}#{@root.mutableElement.attributes}>#{@root.mutableElement.mixed_content}</#{@root.mutableElement.name}>"
-              end
-              @root.mutableElement = Element.new(@root.element)
-            else
-              #フック判定がFALSEの場合
-              clean
-            end
+            #フック判定がFALSEの場合
+            clean
           end
-        #else
-        #  if @root.hook then
-        #    @_attributes = @root.mutableElement.attributes
-        #    replace2Regex(@_attributes)
-        #    if @root.element.cx then
-        #      @root.hookDocument.push(SET_CX_1,@root.mutableElement.name,SPACE,@_attributes,SET_CX_2,self.document,SET_CX_3,@root.mutableElement.name,SET_CX_4)
-        #    else
-        #      @root.hookDocument.push(TAG_OPEN,@root.mutableElement.name,@_attributes,TAG_CLOSE,@root.document,TAG_OPEN3,@root.mutableElement.name,TAG_CLOSE)
-        #    end
-        #    @root.mutableElement = Element.new(@root.element)
-        #    self.document = String.new(@root.element.mixed_content)
-        #  else
-        #    if @root.monoHook then
-        #      if @root.element.cx then
-        #        @root.hookDocument.push(SET_CX_1,@root.mutableElement.name,SPACE,@root.mutableElement.attributes,SET_CX_2,@root.mutableElement.mixed_content,SET_CX_3,@root.mutableElement.name,SET_CX_4)
-        #      else
-        #        @root.hookDocument.push(TAG_OPEN,@root.mutableElement.name,@root.mutableElement.attributes,TAG_CLOSE,@root.mutableElement.mixed_content,TAG_OPEN3,@root.mutableElement.name,TAG_CLOSE)
-        #      end
-        #      @root.mutableElement = Element.new(@root.element)
-        #    else
-        #      #フック判定がFALSEの場合
-        #      clean
-        #    end
-        #  end
-        #end
+        end
       end
-
+      
       def clean
         #CX開始タグ置換
         @pattern = @@pattern_clean1
-        self.document.gsub!(@pattern,EMPTY)
+        @root.document.gsub!(@pattern,EMPTY)
         #CX終了タグ置換
         @pattern = @@pattern_clean2
         @root.document.gsub!(@pattern,EMPTY)
-        #self.document = @root.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
+        #@root.document = @root.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
       end
       private :clean
       
@@ -2558,13 +2443,8 @@ module Meteor
       def flush
         if @root.hook || @root.monoHook then
           if @root.element then
-            #reflect
             @parent.reflect
-            #if RUBY_VERSION >= "1.9.0" then
-              @parent.replace(@root.element, @root.hookDocument)
-            #else
-            #  @parent.replace(@root.element, @root.hookDocument.join)
-            #end
+            @parent.replace(@root.element, @root.hookDocument)
           end
         end
       end
@@ -3044,16 +2924,10 @@ module Meteor
         # @param [Meteor::Parser] ps パーサ
         #
         def initialize_1(ps)
-          #ps = Marshal.load(Marshal.dump(ps))
-          self.document = String.new(ps.document)
-          #if RUBY_VERSION >= "1.9.0" then
-            @root.hookDocument = String.new(ps.hookDocument)
-          #else
-          #  @root.hookDocument = Array.new(ps.hookDocument)
-          #end
+          @root.document = String.new(ps.document)
+          @root.hookDocument = String.new(ps.hookDocument)
           @root.hook = ps.hook
-          self.monoHook = ps.monoHook
-          #@root.element = ps.element
+          @root.monoHook = ps.monoHook
           @root.contentType = String.new(ps.contentType);
         end
         private :initialize_1
@@ -3064,7 +2938,7 @@ module Meteor
         # @param [String] document ドキュメント
         #
         def parse(document)
-          self.document = document
+          @root.document = document
           analyzeML()
         end
 
@@ -3146,7 +3020,7 @@ module Meteor
             #空要素検索用パターン
             @pattern_cc = '' << TAG_OPEN << @_elmName << TAG_SEARCH_1_4_2
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-            @res = @pattern.match(self.document)
+            @res = @pattern.match(@root.document)
             if @res then
               elementWithoutContent_1(elmName)
             else
@@ -3205,7 +3079,7 @@ module Meteor
             @pattern_cc << @_attrValue << TAG_SEARCH_2_4_3
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             #空要素検索
-            @res = @pattern.match(self.document)
+            @res = @pattern.match(@root.document)
             if @res then
               elementWithoutContent_3(elmName)
             else
@@ -3259,7 +3133,7 @@ module Meteor
           @pattern_cc = '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue
           @pattern_cc << TAG_SEARCH_2_4_4
           @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-          @res = @pattern.match(self.document)
+          @res = @pattern.match(@root.document)
 
           if @res then
             @elm_ = element_3(@res[1],attrName,attrValue)
@@ -3316,7 +3190,7 @@ module Meteor
             @pattern_cc << TAG_SEARCH_1_2 << @_elmName << TAG_CLOSE
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             #内容あり要素検索
-            @res = @pattern.match(self.document)
+            @res = @pattern.match(@root.document)
             
             if !@res then
               @res = elementWithContent_5_2(elmName)
@@ -3939,16 +3813,10 @@ module Meteor
         # @param [Meteor::Parser] ps パーサ
         #
         def initialize_1(ps)
-          #ps = Marshal.load(Marshal.dump(ps))
           @root.document = String.new(ps.document)
-          #if RUBY_VERSION >= "1.9.0" then
-            @root.hookDocument = String.new(ps.hookDocument)
-          #else
-          #  @root.hookDocument = Array.new(ps.hookDocument)
-          #end
+          @root.hookDocument = String.new(ps.hookDocument)
           @root.hook = ps.hook
           @root.monoHook = ps.monoHook
-          #@root.element = ps.element
           @root.contentType = String.new(ps.contentType);
         end
         private :initialize_1
@@ -4469,11 +4337,7 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          #if RUBY_VERSION >= "1.9.0" then
-            @root.hookDocument = String.new(ps.hookDocument)
-          #else
-          #  @root.hookDocument = Array.new(ps.hookDocument)
-          #end
+          @root.hookDocument = String.new(ps.hookDocument)
           @root.hook = ps.hook
           @root.monoHook = ps.monoHook
           @root.contentType = String.new(ps.contentType);
@@ -4574,17 +4438,6 @@ module Meteor
             raise ArgumentError
           end
         end
-
-        #
-        # 要素の属性マップを取得する
-        # 
-        # @param [Meteor::Element] 要素
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        #def getAttributeMap_1(elm)
-        #  super(elm)
-        #end
-        #private :getAttributeMap_1
 
         #
         # 要素の属性マップを取得する

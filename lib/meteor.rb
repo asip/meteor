@@ -619,6 +619,7 @@ module Meteor
       #TAG_SEARCH_2_4_2 = "\"[^<>\\/]*)>"
       TAG_SEARCH_2_4_2 = "(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
       TAG_SEARCH_2_4_2_2 = "\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))"
+      TAG_SEARCH_2_4_2_3 = "\""
       TAG_SEARCH_2_4_3 = "\"[^<>]*)>"
       TAG_SEARCH_2_4_3_2 = "\")[^<>]*)>"
       TAG_SEARCH_2_4_4 = "\"[^<>]*>"
@@ -636,6 +637,7 @@ module Meteor
       TAG_SEARCH_NC_2_4 = "(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
       TAG_SEARCH_NC_2_4_2 = "(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
       TAG_SEARCH_NC_2_4_2_2 = "\")(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+      TAG_SEARCH_NC_2_4_2_3 = "\""
       TAG_SEARCH_NC_2_4_3 = "\"[^<>]*>"
       TAG_SEARCH_NC_2_4_3_2 = "\")[^<>]*>"
       TAG_SEARCH_NC_2_4_4 = "\"[^<>]*>"
@@ -1465,7 +1467,8 @@ module Meteor
         @_attrName = escapeRegex(attrName)
         @_attrValue = escapeRegex(attrValue)
         
-        @pattern_cc = '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_2_4
+        #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_2_4
+        @pattern_cc = '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_2_4_2_3
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         
         @res = @pattern.match(self.document)
@@ -1473,28 +1476,29 @@ module Meteor
         if @res then
           @elm_ = element_3(@res[1], attrName, attrValue)
         else
-          elementWithoutContent_2(attrName, attrValue)
+          #elementWithoutContent_2(attrName, attrValue)
+          @elm_ = nil
         end
         
         @elm_
       end
       private :element_2
       
-      def elementWithoutContent_2(attrName,attrValue)
-        
-        @pattern_cc= '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_3_2
-        
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        @res = @pattern.match(@root.document)
-        
-        if @res then
-          @elm_ = element_3(@res[1], attrName, attrValue);
-        else
-          @elm_ = nil
-          #raise NoSuchElementException.new(attrName,attrValue);
-        end
-      end
-      private :elementWithoutContent_2
+      #def elementWithoutContent_2(attrName,attrValue)
+      #  
+      #  @pattern_cc= '' << TAG_SEARCH_3_1 << @_attrName << ATTR_EQ << @_attrValue << TAG_SEARCH_3_2
+      #  
+      #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+      #  @res = @pattern.match(@root.document)
+      #  
+      #  if @res then
+      #    @elm_ = element_3(@res[1], attrName, attrValue);
+      #  else
+      #    @elm_ = nil
+      #    #raise NoSuchElementException.new(attrName,attrValue);
+      #  end
+      #end
+      #private :elementWithoutContent_2
       
       #
       # 要素名と属性1・属性2で検索し、要素を取得する
@@ -1899,7 +1903,7 @@ module Meteor
         @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
         @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
         @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
-        @pattern_cc << @_attrValue1 << TAG_SEARCH_2_4_2_2
+        @pattern_cc << @_attrValue1 << TAG_SEARCH_2_4_2_3
 
         @pattern = PatternCache.get(@pattern_cc)
 
@@ -1908,33 +1912,34 @@ module Meteor
         if @res then
           @elm_ = element_5(@res[1], attrName1, attrValue1,attrName2, attrValue2);
         else
-          elementWithoutContent_4(attrName1, attrValue1,attrName2, attrValue2);
+          @elm_ = nil
+          #elementWithoutContent_4(attrName1, attrValue1,attrName2, attrValue2);
         end
 
         @elm_
       end
       private :element_4
 
-      def elementWithoutContent_4(attrName1,attrValue1,attrName2,attrValue2)
-
-        @pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attrName1 << ATTR_EQ
-        @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
-        @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
-        @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
-        @pattern_cc << @_attrValue1 << TAG_SEARCH_3_2_2_2
-
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-
-        @res = @pattern.match(@root.document)
-
-        if @res then
-          @elm_ = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
-        else
-          @elm_ = nil
-          #raise NoSuchElementException.new(attrName1,attrValue1,attrName2,attrValue2);
-        end
-      end
-      private :elementWithoutContent_4
+      #def elementWithoutContent_4(attrName1,attrValue1,attrName2,attrValue2)
+      #
+      #  @pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attrName1 << ATTR_EQ
+      #  @pattern_cc << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
+      #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
+      #  @pattern_cc << @_attrValue2 << TAG_SEARCH_2_6 << @_attrName1 << ATTR_EQ
+      #  @pattern_cc << @_attrValue1 << TAG_SEARCH_3_2_2_2
+      #
+      #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+      #
+      #  @res = @pattern.match(@root.document)
+      #
+      #  if @res then
+      #    @elm_ = element_5(@res[1],attrName1,attrValue1,attrName2,attrValue2)
+      #  else
+      #    @elm_ = nil
+      #    #raise NoSuchElementException.new(attrName1,attrValue1,attrName2,attrValue2);
+      #  end
+      #end
+      #private :elementWithoutContent_4
 
       #
       # 要素の属性をセットする or 属性の値を取得する
@@ -2306,35 +2311,6 @@ module Meteor
           end
           
           @e_cache.store(elm.object_id,elm)
-          
-          #editDocument_1(elm)
-          
-          #editPattern_(elm)
-          
-#          if !@parent then
-#            #タグ置換用パターン
-#            @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-#            
-#            if elm.empty then
-#              #内容あり要素の場合
-#              #@_content = elm.mixed_content
-#              
-#              @pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE
-#              @pattern_cc << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-#              @root.document.sub!(@pattern,@pattern_cc)
-#            else
-#              #空要素の場合
-#              @pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE2
-#              @root.document.sub!(@pattern,@pattern_cc)
-#            end
-#
-#            if elm.arguments.include?(attrName) then
-#              #パターンの更新
-#              @pattern_cc = '' << attrName << SET_ATTR_1
-#              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-#              elm.pattern.sub!(@pattern,EMPTY)
-#            end
-#          end
         end
       end
       private :removeAttribute_2
@@ -2346,6 +2322,7 @@ module Meteor
       #
       def removeElement(elm)
           replace(elm,EMPTY)
+          @e_cache.delete(elm.object_id)
       end
 
       #

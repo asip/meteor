@@ -3471,25 +3471,31 @@ module Meteor
               #end
             end
             
-            if !@parent then
-              #要素検索用パターン
-              @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-              
-              if elm.empty then
-                #内容あり要素の場合
-                @root.document.sub!(@pattern, '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
-              else
-                #空要素の場合
-                @root.document.sub!(@pattern, '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE)
-              end
+            if !isMatch(ATTR_LOGIC,attrName) && elm.arguments.map.include?(attrName) then
+              elm.arguments.delete(attrName)
             end
             
-            if !@parent && !isMatch(ATTR_LOGIC,attrName) then
-              #パターンの更新
-              @pattern_cc = '' << attrName << SET_ATTR_1
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-              elm.pattern.sub!(@pattern, EMPTY)
-            end
+            @e_cache.store(elm.object_id,elm)
+            
+            #if !@parent then
+            #  #要素検索用パターン
+            #  @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
+            #  
+            #  if elm.empty then
+            #    #内容あり要素の場合
+            #    @root.document.sub!(@pattern, '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
+            #  else
+            #    #空要素の場合
+            #    @root.document.sub!(@pattern, '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE)
+            #  end
+            #end
+            
+            #if !@parent && !isMatch(ATTR_LOGIC,attrName) then
+            #  #パターンの更新
+            #  @pattern_cc = '' << attrName << SET_ATTR_1
+            #  @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+            #  elm.pattern.gsub!(@pattern, EMPTY)
+            #end
           end
         end
         private :removeAttribute_2

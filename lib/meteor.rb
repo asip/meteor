@@ -2117,15 +2117,17 @@ module Meteor
       # @param [Meteor::AttributeMap] attrMap 属性マップ
       #
       def setAttribute_2_m(elm,attrMap)
-
-        attrMap.map.each_key{|key|
-          if attrMap.changed(key) then
-            editAttributes_(elm,key,attrMap.map[key])
-            editPattern_(elm,key,attrMap.map[key])
-          end
-        }
-
-        @e_cache.store(elm.object_id,elm)
+        if !elm.cx then
+          attrMap.map.each{|name,attr|
+            if attrMap.changed(name) then
+              editAttributes_(elm,name,attr.value)
+            elsif attrMap.removed(name) then
+              removeAttributes_(elm,name)
+            end
+          }
+          
+          @e_cache.store(elm.object_id,elm)
+        end
       end
       private :setAttribute_2_m
 
@@ -2211,10 +2213,7 @@ module Meteor
       def removeAttribute_2(elm,attrName)
         if !elm.cx then
 
-          #属性検索用パターン
-          @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << ERASE_ATTR_1)
-          #属性の置換
-          elm.attributes.sub!(@pattern,EMPTY)
+          removeAttributes_(elm,attrName)
 
           if elm.arguments.map.include?(attrName) then
             elm.arguments.delete(attrName)
@@ -2225,6 +2224,14 @@ module Meteor
       end
       private :removeAttribute_2
 
+      def removeAttributes_(elm,attrName)
+        #属性検索用パターン
+        @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << ERASE_ATTR_1)
+        #属性の置換
+        elm.attributes.sub!(@pattern,EMPTY)
+      end
+      private :removeAttributes_
+      
       #
       # 要素を消す
       # 
@@ -3450,36 +3457,21 @@ module Meteor
           end
         end
 
-        #
-        # 要素の属性を消す
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] attrName 属性名
-        #
-        def removeAttribute_2(elm,attrName)
-
-          if !elm.cx then
-            #検索対象属性の論理型是非判定
-            if !isMatch(ATTR_LOGIC,attrName) then
-              #属性検索用パターン
-              @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << ERASE_ATTR_1)
-              elm.attributes.sub!(@pattern, EMPTY)
-            else
-              #属性検索用パターン
-              @pattern = Meteor::Core::Util::PatternCache.get(attrName)  
-              elm.attributes.sub!(@pattern, EMPTY)
-              #end
-            end
-            
-            if !isMatch(ATTR_LOGIC,attrName) && elm.arguments.map.include?(attrName) then
-              elm.arguments.delete(attrName)
-            end
-            
-            @e_cache.store(elm.object_id,elm)
+        def removeAttributes_(elm,attrName)
+          #検索対象属性の論理型是非判定
+          if !isMatch(ATTR_LOGIC,attrName) then
+            #属性検索用パターン
+            @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << ERASE_ATTR_1)
+            elm.attributes.sub!(@pattern, EMPTY)
+          else
+            #属性検索用パターン
+            @pattern = Meteor::Core::Util::PatternCache.get(attrName)  
+            elm.attributes.sub!(@pattern, EMPTY)
+            #end
           end
         end
-        private :removeAttribute_2
-
+        private :removeAttributes_
+        
         #
         # 要素の属性を消す
         # 

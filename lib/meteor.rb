@@ -2902,6 +2902,9 @@ module Meteor
         @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
 
+        GET_ATTRS_MAP2="\\s(disabled|readonly|checked|selected|multiple)"
+        @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
+        
         #
         # イニシャライザ
         # 
@@ -3422,10 +3425,22 @@ module Meteor
         # @param [Meteor::Element] elm 要素
         # @return [Meteor::AttributeMap] 属性マップ
         #
-        #def getAttributeMap_1(elm)
-        #  super(elm)
-        #end
-        #private :getAttributeMap_1
+        def getAttributeMap_1(elm)
+          attrs = Meteor::AttributeMap.new
+          
+          elm.attributes.scan(@@pattern_get_attrs_map){ |a,b|
+            attrs.store(a,unescape(b))
+          }
+          
+          elm.attributes.scan(@@pattern_get_attrs_map2){ |a|
+            attrs.store(a, TRUE)
+          }
+          
+          attrs.recordable = true
+          
+          attrs
+        end
+        private :getAttributeMap_1
 
         #
         # 要素の属性マップを取得する
@@ -3670,6 +3685,7 @@ module Meteor
         #MATCH_TAG_2 = "textarea|option|pre"
         MATCH_TAG_2 = ['textarea','option','pre']
         
+        ATTR_LOGIC = ['disabled','readonly','checked','selected','multiple']
         OPTION = 'option'
         SELECTED = 'selected'
         INPUT = 'input'
@@ -4050,7 +4066,7 @@ module Meteor
           when 0
             getAttributeMap_0
           when 1
-            getAttributeMap_1(args[1])
+            getAttributeMap_1(args[0])
           else
             raise ArgumentError
           end
@@ -4069,7 +4085,29 @@ module Meteor
           end
         end
         private :getAttributeMap_0
-
+        
+        #
+        # 属性マップを取得する
+        # 
+        # @param [Meteor::Element] elm 要素
+        # @return [Meteor::AttributeMap] 属性マップ
+        #
+        def getAttributeMap_1(elm)
+          attrs = Meteor::AttributeMap.new
+          
+          elm.attributes.scan(@@pattern_get_attrs_map){ |a,b|
+            if isMatch(ATTR_LOGIC,a) && a==b then
+              attrs.store(a,TRUE)
+            else
+              attrs.store(a,unescape(b))
+            end  
+          }
+          attrs.recordable = true
+          
+          attrs
+        end
+        private :getAttributeMap_1
+        
         #
         # 要素の属性を消す
         # 

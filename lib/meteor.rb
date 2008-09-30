@@ -2085,6 +2085,8 @@ module Meteor
       #
       def attributeMap(*args)
         case args.length
+        when 0
+          getAttributeMap_0
         when 1
           getAttributeMap_1(args[0])
         else
@@ -2109,6 +2111,20 @@ module Meteor
         attrs
       end
       private :getAttributeMap_1
+      
+      #
+      # 要素の属性マップを取得する
+      # 
+      # @return [Meteor::AttributeMap] 属性マップ
+      #
+      def getAttributeMap_0()
+        if @root.hook || @root.monoHook then
+          getAttributeMap_1(@root.mutableElement)
+        else
+          nil
+        end
+      end
+      private :getAttributeMap_0
       
       #
       # 要素の属性を編集する
@@ -3401,24 +3417,7 @@ module Meteor
           end
         end
         private :getAttributeValue_1
-
-        #
-        # 属性マップを取得する
-        # 
-        # @param [Array] 引数配列
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        def attributeMap(*args)
-          case args.length
-          when 0
-            getAttributeMap_0
-          when 1
-            getAttributeMap_1(args[0])
-          else
-            raise ArgumentError
-          end
-        end
-
+        
         #
         # 要素の属性マップを取得する
         # 
@@ -3441,20 +3440,6 @@ module Meteor
           attrs
         end
         private :getAttributeMap_1
-
-        #
-        # 要素の属性マップを取得する
-        # 
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        def getAttributeMap_0()
-          if @root.hook || @root.monoHook then
-            getAttributeMap_1(@root.mutableElement)
-          else
-            nil
-          end
-        end
-        private :getAttributeMap_0
 
         #
         # 要素の属性を消す
@@ -4056,37 +4041,6 @@ module Meteor
         private :getAttributeValue_1
         
         #
-        # 要素の属性マップを取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        def attributeMap(*args)
-          case args.length
-          when 0
-            getAttributeMap_0
-          when 1
-            getAttributeMap_1(args[0])
-          else
-            raise ArgumentError
-          end
-        end
-
-        #
-        # 要素の属性マップを取得する
-        # 
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        def getAttributeMap_0()
-          if @root.hook || @root.monoHook then
-            getAttributeMap_1(@root.mutableElement)
-          else
-            nil
-          end
-        end
-        private :getAttributeMap_0
-        
-        #
         # 属性マップを取得する
         # 
         # @param [Meteor::Element] elm 要素
@@ -4437,37 +4391,6 @@ module Meteor
           end
         end
         private :getAttributeValue_1
-
-        #
-        # 要素の属性マップを取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        def attributeMap(*args)
-          case args.length
-          when 0
-            getAttributeMap_0
-          when 1
-            getAttributeMap_1(args[0])
-          else
-            raise ArgumentError
-          end
-        end
-
-        #
-        # 要素の属性マップを取得する
-        # 
-        # @return [Meteor::AttributeMap] 属性マップ
-        #
-        def getAttributeMap_0()
-          if @root.hook || @root.monoHook then
-            getAttributeMap_1(@root.mutableElement)
-          else
-            nil
-          end
-        end
-        private :getAttributeMap_0
 
         #
         # 要素の属性を消す

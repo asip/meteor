@@ -1904,11 +1904,17 @@ module Meteor
       #
       def attribute(*args)
         case args.length
+        when 1
+          getAttributeValue_1(args[0])
         when 2
           if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             getAttributeValue_2(args[0],args[1])
+          elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
+            setAttribute_2(args[0],args[1])
           elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
             setAttribute_2_m(args[0],args[1])
+          else
+            raise ArgumentError
           end
         when 3
           setAttribute_3(args[0],args[1],args[2])
@@ -1916,7 +1922,7 @@ module Meteor
           raise ArgumentError
         end
       end
-
+      
       #
       # 要素の属性を編集する
       #
@@ -2051,6 +2057,19 @@ module Meteor
       private :editPattern_
 
       #
+      # 要素の属性を編集する
+      # 
+      # @param [String] attrName 属性名
+      # @param [String] attrValue 属性値
+      #
+      def setAttribute_2(attrName,attrValue)
+        if @root.hook || @root.monoHook then
+          setAttribute_3(@root.mutableElement, attrName, attrValue)
+        end
+      end
+      private :setAttribute_2
+      
+      #
       # 要素の属性値を取得する
       #
       # @param [Meteor::Element] elm 要素
@@ -2076,7 +2095,22 @@ module Meteor
         end
       end
       private :getAttributeValue_
-
+      
+      #
+      # 要素の属性値を取得する
+      # 
+      # @param [String] attrName 属性名
+      # @return [String] 属性値
+      #
+      def getAttributeValue_1(attrName)
+        if @root.hook || @root.monoHook then
+          getAttributeValue_2(@root.mutableElement, attrName)
+        else
+          nil
+        end
+      end
+      private :getAttributeValue_1
+      
       #
       # 属性マップを取得する
       # 
@@ -2146,7 +2180,7 @@ module Meteor
         end
       end
       private :setAttribute_2_m
-
+ 
       #
       # 要素の内容をセットする or 内容を取得する
       # 
@@ -2154,16 +2188,28 @@ module Meteor
       # @return [String] 内容
       #
       def content(*args)
-        case args.lengh
+        case args.length
         when 1
-          getContent_1(args[0])
+          if args[0].kind_of?(Meteor::Element) then
+            getContent_1(args[0])
+          elsif args[0].kind_of?(String) then
+            setContent_1(args[0])
+          end
         when 2
-          setContent_2(args[0],args[1])
+          if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
+            setContent_2_s(args[0],args[1])
+          elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClsss)) then
+            setContent_2_b(args[0],args[1])
+          else
+            raise ArgumentError
+          end
         when 3
           setContent_3(args[0],args[1],args[2])
+        else
+          raise ArgumentError
         end
       end
-
+      
       #
       # 要素の内容をセットする
       #
@@ -2185,16 +2231,41 @@ module Meteor
       private :setContent_3
 
       #
-      # 要素の内容をセットする
+      # 要素の内容を編集する
       # 
-      # @param [Meteor::Element] elm 要素
+      # @param [Meteor::Element] 要素
       # @param [String] mixed_content 要素の内容
       #
-      def setContent_2(elm,content)
-        setContent_3(elm,content)
+      def setContent_2_s(elm,content)
+        setContent_3(elm, content)
       end
-      private :setContent_2
-
+      private :setContent_2_s
+      
+      #
+      # 要素の内容を編集する
+      # 
+      # @param [String] mixed_content 内容
+      #
+      def setContent_1(content)
+        if @root.monoHook then
+          setContent_2_s(@root.mutableElement, content)
+        end
+      end
+      private :setContent_1
+      
+      #
+      # 要素の内容を編集する
+      # 
+      # @param [String] mixed_content 内容
+      # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
+      #
+      def setContent_2_b(content,entityRef)
+        if @root.monoHook then
+          setContent_3(@root.mutableElement, content, entityRef)
+        end
+      end
+      private :setContent_2_b
+      
       def getContent_1(elm)
         if !elm.cx then
           if elm.empty then
@@ -2213,6 +2284,8 @@ module Meteor
       #
       def removeAttribute(*args)
         case args.length
+        when 1
+          removeAttribute_1(args[0])
         when 2
           removeAttribute_2(args[0],args[1])
         else
@@ -2247,6 +2320,18 @@ module Meteor
         elm.attributes.sub!(@pattern,EMPTY)
       end
       private :removeAttributes_
+      
+      #
+      # 要素の属性を消す
+      # 
+      # @param [String] attrName 属性名
+      #
+      def removeAttribute_1(attrName)
+        if @root.hook || @root.monoHook then
+          removeAttribute_2(@root.mutableElement, attrName)
+        end
+      end
+      private :removeAttribute_1
       
       #
       # 要素を消す
@@ -3278,33 +3363,6 @@ module Meteor
           @elm_
         end
         private :element_4
-        
-        #
-        # 要素の属性をセットする or 属性の値を取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [String] 属性値
-        #
-        def attribute(*args)
-          case args.length
-          when 1
-            getAttributeValue_1(args[0])
-          when 2
-            if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-              getAttributeValue_2(args[0],args[1])
-            elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
-              setAttribute_2(args[0],args[1])
-            elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
-              setAttribute_2_m(args[0],args[1])
-            else
-              raise ArgumentError
-            end
-          when 3
-            setAttribute_3(args[0],args[1],args[2])
-          else
-            raise ArgumentError
-          end
-        end
 
         def editAttributes_(elm,attrName,attrValue)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
@@ -3350,19 +3408,6 @@ module Meteor
         end
         private :editDocument_1
 
-        #
-        # 要素の属性を編集する
-        # 
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        #
-        def setAttribute_2(attrName,attrValue)
-          if @root.hook || @root.monoHook then
-            setAttribute_3(@root.mutableElement, attrName, attrValue)
-          end
-        end
-        private :setAttribute_2
-
         def getAttributeValue_(elm,attrName)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
             getAttributeValue_2_r(elm,@@pattern_selected_m)
@@ -3402,21 +3447,6 @@ module Meteor
           end
         end
         private :getAttributeValue_2_r
-
-        #
-        # 要素の属性値を取得する
-        # 
-        # @param [String] attrName 属性名
-        # @return [String] 属性値
-        #
-        def getAttributeValue_1(attrName)
-          if @root.hook || @root.monoHook then
-            getAttributeValue_2(@root.mutableElement, attrName)
-          else
-            nil
-          end
-        end
-        private :getAttributeValue_1
         
         #
         # 要素の属性マップを取得する
@@ -3441,22 +3471,6 @@ module Meteor
         end
         private :getAttributeMap_1
 
-        #
-        # 要素の属性を消す
-        # 
-        # @param [Array] args 引数配列
-        #
-        def removeAttribute(*args)
-          case args.length
-          when 1
-            removeAttribute_1(args[0])
-          when 2
-            removeAttribute_2(args[0],args[1])
-          else
-            raise ArgumentError
-          end
-        end
-
         def removeAttributes_(elm,attrName)
           #検索対象属性の論理型是非判定
           if !isMatch(ATTR_LOGIC,attrName) then
@@ -3471,83 +3485,6 @@ module Meteor
           end
         end
         private :removeAttributes_
-        
-        #
-        # 要素の属性を消す
-        # 
-        # @param [String] attrName 属性名
-        #
-        def removeAttribute_1(attrName)
-          if @root.hook || @root.monoHook then
-            removeAttribute(@root.mutableElement, attrName)
-          end
-        end
-        private :removeAttribute_1
-        
-        #
-        # 要素の内容をセットする or 内容を取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [String] 内容
-        #
-        def content(*args)
-          case args.length
-          when 1
-            if args[0].kind_of?(Meteor::Element) then
-              getContent_1(args[0])
-            elsif args[0].kind_of?(String) then
-              setContent_1(args[0])
-            else
-              raise ArgumentError
-            end
-          when 2
-            if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-              setContent_2_s(args[0],args[1])
-            elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of_?(FalseClsss)) then
-              setContent_2_b(args[0],args[1])
-            else
-              raise ArgumentError
-            end
-          when 3
-            setContent_3(args[0],args[1],args[2])
-          end
-        end
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] mixed_content 内容
-        #
-        def setContent_2_s(elm,content)
-          setContent_3(elm, content)
-        end
-        private :setContent_2_s
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [String] mixed_content 内容
-        # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
-        #
-        def setContent_2_b(content,entityRef)
-          if @root.monoHook then
-            setContent_3(@root.mutableElement, content, entityRef)
-          end
-        end
-        private :setContent_2_b
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [String] mixed_content 内容
-        #
-        def setContent_1(content)
-          if @root.monoHook then
-            setContent_2_s(@root.mutableElement,content)
-          end
-        end
-        private :setContent_1
 
         def setMonoInfo(elm)
 
@@ -3874,33 +3811,6 @@ module Meteor
         end
         private :analyzeKaigyoCode
 
-        #
-        # 要素の属性をセットする or 属性の値を取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [String] 属性値
-        #
-        def attribute(*args)
-          case args.length
-          when 1
-            getAttributeValue_1(args[0])
-          when 2
-            if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-              getAttributeValue_2(args[0],args[1])
-            elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
-              setAttribute_2(args[0],args[1])
-            elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
-              setAttribute_2_m(args[0],args[1])
-            else
-              raise ArgumentError
-            end
-          when 3
-            setAttribute_3(args[0],args[1],args[2])
-          else
-            raise ArgumentError
-          end
-        end
-
         def editAttributes_(elm,attrName,attrValue)
 
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
@@ -3947,19 +3857,6 @@ module Meteor
           
         end
         private :editAttributes_5
-
-        #
-        # 要素の属性を編集する
-        # 
-        # @param attrName 属性名
-        # @param attrValue 属性値
-        #
-        def setAttribute_2(attrName,attrValue)
-          if @root.hook || @root.monoHook then
-            setAttribute_3(@root.mutableElement, attrName, attrValue)
-          end
-        end
-        private :setAttribute_2
         
         def getAttributeValue_(elm,attrName)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name)  then
@@ -4026,21 +3923,6 @@ module Meteor
         private :getAttributeValue_2_r
         
         #
-        # 要素の属性値を取得する
-        # 
-        # @param [String] attrName 属性名
-        # @return [String] 属性値
-        #
-        def getAttributeValue_1(attrName)
-          if @root.hook || @root.monoHook then
-            getAttributeValue_2(@root.mutableElement, attrName)
-          else
-            nil
-          end
-        end
-        private :getAttributeValue_1
-        
-        #
         # 属性マップを取得する
         # 
         # @param [Meteor::Element] elm 要素
@@ -4062,97 +3944,6 @@ module Meteor
         end
         private :getAttributeMap_1
         
-        #
-        # 要素の属性を消す
-        # 
-        # @param [Array] args 引数配列
-        #
-        def removeAttribute(*args)
-          case args.length
-          when 1
-            removeAttribute_1(args[0])
-          when 2
-            removeAttribute_2(args[0],args[1])
-          end
-        end
-
-        #
-        # 要素の属性を消す
-        # 
-        # @param [String] attrName 属性名
-        #
-        def removeAttribute_1(attrName)
-          if @root.hook || @root.monoHook then
-            removeAttribute_2(@root.mutableElement,attrName)
-          end
-        end
-        private :removeAttribute_1
-
-        #
-        # 要素の内容をセットする or 取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return 要素の内容
-        #
-        def content(*args)
-          case args.length
-          when 1
-            if args[0].kind_of?(Meteor::Element) then
-              getContent_1(args[0])
-            elsif args[0].kind_of?(String) then
-              setContent_1(args[0])
-            else
-              raise ArgumentError
-            end
-          when 2
-            if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-              setContent_2_s(args[0],args[1])
-            elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClsss)) then
-              setContent_2_b(args[0],args[1])
-            end
-          when 3
-            setContent_3(args[0],args[1],args[2])
-          else
-            raise ArgumentError
-          end
-        end
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [Meteor::Element] elm 要素
-        # @param [String] mixed_content 内容
-        #
-        def setContent_2_s(elm,content)
-          setContent_3(elm, content)
-        end
-        private :setContent_2_s
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [String] mixed_content 内容
-        # @param [TrueClass][FalseClass] エンティティ参照フラグ
-        #
-        def setContent_2_b(content,entityRef)
-          if @root.monoHook then
-            setContent_3(@root.mutableElement, content,entityRef)
-          end
-        end
-        private :setContent_2_b
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [String] mixed_content 内容
-        #
-        def setContent_1(content)
-          if @root.monoHook then
-            setContent_2_s(@root.mutableElement, content)
-          end
-        end
-        private :setContent_1
-
         def setMonoInfo(elm)
 
           @res = @@pattern_set_mono1.match(elm.mixed_content)
@@ -4331,160 +4122,15 @@ module Meteor
         def read(filePath,encoding)
           super(filePath, encoding)
         end
-
-        #
+        
         # コンテントタイプを取得する
         # 
-        # @return [String] コンテントタイプ
+        # @return [Streing]コンテントタイプ
         #
         def contentType()
           @root.contentType
         end
-
-        #
-        # 要素の属性をセットする or 属性の値を取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [String] 属性値
-        #
-        def attribute(*args)
-          case args.length
-          when 2
-            if args[0].kind_of?(String) && args[1].kind_of?(String) then
-              setAttribute_2(args[0],args[1])
-            elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
-              setAttribute_2_m(args[0],args[1])
-            else
-              raise ArgumentError
-            end
-          when 3
-            setAttribute_3(args[0],args[1],args[2])
-          else
-            raise ArgumentError
-          end
-        end
-
-        #
-        # 要素の属性を編集する
-        # 
-        # @param [String] attrName 属性名
-        # @param [String] attrValue 属性値
-        #
-        def setAttribute_2(attrName,attrValue)
-          if @root.hook || @root.monoHook then
-            setAttribute_3(@root.mutableElement, attrName, attrValue)
-          end
-        end
-        private :setAttribute_2
-
-        #
-        # 要素の属性値を取得する
-        # 
-        # @param [String] attrName 属性名
-        # @return [String] 属性値
-        #
-        def getAttributeValue_1(attrName)
-          if @root.hook || @root.monoHook then
-            getAttributeValue_2(@root.mutableElement, attrName)
-          else
-            nil
-          end
-        end
-        private :getAttributeValue_1
-
-        #
-        # 要素の属性を消す
-        # 
-        # @param [Array] args 引数配列
-        #
-        def removeAttribute(*args)
-          case args.length
-          when 1
-            removeAttribute_1(args[0])
-          when 2
-            removeAttribute_2(args[0],args[1])
-          else
-            raise ArgumentError
-          end
-        end
-
-        #
-        # 要素の属性を消す
-        # 
-        # @param [String] attrName 属性名
-        #
-        def removeAttribute_1(attrName)
-          if @root.hook || @root.monoHook then
-            removeAttribute_2(@root.mutableElement, attrName)
-          end
-        end
-        private :removeAttribute_1
-
-        #
-        # 要素の内容をセットする or 内容を取得する
-        # 
-        # @param [Array] args 引数配列
-        # @return [String] 内容
-        #
-        def content(*args)
-          case args.length
-          when 1
-            if args[0].kind_of?(Meteor::Element) then
-              getContent_1(args[0])
-            elsif args[0].kind_of?(String) then
-              setContent_1(args[0])
-            end
-          when 2
-            if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-              setContent_2_s(args[0],args[1])
-            elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClsss)) then
-              setContent_2_b(args[0],args[1])
-            else
-              raise ArgumentError
-            end
-          when 3
-            setContent_3(args[0],args[1],args[2])
-          else
-            raise ArgumentError
-          end
-        end
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [Meteor::Element] 要素
-        # @param [String] mixed_content 要素
-        #
-        def setContent_2_s(elm,content)
-          setContent_3(elm, content)
-        end
-        private :setContent_2_s
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [String] mixed_content 内容
-        #
-        def setContent_1(content)
-          if @root.monoHook then
-            setContent_2_s(@root.mutableElement, content)
-          end
-        end
-        private :setContent_1
-
-        #
-        # 要素の内容を編集する
-        # 
-        # @param [String] mixed_content 内容
-        # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
-        #
-        def setContent_2_b(content,entityRef)
-          if @root.monoHook then
-            setContent_3(@root.mutableElement, content, entityRef)
-          end
-        end
-        private :setContent_2_b
-
+        
         def setMonoInfo(elm)
 
           @res = @@pattern_set_mono1.match(elm.mixed_content)

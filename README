@@ -1,6 +1,7 @@
 
-= meteor
+= meteor - A lightweight (X)HTML & XML Parser 
 
+by asip <ys.ashida@gmail.com>
 
 == Description
 
@@ -24,6 +25,6 @@
 
 == Copyright
 
-Author::    asip <asip@>
+Author::    asip <ys.ashida@gmail.com>
 Copyright:: Copyright (c) 2008 asip
-License::   
+License::   GPL V2

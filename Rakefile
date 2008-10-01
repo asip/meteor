@@ -13,7 +13,7 @@ include FileUtils
 
 NAME              = "meteor"
 AUTHOR            = "asip"
-EMAIL             = "kuro.pj@gmail.com"
+EMAIL             = "ys.ashida@gmail.com"
 DESCRIPTION       = "A lightweight (X)HTML & XML parser"
 RUBYFORGE_PROJECT = "meteor"
 HOMEPATH          = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"

@@ -1946,15 +1946,14 @@ module Meteor
 
       def editAttributes_(elm,attrName,attrValue)
 
-        attrValue = escape(attrValue)
-
-        @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << SET_ATTR_1)
+        #attrValue = escape(attrValue)
 
         #属性検索
-        @res = @pattern.match(elm.attributes)
+        #@res = @pattern.match(elm.attributes)
 
         #検索対象属性の存在判定
-        if @res then
+        #if @res then
+        if elm.attributes.include?(' ' << attrName << ATTR_EQ) then
           
           @_attrValue = attrValue
           #replace2Regex(@_attrValue)
@@ -1964,16 +1963,23 @@ module Meteor
             replace2Regex(@_attrValue)
           end
           #属性の置換
+          @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << SET_ATTR_1)
           elm.attributes.sub!(@pattern,'' << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
         else
           #属性文字列の最後に新規の属性を追加する
+          @_attrValue = attrValue
+          #replace2Regex(@_attrValue)
+          if elm.parser.rootElement.hook || elm.parser.rootElement.monoHook then
+            replace2Regex(@_attrValue)
+          end
+          
           if EMPTY != elm.attributes && EMPTY != elm.attributes.strip then
             elm.attributes = '' << SPACE << elm.attributes.strip
           else
             elm.attributes = ''
           end
 
-          elm.attributes << SPACE << attrName << ATTR_EQ << attrValue << DOUBLE_QUATATION
+          elm.attributes << SPACE << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION
         end
         
       end
@@ -2037,9 +2043,8 @@ module Meteor
           elm.arguments.map.each{ |name,attr|
             
             if attr.changed then
-              @_attrValue = attr.value
-              replace2Regex(@_attrValue)
-          
+              @_attrValue = escape(attr.value)
+              #replace2Regex(@_attrValue)  
               @pattern_cc = '' << name << SET_ATTR_1
               #@pattern_cc = "#{attrName}=\"[^\"]*\""
               @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)

@@ -3640,26 +3640,26 @@ module Meteor
         #@@pattern_readonly = Regexp.new(READONLY)
         #@@pattern_select = Regexp.new(SELECT)
         #@@pattern_multiple = Regexp.new(MULTIPLE)
-
-        SELECTED_M = "\\sselected=\"[^\"]*\"\\s|\\sselected=\"[^\"]*\"$|\\sSELECTED=\"[^\"]*\"\\s|\\sSELECTED=\"[^\"]*\"$"
-        SELECTED_M1 = "\\sselected=\"([^\"]*)\"\\s|\\sselected=\"([^\"]*)\"$|\\sSELECTED=\"([^\"]*)\"\\s|\\sSELECTED=\"([^\"]*)\"$"
-        SELECTED_R = "selected=\"[^\"]*\"|SELECTED=\"[^\"]*\""
+        
+        SELECTED_M = "\\sselected=\"[^\"]*\"\\s|\\sselected=\"[^\"]*\"$"
+        SELECTED_M1 = "\\sselected=\"([^\"]*)\"\\s|\\sselected=\"([^\"]*)\"$"
+        SELECTED_R = "selected=\"[^\"]*\""
         SELECTED_U = "selected=\"selected\""
-        CHECKED_M = "\\schecked=\"[^\"]*\"\\s|\\schecked=\"[^\"]*\"$|\\sCHECKED=\"[^\"]*\"\\s|\\sCHECKED=\"[^\"]*\"$"
-        CHECKED_M1 = "\\schecked=\"([^\"]*)\"\\s|\\schecked=\"([^\"]*)\"$|\\sCHECKED=\"([^\"]*)\"\\s|\\sCHECKED=\"([^\"]*)\"$"
-        CHECKED_R = "checked=\"[^\"]*\"|CHECKED=\"[^\"]*\""
+        CHECKED_M = "\\schecked=\"[^\"]*\"\\s|\\schecked=\"[^\"]*\"$"
+        CHECKED_M1 = "\\schecked=\"([^\"]*)\"\\s|\\schecked=\"([^\"]*)\"$"
+        CHECKED_R = "checked=\"[^\"]*\""
         CHECKED_U = "checked=\"checked\""
-        DISABLED_M = "\\sdisabled=\"[^\"]*\"\\s|\\sdisabled=\"[^\"]*\"$|\\sDISABLED=\"[^\"]*\"\\s|\\sDISABLED=\"[^\"]*\"$"
-        DISABLED_M1 = "\\sdisabled=\"([^\"]*)\"\\s|\\sdisabled=\"([^\"]*)\"$|\\sDISABLED=\"([^\"]*)\"\\s|\\sDISABLED=\"([^\"]*)\"$"
-        DISABLED_R = "disabled=\"[^\"]*\"|DISABLED=\"[^\"]*\""
+        DISABLED_M = "\\sdisabled=\"[^\"]*\"\\s|\\sdisabled=\"[^\"]*\"$"
+        DISABLED_M1 = "\\sdisabled=\"([^\"]*)\"\\s|\\sdisabled=\"([^\"]*)\"$"
+        DISABLED_R = "disabled=\"[^\"]*\""
         DISABLED_U = "disabled=\"disabled\""
-        READONLY_M = "\\sreadonly=\"[^\"]*\"\\s|\\sreadonly=\"[^\"]*\"$|\\sREADONLY=\"[^\"]*\"\\s|\\sREADONLY=\"[^\"]*\"$"
-        READONLY_M1 = "\\sreadonly=\"([^\"]*)\"\\s|\\sreadonly=\"([^\"]*)\"$|\\sREADONLY=\"([^\"]*)\"\\s|\\sREADONLY=\"([^\"]*)\"$"
-        READONLY_R = "readonly=\"[^\"]*\"|READONLY=\"[^\"]*\""
+        READONLY_M = "\\sreadonly=\"[^\"]*\"\\s|\\sreadonly=\"[^\"]*\"$"
+        READONLY_M1 = "\\sreadonly=\"([^\"]*)\"\\s|\\sreadonly=\"([^\"]*)\"$"
+        READONLY_R = "readonly=\"[^\"]*\""
         READONLY_U = "readonly=\"readonly\""
-        MULTIPLE_M = "\\smultiple=\"[^\"]*\"\\s|\\smultiple=\"[^\"]*\"$|\\sMULTIPLE=\"[^\"]*\"\\s|\\sMULTIPLE=\"[^\"]*\"$"
-        MULTIPLE_M1 = "\\smultiple=\"([^\"]*)\"\\s|\\smultiple=\"([^\"]*)\"$|\\sMULTIPLE=\"([^\"]*)\"\\s|\\sMULTIPLE=\"([^\"]*)\"$"
-        MULTIPLE_R = "multiple=\"[^\"]*\"|MULTIPLE=\"[^\"]*\""
+        MULTIPLE_M = "\\smultiple=\"[^\"]*\"\\s|\\smultiple=\"[^\"]*\"$"
+        MULTIPLE_M1 = "\\smultiple=\"([^\"]*)\"\\s|\\smultiple=\"([^\"]*)\"$"
+        MULTIPLE_R = "multiple=\"[^\"]*\""
         MULTIPLE_U = "multiple=\"multiple\""
 
         HTTP_EQUIV = 'http-equiv'

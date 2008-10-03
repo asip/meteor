@@ -836,54 +836,54 @@ module Meteor
       # 
       # @param [TrueClass][FalseClass] hook フックフラグ
       #
-      def hook=(hook)
-        @root.hook = hook
-      end
+      #def hook=(hook)
+      #  @root.hook = hook
+      #end
 
       #
       # フックフラグを取得する
       # 
       # @return [TrueClass][FalseClass] フックフラグ
       #
-      def hook
-        @root.hook
-      end
+      #def hook
+      #  @root.hook
+      #end
 
       #
       # 単一要素フックフラグをセットする
       # 
       # @pamam [TrueClass][FalseClass] hook 単一要素フックフラグ
       #
-      def monoHook=(hook)
-        @root.monoHook = hook
-      end
+      #def monoHook=(hook)
+      #  @root.monoHook = hook
+      #end
 
       #
       # 単一要素フックフラグを取得する
       # 
       # @return [TrueClass][FalseClass] 単一要素フックフラグ
       #
-      def monoHook
-        @root.monoHook
-      end
+      #def monoHook
+      #  @root.monoHook
+      #end
 
       #
       # フックドキュメントをセットする
       # 
       # @param [String] hookDocument フックドキュメント
       #
-      def hookDocument=(hookDocument)
-        @root.hookDocument = hookDocument
-      end
+      #def hookDocument=(hookDocument)
+      #  @root.hookDocument = hookDocument
+      #end
 
       #
       # フックドキュメントを取得する
       # 
       # @return [String] フックドキュメント
       #
-      def hookDocument
-        @root.hookDocument
-      end
+      #def hookDocument
+      #  @root.hookDocument
+      #end
 
       #
       # 文字エンコーディングをセットする
@@ -3041,9 +3041,9 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hookDocument = String.new(ps.hookDocument)
-          @root.hook = ps.hook
-          @root.monoHook = ps.monoHook
+          @root.hookDocument = String.new(ps.rootElement.hookDocument)
+          @root.hook = ps.rootElement.hook
+          @root.monoHook = ps.rootElement.monoHook
           @root.contentType = String.new(ps.contentType);
         end
         private :initialize_1
@@ -3735,9 +3735,9 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hookDocument = String.new(ps.hookDocument)
-          @root.hook = ps.hook
-          @root.monoHook = ps.monoHook
+          @root.hookDocument = String.new(ps.rootElement.hookDocument)
+          @root.hook = ps.rootElement.hook
+          @root.monoHook = ps.rootElement.monoHook
           @root.contentType = String.new(ps.contentType);
         end
         private :initialize_1
@@ -4103,9 +4103,9 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hookDocument = String.new(ps.hookDocument)
-          @root.hook = ps.hook
-          @root.monoHook = ps.monoHook
+          @root.hookDocument = String.new(ps.rootElement.hookDocument)
+          @root.hook = ps.rootElement.hook
+          @root.monoHook = ps.rootElement.monoHook
           @root.contentType = String.new(ps.contentType);
         end
 

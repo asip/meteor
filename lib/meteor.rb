@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.1
+# @version 0.9.0.2
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.1"
+  VERSION = "0.9.0.2"
   
   #
   # 要素クラス
@@ -153,7 +153,7 @@ module Meteor
     #
     def [](name)
       if !name.kind_of?(String) || name != ':content' then
-        getAttributeValue(name)
+        attribute(name)
       else
         content()
       end
@@ -2961,14 +2961,19 @@ module Meteor
         #@@pattern_multiple = Regexp.new(MULTIPLE)
 
         SELECTED_M = "\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$"
+        #SELECTED_M = [' selected ',' selected',' SELECTED ',' SELECTED']
         SELECTED_R = "selected\\s|selected$|SELECTED\\s|SELECTED$"
         CHECKED_M = "\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$"
+        #CHECKED_M = [' checked ',' checked',' CHECKED ',' CHECKED']
         CHECKED_R = "checked\\s|checked$|CHECKED\\s|CHECKED$"
         DISABLED_M = "\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$"
+        #DISABLED_M = [' disabled ',' disiabled',' DISABLED ',' DISABLED']
         DISABLED_R = "disabled\\s|disabled$|DISABLED\\s|DISABLED$"
         READONLY_M = "\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$"
+        #READONLY_M = [' readonly ',' readonly',' READONLY ',' READONLY']
         READONLY_R = "readonly\\s|readonly$|READONLY\\s|READONLY$"
         MULTIPLE_M = "\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$"
+        #MULTIPLE_M = [' multiple ',' multiple',' MULTIPLE ',' MULTIPLE']
         MULTIPLE_R = "multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$"
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)
@@ -3372,14 +3377,19 @@ module Meteor
         def editAttributes_(elm,attrName,attrValue)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
             editAttributes_5(elm,attrName,attrValue,@@pattern_selected_m,@@pattern_selected_r)
+            #editAttributes_5(elm,attrName,attrValue,SELECTED_M,@@pattern_selected_r)
           elsif isMatch(MULTIPLE, attrName) && isMatch(SELECT,elm.name)
             editAttributes_5(elm,attrName,attrValue,@@pattern_multiple_m,@@pattern_multiple_r)
+            #editAttributes_5(elm,attrName,attrValue,MULTIPLE_M,@@pattern_multiple_r)
           elsif isMatch(DISABLED, attrName) && isMatch(DISABLE_ELEMENT, elm.name) then
             editAttributes_5(elm,attrName,attrValue,@@pattern_disabled_m,@@pattern_disabled_r)
+            #editAttributes_5(elm,attrName,attrValue,DISABLED_M,@@pattern_disabled_r)
           elsif isMatch(CHECKED, attrName) && isMatch(INPUT,elm.name) && isMatch(RADIO, getType(elm)) then
             editAttributes_5(elm,attrName,attrValue,@@pattern_checked_m,@@pattern_checked_r)
+            #editAttributes_5(elm,attrName,attrValue,CHECKED_M,@@pattern_checked_r)
           elsif isMatch(READONLY, attrName) && (isMatch(TEXTAREA,elm.name) || (isMatch(INPUT,elm.name) && isMatch(READONLY_TYPE, getType(elm)))) then
             editAttributes_5(elm,attrName,attrValue,@@pattern_readonly_m,@@pattern_readonly_r)
+            #editAttributes_5(elm,attrName,attrValue,READONLY_M,@@pattern_readonly_r)
           else
             super(elm,attrName,attrValue)
           end
@@ -3393,6 +3403,7 @@ module Meteor
             @res = match_p.match(elm.attributes)
 
             if !@res then
+            #if elm.attributes.include?(match_p[0]) || elm.attributes.rindex(match_p[1],elm.attributes.length - 1) == 0 || elm.attributes.include?(match_p[2]) || elm.attributes.rindex(match_p[3],elm.attributes.length - 1) == 0
               if !EMPTY.eql?(elm.attributes) && !EMPTY.eql?(elm.attributes.strip) then
                 elm.attributes = '' << SPACE << elm.attributes.strip
               else
@@ -3416,14 +3427,19 @@ module Meteor
         def getAttributeValue_(elm,attrName)
           if isMatch(SELECTED, attrName) && isMatch(OPTION,elm.name) then
             getAttributeValue_2_r(elm,@@pattern_selected_m)
+            #getAttributeValue_2_r(elm,SELECTED_M)
           elsif isMatch(MULTIPLE, attrName) && isMatch(SELECT,elm.name)
             getAttributeValue_2_r(elm,@@pattern_multiple_m)
+            #getAttributeValue_2_r(elm,MULTIPLE_M)
           elsif isMatch(DISABLED, attrName) && isMatch(DISABLE_ELEMENT, elm.name) then
             getAttributeValue_2_r(elm,@@pattern_disabled_m)
+            #getAttributeValue_2_r(elm,DISABLED_M)
           elsif isMatch(CHECKED, attrName) && isMatch(INPUT,elm.name) && isMatch(RADIO, getType(elm)) then
             getAttributeValue_2_r(elm,@@pattern_checked_m)
+            #getAttributeValue_2_r(elm,CHECKED_M)
           elsif isMatch(READONLY, attrName) && (isMatch(TEXTAREA,elm.name) || (isMatch(INPUT,elm.name) && isMatch(READONLY_TYPE, getType(elm)))) then
             getAttributeValue_2_r(elm,@@pattern_readonly_m)
+            #getAttributeValue_2_r(elm,READONLY_M)
           else
             super(elm,attrName)
           end
@@ -3432,9 +3448,9 @@ module Meteor
 
         def getType(elm)
           if !elm.type_value
-            elm.type_value = getAttributeValue_2(elm, TYPE_L)
+            elm.type_value = getAttributeValue_(elm, TYPE_L)
             if !elm.type_value then
-              elm.type_value = getAttributeValue_2(elm, TYPE_U)
+              elm.type_value = getAttributeValue_(elm, TYPE_U)
             end
           end
           elm.type_value
@@ -3446,6 +3462,7 @@ module Meteor
           @res = match_p.match(elm.attributes)
 
           if @res then
+          #if elm.attributes.include?(match_p[0]) || elm.attributes.rindex(match_p[1],elm.attributes.length - 1) == 0 || elm.attributes.include?(match_p[2]) || elm.attributes.rindex(match_p[3],elm.attributes.length - 1) == 0 then
             TRUE
           else
             FALSE

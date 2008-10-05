@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.2
+# @version 0.9.0.3
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.2"
+  VERSION = "0.9.0.3"
   
   #
   # 要素クラス
@@ -1932,6 +1932,7 @@ module Meteor
       #
       def setAttribute_3(elm,attrName,attrValue)
         if !elm.cx then
+          attrValue = escape(attrValue)
           #属性群の更新
           editAttributes_(elm,attrName,attrValue)
           
@@ -1945,8 +1946,6 @@ module Meteor
       private :setAttribute_3
 
       def editAttributes_(elm,attrName,attrValue)
-
-        #attrValue = escape(attrValue)
 
         #属性検索
         #@res = @pattern.match(elm.attributes)
@@ -2043,7 +2042,7 @@ module Meteor
           elm.arguments.map.each{ |name,attr|
             
             if attr.changed then
-              @_attrValue = escape(attr.value)
+              @_attrValue = attr.value
               #replace2Regex(@_attrValue)  
               @pattern_cc = '' << name << SET_ATTR_1
               #@pattern_cc = "#{attrName}=\"[^\"]*\""

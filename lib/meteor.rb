@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.3
+# @version 0.9.0.4
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.3"
+  VERSION = "0.9.0.4"
   
   #
   # 要素クラス
@@ -1936,11 +1936,13 @@ module Meteor
           #属性群の更新
           editAttributes_(elm,attrName,attrValue)
           
-          if elm.arguments.map.include?(attrName) then
-            elm.arguments.store(attrName, attrValue)
+          if !elm.parent then
+            if elm.arguments.map.include?(attrName) then
+              elm.arguments.store(attrName, attrValue)
+            end
+            
+            @e_cache.store(elm.object_id, elm)
           end
-          
-          @e_cache.store(elm.object_id, elm)
         end
       end
       private :setAttribute_3
@@ -1990,73 +1992,68 @@ module Meteor
       private :editDocument_1
 
       def editDocument_2(elm,closer)
-        if !elm.parent then
-
-          if !elm.cx then
-            @_attributes = elm.attributes
-            replace2Regex(@_attributes)
-            
-            if elm.empty then
-              #内容あり要素の場合
-              @_content = elm.mixed_content
-              #replace2Regex(@_content)
-              if elm.parser.rootElement.hook || elm.parser.rootElement.monoHook then
-                replace4Regex(@_content)
-              else
-                replace2Regex(@_content)
-              end
-              
-              #タグ検索用パターン
-              @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-              @root.document.sub!(@pattern,'' << TAG_OPEN << elm.name << @_attributes << TAG_CLOSE << @_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
-              #@root.document.sub!(@pattern,"<#{elm.name}#{@_attributes}>#{@_content}</#{elm.name}>")
-            else
-              #空要素の場合
-              #タグ置換用パターン
-              @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-              @root.document.sub!(@pattern,'' << TAG_OPEN << elm.name << @_attributes << closer)
-            end
-          else
+        if !elm.cx then
+          @_attributes = elm.attributes
+          replace2Regex(@_attributes)
+          
+          if elm.empty then
+            #内容あり要素の場合
             @_content = elm.mixed_content
+            #replace2Regex(@_content)
             if elm.parser.rootElement.hook || elm.parser.rootElement.monoHook then
               replace4Regex(@_content)
             else
               replace2Regex(@_content)
             end
             
+            #タグ検索用パターン
             @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
-            
-            #タグ置換
-            @pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2
-            @pattern_cc << @_content << SET_CX_3 << elm.name << SET_CX_4
-            #@pattern_cc = "<!-- @#{elm.name} #{elm.attributes}-->#{@_content}<!-- /@#{elm.name} -->"
-            @root.document.sub!(@pattern,@pattern_cc)
+            @root.document.sub!(@pattern,'' << TAG_OPEN << elm.name << @_attributes << TAG_CLOSE << @_content << TAG_OPEN3 << elm.name << TAG_CLOSE)
+            #@root.document.sub!(@pattern,"<#{elm.name}#{@_attributes}>#{@_content}</#{elm.name}>")
+          else
+            #空要素の場合
+            #タグ置換用パターン
+            @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
+            @root.document.sub!(@pattern,'' << TAG_OPEN << elm.name << @_attributes << closer)
           end
+        else
+          @_content = elm.mixed_content
+          if elm.parser.rootElement.hook || elm.parser.rootElement.monoHook then
+            replace4Regex(@_content)
+          else
+            replace2Regex(@_content)
+          end
+          
+          @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
+          
+          #タグ置換
+          @pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2
+          @pattern_cc << @_content << SET_CX_3 << elm.name << SET_CX_4
+          #@pattern_cc = "<!-- @#{elm.name} #{elm.attributes}-->#{@_content}<!-- /@#{elm.name} -->"
+          @root.document.sub!(@pattern,@pattern_cc)
         end
       end
       private :editDocument_2
 
       def editPattern_(elm)
-        if !elm.parent then
           
-          elm.arguments.map.each{ |name,attr|
-            
-            if attr.changed then
-              @_attrValue = attr.value
-              #replace2Regex(@_attrValue)  
-              @pattern_cc = '' << name << SET_ATTR_1
-              #@pattern_cc = "#{attrName}=\"[^\"]*\""
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-              elm.pattern.gsub!(@pattern,'' << name << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
-              #elm.pattern.sub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
-            elsif attr.removed then
-              @pattern_cc = '' << name << SET_ATTR_1
-              #@pattern_cc = "#{attrName}=\"[^\"]*\""
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-              elm.pattern.gsub!(@pattern,EMPTY)
-            end
-          }
-        end
+        elm.arguments.map.each{ |name,attr|
+          
+          if attr.changed then
+            @_attrValue = escapeRegex(attr.value)
+            #replace2Regex(@_attrValue)  
+            @pattern_cc = '' << name << SET_ATTR_1
+            #@pattern_cc = "#{attrName}=\"[^\"]*\""
+            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+            elm.pattern.gsub!(@pattern,'' << name << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
+            #elm.pattern.sub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
+          elsif attr.removed then
+            @pattern_cc = '' << name << SET_ATTR_1
+            #@pattern_cc = "#{attrName}=\"[^\"]*\""
+            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+            elm.pattern.gsub!(@pattern,EMPTY)
+          end
+        }
       end
       private :editPattern_
 
@@ -2180,7 +2177,9 @@ module Meteor
             end
           }
           
-          @e_cache.store(elm.object_id,elm)
+          if !elm.parent then
+            @e_cache.store(elm.object_id,elm)
+          end
         end
       end
       private :setAttribute_2_m
@@ -2229,7 +2228,9 @@ module Meteor
         
         elm.mixed_content = content
         
-        @e_cache.store(elm.object_id,elm)
+        if !elm.parent then
+          @e_cache.store(elm.object_id,elm)
+        end
         
       end
       private :setContent_3
@@ -2308,11 +2309,13 @@ module Meteor
 
           removeAttributes_(elm,attrName)
 
-          if elm.arguments.map.include?(attrName) then
-            elm.arguments.delete(attrName)
+          if !elm.parent then
+            if elm.arguments.map.include?(attrName) then
+              elm.arguments.delete(attrName)
+            end
+            
+            @e_cache.store(elm.object_id,elm)
           end
-          
-          @e_cache.store(elm.object_id,elm)
         end
       end
       private :removeAttribute_2

@@ -795,6 +795,9 @@ module Meteor
         #@pattern_cc_2 = nil
         #@pattern_cc_2_1 = nil
         #@pattern_cc_2_2 = nil
+        #@pattern_2 = nil
+        #@pattern_1 = nil
+        #@pattern_1b = nil
         #@cnt = 0
         #@position = 0
         #@position2 = 0
@@ -1219,6 +1222,9 @@ module Meteor
         
         @sbuf = '';
         
+        @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
+        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
+        
         if RUBY_VERSION >= '1.9.0' then
           
           @position = 0
@@ -1231,8 +1237,7 @@ module Meteor
                 
                 @position2 = @res.end(0)
                 
-                @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-                @res = @pattern.match(@root.document,@position)
+                @res = @pattern_2.match(@root.document,@position)
                 
                 if @res then
                   
@@ -1289,8 +1294,7 @@ module Meteor
               end
             else
               
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-              @res = @pattern.match(@root.document,@position)
+              @res = @pattern_2.match(@root.document,@position)
               
               if @res then
                 @cnt -= 1
@@ -1313,7 +1317,7 @@ module Meteor
               end
             end
             
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+            @pattern = @pattern_1b
           end
         else
           
@@ -1326,9 +1330,8 @@ module Meteor
               if @cnt > 0 then
                 
                 @rx_document2 = @res.post_match
-                @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
                 
-                @res = @pattern.match(@rx_document)
+                @res = @pattern_2.match(@rx_document)
                 
                 if @res then
                   
@@ -1385,8 +1388,7 @@ module Meteor
               end
             else
               
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-              @res = @pattern.match(@rx_document)
+              @res = @pattern_2.match(@rx_document)
               
               if @res then
                 @cnt -= 1
@@ -1409,7 +1411,7 @@ module Meteor
               end
             end
             
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+            @pattern = @pattern_1b
           end
         end
         
@@ -1627,6 +1629,9 @@ module Meteor
         
         @sbuf = ''
         
+        @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
+        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
+        
         if RUBY_VERSION >= '1.9.0' then
           
           @position = 0
@@ -1639,8 +1644,7 @@ module Meteor
                 
                 @position2 = @res.end(0)
                 
-                @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-                @res = @pattern.match(@root.document,@position)
+                @res = @pattern_2.match(@root.document,@position)
                 
                 if @res then
                   
@@ -1696,8 +1700,7 @@ module Meteor
               end
             else
               
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-              @res = @pattern.match(@root.document,@position)
+              @res = @pattern_2.match(@root.document,@position)
               
               if @res then
                 
@@ -1721,7 +1724,7 @@ module Meteor
               end
             end
             
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+            @pattern = @pattern_1b
           end
         else
           
@@ -1735,8 +1738,7 @@ module Meteor
                 
                 @rx_document2 = @res.post_match
                 
-                @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-                @res = @pattern.match(@rx_document)
+                @res = @pattern_2.match(@rx_document)
                 
                 if @res then
                   
@@ -1792,8 +1794,7 @@ module Meteor
               end
             else
               
-              @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-              @res = @pattern.match(@rx_document)
+              @res = @pattern_2.match(@rx_document)
               
               if @res then
                 
@@ -1817,7 +1818,7 @@ module Meteor
               end
             end
             
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+            @pattern = @pattern_1b
           end
         end
         

@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.4
+# @version 0.9.0.5
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.4"
+  VERSION = "0.9.0.5"
   
   #
   # 要素クラス
@@ -719,6 +719,8 @@ module Meteor
       #DOL_2 = "\\\\\\$"
       #PLUS_1 = "\\\+"
       #PLUS_2 = "\\\\\\+"
+      
+      ESCAPE_ENTITY_REF = ''
       
       SUB_REGEX1 = "(\\\\*)\\\\([0-9]+)"
       SUB_REGEX2 = "\\1\\1\\\\\\\\\\2"
@@ -2995,23 +2997,54 @@ module Meteor
 
         #@@pattern_true = Regexp.new(TRUE)
         #@@pattern_false = Regexp.new(FALSE)
-
+        
         TYPE_L = 'type'
         TYPE_U = 'TYPE'
-
-        @@pattern_and_1 = Regexp.new(AND_1)
-        @@pattern_lt_1 = Regexp.new(LT_1)
-        @@pattern_gt_1 = Regexp.new(GT_1)
-        @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-        @@pattern_space_1 = Regexp.new(SPACE)
-        @@pattern_br_1 = Regexp.new(BR_1)
-        @@pattern_lt_2 = Regexp.new(LT_2)
-        @@pattern_gt_2 = Regexp.new(GT_2)
-        @@pattern_dq_2 = Regexp.new(QO_2)
-        @@pattern_space_2 = Regexp.new(NBSP_2)
-        @@pattern_and_2 = Regexp.new(AND_2)
-        @@pattern_br_2 = Regexp.new(BR_2)
-
+        
+        if RUBY_VERSION >= '1.9.0' then
+          TABLE_FOR_ESCAPE_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+          }
+          
+          TABLE_FOR_ESCAPE_CONTENT_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+            "\n" => '<br>',
+          }
+          
+          PATTERN_ESCAPE = "[&\"'<> ]"
+          PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+          
+          @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)  
+        else
+          @@pattern_and_1 = Regexp.new(AND_1)
+          @@pattern_lt_1 = Regexp.new(LT_1)
+          @@pattern_gt_1 = Regexp.new(GT_1)
+          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
+          @@pattern_space_1 = Regexp.new(SPACE)
+          @@pattern_br_1 = Regexp.new(BR_1)
+          @@pattern_lt_2 = Regexp.new(LT_2)
+          @@pattern_gt_2 = Regexp.new(GT_2)
+          @@pattern_dq_2 = Regexp.new(QO_2)
+          @@pattern_space_2 = Regexp.new(NBSP_2)
+          @@pattern_and_2 = Regexp.new(AND_2)
+          @@pattern_br_2 = Regexp.new(BR_2)
+        end
+        
+        
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        
         #@@pattern_match_tag = Regexp.new(MATCH_TAG)
         @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
@@ -3533,39 +3566,46 @@ module Meteor
 
         def escape(element)
           #特殊文字の置換
-          #「&」->「&amp;」
-          if element.include?(AND_1) then
-            element.gsub!(@@pattern_and_1,AND_2)
+          if RUBY_VERSION < '1.9.0' then
+            #「&」->「&amp;」
+            if element.include?(AND_1) then
+              element.gsub!(@@pattern_and_1,AND_2)
+            end
+            #「<」->「&lt;」
+            if element.include?(LT_1) then
+              element.gsub!(@@pattern_lt_1,LT_2)
+            end
+            #「>」->「&gt;」
+            if element.include?(GT_1) then
+              element.gsub!(@@pattern_gt_1,GT_2)
+            end
+            #「"」->「&quotl」
+            if element.include?(DOUBLE_QUATATION) then
+              element.gsub!(@@pattern_dq_1,QO_2)
+            end
+            #「 」->「&nbsp;」
+            if element.include?(SPACE) then
+              element.gsub!(@@pattern_space_1,NBSP_2)
+            end
+          else
+            element.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
           end
-          #「<」->「&lt;」
-          if element.include?(LT_1) then
-            element.gsub!(@@pattern_lt_1,LT_2)
-          end
-          #「>」->「&gt;」
-          if element.include?(GT_1) then
-            element.gsub!(@@pattern_gt_1,GT_2)
-          end
-          #「"」->「&quotl」
-          if element.include?(DOUBLE_QUATATION) then
-            element.gsub!(@@pattern_dq_1,QO_2)
-          end
-          #「 」->「&nbsp;」
-          if element.include?(SPACE) then
-            element.gsub!(@@pattern_space_1,NBSP_2)
-          end
-          
           element
         end
         private :escape
 
         def escapeContent(element,elmName)
-          element = escape(element)
-
-          if !isMatch(MATCH_TAG_2,elmName) then
-            #「¥r?¥n」->「<br>」
-            element.gsub!(@@pattern_br_1, BR_2)
+          if RUBY_VERSION < '1.9.0' then
+            element = escape(element)
+            
+            if !isMatch(MATCH_TAG_2,elmName) then
+              #「¥r?¥n」->「<br>」
+              element.gsub!(@@pattern_br_1, BR_2)
+            end
+          else
+            element.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
           end
-
+          
           element
         end
         private :escapeContent
@@ -3573,25 +3613,36 @@ module Meteor
         def unescape(element)
           #特殊文字の置換
           #「<」<-「&lt;」
-          if element.include?(LT_2) then
-            element.gsub!(@@pattern_lt_2,LT_1)
-          end
+          #if element.include?(LT_2) then
+          #  element.gsub!(@@pattern_lt_2,LT_1)
+          #end
           #「>」<-「&gt;」
-          if element.include?(GT_2) then
-            element.gsub!(@@pattern_gt_2,GT_1)
-          end
+          #if element.include?(GT_2) then
+          #  element.gsub!(@@pattern_gt_2,GT_1)
+          #end
           #「"」<-「&quotl」
-          if element.include?(QO_2) then
-            element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
-          end
+          #if element.include?(QO_2) then
+          #  element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
+          #end
           #「 」<-「&nbsp;」
-          if element.include?(NBSP_2) then
-            element.gsub!(@@pattern_space_2,SPACE)
-          end
+          #if element.include?(NBSP_2) then
+          #  element.gsub!(@@pattern_space_2,SPACE)
+          #end
           #「&」<-「&amp;」
-          if element.include?(AND_2) then
-            element.gsub!(@@pattern_and_2,AND_1)
-          end
+          #if element.include?(AND_2) then
+          #  element.gsub!(@@pattern_and_2,AND_1)
+          #end
+          element.gsub!(@@pattern_unescape){
+            case $1
+            when 'amp' then '&'
+            when 'quot' then '"'
+            when 'apos' then '\''
+            when 'gt' then '>'
+            when 'lt' then '<'
+            when 'nbsp' then ' '
+            end
+          }
+          
           element
         end
         private :unescape
@@ -3708,19 +3759,53 @@ module Meteor
         TYPE_L = 'type'
         TYPE_U = 'TYPE'
 
-        @@pattern_and_1 = Regexp.new(AND_1)
-        @@pattern_lt_1 = Regexp.new(LT_1)
-        @@pattern_gt_1 = Regexp.new(GT_1)
-        @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-        @@pattern_space_1 = Regexp.new(SPACE)
-        @@pattern_br_1 = Regexp.new(BR_1)
-        @@pattern_lt_2 = Regexp.new(LT_2)
-        @@pattern_gt_2 = Regexp.new(GT_2)
-        @@pattern_dq_2 = Regexp.new(QO_2)
-        @@pattern_space_2 = Regexp.new(NBSP_2)
-        @@pattern_and_2 = Regexp.new(AND_2)
-        @@pattern_br_2 = Regexp.new(BR_3)
-
+        if RUBY_VERSION >= '1.9.0' then 
+          TABLE_FOR_ESCAPE_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+          }
+          
+          TABLE_FOR_ESCAPE_CONTENT_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+            "\n" => '<br/>',
+          }
+          
+          PATTERN_ESCAPE = "[&\"'<> ]"
+          PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+          @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+          
+        else
+          
+          @@pattern_and_1 = Regexp.new(AND_1)
+          @@pattern_lt_1 = Regexp.new(LT_1)
+          @@pattern_gt_1 = Regexp.new(GT_1)
+          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
+          @@pattern_ap_1 = Regexp.new(AP_1)
+          @@pattern_space_1 = Regexp.new(SPACE)
+          @@pattern_br_1 = Regexp.new(BR_1)
+          @@pattern_lt_2 = Regexp.new(LT_2)
+          @@pattern_gt_2 = Regexp.new(GT_2)
+          @@pattern_dq_2 = Regexp.new(QO_2)
+          @@pattern_ap_2 = Regexp.new(AP_2)
+          @@pattern_space_2 = Regexp.new(NBSP_2)
+          @@pattern_and_2 = Regexp.new(AND_2)
+          @@pattern_br_2 = Regexp.new(BR_3)
+          
+        end
+        
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        
         #@@pattern_match_tag = Regexp.new(MATCH_TAG)
         @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
@@ -3991,39 +4076,51 @@ module Meteor
 
         def escape(element)
           #特殊文字の置換
-          #「&」->「&amp;」
-          if element.include?(AND_1) then
-            element.gsub!(@@pattern_and_1,AND_2)
+          if RUBY_VERSION < '1.9.0' then
+            #「&」->「&amp;」
+            if element.include?(AND_1) then
+              element.gsub!(@@pattern_and_1,AND_2)
+            end
+            #「<」->「&lt;」
+            if element.include?(LT_1) then
+              element.gsub!(@@pattern_lt_1,LT_2)
+            end
+            #「>」->「&gt;」
+            if element.include?(GT_1) then
+              element.gsub!(@@pattern_gt_1,GT_2)
+            end
+            #「"」->「&quotl」
+            if element.include?(DOUBLE_QUATATION) then
+              element.gsub!(@@pattern_dq_1,QO_2)
+            end
+             #「'」->「&apos;」
+            if element.include?(AP_1) then
+              element.gsub!(@@pattern_ap_1,AP_2)
+            end
+            #「 」->「&nbsp;」
+            if element.include?(SPACE) then
+              element.gsub!(@@pattern_space_1,NBSP_2)
+            end
+          else
+            element.gsub!(@@pattern_escape,TABLE_FOR_ESCAPE_)
           end
-          #「<」->「&lt;」
-          if element.include?(LT_1) then
-            element.gsub!(@@pattern_lt_1,LT_2)
-          end
-          #「>」->「&gt;」
-          if element.include?(GT_1) then
-            element.gsub!(@@pattern_gt_1,GT_2)
-          end
-          #「"」->「&quotl」
-          if element.include?(DOUBLE_QUATATION) then
-            element.gsub!(@@pattern_dq_1,QO_2)
-          end
-          #「 」->「&nbsp;」
-          if element.include?(SPACE) then
-            element.gsub!(@@pattern_space_1,NBSP_2)
-          end
-          
+            
           element
         end
         private :escape
 
         def escapeContent(element,elmName)
-          element = escape(element)
-
-          if !isMatch(MATCH_TAG_2,elmName) then
-            #「¥r?¥n」->「<br>」
-            element.gsub!(@@pattern_br_1, BR_2)
+          
+          if RUBY_VERSION < '1.9.0' then
+            element = escape(element)
+            
+            if !isMatch(MATCH_TAG_2,elmName) then
+              #「¥r?¥n」->「<br>」
+              element.gsub!(@@pattern_br_1, BR_2)
+            end
+          else
+            element.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
           end
-
           element
         end
         private :escapeContent
@@ -4031,26 +4128,36 @@ module Meteor
         def unescape(element)
           #特殊文字の置換
           #「<」<-「&lt;」
-          if element.include?(LT_2) then
-            element.gsub!(@@pattern_lt_2,LT_1)
-          end
+          #if element.include?(LT_2) then
+          #  element.gsub!(@@pattern_lt_2,LT_1)
+          #end
           #「>」<-「&gt;」
-          if element.include?(GT_2) then
-            element.gsub!(@@pattern_gt_2,GT_1)
-          end
+          #if element.include?(GT_2) then
+          #  element.gsub!(@@pattern_gt_2,GT_1)
+          #end
           #「"」<-「&quotl」
-          if element.include?(QO_2) then
-            element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
-          end
+          #if element.include?(QO_2) then
+          #  element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
+          #end
           #「 」<-「&nbsp;」
-          if element.include?(NBSP_2) then
-            element.gsub!(@@pattern_space_2,SPACE)
-          end
+          #if element.include?(NBSP_2) then
+          #  element.gsub!(@@pattern_space_2,SPACE)
+          #end
           #「&」<-「&amp;」
-          if element.include?(AND_2) then
-            element.gsub!(@@pattern_and_2,AND_1)
-          end
-
+          #if element.include?(AND_2) then
+          #  element.gsub!(@@pattern_and_2,AND_1)
+          #end
+          element.gsub!(@@pattern_unescape){
+            case $1
+            when 'amp' then '&'
+            when 'quot' then '"'
+            when 'apos' then '\''
+            when 'gt' then '>'
+            when 'lt' then '<'
+            when 'nbsp' then ' '
+            end
+          }
+          
           element
         end
         private :unescape
@@ -4079,6 +4186,17 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
+        TABLE_FOR_ESCAPE_ = {
+          '&' => '&amp;',
+          '"' => '&quot;',
+          '\'' => '&apos;',
+          '<' => '&lt;',
+          '>' => '&gt;',
+        }
+        
+        PATTERN_ESCAPE = "[&\"'<>]"
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
+        
         @@pattern_and_1 = Regexp.new(AND_1)
         @@pattern_lt_1 = Regexp.new(LT_1)
         @@pattern_gt_1 = Regexp.new(GT_1)
@@ -4089,7 +4207,10 @@ module Meteor
         @@pattern_dq_2 = Regexp.new(QO_2)
         @@pattern_ap_2 = Regexp.new(AP_2)
         @@pattern_and_2 = Regexp.new(AND_2)
-
+        
+        @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        
         @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
 
         #
@@ -4178,25 +4299,29 @@ module Meteor
 
         def escape(element)
           #特殊文字の置換
-          #「&」->「&amp;」
-          if element.include?(AND_1) then
-            element.gsub!(@@pattern_and_1,AND_2)
-          end
-          #「<」->「&lt;」
-          if element.include?(LT_1) then
-            element.gsub!(@@pattern_lt_1,LT_2)
-          end
-          #「>」->「&gt;」
-          if element.include?(GT_1) then
-            element.gsub!(@@pattern_gt_1,GT_2)
-          end
-          #「"」->「&quot;」
-          if element.include?(DOUBLE_QUATATION) then
-            element.gsub!(@@pattern_dq_1,QO_2)
-          end
-          #「'」->「&apos;」
-          if element.include?(AP_1) then
-            element.gsub!(@@pattern_ap_1,AP_2)
+          if RUBY_VERSION < '1.9.0' then
+            #「&」->「&amp;」
+            if element.include?(AND_1) then
+              element.gsub!(@@pattern_and_1,AND_2)
+            end
+            #「<」->「&lt;」
+            if element.include?(LT_1) then
+              element.gsub!(@@pattern_lt_1,LT_2)
+            end
+            #「>」->「&gt;」
+            if element.include?(GT_1) then
+              element.gsub!(@@pattern_gt_1,GT_2)
+            end
+            #「"」->「&quot;」
+            if element.include?(DOUBLE_QUATATION) then
+              element.gsub!(@@pattern_dq_1,QO_2)
+            end
+            #「'」->「&apos;」
+            if element.include?(AP_1) then
+              element.gsub!(@@pattern_ap_1,AP_2)
+            end
+          else
+            element.gsub!(@@pattern_escape,TABLE_FOR_ESCAPE_)
           end
 
           element
@@ -4210,26 +4335,38 @@ module Meteor
 
         def unescape(element)
           #特殊文字の置換
-          #「<」<-「&lt;」
-          if element.include?(LT_2) then
-            element.gsub!(@@pattern_lt_2,LT_1)
-          end
-          #「>」<-「&gt;」
-          if element.include?(GT_2) then
-            element.gsub!(@@pattern_gt_2,GT_1)
-          end
-          #「"」<-「&quot;」
-          if element.include?(QO_2) then
-            element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
-          end
-          #「'」<-「&apos;」
-          if element.include?(AP_2) then
-            element.gsub!(@@pattern_ap_2,AP_1)
-          end
-          #「&」<-「&amp;」
-          if element.include?(AND_2) then
-            element.gsub!(@@pattern_and_2,AND_1)
-          end
+          #if RUBY_VERSION < '1.9.0' then
+          #  #「<」<-「&lt;」
+          #  if element.include?(LT_2) then
+          #    element.gsub!(@@pattern_lt_2,LT_1)
+          #  end
+          #  #「>」<-「&gt;」
+          #  if element.include?(GT_2) then
+          #    element.gsub!(@@pattern_gt_2,GT_1)
+          #  end
+          #  #「"」<-「&quot;」
+          #  if element.include?(QO_2) then
+          #    element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
+          #  end
+          #  #「'」<-「&apos;」
+          #  if element.include?(AP_2) then
+          #    element.gsub!(@@pattern_ap_2,AP_1)
+          #  end
+          #  #「&」<-「&amp;」
+          #  if element.include?(AND_2) then
+          #    element.gsub!(@@pattern_and_2,AND_1)
+          #  end
+          #else
+          element.gsub!(@@pattern_unescape){
+            case $1
+            when 'amp' then '&'
+            when 'quot' then '"'
+            when 'apos' then '\''
+            when 'gt' then '>'
+            when 'lt' then '<'
+            end
+          }
+          #end
             
           element
         end

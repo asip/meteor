@@ -4,21 +4,21 @@
 # Copyright (C) 2008 Yasumasa Ashida.
 #
 # This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation; either version 2.1 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# GNU Lesser General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
+# You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.5
+# @version 0.9.0.7
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.5"
+  VERSION = "0.9.0.7"
   
   #
   # 要素クラス
@@ -1227,195 +1227,7 @@ module Meteor
         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
         
-        if RUBY_VERSION >= '1.9.0' then
-          
-          @position = 0
-          
-          while (@res = @pattern.match(@root.document,@position)) || @cnt > 0
-            
-            if @res then
-              
-              if @cnt > 0 then
-                
-                @position2 = @res.end(0)
-                
-                @res = @pattern_2.match(@root.document,@position)
-                
-                if @res then
-                  
-                  @position = @res.end(0)
-                  
-                  if @position > @position2 then
-                    
-                    if @cnt == 0 then
-                      @sbuf << @pattern_cc_1_1
-                    else
-                      @sbuf << @pattern_cc_1_2
-                    end
-                    
-                    @cnt += 1
-                    
-                    @position = @position2
-                  else
-                    
-                    @cnt -= 1
-                    
-                    if @cnt != 0 then
-                      @sbuf << @pattern_cc_2_1
-                    else
-                      @sbuf << @pattern_cc_2_2
-                    end
-                    
-                    if @cnt == 0 then
-                      break
-                    end
-                  end
-                else
-                  
-                  if @cnt == 0 then
-                    @sbuf << @pattern_cc_1_1
-                  else
-                    @sbuf << @pattern_cc_1_2
-                  end
-                  
-                  @cnt += 1
-                  
-                  @position = @position2
-                end
-              else
-                
-                @position = @res.end(0)
-                
-                if @cnt == 0 then
-                  @sbuf << @pattern_cc_1_1
-                else
-                  @sbuf << @pattern_cc_1_2
-                end
-                
-                @cnt += 1
-              end
-            else
-              
-              @res = @pattern_2.match(@root.document,@position)
-              
-              if @res then
-                @cnt -= 1
-                
-                if @cnt != 0 then
-                  @sbuf << @pattern_cc_2_1
-                else
-                  @sbuf << @pattern_cc_2_2
-                end
-                
-                @position = @res.end(0)
-              end
-              
-              if !@res then
-                break
-              end
-              
-              if @cnt == 0 then
-                break
-              end
-            end
-            
-            @pattern = @pattern_1b
-          end
-        else
-          
-          @rx_document = @root.document
-          
-          while (@res = @pattern.match(@rx_document)) || @cnt > 0
-            
-            if @res then
-              
-              if @cnt > 0 then
-                
-                @rx_document2 = @res.post_match
-                
-                @res = @pattern_2.match(@rx_document)
-                
-                if @res then
-                  
-                  @rx_document = @res.post_match
-                  
-                  if @rx_document2.length > @rx_document.length then
-                    
-                    if @cnt == 0 then
-                      @sbuf << @pattern_cc_1_1
-                    else
-                      @sbuf << @pattern_cc_1_2
-                    end
-                    
-                    @cnt += 1
-                    
-                    @rx_document = @rx_document2
-                  else
-                    
-                    @cnt -= 1
-                    
-                    if @cnt != 0 then
-                      @sbuf << @pattern_cc_2_1
-                    else
-                      @sbuf << @pattern_cc_2_2
-                    end
-                    
-                    if @cnt == 0 then
-                      break
-                    end
-                  end
-                else
-                  
-                  if @cnt == 0 then
-                    @sbuf << @pattern_cc_1_1
-                  else
-                    @sbuf << @pattern_cc_1_2
-                  end
-                  
-                  @cnt += 1
-                  
-                  @rx_document = @rx_document2
-                end
-              else
-                
-                @rx_document = @res.post_match
-                
-                if @cnt == 0 then
-                  @sbuf << @pattern_cc_1_1
-                else
-                  @sbuf << @pattern_cc_1_2
-                end
-                
-                @cnt += 1
-              end
-            else
-              
-              @res = @pattern_2.match(@rx_document)
-              
-              if @res then
-                @cnt -= 1
-                
-                if @cnt != 0 then
-                  @sbuf << @pattern_cc_2_1
-                else
-                  @sbuf << @pattern_cc_2_2
-                end
-                
-                @rx_document = @res.post_match
-              end
-              
-              if !@res then
-                break
-              end
-              
-              if @cnt == 0 then
-                break
-              end
-            end
-            
-            @pattern = @pattern_1b
-          end
-        end
+        create_element_pattern
         
         @pattern_cc = @sbuf
         
@@ -1634,195 +1446,7 @@ module Meteor
         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
         
-        if RUBY_VERSION >= '1.9.0' then
-          
-          @position = 0
-          
-          while (@res = @pattern.match(@root.document,@position)) || @cnt > 0
-            
-            if @res then
-              
-              if @cnt > 0 then
-                
-                @position2 = @res.end(0)
-                
-                @res = @pattern_2.match(@root.document,@position)
-                
-                if @res then
-                  
-                  @position = @res.end(0)
-                  
-                  if @position > @position2 then
-                    
-                    if @cnt == 0 then
-                      @sbuf << @pattern_cc_1_1
-                    else
-                      @sbuf << @pattern_cc_1_2
-                    end
-                    
-                    @cnt << 1
-                    
-                    @position = @position2
-                  else
-                    
-                    @cnt -= 1
-                    
-                    if @cnt != 0 then
-                      @sbuf << @pattern_cc_2_1
-                    else
-                      @sbuf << @pattern_cc_2_2
-                    end
-                    
-                    if @cnt == 0 then
-                      break
-                    end
-                  end
-                else
-                  
-                  if @cnt == 0 then
-                    @sbuf << @pattern_cc_1_1
-                  else
-                    @sbuf << @pattern_cc_1_2
-                  end
-                  
-                  @cnt += 1
-                  
-                  @position = @position2
-                end
-              else
-                @position = @res.end(0)
-                
-                if @cnt == 0 then
-                  @sbuf << @pattern_cc_1_1
-                else
-                  @sbuf << @pattern_cc_1_2
-                end
-                
-                @cnt += 1
-              end
-            else
-              
-              @res = @pattern_2.match(@root.document,@position)
-              
-              if @res then
-                
-                @cnt -= 1
-                
-                if @cnt != 0 then
-                  @sbuf << @pattern_cc_2_1
-                else
-                  @sbuf << @pattern_cc_2_2
-                end
-                
-                @position = @res.end(0)
-              end
-              
-              if @cnt == 0 then
-                break
-              end
-              
-              if !@res then
-                break
-              end
-            end
-            
-            @pattern = @pattern_1b
-          end
-        else
-          
-          @rx_document = @root.document
-          
-          while (@res = @pattern.match(@rx_document)) || @cnt > 0
-            
-            if @res then
-              
-              if @cnt > 0 then
-                
-                @rx_document2 = @res.post_match
-                
-                @res = @pattern_2.match(@rx_document)
-                
-                if @res then
-                  
-                  @rx_document = @res.post_match
-                  
-                  if @rx_document2.length > @rx_document.length then
-                    
-                    if @cnt == 0 then
-                      @sbuf << @pattern_cc_1_1
-                    else
-                      @sbuf << @pattern_cc_1_2
-                    end
-                    
-                    @cnt += 1
-                    
-                    @rx_document = @rx_document2
-                  else
-                    
-                    @cnt -= 1
-                    
-                    if @cnt != 0 then
-                      @sbuf << @pattern_cc_2_1
-                    else
-                      @sbuf << @pattern_cc_2_2
-                    end
-                    
-                    if @cnt == 0 then
-                      break
-                    end
-                  end
-                else
-                  
-                  if @cnt == 0 then
-                    @sbuf << @pattern_cc_1_1
-                  else
-                    @sbuf << @pattern_cc_1_2
-                  end
-                  
-                  @cnt += 1
-                  
-                  @rx_document = @rx_document2
-                end
-              else
-                @rx_document = @res.post_match
-                
-                if @cnt == 0 then
-                  @sbuf << @pattern_cc_1_1
-                else
-                  @sbuf << @pattern_cc_1_2
-                end
-                
-                @cnt += 1
-              end
-            else
-              
-              @res = @pattern_2.match(@rx_document)
-              
-              if @res then
-                
-                @cnt -= 1
-                
-                if @cnt != 0 then
-                  @sbuf << @pattern_cc_2_1
-                else
-                  @sbuf << @pattern_cc_2_2
-                end
-                
-                @rx_document = @res.post_match
-              end
-              
-              if @cnt == 0 then
-                break
-              end
-              
-              if !@res then
-                break
-              end
-            end
-            
-            @pattern = @pattern_1b
-          end
-        end
+        create_element_pattern
         
         @pattern_cc = @sbuf
         
@@ -1899,6 +1523,200 @@ module Meteor
       end
       private :element_4
 
+      def create_element_pattern    
+
+        if RUBY_VERSION >= '1.9.0' then
+
+          @position = 0
+
+          while (@res = @pattern.match(@root.document,@position)) || @cnt > 0
+
+            if @res then
+
+              if @cnt > 0 then
+
+                @position2 = @res.end(0)
+
+                @res = @pattern_2.match(@root.document,@position)
+
+                if @res then
+
+                  @position = @res.end(0)
+
+                  if @position > @position2 then
+
+                    if @cnt == 0 then
+                      @sbuf << @pattern_cc_1_1
+                    else
+                      @sbuf << @pattern_cc_1_2
+                    end
+
+                    @cnt << 1
+
+                    @position = @position2
+                  else
+
+                    @cnt -= 1
+
+                    if @cnt != 0 then
+                      @sbuf << @pattern_cc_2_1
+                    else
+                      @sbuf << @pattern_cc_2_2
+                    end
+
+                    if @cnt == 0 then
+                      break
+                    end
+                  end
+                else
+
+                  if @cnt == 0 then
+                    @sbuf << @pattern_cc_1_1
+                  else
+                    @sbuf << @pattern_cc_1_2
+                  end
+
+                  @cnt += 1
+
+                  @position = @position2
+                end
+              else
+                @position = @res.end(0)
+
+                if @cnt == 0 then
+                  @sbuf << @pattern_cc_1_1
+                else
+                  @sbuf << @pattern_cc_1_2
+                end
+
+                @cnt += 1
+              end
+            else
+
+              @res = @pattern_2.match(@root.document,@position)
+
+              if @res then
+
+                @cnt -= 1
+
+                if @cnt != 0 then
+                  @sbuf << @pattern_cc_2_1
+                else
+                  @sbuf << @pattern_cc_2_2
+                end
+
+                @position = @res.end(0)
+              end
+
+              if @cnt == 0 then
+                break
+              end
+
+              if !@res then
+                break
+              end
+            end
+
+            @pattern = @pattern_1b
+          end
+        else
+
+          @rx_document = @root.document
+
+          while (@res = @pattern.match(@rx_document)) || @cnt > 0
+
+            if @res then
+
+              if @cnt > 0 then
+
+                @rx_document2 = @res.post_match
+
+                @res = @pattern_2.match(@rx_document)
+
+                if @res then
+
+                  @rx_document = @res.post_match
+
+                  if @rx_document2.length > @rx_document.length then
+
+                    if @cnt == 0 then
+                      @sbuf << @pattern_cc_1_1
+                    else
+                      @sbuf << @pattern_cc_1_2
+                    end
+
+                    @cnt += 1
+
+                    @rx_document = @rx_document2
+                  else
+
+                    @cnt -= 1
+
+                    if @cnt != 0 then
+                      @sbuf << @pattern_cc_2_1
+                    else
+                      @sbuf << @pattern_cc_2_2
+                    end
+
+                    if @cnt == 0 then
+                      break
+                    end
+                  end
+                else
+
+                  if @cnt == 0 then
+                    @sbuf << @pattern_cc_1_1
+                  else
+                    @sbuf << @pattern_cc_1_2
+                  end
+
+                  @cnt += 1
+
+                  @rx_document = @rx_document2
+                end
+              else
+                @rx_document = @res.post_match
+
+                if @cnt == 0 then
+                  @sbuf << @pattern_cc_1_1
+                else
+                  @sbuf << @pattern_cc_1_2
+                end
+
+                @cnt += 1
+              end
+            else
+
+              @res = @pattern_2.match(@rx_document)
+
+              if @res then
+
+                @cnt -= 1
+
+                if @cnt != 0 then
+                  @sbuf << @pattern_cc_2_1
+                else
+                  @sbuf << @pattern_cc_2_2
+                end
+
+                @rx_document = @res.post_match
+              end
+
+              if @cnt == 0 then
+                break
+              end
+
+              if !@res then
+                break
+              end
+            end
+
+            @pattern = @pattern_1b
+          end
+        end
+      end
+      private :create_element_pattern
+
       #
       # 要素の属性をセットする or 属性の値を取得する
       # 
@@ -1947,6 +1765,7 @@ module Meteor
             @e_cache.store(elm.object_id, elm)
           end
         end
+        elm
       end
       private :setAttribute_3
 
@@ -2070,6 +1889,7 @@ module Meteor
         if @root.hook || @root.monoHook then
           setAttribute_3(@root.mutableElement, attrName, attrValue)
         end
+        @root.mutableElement
       end
       private :setAttribute_2
       
@@ -2184,6 +2004,7 @@ module Meteor
             @e_cache.store(elm.object_id,elm)
           end
         end
+        elm
       end
       private :setAttribute_2_m
  
@@ -2234,7 +2055,8 @@ module Meteor
         if !elm.parent then
           @e_cache.store(elm.object_id,elm)
         end
-        
+
+        elm
       end
       private :setContent_3
 
@@ -2271,6 +2093,8 @@ module Meteor
         if @root.monoHook then
           setContent_3(@root.mutableElement, content, entityRef)
         end
+
+        elm
       end
       private :setContent_2_b
       
@@ -2320,6 +2144,8 @@ module Meteor
             @e_cache.store(elm.object_id,elm)
           end
         end
+
+        elm
       end
       private :removeAttribute_2
 
@@ -2340,6 +2166,8 @@ module Meteor
         if @root.hook || @root.monoHook then
           removeAttribute_2(@root.mutableElement, attrName)
         end
+
+        @root.mutableElement
       end
       private :removeAttribute_1
       

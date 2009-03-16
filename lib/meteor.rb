@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.6
+# @version 0.9.0.7
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.6"
+  VERSION = "0.9.0.7"
   
   #
   # 要素クラス
@@ -187,11 +187,11 @@ module Meteor
     #
     def initialize()
       #コンテントタイプ
-      @contentType = ''
+      #@contentType = ''
       #改行コード
-      @kaigyoCode = ''
+      #@kaigyoCode = ''
       #文字コード
-      @characterEncoding=''
+      #@characterEncoding=''
 
       #フックドキュメント
       @hookDocument =''
@@ -574,95 +574,95 @@ module Meteor
     class Kernel < Meteor::Parser
 
       EMPTY = ''
-      SPACE = " "
-      DOUBLE_QUATATION = "\""
-      TAG_OPEN = "<"
-      TAG_OPEN3 = "</"
-      TAG_OPEN4 = "<\\\\/"
-      TAG_CLOSE = ">"
-      TAG_CLOSE2 = "\\/>"
-      TAG_CLOSE3 = "/>"
-      ATTR_EQ = "=\""
+      SPACE = ' '
+      DOUBLE_QUATATION = '"'
+      TAG_OPEN = '<'
+      TAG_OPEN3 = '</'
+      TAG_OPEN4 = '<\\\\/'
+      TAG_CLOSE = '>'
+      TAG_CLOSE2 = '\\/>'
+      TAG_CLOSE3 = '/>'
+      ATTR_EQ = '="'
       #element
       #TAG_SEARCH_1_1 = "([^<>]*)>(((?!(<\\/"
-      TAG_SEARCH_1_1 = "(\\s?[^<>]*)>(((?!("
+      TAG_SEARCH_1_1 = '(\\s?[^<>]*)>(((?!('
       #TAG_SEARCH_1_2 = ")).)*)<\\/";
-      TAG_SEARCH_1_2 = "[^<>]*>)).)*)<\\/"
-      TAG_SEARCH_1_3 = "(\\s?[^<>]*)\\/>"
+      TAG_SEARCH_1_2 = '[^<>]*>)).)*)<\\/'
+      TAG_SEARCH_1_3 = '(\\s?[^<>]*)\\/>'
       #TAG_SEARCH_1_4 = "([^<>\\/]*)>"
-      TAG_SEARCH_1_4 = "(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      TAG_SEARCH_1_4_2 = "(\\s[^<>]*)>"
+      TAG_SEARCH_1_4 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      TAG_SEARCH_1_4_2 = '(\\s[^<>]*)>'
       
-      TAG_SEARCH_NC_1_1 = "\\s?[^<>]*>((?!("
-      TAG_SEARCH_NC_1_2 = "[^<>]*>)).)*<\\/"
-      TAG_SEARCH_NC_1_3 = "\\s?[^<>]*\\/>"
-      TAG_SEARCH_NC_1_4 = "(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      TAG_SEARCH_NC_1_4_2 = "\\s[^<>]*>"
+      TAG_SEARCH_NC_1_1 = '\\s?[^<>]*>((?!('
+      TAG_SEARCH_NC_1_2 = '[^<>]*>)).)*<\\/'
+      TAG_SEARCH_NC_1_3 = '\\s?[^<>]*\\/>'
+      TAG_SEARCH_NC_1_4 = '(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      TAG_SEARCH_NC_1_4_2 = '\\s[^<>]*>'
       
       #TAG_SEARCH_2_1 = "\\s([^<>]*"
-      TAG_SEARCH_2_1 = "(\\s[^<>]*"
-      TAG_SEARCH_2_1_2 = "(\\s[^<>]*(?:"
+      TAG_SEARCH_2_1 = '(\\s[^<>]*'
+      TAG_SEARCH_2_1_2 = '(\\s[^<>]*(?:'
       #TAG_SEARCH_2_2 = "\"[^<>]*)>(((?!(<\\/"
-      TAG_SEARCH_2_2 = "\"[^<>]*)>(((?!("
-      TAG_SEARCH_2_2_2 = "\")[^<>]*)>(((?!("
-      TAG_SEARCH_2_3 = "\"[^<>]*)"
+      TAG_SEARCH_2_2 = '"[^<>]*)>(((?!('
+      TAG_SEARCH_2_2_2 = '")[^<>]*)>(((?!('
+      TAG_SEARCH_2_3 = '"[^<>]*)'
       TAG_SEARCH_2_3_2 = "\"[^<>]*)\\/>"
       TAG_SEARCH_2_3_2_2 = "\")[^<>]*)\\/>"
       #TAG_SEARCH_2_4 = "\"[^<>\\/]*>"
-      TAG_SEARCH_2_4 = "(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+      TAG_SEARCH_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       #TAG_SEARCH_2_4_2 = "\"[^<>\\/]*)>"
-      TAG_SEARCH_2_4_2 = "(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
-      TAG_SEARCH_2_4_2_2 = "\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))"
-      TAG_SEARCH_2_4_2_3 = "\""
-      TAG_SEARCH_2_4_3 = "\"[^<>]*)>"
-      TAG_SEARCH_2_4_3_2 = "\")[^<>]*)>"
-      TAG_SEARCH_2_4_4 = "\"[^<>]*>"
+      TAG_SEARCH_2_4_2 = '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
+      TAG_SEARCH_2_4_2_2 = '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'
+      TAG_SEARCH_2_4_2_3 = '"'
+      TAG_SEARCH_2_4_3 = '"[^<>]*)>'
+      TAG_SEARCH_2_4_3_2 = '")[^<>]*)>'
+      TAG_SEARCH_2_4_4 = '"[^<>]*>'
 
-      TAG_SEARCH_2_6 = "\"[^<>]*"
-      TAG_SEARCH_2_7 = "\"|"
+      TAG_SEARCH_2_6 = '"[^<>]*'
+      TAG_SEARCH_2_7 = '"|'
 
-      TAG_SEARCH_NC_2_1 = "\\s[^<>]*"
-      TAG_SEARCH_NC_2_1_2 = "\\s[^<>]*(?:"
-      TAG_SEARCH_NC_2_2 = "\"[^<>]*>((?!("
-      TAG_SEARCH_NC_2_2_2 = "\")[^<>]*>((?!("
-      TAG_SEARCH_NC_2_3 = "\"[^<>]*)"
-      TAG_SEARCH_NC_2_3_2 = "\"[^<>]*\\/>"
-      TAG_SEARCH_NC_2_3_2_2 = "\")[^<>]*\\/>"
-      TAG_SEARCH_NC_2_4 = "(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      TAG_SEARCH_NC_2_4_2 = "(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      TAG_SEARCH_NC_2_4_2_2 = "\")(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      TAG_SEARCH_NC_2_4_2_3 = "\""
-      TAG_SEARCH_NC_2_4_3 = "\"[^<>]*>"
-      TAG_SEARCH_NC_2_4_3_2 = "\")[^<>]*>"
-      TAG_SEARCH_NC_2_4_4 = "\"[^<>]*>"
-      TAG_SEARCH_NC_2_6 = "\"[^<>]*"
-      TAG_SEARCH_NC_2_7 = "\"|"
+      TAG_SEARCH_NC_2_1 = '\\s[^<>]*'
+      TAG_SEARCH_NC_2_1_2 = '\\s[^<>]*(?:'
+      TAG_SEARCH_NC_2_2 = '"[^<>]*>((?!('
+      TAG_SEARCH_NC_2_2_2 = '")[^<>]*>((?!('
+      TAG_SEARCH_NC_2_3 = '"[^<>]*)'
+      TAG_SEARCH_NC_2_3_2 = '"[^<>]*\\/>'
+      TAG_SEARCH_NC_2_3_2_2 = '")[^<>]*\\/>'
+      TAG_SEARCH_NC_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      TAG_SEARCH_NC_2_4_2 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      TAG_SEARCH_NC_2_4_2_2 = '")(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      TAG_SEARCH_NC_2_4_2_3 = '"'
+      TAG_SEARCH_NC_2_4_3 = '"[^<>]*>'
+      TAG_SEARCH_NC_2_4_3_2 = '")[^<>]*>'
+      TAG_SEARCH_NC_2_4_4 = '"[^<>]*>'
+      TAG_SEARCH_NC_2_6 = '"[^<>]*'
+      TAG_SEARCH_NC_2_7 = '"|'
       
-      TAG_SEARCH_3_1 = "<([^<>\"]*)\\s[^<>]*"
-      TAG_SEARCH_3_1_2 = "<([^<>\"]*)\\s([^<>]*"
-      TAG_SEARCH_3_1_2_2 = "<([^<>\"]*)\\s([^<>]*("
+      TAG_SEARCH_3_1 = '<([^<>"]*)\\s[^<>]*'
+      TAG_SEARCH_3_1_2 = '<([^<>"]*)\\s([^<>]*'
+      TAG_SEARCH_3_1_2_2 = '<([^<>"]*)\\s([^<>]*('
 
-      TAG_SEARCH_3_2 = "\"[^<>]*\\/>"
-      TAG_SEARCH_3_2_2 = "\"[^<>]*)\\/>"
-      TAG_SEARCH_3_2_2_2 = "\")[^<>]*)\\/>"
+      TAG_SEARCH_3_2 = '"[^<>]*\\/>'
+      TAG_SEARCH_3_2_2 = '"[^<>]*)\\/>'
+      TAG_SEARCH_3_2_2_2 = '")[^<>]*)\\/>'
 
-      TAG_SEARCH_4_1 = "(\\s[^<>\\/]*)>("
-      TAG_SEARCH_4_2 = ".*?<"
+      TAG_SEARCH_4_1 = '(\\s[^<>\\/]*)>('
+      TAG_SEARCH_4_2 = '.*?<'
       #TAG_SEARCH_4_3 = "\\s[^<>\\/]*>"
-      TAG_SEARCH_4_3 = "(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      TAG_SEARCH_4_4 = "<\\/"
-      TAG_SEARCH_4_5 = ".*?<\/"
-      TAG_SEARCH_4_6 = ".*?)<\/"
-      #TAG_SEARCH_4_7 = "\"[^<>\\/]*)>("
-      TAG_SEARCH_4_7 = "\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
-      TAG_SEARCH_4_7_2 = "\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+      TAG_SEARCH_4_3 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      TAG_SEARCH_4_4 = '<\\/'
+      TAG_SEARCH_4_5 = '.*?<\/'
+      TAG_SEARCH_4_6 = '.*?)<\/'
+      #TAG_SEARCH_4_7 = '\"[^<>\\/]*)>(''
+      TAG_SEARCH_4_7 = '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
+      TAG_SEARCH_4_7_2 = '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
 
-      TAG_SEARCH_NC_3_1 = "<[^<>\"]*\\s[^<>]*"
-      TAG_SEARCH_NC_3_1_2 = "<([^<>\"]*)\\s(?:[^<>]*"
-      TAG_SEARCH_NC_3_1_2_2 = "<([^<>\"]*)\\s(?:[^<>]*("
-      TAG_SEARCH_NC_3_2 = "\"[^<>]*\\/>"
-      TAG_SEARCH_NC_3_2_2 = "\"[^<>]*)\\/>"
-      TAG_SEARCH_NC_3_2_2_2 = "\")[^<>]*)\\/>"
+      TAG_SEARCH_NC_3_1 = '<[^<>"]*\\s[^<>]*'
+      TAG_SEARCH_NC_3_1_2 = '<([^<>"]*)\\s(?:[^<>]*'
+      TAG_SEARCH_NC_3_1_2_2 = '<([^<>"]*)\\s(?:[^<>]*('
+      TAG_SEARCH_NC_3_2 = '"[^<>]*\\/>'
+      TAG_SEARCH_NC_3_2_2 = '"[^<>]*)\\/>'
+      TAG_SEARCH_NC_3_2_2_2 = '")[^<>]*)\\/>'
       #TAG_SEARCH_NC_4_1 = "(?:\\s[^<>\\/]*)>("
       #TAG_SEARCH_NC_4_2 = ".*?<"
       #TAG_SEARCH_NC_4_3 = "(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
@@ -673,35 +673,35 @@ module Meteor
       #TAG_SEARCH_NC_4_7_2 = "\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
       
       #setAttribute
-      SET_ATTR_1 = "=\"[^\"]*\""
+      SET_ATTR_1 = '="[^"]*"'
       #getAttributeValue
-      GET_ATTR_1 = "=\"([^\"]*)\""
+      GET_ATTR_1 = '="([^"]*)"'
       #attributeMap
       #todo
-      GET_ATTRS_MAP = "([^\\s]*)=\"([^\"]*)\""
+      GET_ATTRS_MAP = '([^\\s]*)="([^\"]*)"'
       #removeAttribute
-      ERASE_ATTR_1 = "=\"[^\"]*\"\\s"
+      ERASE_ATTR_1 = '="[^\"]*"\\s'
 
       #cxtag
-      SEARCH_CX_1 = "<!--\\s@"
-      SEARCH_CX_2 = "\\s([^<>]*id=\""
-      SEARCH_CX_3 = "\"[^<>]*)-->(((?!(<!--\\s\\/@"
-      SEARCH_CX_4 = ")).)*)<!--\\s\\/@"
-      SEARCH_CX_5 = "\\s-->"
-      SEARCH_CX_6 = "<!--\\s@([^<>]*)\\s[^<>]*id=\""
+      SEARCH_CX_1 = '<!--\\s@'
+      SEARCH_CX_2 = '\\s([^<>]*id="'
+      SEARCH_CX_3 = '\"[^<>]*)-->(((?!(<!--\\s\\/@'
+      SEARCH_CX_4 = ')).)*)<!--\\s\\/@'
+      SEARCH_CX_5 = '\\s-->'
+      SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
 
       #setElementToCXTag
-      SET_CX_1 = "<!-- @"
-      SET_CX_2 = "-->"
-      SET_CX_3 = "<!-- /@"
-      SET_CX_4 = " -->"
+      SET_CX_1 = '<!-- @'
+      SET_CX_2 = '-->'
+      SET_CX_3 = '<!-- /@'
+      SET_CX_4 = ' -->'
 
       #setMonoInfo
-      SET_MONO_1 = "\\A[^<>]*\\Z"
+      SET_MONO_1 = '\\A[^<>]*\\Z'
 
       #clean
-      CLEAN_1 = "<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->"
-      CLEAN_2 = "<!--\\s\\/@[^<>]*(\\s)*-->"
+      CLEAN_1 = '<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->'
+      CLEAN_2 = '<!--\\s\\/@[^<>]*(\\s)*-->'
       #escape
       AND_1 = '&'
       AND_2 = '&amp;'
@@ -722,9 +722,9 @@ module Meteor
       
       ESCAPE_ENTITY_REF = ''
       
-      SUB_REGEX1 = "(\\\\*)\\\\([0-9]+)"
-      SUB_REGEX2 = "\\1\\1\\\\\\\\\\2"
-      SUB_REGEX3 = "\\1\\1\\1\\1\\\\\\\\\\\\\\\\\\2"
+      SUB_REGEX1 = '(\\\\*)\\\\([0-9]+)'
+      SUB_REGEX2 = '\\1\\1\\\\\\\\\\2'
+      SUB_REGEX3 = '\\1\\1\\1\\1\\\\\\\\\\\\\\\\\\2'
       
       @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
 
@@ -1201,7 +1201,6 @@ module Meteor
       private :elementWithContent_3_1
       
       def elementWithContent_3_2(elmName)
-        @cnt = 0
 
         @pattern_cc_1 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1 << @_attrName << ATTR_EQ
         @pattern_cc_1 << @_attrValue << TAG_SEARCH_2_4_2
@@ -1226,7 +1225,9 @@ module Meteor
         
         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
-        
+
+        @cnt = 0
+
         create_element_pattern
         
         @pattern_cc = @sbuf
@@ -1414,8 +1415,7 @@ module Meteor
       private :elementWithContent_5_1
       
       def elementWithContent_5_2(elmName)
-        @cnt = 0
-        
+
         @pattern_cc_1 = '' << TAG_OPEN << @_elmName << TAG_SEARCH_2_1_2 << @_attrName1 << ATTR_EQ
         @pattern_cc_1 << @_attrValue1 << TAG_SEARCH_2_6 << @_attrName2 << ATTR_EQ
         @pattern_cc_1 << @_attrValue2 << TAG_SEARCH_2_7 << @_attrName2 << ATTR_EQ
@@ -1445,7 +1445,9 @@ module Meteor
         
         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
-        
+
+        @cnt = 0
+
         create_element_pattern
         
         @pattern_cc = @sbuf
@@ -1787,7 +1789,9 @@ module Meteor
           end
           #属性の置換
           @pattern = Meteor::Core::Util::PatternCache.get('' << attrName << SET_ATTR_1)
-          elm.attributes.sub!(@pattern,'' << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
+          
+          #elm.attributes.sub!(@pattern,'' << attrName << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
+          elm.attributes.sub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
         else
           #属性文字列の最後に新規の属性を追加する
           @_attrValue = attrValue
@@ -1849,9 +1853,9 @@ module Meteor
           @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
           
           #タグ置換
-          @pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2
-          @pattern_cc << @_content << SET_CX_3 << elm.name << SET_CX_4
-          #@pattern_cc = "<!-- @#{elm.name} #{elm.attributes}-->#{@_content}<!-- /@#{elm.name} -->"
+          #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2
+          #@pattern_cc << @_content << SET_CX_3 << elm.name << SET_CX_4
+          @pattern_cc = "<!-- @#{elm.name} #{elm.attributes}-->#{@_content}<!-- /@#{elm.name} -->"
           @root.document.sub!(@pattern,@pattern_cc)
         end
       end
@@ -1864,11 +1868,11 @@ module Meteor
           if attr.changed then
             @_attrValue = escapeRegex(attr.value)
             #replace2Regex(@_attrValue)  
-            @pattern_cc = '' << name << SET_ATTR_1
-            #@pattern_cc = "#{attrName}=\"[^\"]*\""
+            #@pattern_cc = '' << name << SET_ATTR_1
+            @pattern_cc = "#{attrName}=\"[^\"]*\""
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-            elm.pattern.gsub!(@pattern,'' << name << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
-            #elm.pattern.sub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
+            #elm.pattern.gsub!(@pattern,'' << name << ATTR_EQ << @_attrValue << DOUBLE_QUATATION)
+            elm.pattern.sub!(@pattern,"#{attrName}=\"#{@_attrValue}\"")
           elsif attr.removed then
             @pattern_cc = '' << name << SET_ATTR_1
             #@pattern_cc = "#{attrName}=\"[^\"]*\""
@@ -2747,10 +2751,10 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
-        KAIGYO_CODE = "(\r?\n|\r)"
+        KAIGYO_CODE = '(\r?\n|\r)'
         NBSP_2 = '&nbsp;'
-        BR_1 = "\r?\n|\r"
-        BR_2 = "<br>"
+        BR_1 = '\r?\n|\r'
+        BR_2 = '<br>'
 
         META = 'META'
         META_S = 'meta'
@@ -2793,21 +2797,21 @@ module Meteor
         #@@pattern_select = Regexp.new(SELECT)
         #@@pattern_multiple = Regexp.new(MULTIPLE)
 
-        SELECTED_M = "\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$"
+        SELECTED_M = '\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$'
         #SELECTED_M = [' selected ',' selected',' SELECTED ',' SELECTED']
-        SELECTED_R = "selected\\s|selected$|SELECTED\\s|SELECTED$"
-        CHECKED_M = "\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$"
+        SELECTED_R = 'selected\\s|selected$|SELECTED\\s|SELECTED$'
+        CHECKED_M = '\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$'
         #CHECKED_M = [' checked ',' checked',' CHECKED ',' CHECKED']
-        CHECKED_R = "checked\\s|checked$|CHECKED\\s|CHECKED$"
-        DISABLED_M = "\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$"
+        CHECKED_R = 'checked\\s|checked$|CHECKED\\s|CHECKED$'
+        DISABLED_M = '\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$'
         #DISABLED_M = [' disabled ',' disiabled',' DISABLED ',' DISABLED']
-        DISABLED_R = "disabled\\s|disabled$|DISABLED\\s|DISABLED$"
-        READONLY_M = "\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$"
+        DISABLED_R = 'disabled\\s|disabled$|DISABLED\\s|DISABLED$'
+        READONLY_M = '\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$'
         #READONLY_M = [' readonly ',' readonly',' READONLY ',' READONLY']
-        READONLY_R = "readonly\\s|readonly$|READONLY\\s|READONLY$"
-        MULTIPLE_M = "\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$"
+        READONLY_R = 'readonly\\s|readonly$|READONLY\\s|READONLY$'
+        MULTIPLE_M = '\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$'
         #MULTIPLE_M = [' multiple ',' multiple',' MULTIPLE ',' MULTIPLE']
-        MULTIPLE_R = "multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$"
+        MULTIPLE_R = 'multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$'
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)
         @@pattern_selected_r = Regexp.new(SELECTED_R)
@@ -2877,7 +2881,7 @@ module Meteor
         @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
 
-        GET_ATTRS_MAP2="\\s(disabled|readonly|checked|selected|multiple)"
+        GET_ATTRS_MAP2='\\s(disabled|readonly|checked|selected|multiple)'
         @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
         
         #
@@ -3499,11 +3503,11 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
-        KAIGYO_CODE = "(\r?\n|\r)"
+        KAIGYO_CODE = '(\r?\n|\r)'
         NBSP_2 = '&nbsp;'
-        BR_1 = "\r?\n|\r"
+        BR_1 = '\r?\n|\r'
         BR_2 = '<br/>'
-        BR_3 = "<br\\/>"
+        BR_3 = '<br\\/>'
 
         META = 'META'
         META_S = 'meta'
@@ -3540,26 +3544,26 @@ module Meteor
         #@@pattern_select = Regexp.new(SELECT)
         #@@pattern_multiple = Regexp.new(MULTIPLE)
         
-        SELECTED_M = "\\sselected=\"[^\"]*\"\\s|\\sselected=\"[^\"]*\"$"
-        SELECTED_M1 = "\\sselected=\"([^\"]*)\"\\s|\\sselected=\"([^\"]*)\"$"
-        SELECTED_R = "selected=\"[^\"]*\""
-        SELECTED_U = "selected=\"selected\""
-        CHECKED_M = "\\schecked=\"[^\"]*\"\\s|\\schecked=\"[^\"]*\"$"
-        CHECKED_M1 = "\\schecked=\"([^\"]*)\"\\s|\\schecked=\"([^\"]*)\"$"
-        CHECKED_R = "checked=\"[^\"]*\""
-        CHECKED_U = "checked=\"checked\""
-        DISABLED_M = "\\sdisabled=\"[^\"]*\"\\s|\\sdisabled=\"[^\"]*\"$"
-        DISABLED_M1 = "\\sdisabled=\"([^\"]*)\"\\s|\\sdisabled=\"([^\"]*)\"$"
-        DISABLED_R = "disabled=\"[^\"]*\""
-        DISABLED_U = "disabled=\"disabled\""
-        READONLY_M = "\\sreadonly=\"[^\"]*\"\\s|\\sreadonly=\"[^\"]*\"$"
-        READONLY_M1 = "\\sreadonly=\"([^\"]*)\"\\s|\\sreadonly=\"([^\"]*)\"$"
-        READONLY_R = "readonly=\"[^\"]*\""
-        READONLY_U = "readonly=\"readonly\""
-        MULTIPLE_M = "\\smultiple=\"[^\"]*\"\\s|\\smultiple=\"[^\"]*\"$"
-        MULTIPLE_M1 = "\\smultiple=\"([^\"]*)\"\\s|\\smultiple=\"([^\"]*)\"$"
-        MULTIPLE_R = "multiple=\"[^\"]*\""
-        MULTIPLE_U = "multiple=\"multiple\""
+        SELECTED_M = '\\sselected="[^"]*"\\s|\\sselected="[^"]*"$'
+        SELECTED_M1 = '\\sselected="([^"]*)"\\s|\\sselected="([^"]*)"$'
+        SELECTED_R = 'selected="[^"]*"'
+        SELECTED_U = 'selected="selected"'
+        CHECKED_M = '\\schecked="[^"]*"\\s|\\schecked="[^"]*"$'
+        CHECKED_M1 = '\\schecked="([^"]*)"\\s|\\schecked="([^"]*)"$'
+        CHECKED_R = 'checked="[^"]*"'
+        CHECKED_U = 'checked="checked"'
+        DISABLED_M = '\\sdisabled="[^"]*"\\s|\\sdisabled="[^"]*"$'
+        DISABLED_M1 = '\\sdisabled="([^"]*)"\\s|\\sdisabled="([^"]*)"$'
+        DISABLED_R = 'disabled="[^"]*"'
+        DISABLED_U = 'disabled="disabled"'
+        READONLY_M = '\\sreadonly="[^"]*"\\s|\\sreadonly="[^"]*"$'
+        READONLY_M1 = '\\sreadonly="([^"]*)"\\s|\\sreadonly="([^"]*)"$'
+        READONLY_R = 'readonly="[^"]*"'
+        READONLY_U = 'readonly="readonly"'
+        MULTIPLE_M = '\\smultiple="[^"]*"\\s|\\smultiple="[^"]*"$'
+        MULTIPLE_M1 = '\\smultiple="([^"]*)"\\s|\\smultiple="([^"]*)"$'
+        MULTIPLE_R = 'multiple="[^"]*"'
+        MULTIPLE_U = 'multiple="multiple"'
 
         HTTP_EQUIV = 'http-equiv'
         CONTENT_TYPE = 'Content-Type'
@@ -3607,8 +3611,8 @@ module Meteor
             "\n" => '<br/>',
           }
           
-          PATTERN_ESCAPE = "[&\"'<> ]"
-          PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+          PATTERN_ESCAPE = '[&"\'<> ]'
+          PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
           @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
           
@@ -4022,7 +4026,7 @@ module Meteor
           '>' => '&gt;',
         }
         
-        PATTERN_ESCAPE = "[&\"'<>]"
+        PATTERN_ESCAPE = '[&\"\'<>]'
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
         
         @@pattern_and_1 = Regexp.new(AND_1)

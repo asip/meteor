@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.7
+# @version 0.9.0.8
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.7"
+  VERSION = "0.9.0.8"
   
   #
   # 要素クラス
@@ -69,6 +69,7 @@ module Meteor
       #@mono = false
       #@parent = false
       @arguments = AttributeMap.new
+      @origin = self.object_id
     end
 
     #
@@ -87,6 +88,7 @@ module Meteor
       @parent = elm.parent
       @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
+      @origin = elm.object_id
     end
     
     attr_accessor :name
@@ -101,6 +103,8 @@ module Meteor
     attr_accessor :parser
     attr_accessor :type_value
     attr_accessor :arguments
+    attr_accessor :usable
+    attr_accessor :origin
     
     #
     # 属性を編集する or 属性の値を取得する
@@ -1764,7 +1768,7 @@ module Meteor
               elm.arguments.store(attrName, attrValue)
             end
             
-            @e_cache.store(elm.object_id, elm)
+            @e_cache.store(elm.origin, elm)
           end
         end
         elm
@@ -2005,7 +2009,7 @@ module Meteor
           }
           
           if !elm.parent then
-            @e_cache.store(elm.object_id,elm)
+            @e_cache.store(elm.origin,elm)
           end
         end
         elm
@@ -2057,7 +2061,7 @@ module Meteor
         elm.mixed_content = content
         
         if !elm.parent then
-          @e_cache.store(elm.object_id,elm)
+          @e_cache.store(elm.origin,elm)
         end
 
         elm
@@ -2145,7 +2149,7 @@ module Meteor
               elm.arguments.delete(attrName)
             end
             
-            @e_cache.store(elm.object_id,elm)
+            @e_cache.store(elm.origin,elm)
           end
         end
 
@@ -2182,7 +2186,7 @@ module Meteor
       #
       def removeElement(elm)
           replace(elm,EMPTY)
-          @e_cache.delete(elm.object_id)
+          @e_cache.delete(elm.origin)
       end
 
       #
@@ -2288,10 +2292,13 @@ module Meteor
       def reflect()
         
         @e_cache.values.each { |item|
-          editDocument_1(item)
-          editPattern_(item)
+          if item.usable = 0 then
+            editDocument_1(item)
+            editPattern_(item)
+          end
+          item.usable = 1
         }
-        @e_cache.clear
+        #@e_cache.clear
       end
       protected :reflect
       
@@ -4079,7 +4086,7 @@ module Meteor
           @root.hookDocument = String.new(ps.rootElement.hookDocument)
           @root.hook = ps.rootElement.hook
           @root.monoHook = ps.rootElement.monoHook
-          @root.contentType = String.new(ps.contentType);
+          #@root.contentType = String.new(ps.contentType);
         end
 
         #

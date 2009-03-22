@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.8
+# @version 0.9.0.9
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.8"
+  VERSION = "0.9.0.9"
   
   #
   # 要素クラス
@@ -90,7 +90,22 @@ module Meteor
       @arguments = AttributeMap.new(elm.arguments)
       @origin = elm.object_id
     end
-    
+
+    def self.copy(elm)
+      @obj = elm.parser.e_cache[elm.origin]
+      if @obj then     
+        @obj.attributes = String.new(elm.attributes)
+        @obj.pattern = String.new(elm.pattern)
+        @obj.document = String.new(elm.document)    
+        @obj.arguments = AttributeMap.new(elm.arguments)
+        @obj.usable = 0
+        @obj
+      else    
+        self.new(elm)
+      end
+
+    end
+
     attr_accessor :name
     attr_accessor :attributes
     attr_accessor :mixed_content
@@ -839,6 +854,7 @@ module Meteor
       end
 
       attr_accessor :parent
+      attr_accessor :e_cache
 
       #
       # フックフラグをセットする
@@ -962,15 +978,15 @@ module Meteor
 
       def get_encoding()
         case @characterEncoding
-        when "UTF-8"
+        when 'UTF-8'
           Kconv::UTF8
-        when "ISO-2022-JP"
+        when 'ISO-2022-JP'
           Kconv::JIS
-        when "Shift_JIS"
+        when 'Shift_JIS'
           Kconv::SJIS
-        when "EUC-JP"
+        when 'EUC-JP'
           Kconv::EUC
-        when "ASCII"
+        when 'ASCII'
           Kconv::ASCII
           #when "UTF-16"
           #  return KConv::UTF16
@@ -2292,11 +2308,11 @@ module Meteor
       def reflect()
         
         @e_cache.values.each { |item|
-          if item.usable = 0 then
+          if item.usable == 0 then
             editDocument_1(item)
             editPattern_(item)
+            item.usable = 1
           end
-          item.usable = 1
         }
         #@e_cache.clear
       end
@@ -2323,7 +2339,7 @@ module Meteor
             #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
             @root.hookDocument << "<#{@root.mutableElement.name}#{@_attributes}>#{@root.document}</#{@root.mutableElement.name}>"
           end
-          @root.mutableElement = Element.new(@root.element)
+          @root.mutableElement = Element.copy(@root.element)
           @root.document = String.new(@root.element.mixed_content)
         else
           if @root.monoHook then
@@ -2339,7 +2355,7 @@ module Meteor
               #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
               @root.hookDocument << "<#{@root.mutableElement.name}#{@root.mutableElement.attributes}>#{@root.mutableElement.mixed_content}</#{@root.mutableElement.name}>"
             end
-            @root.mutableElement = Element.new(@root.element)
+            @root.mutableElement = Element.copy(@root.element)
           else
             #フック判定がFALSEの場合
             clean

@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.0.10
+# @version 0.9.0.9
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.0.10"
+  VERSION = "0.9.0.9"
   
   #
   # 要素クラス
@@ -89,7 +89,6 @@ module Meteor
       @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
       @origin = elm.object_id
-      @usable = 0
     end
 
     def self.copy(elm)

@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.0
+# @version 0.9.0.10
 #
 if RUBY_VERSION < '1.9.0' then
   require 'kconv'
@@ -27,7 +27,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.0"
+  VERSION = "0.9.0.10"
   
   #
   # 要素クラス

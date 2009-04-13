@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.2
+# @version 0.9.1.3
 #
 
 
@@ -31,7 +31,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.2"
+  VERSION = "0.9.1.3"
   
   #
   # 要素クラス
@@ -97,7 +97,7 @@ module Meteor
       @usable = 0
     end
 
-    def self.new?(elm)
+    def self.new!(elm)
       @obj = elm.parser.e_cache[elm.origin]
       if @obj then     
         @obj.attributes = String.new(elm.attributes)
@@ -2370,7 +2370,7 @@ module Meteor
             #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
             @root.hook_document << "<#{@root.mutableElement.name}#{@_attributes}>#{@root.document}</#{@root.mutableElement.name}>"
           end
-          @root.mutableElement = Element.new?(@root.element)
+          @root.mutableElement = Element.new!(@root.element)
           @root.document = String.new(@root.element.mixed_content)
         else
           if @root.mono_hook then

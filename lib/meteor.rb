@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.3
+# @version 0.9.1.4
 #
 
 
@@ -31,8 +31,10 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.3"
-  
+  VERSION = "0.9.1.4"
+
+  CONTENT_STR = ':content'
+
   #
   # 要素クラス
   #
@@ -163,7 +165,7 @@ module Meteor
     # @param [String] value 属性の値or内容
     #
     def []=(name,value)
-      if !name.kind_of?(String) || name != ':content' then
+      if !name.kind_of?(String) || name != CONTENT_STR then
         attribute(name,value)
       else
         content(value)
@@ -177,7 +179,7 @@ module Meteor
     # @return [String] 属性の値or内容
     #
     def [](name)
-      if !name.kind_of?(String) || name != ':content' then
+      if !name.kind_of?(String) || name != CONTENT_STR then
         attribute(name)
       else
         content()
@@ -207,6 +209,8 @@ module Meteor
   #
   class RootElement
 
+    EMPTY = ''
+
     #
     # イニシャライザ
     #
@@ -219,7 +223,7 @@ module Meteor
       #@character_encoding=''
 
       #フックドキュメント
-      @hook_document =''
+      @hook_document = EMPTY
       #フック判定フラグ
       #@hook = false
       #単一要素フック判定フラグ
@@ -730,13 +734,18 @@ module Meteor
       #escape
       AND_1 = '&'
       AND_2 = '&amp;'
+      AND_3 = 'amp'
       LT_1 = '<'
       LT_2 = '&lt;'
+      LT_3 = 'lt'
       GT_1 = '>'
       GT_2 = '&gt;'
+      GT_3 = 'gt'
       QO_2 = '&quot;'
+      QO_3 = 'quot'
       AP_1 = '\''
       AP_2 = '&apos;'
+      AP_3 = 'apos'
       #EN_1 = "\\\\"
       EN_1 = "\\"
       #EN_2 = "\\\\\\\\"
@@ -1872,7 +1881,7 @@ module Meteor
         if !elm.cx then
           @_attributes = elm.attributes
           replace2regex(@_attributes)
-          
+
           if elm.empty then
             #内容あり要素の場合
             @_content = elm.mixed_content
@@ -2616,7 +2625,7 @@ module Meteor
       # @param [String] value 属性値or内容
       #
       def []=(name,value)
-        if !name.kind_of?(String)|| name != ':content' then
+        if !name.kind_of?(String)|| name != CONTENT_STR then
           attribute(name,value)
         else
           content(value)
@@ -2629,7 +2638,7 @@ module Meteor
       # @return [String] 属性値or内容
       #
       def [](name)  
-        if !name.kind_of?(String)|| name != ':content' then
+        if !name.kind_of?(String)|| name != CONTENT_STR then
           attribute(name)
         else
           content()
@@ -2807,6 +2816,7 @@ module Meteor
 
         KAIGYO_CODE = '(\r?\n|\r)'
         NBSP_2 = '&nbsp;'
+        NBSP_3 = 'nbsp'
         BR_1 = '\r?\n|\r'
         BR_2 = '<br>'
 
@@ -3534,18 +3544,18 @@ module Meteor
           #end
           element.gsub!(@@pattern_unescape) do
             case $1
-            when 'amp' then
-              '&'
-            when 'quot' then
-              '"'
-            when 'apos' then
-              '\''
-            when 'gt' then
-              '>'
-            when 'lt' then
-              '<'
-            when 'nbsp' then
-              ' '
+            when AND_3 then
+              AND_1
+            when QO_3 then
+              DOUBLE_QUATATION
+            when AP_3 then
+              AP_1
+            when GT_3 then
+              GT_1
+            when LT_3 then
+              LT_1
+            when NBSP_3 then
+              SPACE
             end
           end
           
@@ -3579,6 +3589,7 @@ module Meteor
 
         KAIGYO_CODE = '(\r?\n|\r)'
         NBSP_2 = '&nbsp;'
+        NBSP_3 = 'nbsp'
         BR_1 = '\r?\n|\r'
         BR_2 = '<br/>'
         BR_3 = '<br\\/>'
@@ -4057,18 +4068,18 @@ module Meteor
           #end
           element.gsub!(@@pattern_unescape) do
             case $1
-            when 'amp' then
-              '&'
-            when 'quot' then
-              '"'
-            when 'apos' then
-              '\''
-            when 'gt' then
-              '>'
-            when 'lt' then
-              '<'
-            when 'nbsp' then
-              ' '
+            when AND_3 then
+              AND_1
+            when QO_3 then
+              DOUBLE_QUATATION
+            when AP_3 then
+              AP_1
+            when GT_3 then
+              GT_1
+            when LT_3 then
+              LT_1
+            when NBSP_3 then
+             SPACE
             end
           end
           
@@ -4098,31 +4109,34 @@ module Meteor
       #
       # XMLパーサ
       #
-      class ParserImpl < Meteor::Core::Kernel
+      class ParserImpl < Meteor::Core::Kernel    
 
-        TABLE_FOR_ESCAPE_ = {
-          '&' => '&amp;',
-          '"' => '&quot;',
-          '\'' => '&apos;',
-          '<' => '&lt;',
-          '>' => '&gt;',
-        }
-        
-        PATTERN_ESCAPE = '[&\"\'<>]'
+        if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+          TABLE_FOR_ESCAPE_ = {
+                  '&' => '&amp;',
+                  '"' => '&quot;',
+                  '\'' => '&apos;',
+                  '<' => '&lt;',
+                  '>' => '&gt;',
+                  }     
+          PATTERN_ESCAPE = '[&\"\'<>]'
+          @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+        else
+          @@pattern_and_1 = Regexp.new(AND_1)
+          @@pattern_lt_1 = Regexp.new(LT_1)
+          @@pattern_gt_1 = Regexp.new(GT_1)
+          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
+          @@pattern_ap_1 = Regexp.new(AP_1)
+          @@pattern_lt_2 = Regexp.new(LT_2)
+          @@pattern_gt_2 = Regexp.new(GT_2)
+          @@pattern_dq_2 = Regexp.new(QO_2)
+          @@pattern_ap_2 = Regexp.new(AP_2)
+          @@pattern_and_2 = Regexp.new(AND_2)
+        end
+
+
+
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
-        
-        @@pattern_and_1 = Regexp.new(AND_1)
-        @@pattern_lt_1 = Regexp.new(LT_1)
-        @@pattern_gt_1 = Regexp.new(GT_1)
-        @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-        @@pattern_ap_1 = Regexp.new(AP_1)
-        @@pattern_lt_2 = Regexp.new(LT_2)
-        @@pattern_gt_2 = Regexp.new(GT_2)
-        @@pattern_dq_2 = Regexp.new(QO_2)
-        @@pattern_ap_2 = Regexp.new(AP_2)
-        @@pattern_and_2 = Regexp.new(AND_2)
-        
-        @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
         
         @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
@@ -4275,16 +4289,16 @@ module Meteor
           #else
           element.gsub!(@@pattern_unescape) do
             case $1
-            when 'amp' then
-              '&'
-            when 'quot' then
-              '"'
-            when 'apos' then
-              '\''
-            when 'gt' then
-              '>'
-            when 'lt' then
-              '<'
+            when AND_3 then
+              AND_1
+            when QO_3 then
+              DOUBLE_QUATATION
+            when AP_3 then
+              AP_1
+            when GT_3 then
+              GT_1
+            when LT_3 then
+              LT_1
             end
           end
           #end

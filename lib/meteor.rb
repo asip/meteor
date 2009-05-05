@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.4
+# @version 0.9.1.5
 #
 
 
@@ -31,7 +31,16 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.4"
+  VERSION = "0.9.1.5"
+
+  ZERO = 0
+  ONE = 1
+  TWO = 2
+  THREE = 3
+  FOUR = 4
+  FIVE = 5
+  SIX = 6
+  SEVEN = 7
 
   CONTENT_STR = ':content'
 
@@ -46,7 +55,7 @@ module Meteor
     #
     def initialize(*args)
       case args.length
-      when 1
+      when ONE
         if args[0].kind_of?(String) then
           initialize_s(args[0])
         elsif args[0].kind_of?(Meteor::Element)
@@ -76,8 +85,9 @@ module Meteor
       #@parent = false
       @arguments = AttributeMap.new
       @origin = self.object_id
-      @usable = 0
+      @usable = ZERO
     end
+    private :initialize_s
 
     #
     # イニシャライザ
@@ -96,8 +106,9 @@ module Meteor
       @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
       @origin = elm.object_id
-      @usable = 0
+      @usable = ZERO
     end
+    private :initialize_e
 
     def self.new!(elm)
       @obj = elm.parser.e_cache[elm.origin]
@@ -106,7 +117,7 @@ module Meteor
         @obj.pattern = String.new(elm.pattern)
         @obj.document = String.new(elm.document)    
         @obj.arguments = AttributeMap.new(elm.arguments)
-        @obj.usable = 0
+        @obj.usable = ZERO
         @obj
       else    
         self.new(elm)
@@ -147,16 +158,28 @@ module Meteor
     def attribute_map
       @parser.attribute_map(self)
     end
-    
+
+
+
     #
     # 内容をセットする or 内容を取得する
-    # 
+    #
     # @param [Array] args 引数配列
     # @return [String] 内容
     #
     def content(*args)
-      @parser.content(self,*args)
+      @parser.content(self,args)
     end
+
+    #
+    # 内容をセットする
+    #
+    # @param [String] value 内容の値
+    #
+    def content=(value)
+      @parser.content(self,value)
+    end
+
 
     #
     # 属性を編集するor内容をセットする
@@ -168,7 +191,7 @@ module Meteor
       if !name.kind_of?(String) || name != CONTENT_STR then
         attribute(name,value)
       else
-        content(value)
+        content=(value)
       end
     end
 
@@ -252,9 +275,9 @@ module Meteor
     
     def initialize(*args)
       case args.length
-      when 0
+      when ZERO
         initialize_0
-      when 1
+      when ONE
         initialize_1(args[0])
       else
         raise ArgumentError
@@ -271,6 +294,7 @@ module Meteor
       end
       @recordable = false
     end
+    private :initialize_0
 
     #
     # イニシャライザ
@@ -283,7 +307,8 @@ module Meteor
       end
       @recordable = attr_map.recordable
     end
-    
+    private :initialize_1
+
     #
     # 属性名と属性値を対としてセットする
     # 
@@ -416,7 +441,7 @@ module Meteor
     attr_accessor :name
     attr_accessor :value
     attr_accessor :changed
-    attr_accessor :removed
+    attr_accessor :removed   
 
   end
 
@@ -424,8 +449,8 @@ module Meteor
   # パーサ共通クラス
   #
   class Parser
-    HTML = 0
-    XHTML = 1
+    HTML = ZERO
+    XHTML = ONE
     XML = 2
   end
 
@@ -442,9 +467,9 @@ module Meteor
     #
     def self.build(*args)
       case args.length
-      when 3
+      when THREE
         build_3(args[0],args[1],args[2])
-      when 2
+      when TWO
         build_2(args[0],args[1])
       else
         raise ArgumentError
@@ -846,6 +871,7 @@ module Meteor
         #@_attrValue2 = nil
 
         #@sbuf = nil;
+        #@sbuf = ''
         #@rx_document = nil;
         #@rx_document2 = nil;
       end
@@ -1019,15 +1045,15 @@ module Meteor
       #
       def element(*args)
         case args.length
-        when 1
+        when ONE
           element_1(args[0])
-        when 2
+        when TWO
           element_2(args[0],args[1])
-        when 3
+        when THREE
           element_3(args[0],args[1],args[2])
-        when 4
+        when FOUR
           element_4(args[0],args[1],args[2],args[3])
-        when 5
+        when FIVE
           element_5(args[0],args[1],args[2],args[3],args[4])
         else
           raise ArgumentError
@@ -1204,7 +1230,7 @@ module Meteor
 
       def element_with_3_1(elm_name)
           
-        if @res.captures.length == 4 then
+        if @res.captures.length == FOUR then
           #要素
           @elm_ = Element.new(elm_name)
           #属性
@@ -1225,7 +1251,7 @@ module Meteor
           
           @elm_.parser = self
           
-        elsif @res.captures.length == 6 then
+        elsif @res.captures.length == SIX then
           #内容
           @elm_ = Element.new(elm_name)
           #属性
@@ -1278,7 +1304,7 @@ module Meteor
         
         @pattern_cc = @sbuf
         
-        if @sbuf.length == 0 || @cnt != 0 then
+        if @sbuf.length == ZERO || @cnt != ZERO then
           #  raise NoSuchElementException.new(elm_name,attr_name,attr_value);
           return nil;
         end
@@ -1425,7 +1451,7 @@ module Meteor
       
       def element_with_5_1(elm_name)
         
-        if @res.captures.length == 4 then
+        if @res.captures.length == FOUR then
           #要素
           @elm_ = Element.new(elm_name)
           #属性
@@ -1449,7 +1475,7 @@ module Meteor
           
           @elm_.parser = self
           
-        elsif @res.captures.length == 6 then
+        elsif @res.captures.length == SIX then
           
           @elm_ = Element.new(elm_name)
           #属性
@@ -1508,7 +1534,7 @@ module Meteor
         
         @pattern_cc = @sbuf
         
-        if @sbuf.length == 0 || @cnt != 0 then
+        if @sbuf.length == ZERO || @cnt != ZERO then
           #  raise NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2);
           return nil
         end
@@ -1590,11 +1616,11 @@ module Meteor
 
           @position = 0
 
-          while (@res = @pattern.match(@root.document,@position)) || @cnt > 0
+          while (@res = @pattern.match(@root.document,@position)) || @cnt > ZERO
 
             if @res then
 
-              if @cnt > 0 then
+              if @cnt > ZERO then
 
                 @position2 = @res.end(0)
 
@@ -1606,7 +1632,7 @@ module Meteor
 
                   if @position > @position2 then
 
-                    if @cnt == 0 then
+                    if @cnt == ZERO then
                       @sbuf << @pattern_cc_1_1
                     else
                       @sbuf << @pattern_cc_1_2
@@ -1617,40 +1643,40 @@ module Meteor
                     @position = @position2
                   else
 
-                    @cnt -= 1
+                    @cnt -= ONE
 
-                    if @cnt != 0 then
+                    if @cnt != ZERO then
                       @sbuf << @pattern_cc_2_1
                     else
                       @sbuf << @pattern_cc_2_2
                     end
 
-                    if @cnt == 0 then
+                    if @cnt == ZERO then
                       break
                     end
                   end
                 else
 
-                  if @cnt == 0 then
+                  if @cnt == ZERO then
                     @sbuf << @pattern_cc_1_1
                   else
                     @sbuf << @pattern_cc_1_2
                   end
 
-                  @cnt += 1
+                  @cnt += ONE
 
                   @position = @position2
                 end
               else
                 @position = @res.end(0)
 
-                if @cnt == 0 then
+                if @cnt == ZERO then
                   @sbuf << @pattern_cc_1_1
                 else
                   @sbuf << @pattern_cc_1_2
                 end
 
-                @cnt += 1
+                @cnt += ONE
               end
             else
 
@@ -1658,9 +1684,9 @@ module Meteor
 
               if @res then
 
-                @cnt -= 1
+                @cnt -= ONE
 
-                if @cnt != 0 then
+                if @cnt != ZERO then
                   @sbuf << @pattern_cc_2_1
                 else
                   @sbuf << @pattern_cc_2_2
@@ -1669,7 +1695,7 @@ module Meteor
                 @position = @res.end(0)
               end
 
-              if @cnt == 0 then
+              if @cnt == ZERO then
                 break
               end
 
@@ -1684,11 +1710,11 @@ module Meteor
 
           @rx_document = @root.document
 
-          while (@res = @pattern.match(@rx_document)) || @cnt > 0
+          while (@res = @pattern.match(@rx_document)) || @cnt > ZERO
 
             if @res then
 
-              if @cnt > 0 then
+              if @cnt > ZERO then
 
                 @rx_document2 = @res.post_match
 
@@ -1700,51 +1726,51 @@ module Meteor
 
                   if @rx_document2.length > @rx_document.length then
 
-                    if @cnt == 0 then
+                    if @cnt == ZERO then
                       @sbuf << @pattern_cc_1_1
                     else
                       @sbuf << @pattern_cc_1_2
                     end
 
-                    @cnt += 1
+                    @cnt += ONE
 
                     @rx_document = @rx_document2
                   else
 
-                    @cnt -= 1
+                    @cnt -= ONE
 
-                    if @cnt != 0 then
+                    if @cnt != ZERO then
                       @sbuf << @pattern_cc_2_1
                     else
                       @sbuf << @pattern_cc_2_2
                     end
 
-                    if @cnt == 0 then
+                    if @cnt == ZERO then
                       break
                     end
                   end
                 else
 
-                  if @cnt == 0 then
+                  if @cnt == ZERO then
                     @sbuf << @pattern_cc_1_1
                   else
                     @sbuf << @pattern_cc_1_2
                   end
 
-                  @cnt += 1
+                  @cnt += ONE
 
                   @rx_document = @rx_document2
                 end
               else
                 @rx_document = @res.post_match
 
-                if @cnt == 0 then
+                if @cnt == ZERO then
                   @sbuf << @pattern_cc_1_1
                 else
                   @sbuf << @pattern_cc_1_2
                 end
 
-                @cnt += 1
+                @cnt += ONE
               end
             else
 
@@ -1752,9 +1778,9 @@ module Meteor
 
               if @res then
 
-                @cnt -= 1
+                @cnt -= ONE
 
-                if @cnt != 0 then
+                if @cnt != ZERO then
                   @sbuf << @pattern_cc_2_1
                 else
                   @sbuf << @pattern_cc_2_2
@@ -1763,7 +1789,7 @@ module Meteor
                 @rx_document = @res.post_match
               end
 
-              if @cnt == 0 then
+              if @cnt == ZERO then
                 break
               end
 
@@ -1786,9 +1812,9 @@ module Meteor
       #
       def attribute(*args)
         case args.length
-        when 1
+        when ONE
           get_attribute_value_1(args[0])
-        when 2
+        when TWO
           if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             get_attribute_value_2(args[0],args[1])
           elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
@@ -1798,7 +1824,7 @@ module Meteor
           else
             raise ArgumentError
           end
-        when 3
+        when THREE
           set_attribute_3(args[0],args[1],args[2])
         else
           raise ArgumentError
@@ -2006,9 +2032,9 @@ module Meteor
       #
       def attribute_map(*args)
         case args.length
-        when 0
+        when ZERO
           get_attribute_map_0
-        when 1
+        when ONE
           get_attribute_map_1(args[0])
         else
           raise ArgumentError
@@ -2079,13 +2105,13 @@ module Meteor
       #
       def content(*args)
         case args.length
-        when 1
+        when ONE
           if args[0].kind_of?(Meteor::Element) then
             get_content_1(args[0])
           elsif args[0].kind_of?(String) then
             set_content_1(args[0])
           end
-        when 2
+        when TWO
           if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             set_content_2_s(args[0],args[1])
           elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClass)) then
@@ -2093,7 +2119,7 @@ module Meteor
           else
             raise ArgumentError
           end
-        when 3
+        when THREE
           set_content_3(args[0],args[1],args[2])
         else
           raise ArgumentError
@@ -2179,9 +2205,9 @@ module Meteor
       #
       def remove_attribute(*args)
         case args.length
-        when 1
+        when ONE
           remove_attribute_1(args[0])
-        when 2
+        when TWO
           remove_attribute_2(args[0],args[1])
         else
           raise ArgumentError
@@ -2252,9 +2278,9 @@ module Meteor
       #
       def cxtag(*args)
         case args.length
-        when 1
+        when ONE
           cxtag_1(args[0])
-        when 2
+        when TWO
           cxtag_2(args[0],args[1])
         else
           raise ArgumentError
@@ -2336,7 +2362,7 @@ module Meteor
       #
       def replace(elm,replace_document)
         #文字エスケープ
-        if replace_document.size > 0 && elm.parent && elm.mono then
+        if replace_document.size > ZERO && elm.parent && elm.mono then
           replace2regex(replace_document)
         end
         #タグ置換パターン
@@ -2348,7 +2374,7 @@ module Meteor
       def reflect()
         
         @e_cache.values.each do |item|
-          if item.usable == 0 then
+          if item.usable == ZERO then
             edit_document_1(item)
             edit_pattern_(item)
             item.usable = 1
@@ -2467,9 +2493,9 @@ module Meteor
       #
       def execute(*args)
         case args.length
-        when 1
+        when ONE
           execute_2(args[0],args[1])
-        when 2
+        when TWO
           execute_3(args[0],args[1],args[2])
         else
           raise ArgumentError
@@ -2662,9 +2688,9 @@ module Meteor
         
         def self.get(*args)
           case args.length
-          when 1
+          when ONE
             get_1(args[0])
-          when 2
+          when TWO
             get_2(args[0],args[1])
           else
             raise ArgumentError
@@ -2956,9 +2982,9 @@ module Meteor
         def initialize(*args)
           super(args)
           case args.length
-          when 0
+          when ZERO
             initialize_0
-          when 1
+          when ONE
             initialize_1(args[0])
           else
             raise ArgumentError
@@ -3734,9 +3760,9 @@ module Meteor
         def initialize(*args)
           super(args)
           case args.length
-          when 0
+          when ZERO
             initialize_0
-          when 1
+          when ONE
             initialize_1(args[0])
           else
             raise ArgumentError
@@ -4150,9 +4176,9 @@ module Meteor
           super(args)
 
           case args.length
-          when 0
+          when ZERO
             initialize_0
-          when 1
+          when ONE
             initialize_1(args[0])
           else
             raise ArgumentError

@@ -18,20 +18,20 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.5
+# @version 0.9.1.6
 #
 
 
 RUBY_VERSION_1_9_0 = '1.9.0'
 
 if RUBY_VERSION < RUBY_VERSION_1_9_0 then
-  require 'kconv'
+  require 'Kconv'
 end
 
 
 module Meteor
 
-  VERSION = "0.9.1.5"
+  VERSION = "0.9.1.6"
 
   ZERO = 0
   ONE = 1
@@ -1020,19 +1020,19 @@ module Meteor
       def get_encoding()
         case @character_encoding
         when 'UTF-8'
-          kconv::UTF8
+          Kconv::UTF8
         when 'ISO-2022-JP'
-          kconv::JIS
+          Kconv::JIS
         when 'Shift_JIS'
-          kconv::SJIS
+          Kconv::SJIS
         when 'EUC-JP'
-          kconv::EUC
+          Kconv::EUC
         when 'ASCII'
-          kconv::ASCII
+          Kconv::ASCII
           #when "UTF-16"
           #  return KConv::UTF16
         else
-          kconv::UTF8
+          Kconv::UTF8
         end
       end
       private :get_encoding

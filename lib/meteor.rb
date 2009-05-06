@@ -174,7 +174,7 @@ module Meteor
     #
     # 内容をセットする
     #
-    # @param [String] value 内容の値
+    # @param [String] value 内容
     #
     def content=(value)
       @parser.content(self,value)

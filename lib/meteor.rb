@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.6
+# @version 0.9.1.7
 #
 
 
@@ -31,7 +31,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.6"
+  VERSION = "0.9.1.7"
 
   ZERO = 0
   ONE = 1
@@ -84,8 +84,8 @@ module Meteor
       #@mono = false
       #@parent = false
       @arguments = AttributeMap.new
-      @origin = self.object_id
-      @usable = ZERO
+      #@origin = self.object_id
+      @usable = ZERO   
     end
     private :initialize_s
 
@@ -105,22 +105,27 @@ module Meteor
       @parent = elm.parent
       @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
-      @origin = elm.object_id
+      #@origin = elm.object_id
       @usable = ZERO
+      elm.parser.e_cache.store(elm.object_id,self)
     end
     private :initialize_e
 
     def self.new!(elm)
-      @obj = elm.parser.e_cache[elm.origin]
+      #@obj = elm.parser.e_cache[elm.origin]
+      @obj = elm.parser.e_cache[elm.object_id]
       if @obj then     
         @obj.attributes = String.new(elm.attributes)
+        @obj.mixed_content = String.new(elm.mixed_content)
         @obj.pattern = String.new(elm.pattern)
         @obj.document = String.new(elm.document)    
         @obj.arguments = AttributeMap.new(elm.arguments)
         @obj.usable = ZERO
         @obj
       else    
-        self.new(elm)
+        @obj = self.new(elm)
+        #elm.parser.e_cache.store(elm.origin,@obj)
+        @obj
       end
 
     end
@@ -138,7 +143,7 @@ module Meteor
     attr_accessor :type_value
     attr_accessor :arguments
     attr_accessor :usable
-    attr_accessor :origin
+    #attr_accessor :origin
     
     #
     # 属性を編集する or 属性の値を取得する
@@ -1058,6 +1063,8 @@ module Meteor
         else
           raise ArgumentError
         end
+        @e_cache.store(@elm_.object_id,@elm_)
+        @elm_
       end
 
       #
@@ -1267,6 +1274,7 @@ module Meteor
           
           @elm_.parser = self
         end
+        @elm_
       end
       private :element_with_3_1
       
@@ -1335,6 +1343,8 @@ module Meteor
         @elm_.pattern = @pattern_cc
         
         @elm_.parser = self
+
+        @elm_
       end
       private :element_without_3_1
       
@@ -1491,6 +1501,7 @@ module Meteor
           
           @elm_.parser = self
         end
+        @elm_
       end
       private :element_with_5_1
       
@@ -1570,6 +1581,8 @@ module Meteor
         @elm_.pattern = @pattern_cc
         
         @elm_.parser = self
+
+        @elm_
       end
       private :element_without_5_1
 
@@ -1849,7 +1862,7 @@ module Meteor
               elm.arguments.store(attr_name, attr_value)
             end
             
-            @e_cache.store(elm.origin, elm)
+            #@e_cache.store(elm.origin, elm)
           end
         end
         elm
@@ -2089,9 +2102,9 @@ module Meteor
             end
           end
           
-          if !elm.parent then
-            @e_cache.store(elm.origin,elm)
-          end
+          #if !elm.parent then
+          #  @e_cache.store(elm.origin,elm)
+          #end
         end
         elm
       end
@@ -2141,9 +2154,9 @@ module Meteor
         
         elm.mixed_content = content
         
-        if !elm.parent then
-          @e_cache.store(elm.origin,elm)
-        end
+        #if !elm.parent then
+        #  @e_cache.store(elm.origin,elm)
+        #end
 
         elm
       end
@@ -2230,7 +2243,7 @@ module Meteor
               elm.arguments.delete(attr_name)
             end
             
-            @e_cache.store(elm.origin,elm)
+            #@e_cache.store(elm.origin,elm)
           end
         end
 
@@ -2267,7 +2280,8 @@ module Meteor
       #
       def remove_element(elm)
           replace(elm,EMPTY)
-          @e_cache.delete(elm.origin)
+          #@e_cache.delete(elm.origin)
+          elm.usable = ONE
       end
 
       #
@@ -2683,20 +2697,21 @@ module Meteor
         #
         # イニシャライザ
         #
+
         def initialize
         end
-        
+
         def self.get(*args)
           case args.length
-          when ONE
-            get_1(args[0])
-          when TWO
-            get_2(args[0],args[1])
-          else
-            raise ArgumentError
+            when ONE
+              get_1(args[0])
+            when TWO
+              get_2(args[0], args[1])
+            else
+              raise ArgumentError
           end
         end
-        
+
         #
         # パターンを取得する
         # @param [String] regex 正規表現
@@ -2710,26 +2725,26 @@ module Meteor
             if !@@regex_cache[regex.to_sym] then
               #pattern = Regexp.new(regex)
               #@@regex_cache[regex] = pattern
-              @@regex_cache[regex.to_sym] = Regexp.new(regex,Regexp::MULTILINE)
+              @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE)
             end
-            
+
             #return pattern
             @@regex_cache[regex.to_sym]
           elsif regex.kind_of?(Symbol) then
             if !@@regex_cache[regex] then
-              @@regex_cache[regex] = Regexp.new(regex.to_s,Regexp::MULTILINE)
+              @@regex_cache[regex] = Regexp.new(regex.to_s, Regexp::MULTILINE)
             end
-            
+
             @@regex_cache[regex]
-          end 
+          end
         end
-        
+
         #
         # パターンを取得する
         # @param [String] regex 正規表現
         # @return [Regexp] パターン
         #
-        def self.get_2(regex,option)
+        def self.get_2(regex, option)
           #pattern = @@regex_cache[regex]
           #
           #if pattern == nil then
@@ -2737,99 +2752,100 @@ module Meteor
             if !@@regex_cache[regex.to_sym] then
               #pattern = Regexp.new(regex)
               #@@regex_cache[regex] = pattern
-              @@regex_cache[regex.to_sym] = Regexp.new(regex,option)
+              @@regex_cache[regex.to_sym] = Regexp.new(regex, option)
             end
-            
+
             #return pattern
             @@regex_cache[regex.to_sym]
           elsif regex.kind_of?(Symbol) then
             if !@@regex_cache[regex] then
-              @@regex_cache[regex] = Regexp.new(regex.to_s,option)
+              @@regex_cache[regex] = Regexp.new(regex.to_s, option)
             end
-            
+
             @@regex_cache[regex]
-          end 
+          end
         end
       end
-      
-      class OrderHash <Hash
-        
-        def initialize
-          @keys = Array.new
-          @values = Array.new
-        end
-        
-        attr_accessor :keys
-        attr_accessor :values
-        
-        def store(key, value)
-          super(key, value)
-          unless @keys.include?(key)
-            @keys << key
-            @values << value
+
+      if RUBY_VERSION < RUBY_VERSION_1_9_0 then
+        class OrderHash <Hash
+
+          def initialize
+            @keys = Array.new
+            @values = Array.new
           end
-        end
-        
-        def clear
-          @keys.clear
-          @values.clear
-          super
-        end
-        
-        def delete(key)
-          if @keys.include?(key)
-            @keys.delete(key)
-            @values.delete(fetch(key))
-            super(key)
-          elsif
-            yield(key)
+
+          attr_accessor :keys
+          attr_accessor :values
+
+          def store(key, value)
+            super(key, value)
+            unless @keys.include?(key)
+              @keys << key
+              @values << value
+            end
           end
-        end
-        
-        #superとして、Hash#[]=を呼び出す
-        def []=(key, value)
-          store(key, value)
-        end
-        
-        def each
-          @keys.each do |k|
+
+          def clear
+            @keys.clear
+            @values.clear
+            super
+          end
+
+          def delete(key)
+            if @keys.include?(key)
+              @keys.delete(key)
+              @values.delete(fetch(key))
+              super(key)
+            elsif yield(key)
+            end
+          end
+
+          #superとして、Hash#[]=を呼び出す
+
+          def []=(key, value)
+            store(key, value)
+          end
+
+          def each
+            @keys.each do |k|
+              arr_tmp = Array.new
+              arr_tmp << k
+              arr_tmp << self[k]
+              yield(arr_tmp)
+            end
+            return self
+          end
+
+          def each_pair
+            @keys.each do |k|
+              yield(k, self[k])
+            end
+            return self
+          end
+
+          def map
             arr_tmp = Array.new
-            arr_tmp << k
-            arr_tmp << self[k]
-            yield(arr_tmp)
+            @keys.each do |k|
+              arg_arr = Array.new
+              arg_arr << k
+              arg_arr << self[k]
+              arr_tmp << yield(arg_arr)
+            end
+            return arr_tmp
           end
-          return self
-        end
-        
-        def each_pair
-          @keys.each do |k|
-            yield(k, self[k])
+
+          def sort_hash(&block)
+            if block_given?
+              arr_tmp = self.sort(&block)
+            elsif arr_tmp = self.sort
+            end
+            hash_tmp = OrderHash.new
+            arr_tmp.each do |item|
+              hash_tmp[item[0]] = item[1]
+            end
+            return hash_tmp
           end
-          return self
-        end
-        
-        def map
-          arr_tmp = Array.new
-          @keys.each do |k|
-            arg_arr = Array.new
-            arg_arr << k
-            arg_arr << self[k]
-            arr_tmp << yield(arg_arr)
-          end
-          return arr_tmp
-        end
-        
-        def sort_hash(&block)
-          if block_given?
-            arr_tmp = self.sort(&block)
-          elsif
-            arr_tmp = self.sort
-          end
-          hash_tmp = OrderHash.new
-          arr_tmp.each do |item|
-            hash_tmp[item[0]] = item[1]
-          end
-          return hash_tmp
         end
       end
     end

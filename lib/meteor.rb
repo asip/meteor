@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.7
+# @version 0.9.1.8
 #
 
 
@@ -31,7 +31,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.7"
+  VERSION = "0.9.1.8"
 
   ZERO = 0
   ONE = 1
@@ -85,7 +85,7 @@ module Meteor
       #@parent = false
       @arguments = AttributeMap.new
       #@origin = self.object_id
-      @usable = ZERO   
+      @usable = ZERO
     end
     private :initialize_s
 
@@ -144,7 +144,7 @@ module Meteor
     attr_accessor :arguments
     attr_accessor :usable
     #attr_accessor :origin
-    
+
     #
     # 属性を編集する or 属性の値を取得する
     # 
@@ -277,7 +277,7 @@ module Meteor
   # 属性マップクラス
   #
   class AttributeMap
-    
+
     def initialize(*args)
       case args.length
       when ZERO
@@ -385,7 +385,7 @@ module Meteor
     #
     # 属性名で属性の変更状況を取得する
     # 
-    # @return [TrueClass][FalseClass] 属性の変更状況
+    # @return [TrueClass,FalseClass] 属性の変更状況
     #
     def changed(name)
       if @map[name] then
@@ -396,14 +396,14 @@ module Meteor
     #
     # 属性名で属性の削除状況を取得する
     # 
-    # @return [TrueClass][FalseClass] 属性の削除状況
+    # @return [TrueClass,FalseClass] 属性の削除状況
     #
     def removed(name)
       if @map[name] then
         @map[name].removed
       end
     end
-    
+
     attr_accessor :map
     attr_accessor :recordable
 
@@ -604,24 +604,31 @@ module Meteor
       def initialize
       end
 
-      def do_action(elm,pif,list)
+      def do_action(elm,ps,list)
         #内容あり要素の場合
         if elm.empty then
-          pif2 = pif.child(elm)
-
+          pif2 = ps.child(elm)
+          init(pif2)
           list.each do |item|
             if pif2.root_element.hook then
               pif2.root_element.document = elm.mixed_content
               #elsif pif2.rootElement.mono_hook then
             end
-            execute(pif2, item)
+            execute(pif2.root_element.mutable_element, item)
+            pif2.print
           end
           pif2.flush
         end
       end
 
-      def execute(pif,item)
+      def init(ps)
       end
+      private :init
+
+      def execute(elm,item)
+      end
+      private :execute
+      
     end
   end
 
@@ -898,14 +905,13 @@ module Meteor
       def document
         @root.document
       end
-
-      attr_accessor :parent
+   
       attr_accessor :e_cache
 
       #
       # フックフラグをセットする
       # 
-      # @param [TrueClass][FalseClass] hook フックフラグ
+      # @param [TrueClass,FalseClass] hook フックフラグ
       #
       #def hook=(hook)
       #  @root.hook = hook
@@ -914,7 +920,7 @@ module Meteor
       #
       # フックフラグを取得する
       # 
-      # @return [TrueClass][FalseClass] フックフラグ
+      # @return [TrueClass,FalseClass] フックフラグ
       #
       #def hook
       #  @root.hook
@@ -923,7 +929,7 @@ module Meteor
       #
       # 単一要素フックフラグをセットする
       # 
-      # @pamam [TrueClass][FalseClass] hook 単一要素フックフラグ
+      # @pamam [TrueClass,FalseClass] hook 単一要素フックフラグ
       #
       #def mono_hook=(hook)
       #  @root.mono_hook = hook
@@ -932,7 +938,7 @@ module Meteor
       #
       # 単一要素フックフラグを取得する
       # 
-      # @return [TrueClass][FalseClass] 単一要素フックフラグ
+      # @return [TrueClass,FalseClass] 単一要素フックフラグ
       #
       #def mono_hook
       #  @root.mono_hook
@@ -1098,20 +1104,20 @@ module Meteor
           if @res1.end(0) < @res2.end(0) then
             @res = @res1
             @pattern_cc = @pattern_cc_1
-            @elm_ = element_without_1(elm_name)
+            element_without_1(elm_name)
           elsif @res1.end(0) > @res2.end(0)
             @res = @res2
             @pattern_cc = @pattern_cc_2
-            @elm_ = element_with_1(elm_name)
+            element_with_1(elm_name)
           end
         elsif @res1 && !@res2 then
           @res = @res1
           @pattern_cc = @pattern_cc_1
-          @elm_ = element_without_1(elm_name)
+          element_without_1(elm_name)
         elsif !@res1 && @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
-          @elm_ = element_with_1(elm_name)
+          element_with_1(elm_name)
         elsif !@res1 && !@res2 then
           @elm_ = nil
           #raise NoSuchElementException.new(elm_name);
@@ -1369,7 +1375,8 @@ module Meteor
         @res = @pattern.match(@root.document)
         
         if @res then
-          @elm_ = element_3(@res[1], attr_name, attr_value)
+          #@elm_ = element_3(@res[1], attr_name, attr_value)
+          element_3(@res[1], attr_name, attr_value)
         else
           @elm_ = nil
         end
@@ -1614,7 +1621,8 @@ module Meteor
         @res = @pattern.match(@root.document)
 
         if @res then
-          @elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2);
+          #@elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2);
+          element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2);
         else
           @elm_ = nil
         end
@@ -2143,8 +2151,8 @@ module Meteor
       # 要素の内容をセットする
       #
       # @param [Meteor::Element] elm 要素
-      # @param [String] mixed_content 要素の内容
-      # @param [TrueClass][FalseClass] entityRef エンティティ参照フラグ
+      # @param [String] content 要素の内容
+      # @param [TrueClass,FalseClass] entityRef エンティティ参照フラグ
       #
       def set_content_3(elm,content,entity_ref=true)
 
@@ -2165,8 +2173,8 @@ module Meteor
       #
       # 要素の内容を編集する
       # 
-      # @param [Meteor::Element] 要素
-      # @param [String] mixed_content 要素の内容
+      # @param [Meteor::Element] elm 要素
+      # @param [String] content 要素の内容
       #
       def set_content_2_s(elm,content)
         set_content_3(elm, content)
@@ -2176,7 +2184,7 @@ module Meteor
       #
       # 要素の内容を編集する
       # 
-      # @param [String] mixed_content 内容
+      # @param [String] content 内容
       #
       def set_content_1(content)
         if @root.mono_hook then
@@ -2188,8 +2196,8 @@ module Meteor
       #
       # 要素の内容を編集する
       # 
-      # @param [String] mixed_content 内容
-      # @param [TrueClass][FalseClass] entity_ref エンティティ参照フラグ
+      # @param [String] content 内容
+      # @param [TrueClass,FalseClass] entity_ref エンティティ参照フラグ
       #
       def set_content_2_b(content,entity_ref)
         if @root.mono_hook then
@@ -2359,7 +2367,8 @@ module Meteor
         @res = @pattern.match(@root.document)
 
         if @res then
-          @elm_ = cxtag(@res[1],id)
+          #@elm_ = cxtag(@res[1],id)
+          cxtag(@res[1],id)
         else
           @elm_ = nil
         end
@@ -2435,7 +2444,7 @@ module Meteor
               #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
               @root.hook_document << "<#{@root.mutableElement.name}#{@root.mutableElement.attributes}>#{@root.mutableElement.mixed_content}</#{@root.mutableElement.name}>"
             end
-            @root.mutableElement = Element.copy(@root.element)
+            @root.mutableElement = Element.new!(@root.element)
           else
             #フック判定がFALSEの場合
             clean
@@ -2450,7 +2459,7 @@ module Meteor
         #CX終了タグ置換
         @pattern = @@pattern_clean2
         @root.document.gsub!(@pattern,EMPTY)
-        #@root.document = @root.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
+        #@root.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
       end
       private :clean
       
@@ -2468,7 +2477,6 @@ module Meteor
           pif2 = create(self)
           
           elm.parent=true
-          pif2.parent = self
           pif2.root_element.element = elm
           pif2.root_element.mutableElement = Element.new(elm)
           pif2.root_element.kaigyo_code = @root.kaigyo_code
@@ -3073,10 +3081,12 @@ module Meteor
         # ドキュメントをパースし、コンテントタイプをセットする
         #
         def analyze_content_type
-          @elm_ = element(META_S,HTTP_EQUIV,CONTENT_TYPE)
+          #@elm_ = element(META_S,HTTP_EQUIV,CONTENT_TYPE)
+          element(META_S,HTTP_EQUIV,CONTENT_TYPE)
 
           if !@elm_ then
-            @elm_ = element(META,HTTP_EQUIV,CONTENT_TYPE)
+            #@elm_ = element(META,HTTP_EQUIV,CONTENT_TYPE)
+            element(META,HTTP_EQUIV,CONTENT_TYPE)
           end
 
           if @elm_ then
@@ -3238,7 +3248,8 @@ module Meteor
           @res = @pattern.match(@root.document)
 
           if @res then
-            @elm_ = element_3(@res[1],attr_name,attr_value)
+            #@elm_ = element_3(@res[1],attr_name,attr_value)
+            element_3(@res[1],attr_name,attr_value)
           else
             @elm_ = nil
           end
@@ -3351,7 +3362,8 @@ module Meteor
           @res = @pattern.match(@root.document)
 
           if @res then
-            @elm_ = element_5(@res[1],attr_name1,attr_value1,attr_name2,attr_value2)
+            #@elm_ = element_5(@res[1],attr_name1,attr_value1,attr_name2,attr_value2)
+            element_5(@res[1],attr_name1,attr_value1,attr_name2,attr_value2)
           else
             @elm_ = nil
           end
@@ -3831,7 +3843,7 @@ module Meteor
         # ドキュメントをパースする
         #
         def analyze_ml()
-          #mixed_content-typeの取得
+          #content-typeの取得
           analyze_content_type
           #改行コードの取得
           analyze_kaigyo_code
@@ -3852,10 +3864,12 @@ module Meteor
         # ドキュメントをパースし、コンテントタイプをセットする
         #
         def analyze_content_type
-          @elm_ = element(META_S,HTTP_EQUIV,CONTENT_TYPE)
+          #@elm_ = element(META_S,HTTP_EQUIV,CONTENT_TYPE)
+          element(META_S,HTTP_EQUIV,CONTENT_TYPE)
           
           if !@elm_ then
-            @elm_ = element(META,HTTP_EQUIV,CONTENT_TYPE)
+            #@elm_ = element(META,HTTP_EQUIV,CONTENT_TYPE)
+            element(META,HTTP_EQUIV,CONTENT_TYPE)
           end
           
           if @elm_ then

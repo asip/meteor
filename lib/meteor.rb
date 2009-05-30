@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.8
+# @version 0.9.1.9
 #
 
 
@@ -31,7 +31,7 @@ end
 
 module Meteor
 
-  VERSION = "0.9.1.8"
+  VERSION = "0.9.1.9"
 
   ZERO = 0
   ONE = 1
@@ -84,8 +84,7 @@ module Meteor
       #@mono = false
       #@parent = false
       @arguments = AttributeMap.new
-      #@origin = self.object_id
-      @usable = ZERO
+      @usable = true
     end
     private :initialize_s
 
@@ -102,17 +101,15 @@ module Meteor
       @empty = elm.empty
       @cx = elm.cx
       @mono = elm.mono
-      @parent = elm.parent
       @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
-      #@origin = elm.object_id
-      @usable = ZERO
+      @usable = true
+      @origin = elm
       elm.parser.e_cache.store(elm.object_id,self)
     end
     private :initialize_e
 
     def self.new!(elm)
-      #@obj = elm.parser.e_cache[elm.origin]
       @obj = elm.parser.e_cache[elm.object_id]
       if @obj then     
         @obj.attributes = String.new(elm.attributes)
@@ -120,11 +117,10 @@ module Meteor
         @obj.pattern = String.new(elm.pattern)
         @obj.document = String.new(elm.document)    
         @obj.arguments = AttributeMap.new(elm.arguments)
-        @obj.usable = ZERO
+        @obj.usable = true
         @obj
       else    
         @obj = self.new(elm)
-        #elm.parser.e_cache.store(elm.origin,@obj)
         @obj
       end
 
@@ -138,13 +134,31 @@ module Meteor
     attr_accessor :empty
     attr_accessor :cx
     attr_accessor :mono
-    attr_accessor :parent
     attr_accessor :parser
     attr_accessor :type_value
     attr_accessor :arguments
     attr_accessor :usable
-    #attr_accessor :origin
+    attr_accessor :origin
 
+	#
+	# 子要素を取得する
+	#
+	# @param [Array] args 引数配列
+	# @return [Element] 子要素
+	#
+	def child(*args)
+	  @parser.element(*args)
+	end
+    
+    #
+    # CX(コメント拡張)タグを取得する
+    # 
+    # @param [Array] args 引数配列
+    # @return [Meteor::Element] 要素
+    #
+    def cxtag(*args)
+      @parser.cxtag(*args)
+    end
     #
     # 属性を編集する or 属性の値を取得する
     # 
@@ -163,8 +177,6 @@ module Meteor
     def attribute_map
       @parser.attribute_map(self)
     end
-
-
 
     #
     # 内容をセットする or 内容を取得する
@@ -230,6 +242,14 @@ module Meteor
       @parser.remove_element(self)
     end
     
+    def print
+      @parser.print
+    end
+    
+    def flush
+      @parser.flush
+    end
+    
   end
 
   #
@@ -251,26 +271,17 @@ module Meteor
       #@character_encoding=''
 
       #フックドキュメント
-      @hook_document = EMPTY
-      #フック判定フラグ
-      #@hook = false
-      #単一要素フック判定フラグ
-      #@mono_hook = false
-      #要素
-      #@element = nil
+      @hook_document = ''
       #変更可能要素
-      #@mutableElement = nil
+      #@element = nil
     end
 
     attr_accessor :content_type
     attr_accessor :kaigyo_code
     attr_accessor :character_encoding
+    attr_accessor :document
     attr_accessor :hook_document
-    attr_accessor :hook;
-    attr_accessor :mono_hook
-    attr_accessor :element
-    attr_accessor :mutableElement
-    attr_accessor :document 
+    attr_accessor :element 
   end
 
   #
@@ -341,7 +352,6 @@ module Meteor
           attr.removed = false
         end
         attr.value = value
-        #@map[name] = attr
       end
     end
 
@@ -610,9 +620,8 @@ module Meteor
           pif2 = ps.child(elm)
           init(pif2)
           list.each do |item|
-            if pif2.root_element.hook then
+            if pif2.root_element.element && !pif2.root_element.element.mono then
               pif2.root_element.document = elm.mixed_content
-              #elsif pif2.rootElement.mono_hook then
             end
             execute(pif2.root_element.mutable_element, item)
             pif2.print
@@ -909,60 +918,6 @@ module Meteor
       attr_accessor :e_cache
 
       #
-      # フックフラグをセットする
-      # 
-      # @param [TrueClass,FalseClass] hook フックフラグ
-      #
-      #def hook=(hook)
-      #  @root.hook = hook
-      #end
-
-      #
-      # フックフラグを取得する
-      # 
-      # @return [TrueClass,FalseClass] フックフラグ
-      #
-      #def hook
-      #  @root.hook
-      #end
-
-      #
-      # 単一要素フックフラグをセットする
-      # 
-      # @pamam [TrueClass,FalseClass] hook 単一要素フックフラグ
-      #
-      #def mono_hook=(hook)
-      #  @root.mono_hook = hook
-      #end
-
-      #
-      # 単一要素フックフラグを取得する
-      # 
-      # @return [TrueClass,FalseClass] 単一要素フックフラグ
-      #
-      #def mono_hook
-      #  @root.mono_hook
-      #end
-
-      #
-      # フックドキュメントをセットする
-      # 
-      # @param [String] hookDocument フックドキュメント
-      #
-      #def hookDocument=(hookDocument)
-      #  @root.hookDocument = hookDocument
-      #end
-
-      #
-      # フックドキュメントを取得する
-      # 
-      # @return [String] フックドキュメント
-      #
-      #def hookDocument
-      #  @root.hookDocument
-      #end
-
-      #
       # 文字エンコーディングをセットする
       # 
       # @param [String] enc 文字エンコーディング
@@ -1057,7 +1012,13 @@ module Meteor
       def element(*args)
         case args.length
         when ONE
-          element_1(args[0])
+          if args[0].kind_of?(String) then
+            element_1(args[0])
+          elsif args[0].kind_of?(Meteor::Element) then
+            shadow(args[0])
+          else
+            raise ArgumentError
+          end
         when TWO
           element_2(args[0],args[1])
         when THREE
@@ -1375,7 +1336,6 @@ module Meteor
         @res = @pattern.match(@root.document)
         
         if @res then
-          #@elm_ = element_3(@res[1], attr_name, attr_value)
           element_3(@res[1], attr_name, attr_value)
         else
           @elm_ = nil
@@ -1865,12 +1825,10 @@ module Meteor
           #属性群の更新
           edit_attributes_(elm,attr_name,attr_value)
           
-          if !elm.parent then
+          if !elm.origin then
             if elm.arguments.map.include?(attr_name) then
               elm.arguments.store(attr_name, attr_value)
             end
-            
-            #@e_cache.store(elm.origin, elm)
           end
         end
         elm
@@ -1883,12 +1841,11 @@ module Meteor
         #@res = @pattern.match(elm.attributes)
 
         #検索対象属性の存在判定
-        #if @res then
         if elm.attributes.include?(' ' << attr_name << ATTR_EQ) then
           
           @_attr_value = attr_value
           #replace2regex(@_attr_value)
-          if elm.parser.root_element.hook || elm.parser.root_element.mono_hook then
+          if elm.origin then
             replace4regex(@_attr_value)
           else
             replace2regex(@_attr_value)
@@ -1902,7 +1859,7 @@ module Meteor
           #属性文字列の最後に新規の属性を追加する
           @_attr_value = attr_value
           #replace2regex(@_attr_value)
-          if elm.parser.root_element.hook || elm.parser.root_element.mono_hook then
+          if elm.origin then
             replace2regex(@_attr_value)
           end
           
@@ -1933,7 +1890,7 @@ module Meteor
             #内容あり要素の場合
             @_content = elm.mixed_content
             #replace2regex(@_content)
-            if elm.parser.root_element.hook || elm.parser.root_element.mono_hook then
+            if elm.origin then
               replace4regex(@_content)
             else
               replace2regex(@_content)
@@ -1951,7 +1908,7 @@ module Meteor
           end
         else
           @_content = elm.mixed_content
-          if elm.parser.root_element.hook || elm.parser.root_element.mono_hook then
+          if elm.origin then
             replace4regex(@_content)
           else
             replace2regex(@_content)
@@ -1996,10 +1953,10 @@ module Meteor
       # @param [String] attr_value 属性値
       #
       def set_attribute_2(attr_name,attr_value)
-        if @root.hook || @root.mono_hook then
-          set_attribute_3(@root.mutableElement, attr_name, attr_value)
+        if @root.element.origin then
+          set_attribute_3(@root.element, attr_name, attr_value)
         end
-        @root.mutableElement
+        @root.element
       end
       private :set_attribute_2
       
@@ -2037,8 +1994,8 @@ module Meteor
       # @return [String] 属性値
       #
       def get_attribute_value_1(attr_name)
-        if @root.hook || @root.mono_hook then
-          get_attribute_value_2(@root.mutableElement, attr_name)
+        if @root.element then
+          get_attribute_value_2(@root.element, attr_name)
         else
           nil
         end
@@ -2086,8 +2043,8 @@ module Meteor
       # @return [Meteor::AttributeMap] 属性マップ
       #
       def get_attribute_map_0()
-        if @root.hook || @root.mono_hook then
-          get_attribute_map_1(@root.mutableElement)
+        if @root.element then
+          get_attribute_map_1(@root.element)
         else
           nil
         end
@@ -2109,10 +2066,6 @@ module Meteor
               remove_attributes_(elm, name)
             end
           end
-          
-          #if !elm.parent then
-          #  @e_cache.store(elm.origin,elm)
-          #end
         end
         elm
       end
@@ -2161,10 +2114,6 @@ module Meteor
         end
         
         elm.mixed_content = content
-        
-        #if !elm.parent then
-        #  @e_cache.store(elm.origin,elm)
-        #end
 
         elm
       end
@@ -2187,8 +2136,8 @@ module Meteor
       # @param [String] content 内容
       #
       def set_content_1(content)
-        if @root.mono_hook then
-          set_content_2_s(@root.mutableElement, content)
+        if @root.element && @root.element.mono then
+          set_content_2_s(@root.element, content)
         end
       end
       private :set_content_1
@@ -2200,11 +2149,11 @@ module Meteor
       # @param [TrueClass,FalseClass] entity_ref エンティティ参照フラグ
       #
       def set_content_2_b(content,entity_ref)
-        if @root.mono_hook then
-          set_content_3(@root.mutableElement, content, entity_ref)
+        if @root.element && @root.element.mono then
+          set_content_3(@root.element, content, entity_ref)
         end
 
-        @root.mutableElement
+        @root.element
       end
       private :set_content_2_b
       
@@ -2246,12 +2195,10 @@ module Meteor
 
           remove_attributes_(elm,attr_name)
 
-          if !elm.parent then
+          if !elm.origin then
             if elm.arguments.map.include?(attr_name) then
               elm.arguments.delete(attr_name)
             end
-            
-            #@e_cache.store(elm.origin,elm)
           end
         end
 
@@ -2273,11 +2220,11 @@ module Meteor
       # @param [String] attr_name 属性名
       #
       def remove_attribute_1(attr_name)
-        if @root.hook || @root.mono_hook then
-          remove_attribute_2(@root.mutableElement, attr_name)
+        if @root.element then
+          remove_attribute_2(@root.element, attr_name)
         end
 
-        @root.mutableElement
+        @root.element
       end
       private :remove_attribute_1
       
@@ -2288,8 +2235,7 @@ module Meteor
       #
       def remove_element(elm)
           replace(elm,EMPTY)
-          #@e_cache.delete(elm.origin)
-          elm.usable = ONE
+          elm.usable = false
       end
 
       #
@@ -2385,7 +2331,7 @@ module Meteor
       #
       def replace(elm,replace_document)
         #文字エスケープ
-        if replace_document.size > ZERO && elm.parent && elm.mono then
+        if replace_document.size > ZERO && elm.origin && elm.mono then
           replace2regex(replace_document)
         end
         #タグ置換パターン
@@ -2395,15 +2341,14 @@ module Meteor
       end
       
       def reflect()
-        
+      
         @e_cache.values.each do |item|
-          if item.usable == ZERO then
+          if item.usable then
             edit_document_1(item)
             edit_pattern_(item)
-            item.usable = 1
+            item.usable = false
           end
         end
-        #@e_cache.clear
       end
       protected :reflect
       
@@ -2413,42 +2358,42 @@ module Meteor
       def print
         reflect()
         
-        if @root.hook then
-          @_attributes = @root.mutableElement.attributes
-          replace2regex(@_attributes)
-          if @root.element.cx then
-            #@root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-            #@root.hookDocument << @_attributes << SET_CX_2
-            #@root.hookDocument << @root.document << SET_CX_3
-            #@root.hookDocument << @root.mutableElement.name << SET_CX_4
-            @root.hook_document << "<!-- @#{@root.mutableElement.name} #{@_attributes}-->#{@root.document}<!-- /@#{@root.mutableElement.name} -->"
-          else
-            #@root.hookDocument << TAG_OPEN << @root.mutableElement.name
-            #@root.hookDocument << @_attributes << TAG_CLOSE << @root.document
-            #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-            @root.hook_document << "<#{@root.mutableElement.name}#{@_attributes}>#{@root.document}</#{@root.mutableElement.name}>"
-          end
-          @root.mutableElement = Element.new!(@root.element)
-          @root.document = String.new(@root.element.mixed_content)
-        else
-          if @root.mono_hook then
-            if @root.element.cx then
-              #@root.hookDocument << SET_CX_1 << @root.mutableElement.name << SPACE
-              #@root.hookDocument << @root.mutableElement.attributes << SET_CX_2
-              #@root.hookDocument << @root.mutableElement.mixed_content << SET_CX_3
-              #@root.hookDocument << @root.mutableElement.name << SET_CX_4
-              @root.hook_document << "<!-- @#{@root.mutableElement.name} #{@root.mutableElement.attributes}-->#{@root.mutableElement.mixed_content}<!-- /@#{@root.mutableElement.name} -->"
+        if @root.element then
+          if !@root.element.origin.mono then
+            @_attributes = @root.element.attributes
+            replace2regex(@_attributes)
+            if @root.element.origin.cx then
+              #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
+              #@root.hookDocument << @_attributes << SET_CX_2
+              #@root.hookDocument << @root.document << SET_CX_3
+              #@root.hookDocument << @root.element.name << SET_CX_4
+              @root.hook_document << "<!-- @#{@root.element.name} #{@_attributes}-->#{@root.document}<!-- /@#{@root.element.name} -->"
             else
-              #@root.hookDocument << TAG_OPEN << @root.mutableElement.name
-              #@root.hookDocument << @root.mutableElement.attributes << TAG_CLOSE << @root.mutableElement.mixed_content
-              #@root.hookDocument << TAG_OPEN3 << @root.mutableElement.name << TAG_CLOSE
-              @root.hook_document << "<#{@root.mutableElement.name}#{@root.mutableElement.attributes}>#{@root.mutableElement.mixed_content}</#{@root.mutableElement.name}>"
+              #@root.hookDocument << TAG_OPEN << @root.element.name
+              #@root.hookDocument << @_attributes << TAG_CLOSE << @root.document
+              #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
+              @root.hook_document << "<#{@root.element.name}#{@_attributes}>#{@root.document}</#{@root.element.name}>"
             end
-            @root.mutableElement = Element.new!(@root.element)
+            @root.element = Element.new!(@root.element.origin)
+            @root.document = String.new(@root.element.origin.mixed_content)
           else
-            #フック判定がFALSEの場合
-            clean
+            if @root.element.origin.cx then
+              #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
+              #@root.hookDocument << @root.element.attributes << SET_CX_2
+              #@root.hookDocument << @root.element.mixed_content << SET_CX_3
+              #@root.hookDocument << @root.element.name << SET_CX_4
+              @root.hook_document << "<!-- @#{@root.element.name} #{@root.element.attributes}-->#{@root.element.mixed_content}<!-- /@#{@root.element.name} -->"
+            else
+              #@root.hookDocument << TAG_OPEN << @root.element.name
+              #@root.hookDocument << @root.element.attributes << TAG_CLOSE << @root.element.mixed_content
+              #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
+              @root.hook_document << "<#{@root.element.name}#{@root.element.attributes}>#{@root.element.mixed_content}</#{@root.element.name}>"
+            end
+            @root.element = Element.new!(@root.element.origin)
           end
+        else
+          #フック判定がFALSEの場合
+          clean
         end
       end
       
@@ -2464,33 +2409,40 @@ module Meteor
       private :clean
       
       #
-      # 子パーサを取得する
+      # 要素をコピーする
       # 
       # @param [Meteor::Element] elm 要素
-      # @return [Meteor::Parser] 子パーサ
+      # @return [Meteor::Element] 要素
       #
-      def child(elm)
+      def shadow(elm)
         if elm.empty then
           #内容あり要素の場合
           set_mono_info(elm)
           
           pif2 = create(self)
           
-          elm.parent=true
-          pif2.root_element.element = elm
-          pif2.root_element.mutableElement = Element.new(elm)
-          pif2.root_element.kaigyo_code = @root.kaigyo_code
+          @elm_ = Element.new(elm)
+          @elm_.parser = pif2
           
-          if elm.mono then
-            pif2.root_element.mono_hook = true
-            
-            pif2
-          else
-            pif2.root_element.document = String.new(elm.mixed_content)
-            pif2.root_element.hook = true
-            
-            pif2
-          end
+          if !elm.mono then
+            pif2.root_element.document = String.new(elm.mixed_content)      
+          end  
+          pif2.root_element.element = @elm_
+          
+          @elm_
+        end
+      end
+      private :shadow
+      
+      #
+      # 子パーサを取得する
+      # 
+      # @param [Meteor::Element] elm 要素
+      # @return [Meteor::Parser] 子パーサ
+      #
+      def child(elm)
+        if shadow(elm) then
+          @elm_.parser
         end
       end
       
@@ -2502,11 +2454,9 @@ module Meteor
       # 反映する
       #
       def flush
-        if @root.hook || @root.mono_hook then
-          if @root.element then
-            @root.element.parser.reflect
-            @root.element.parser.replace(@root.element, @root.hook_document)
-          end
+        if @root.element && @root.element.origin then
+          @root.element.origin.parser.reflect
+          @root.element.origin.parser.replace(@root.element.origin, @root.hook_document)
         end
       end
 
@@ -2537,39 +2487,11 @@ module Meteor
       #
       # 正規表現対象文字を置換する
       #
-      # @param [String] element 入力文字列
+      # @param [String] str 入力文字列
       # @return [String] 出力文字列
       #
-      def escape_regex(element)
-        ##「\」->[\\]
-        #element.gsub!(@@pattern_en,EN_2)
-        ##「$」->「\$」
-        #element.gsub!(@@pattern_dol,DOL_2)
-        ##「+」->「\+」
-        #element.gsub!(@@pattern_plus,PLUS_2)
-        #todo
-        ##「(」->「\(」
-        #element.gsub!(@@pattern_brac_open,BRAC_OPEN_2)
-        ##「)」->「\)」
-        #element.gsub!(@@pattern_brac_close,BRAC_CLOSE_2)
-        ##「[」->「\[」
-        #element.gsub!(@@pattern_sbrac_open,SBRAC_OPEN_2)
-        ##「]」->「\]」
-        #element.gsub!(@@pattern_sbrac_close,SBRAC_CLOSE_2)
-        ##「{」->「\{」
-        #element.gsub!(@@pattern_cbrac_open,CBRAC_OPEN_2)
-        ##「}」->「\}」
-        #element.gsub!(@@pattern_cbrac_close,CBRAC_CLOSE_2)
-        ##「.」->「\.」
-        #element.gsub!(@@pattern_comma,COMMA_2)
-        ##「|」->「\|」
-        #element.gsub!(@@pattern_vline,VLINE_2)
-        ##「?」->「\?」
-        #element.gsub!(@@pattern_qmark,QMARK_2)
-        ##「*」->「\*」
-        #element.gsub!(@@pattern_asterisk,ASTERISK_2)
-        Regexp.quote(element)
-
+      def escape_regex(str)
+        Regexp.quote(str)
       end
       private :escape_regex
       
@@ -2705,7 +2627,6 @@ module Meteor
         #
         # イニシャライザ
         #
-
         def initialize
         end
 
@@ -3029,8 +2950,8 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.hook = ps.root_element.hook
-          @root.mono_hook = ps.root_element.mono_hook
+          #@root.hook = ps.root_element.hook
+          #@root.mono_hook = ps.root_element.mono_hook
           @root.content_type = String.new(ps.content_type);
         end
         private :initialize_1
@@ -3081,11 +3002,9 @@ module Meteor
         # ドキュメントをパースし、コンテントタイプをセットする
         #
         def analyze_content_type
-          #@elm_ = element(META_S,HTTP_EQUIV,CONTENT_TYPE)
           element(META_S,HTTP_EQUIV,CONTENT_TYPE)
 
           if !@elm_ then
-            #@elm_ = element(META,HTTP_EQUIV,CONTENT_TYPE)
             element(META,HTTP_EQUIV,CONTENT_TYPE)
           end
 
@@ -3248,7 +3167,6 @@ module Meteor
           @res = @pattern.match(@root.document)
 
           if @res then
-            #@elm_ = element_3(@res[1],attr_name,attr_value)
             element_3(@res[1],attr_name,attr_value)
           else
             @elm_ = nil
@@ -3362,7 +3280,6 @@ module Meteor
           @res = @pattern.match(@root.document)
 
           if @res then
-            #@elm_ = element_5(@res[1],attr_name1,attr_value1,attr_name2,attr_value2)
             element_5(@res[1],attr_name1,attr_value1,attr_name2,attr_value2)
           else
             @elm_ = nil
@@ -3395,13 +3312,11 @@ module Meteor
         private :edit_attributes_
 
         def edit_attributes_5(elm,attr_name,attr_value,match_p,replace)
-          #attr_value = escape(attr_value)
 
           if is_match(TRUE, attr_value) then
             @res = match_p.match(elm.attributes)
 
             if !@res then
-            #if elm.attributes.include?(match_p[0]) || elm.attributes.rindex(match_p[1],elm.attributes.length - 1) == 0 || elm.attributes.include?(match_p[2]) || elm.attributes.rindex(match_p[3],elm.attributes.length - 1) == 0
               if !EMPTY.eql?(elm.attributes) && !EMPTY.eql?(elm.attributes.strip) then
                 elm.attributes = '' << SPACE << elm.attributes.strip
               else
@@ -3460,7 +3375,6 @@ module Meteor
           @res = match_p.match(elm.attributes)
 
           if @res then
-          #if elm.attributes.include?(match_p[0]) || elm.attributes.rindex(match_p[1],elm.attributes.length - 1) == 0 || elm.attributes.include?(match_p[2]) || elm.attributes.rindex(match_p[3],elm.attributes.length - 1) == 0 then
             TRUE
           else
             FALSE
@@ -3812,8 +3726,6 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.hook = ps.root_element.hook
-          @root.mono_hook = ps.root_element.mono_hook
           @root.content_type = String.new(ps.content_type);
         end
         private :initialize_1
@@ -3864,11 +3776,9 @@ module Meteor
         # ドキュメントをパースし、コンテントタイプをセットする
         #
         def analyze_content_type
-          #@elm_ = element(META_S,HTTP_EQUIV,CONTENT_TYPE)
           element(META_S,HTTP_EQUIV,CONTENT_TYPE)
           
           if !@elm_ then
-            #@elm_ = element(META,HTTP_EQUIV,CONTENT_TYPE)
             element(META,HTTP_EQUIV,CONTENT_TYPE)
           end
           
@@ -4229,9 +4139,6 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.hook = ps.root_element.hook
-          @root.mono_hook = ps.root_element.mono_hook
-          #@root.content_type = String.new(ps.content_type);
         end
 
         #

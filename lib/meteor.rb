@@ -18,20 +18,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.1.9
+# @version 0.9.2.0
 #
-
-
-RUBY_VERSION_1_9_0 = '1.9.0'
-
-if RUBY_VERSION < RUBY_VERSION_1_9_0 then
-  require 'Kconv'
-end
-
 
 module Meteor
 
-  VERSION = "0.9.1.9"
+  VERSION = "0.9.2.0"
+
+  RUBY_VERSION_1_9_0 = '1.9.0'
+
+  if RUBY_VERSION < RUBY_VERSION_1_9_0 then
+    require 'Kconv'
+  end
 
   ZERO = 0
   ONE = 1
@@ -197,7 +195,6 @@ module Meteor
       @parser.content(self,value)
     end
 
-
     #
     # 属性を編集するor内容をセットする
     # 
@@ -248,6 +245,14 @@ module Meteor
     
     def flush
       @parser.flush
+    end
+
+    #
+    # フッククラスの処理を実行する
+    # @param [Array] args 引数配列
+    #
+    def execute(*args)
+      @parser.execute(self,*args)
     end
     
   end
@@ -590,16 +595,16 @@ module Meteor
       def initialize
       end
 
-      def do_action(elm,pif)
+      def do_action(elm)
         #内容あり要素の場合
         if elm.empty then
-          pif2 = pif.child(elm)
-          execute(pif2)
-          pif2.flush
+          elm2 = elm.child(elm)
+          execute(elm2)
+          elm2.flush
         end
       end
 
-      def execute(pif)
+      def execute(elm)
       end
     end
 
@@ -614,23 +619,23 @@ module Meteor
       def initialize
       end
 
-      def do_action(elm,ps,list)
+      def do_action(elm,list)
         #内容あり要素の場合
         if elm.empty then
-          pif2 = ps.child(elm)
-          init(pif2)
+          elm2 = elm.child(elm)
+          init(elm2)
           list.each do |item|
-            if pif2.root_element.element && !pif2.root_element.element.mono then
-              pif2.root_element.document = elm.mixed_content
+            if  !elm2.mono then
+              elm2.parser.root_element.document = elm.mixed_content
             end
-            execute(pif2.root_element.mutable_element, item)
-            pif2.print
+            execute(elm2, item)
+            elm2.print
           end
-          pif2.flush
+          elm2.flush
         end
       end
 
-      def init(ps)
+      def init(elm)
       end
       private :init
 
@@ -2434,17 +2439,17 @@ module Meteor
       end
       private :shadow
       
-      #
-      # 子パーサを取得する
-      # 
-      # @param [Meteor::Element] elm 要素
-      # @return [Meteor::Parser] 子パーサ
-      #
-      def child(elm)
-        if shadow(elm) then
-          @elm_.parser
-        end
-      end
+      ##
+      ## 子パーサを取得する
+      ## 
+      ## @param [Meteor::Element] elm 要素
+      ## @return [Meteor::Parser] 子パーサ
+      ##
+      #def child(elm)
+      #  if shadow(elm) then
+      #    @elm_.parser
+      #  end
+      #end
       
       def set_mono_info(elm)
       end
@@ -2459,28 +2464,29 @@ module Meteor
           @root.element.origin.parser.replace(@root.element.origin, @root.hook_document)
         end
       end
-
+      
       #
-      #
+      # フッククラスの処理を実行する
+      # @param [Array] args 引数配列
       #
       def execute(*args)
         case args.length
-        when ONE
-          execute_2(args[0],args[1])
         when TWO
+          execute_2(args[0],args[1])
+        when THREE
           execute_3(args[0],args[1],args[2])
         else
           raise ArgumentError
         end
       end
-      
+    
       def execute_2(elm,hook)
-        hook.do_action(elm, self)
+        hook.do_action(elm)
       end
       private :execute_2
       
       def execute_3(elm,loop,list)
-        loop.do_action(elm, self, list)
+        loop.do_action(elm,list)
       end
       private :execute_3
       
@@ -2495,55 +2501,55 @@ module Meteor
       end
       private :escape_regex
       
-      def replace2regex(element)
-        if element.include?(EN_1) then
-          element.gsub!(@@pattern_sub_regex1,SUB_REGEX2)
+      def replace2regex(str)
+        if str.include?(EN_1) then
+          str.gsub!(@@pattern_sub_regex1,SUB_REGEX2)
         end
       end
       private :replace2regex
       
-      def replace4regex(element)
-        if element.include?(EN_1) then
-          element.gsub!(@@pattern_sub_regex1,SUB_REGEX3)
+      def replace4regex(str)
+        if str.include?(EN_1) then
+          str.gsub!(@@pattern_sub_regex1,SUB_REGEX3)
         end
       end
       private :replace4regex
       
       #
-      # @param [String] element 入力文字列
+      # @param [String] content 入力文字列
       # @return [String] 出力文字列
       #
-      def escape(element)
-        element;
+      def escape(content)
+        content
       end
       private :escape
 
       #
-      # @param [String] element 入力文字列
+      # @param [String] content 入力文字列
       # @param [String] elm_name 要素名
       # @return [String] 出力文字列
       #
-      def escape_content(element,elm_name)
-        element
+      def escape_content(content,elm_name)
+        content
       end
       private :escape_content
 
       #
-      # @param [String] element 入力文字列
+      # @param [String] content 入力文字列
       # @return [String] 出力文字列
       #
-      def unescape(element)
-        element;
+      def unescape(content)
+        content
       end
       private :unescape
 
       #
-      # @param [String] element 入力文字列
+      # @param [String] content 入力文字列
       # @param [String] elm_name 要素名
       # @return [String] 出力文字列
       #
-      def unescape_content(element,elm_name)
-        element;
+      def unescape_content(content,elm_name)
+        content
       end
       private :unescape_content
 
@@ -2574,7 +2580,6 @@ module Meteor
       end
       private :is_match
 
-
       def create(pif)
         if pif.instance_of?(Meteor::Core::Html::ParserImpl) then
           pif = Meteor::Core::Html::ParserImpl.new
@@ -2589,31 +2594,31 @@ module Meteor
       end
       private :create
       
+      ##
+      ## 要素の属性or内容をセットする
+      ## @param [String] name 属性名
+      ## @param [String] value 属性値or内容
+      ##
+      #def []=(name,value)
+      #  if !name.kind_of?(String)|| name != CONTENT_STR then
+      #    attribute(name,value)
+      #  else
+      #    content(value)
+      #  end
+      #end
       #
-      # 要素の属性or内容をセットする
-      # @param [String] name 属性名
-      # @param [String] value 属性値or内容
-      #
-      def []=(name,value)
-        if !name.kind_of?(String)|| name != CONTENT_STR then
-          attribute(name,value)
-        else
-          content(value)
-        end
-      end
-      
-      #
-      # 要素の属性値or内容を取得する
-      # @param [String] name 属性名
-      # @return [String] 属性値or内容
-      #
-      def [](name)  
-        if !name.kind_of?(String)|| name != CONTENT_STR then
-          attribute(name)
-        else
-          content()
-        end
-      end
+      ##
+      ## 要素の属性値or内容を取得する
+      ## @param [String] name 属性名
+      ## @return [String] 属性値or内容
+      ##
+      #def [](name)  
+      #  if !name.kind_of?(String)|| name != CONTENT_STR then
+      #    attribute(name)
+      #  else
+      #    content()
+      #  end
+      #end
     end
 
     module Util
@@ -3442,75 +3447,75 @@ module Meteor
         end
         private :set_mono_info
 
-        def escape(element)
+        def escape(content)
           #特殊文字の置換
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             #「&」->「&amp;」
-            if element.include?(AND_1) then
-              element.gsub!(@@pattern_and_1,AND_2)
+            if content.include?(AND_1) then
+              content.gsub!(@@pattern_and_1,AND_2)
             end
             #「<」->「&lt;」
-            if element.include?(LT_1) then
-              element.gsub!(@@pattern_lt_1,LT_2)
+            if content.include?(LT_1) then
+              content.gsub!(@@pattern_lt_1,LT_2)
             end
             #「>」->「&gt;」
-            if element.include?(GT_1) then
-              element.gsub!(@@pattern_gt_1,GT_2)
+            if content.include?(GT_1) then
+              content.gsub!(@@pattern_gt_1,GT_2)
             end
             #「"」->「&quotl」
-            if element.include?(DOUBLE_QUATATION) then
-              element.gsub!(@@pattern_dq_1,QO_2)
+            if content.include?(DOUBLE_QUATATION) then
+              content.gsub!(@@pattern_dq_1,QO_2)
             end
             #「 」->「&nbsp;」
-            if element.include?(SPACE) then
-              element.gsub!(@@pattern_space_1,NBSP_2)
+            if content.include?(SPACE) then
+              content.gsub!(@@pattern_space_1,NBSP_2)
             end
           else
-            element.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
+            content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
           end
-          element
+          content
         end
         private :escape
 
-        def escape_content(element,elm_name)
+        def escape_content(content,elm_name)
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
-            element = escape(element)
+            content = escape(content)
             
             if !is_match(MATCH_TAG_2,elm_name) then
               #「¥r?¥n」->「<br>」
-              element.gsub!(@@pattern_br_1, BR_2)
+              content.gsub!(@@pattern_br_1, BR_2)
             end
           else
-            element.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
+            content.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
           end
           
-          element
+          content
         end
         private :escape_content
 
-        def unescape(element)
+        def unescape(content)
           #特殊文字の置換
           #「<」<-「&lt;」
-          #if element.include?(LT_2) then
-          #  element.gsub!(@@pattern_lt_2,LT_1)
+          #if content.include?(LT_2) then
+          #  content.gsub!(@@pattern_lt_2,LT_1)
           #end
           #「>」<-「&gt;」
-          #if element.include?(GT_2) then
-          #  element.gsub!(@@pattern_gt_2,GT_1)
+          #if content.include?(GT_2) then
+          #  content.gsub!(@@pattern_gt_2,GT_1)
           #end
           #「"」<-「&quotl」
-          #if element.include?(QO_2) then
-          #  element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
+          #if content.include?(QO_2) then
+          #  content.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
           #end
           #「 」<-「&nbsp;」
-          #if element.include?(NBSP_2) then
-          #  element.gsub!(@@pattern_space_2,SPACE)
+          #if content.include?(NBSP_2) then
+          #  content.gsub!(@@pattern_space_2,SPACE)
           #end
           #「&」<-「&amp;」
-          #if element.include?(AND_2) then
-          #  element.gsub!(@@pattern_and_2,AND_1)
+          #if content.include?(AND_2) then
+          #  content.gsub!(@@pattern_and_2,AND_1)
           #end
-          element.gsub!(@@pattern_unescape) do
+          content.gsub!(@@pattern_unescape) do
             case $1
             when AND_3 then
               AND_1
@@ -3527,21 +3532,21 @@ module Meteor
             end
           end
           
-          element
+          content
         end
         private :unescape
 
-        def unescape_content(element,elm_name)
-          element = unescape(element)
+        def unescape_content(content,elm_name)
+          content = unescape(content)
 
           if !is_match(MATCH_TAG_2,elm_name) then
             #「<br>」->「¥r?¥n」
-            if element.include?(BR_2) then
-              element.gsub!(@@pattern_br_2, @root.kaigyo_code)
+            if content.include?(BR_2) then
+              content.gsub!(@@pattern_br_2, @root.kaigyo_code)
             end
           end
 
-          element
+          content
         end
         private :unescape_content
 
@@ -3959,80 +3964,80 @@ module Meteor
         end
         private :set_mono_info
 
-        def escape(element)
+        def escape(content)
           #特殊文字の置換
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             #「&」->「&amp;」
-            if element.include?(AND_1) then
-              element.gsub!(@@pattern_and_1,AND_2)
+            if content.include?(AND_1) then
+              content.gsub!(@@pattern_and_1,AND_2)
             end
             #「<」->「&lt;」
-            if element.include?(LT_1) then
-              element.gsub!(@@pattern_lt_1,LT_2)
+            if content.include?(LT_1) then
+              content.gsub!(@@pattern_lt_1,LT_2)
             end
             #「>」->「&gt;」
-            if element.include?(GT_1) then
-              element.gsub!(@@pattern_gt_1,GT_2)
+            if content.include?(GT_1) then
+              content.gsub!(@@pattern_gt_1,GT_2)
             end
             #「"」->「&quotl」
-            if element.include?(DOUBLE_QUATATION) then
-              element.gsub!(@@pattern_dq_1,QO_2)
+            if content.include?(DOUBLE_QUATATION) then
+              content.gsub!(@@pattern_dq_1,QO_2)
             end
              #「'」->「&apos;」
-            if element.include?(AP_1) then
-              element.gsub!(@@pattern_ap_1,AP_2)
+            if content.include?(AP_1) then
+              content.gsub!(@@pattern_ap_1,AP_2)
             end
             #「 」->「&nbsp;」
-            if element.include?(SPACE) then
-              element.gsub!(@@pattern_space_1,NBSP_2)
+            if content.include?(SPACE) then
+              content.gsub!(@@pattern_space_1,NBSP_2)
             end
           else
-            element.gsub!(@@pattern_escape,TABLE_FOR_ESCAPE_)
+            content.gsub!(@@pattern_escape,TABLE_FOR_ESCAPE_)
           end
             
-          element
+          content
         end
         private :escape
 
-        def escape_content(element,elm_name)
+        def escape_content(content,elm_name)
           
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
-            element = escape(element)
+            content = escape(content)
             
             if !is_match(MATCH_TAG_2,elm_name) then
               #「¥r?¥n」->「<br>」
-              element.gsub!(@@pattern_br_1, BR_2)
+              content.gsub!(@@pattern_br_1, BR_2)
             end
           else
-            element.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
+            content.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
           end
-          element
+          content
         end
         private :escape_content
 
-        def unescape(element)
+        def unescape(content)
           #特殊文字の置換
           #「<」<-「&lt;」
-          #if element.include?(LT_2) then
-          #  element.gsub!(@@pattern_lt_2,LT_1)
+          #if content.include?(LT_2) then
+          #  content.gsub!(@@pattern_lt_2,LT_1)
           #end
           #「>」<-「&gt;」
-          #if element.include?(GT_2) then
-          #  element.gsub!(@@pattern_gt_2,GT_1)
+          #if content.include?(GT_2) then
+          #  content.gsub!(@@pattern_gt_2,GT_1)
           #end
           #「"」<-「&quotl」
-          #if element.include?(QO_2) then
-          #  element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
+          #if content.include?(QO_2) then
+          #  content.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
           #end
           #「 」<-「&nbsp;」
-          #if element.include?(NBSP_2) then
-          #  element.gsub!(@@pattern_space_2,SPACE)
+          #if content.include?(NBSP_2) then
+          #  content.gsub!(@@pattern_space_2,SPACE)
           #end
           #「&」<-「&amp;」
-          #if element.include?(AND_2) then
-          #  element.gsub!(@@pattern_and_2,AND_1)
+          #if content.include?(AND_2) then
+          #  content.gsub!(@@pattern_and_2,AND_1)
           #end
-          element.gsub!(@@pattern_unescape) do
+          content.gsub!(@@pattern_unescape) do
             case $1
             when AND_3 then
               AND_1
@@ -4049,21 +4054,21 @@ module Meteor
             end
           end
           
-          element
+          content
         end
         private :unescape
 
-        def unescape_content(element,elm_name)
-          element = unescape(element)
+        def unescape_content(content,elm_name)
+          content = unescape(content)
 
           if !is_match(MATCH_TAG_2,elm_name) then
             #「<br>」->「¥r?¥n」
-            if element.include?(BR_2) then
-              element.gsub!(@@pattern_br_2, @root.kaigyo_code)
+            if content.include?(BR_2) then
+              content.gsub!(@@pattern_br_2, @root.kaigyo_code)
             end
           end
 
-          element
+          content
         end
         private :unescape_content
 
@@ -4190,67 +4195,67 @@ module Meteor
         end
         private :set_mono_info
 
-        def escape(element)
+        def escape(content)
           #特殊文字の置換
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             #「&」->「&amp;」
-            if element.include?(AND_1) then
-              element.gsub!(@@pattern_and_1,AND_2)
+            if content.include?(AND_1) then
+              content.gsub!(@@pattern_and_1,AND_2)
             end
             #「<」->「&lt;」
-            if element.include?(LT_1) then
-              element.gsub!(@@pattern_lt_1,LT_2)
+            if content.include?(LT_1) then
+              content.gsub!(@@pattern_lt_1,LT_2)
             end
             #「>」->「&gt;」
-            if element.include?(GT_1) then
-              element.gsub!(@@pattern_gt_1,GT_2)
+            if content.include?(GT_1) then
+              content.gsub!(@@pattern_gt_1,GT_2)
             end
             #「"」->「&quot;」
-            if element.include?(DOUBLE_QUATATION) then
-              element.gsub!(@@pattern_dq_1,QO_2)
+            if content.include?(DOUBLE_QUATATION) then
+              content.gsub!(@@pattern_dq_1,QO_2)
             end
             #「'」->「&apos;」
-            if element.include?(AP_1) then
-              element.gsub!(@@pattern_ap_1,AP_2)
+            if content.include?(AP_1) then
+              content.gsub!(@@pattern_ap_1,AP_2)
             end
           else
-            element.gsub!(@@pattern_escape,TABLE_FOR_ESCAPE_)
+            content.gsub!(@@pattern_escape,TABLE_FOR_ESCAPE_)
           end
 
-          element
+          content
         end
         private :escape
 
-        def escape_content(element,elm_name)
-          escape(element)
+        def escape_content(content,elm_name)
+          escape(content)
         end
         private :escape_content
 
-        def unescape(element)
+        def unescape(content)
           #特殊文字の置換
           #if RUBY_VERSION < RUBY_VERSION_1_9_0 then
           #  #「<」<-「&lt;」
-          #  if element.include?(LT_2) then
-          #    element.gsub!(@@pattern_lt_2,LT_1)
+          #  if content.include?(LT_2) then
+          #    content.gsub!(@@pattern_lt_2,LT_1)
           #  end
           #  #「>」<-「&gt;」
-          #  if element.include?(GT_2) then
-          #    element.gsub!(@@pattern_gt_2,GT_1)
+          #  if content.include?(GT_2) then
+          #    content.gsub!(@@pattern_gt_2,GT_1)
           #  end
           #  #「"」<-「&quot;」
-          #  if element.include?(QO_2) then
-          #    element.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
+          #  if content.include?(QO_2) then
+          #    content.gsub!(@@pattern_dq_2,DOUBLE_QUATATION)
           #  end
           #  #「'」<-「&apos;」
-          #  if element.include?(AP_2) then
-          #    element.gsub!(@@pattern_ap_2,AP_1)
+          #  if content.include?(AP_2) then
+          #    content.gsub!(@@pattern_ap_2,AP_1)
           #  end
           #  #「&」<-「&amp;」
-          #  if element.include?(AND_2) then
-          #    element.gsub!(@@pattern_and_2,AND_1)
+          #  if content.include?(AND_2) then
+          #    content.gsub!(@@pattern_and_2,AND_1)
           #  end
           #else
-          element.gsub!(@@pattern_unescape) do
+          content.gsub!(@@pattern_unescape) do
             case $1
             when AND_3 then
               AND_1
@@ -4266,12 +4271,12 @@ module Meteor
           end
           #end
             
-          element
+          content
         end
         private :unescape
 
-        def unescape_content(element,elm_name)
-          unescape(element)
+        def unescape_content(content,elm_name)
+          unescape(content)
         end
         private :unescape_content
 

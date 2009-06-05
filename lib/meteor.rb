@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.1
+# @version 0.9.2.2
 #
 
 module Meteor
 
-  VERSION = "0.9.2.1"
+  VERSION = "0.9.2.2"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -73,7 +73,8 @@ module Meteor
         @parser = args[1]
         @arguments = AttributeMap.new(args[0].arguments)
         #@usable = false
-        @origin = args[0]        
+        @origin = args[0]
+        args[0].copy = self
       else
         raise ArgumentError
       end
@@ -113,7 +114,7 @@ module Meteor
       @mono = elm.mono
       @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
-      @origin = elm   
+      @origin = elm
       @usable = true   
     end
     private :initialize_e    
@@ -177,6 +178,7 @@ module Meteor
     attr_accessor :arguments
     attr_accessor :usable
     attr_accessor :origin
+    attr_accessor :copy
 
 	#
 	# 子要素を取得する
@@ -283,9 +285,9 @@ module Meteor
       @parser.print
     end
     
-    def flush
-      @parser.flush
-    end
+    #def flush
+    #  @parser.flush
+    #end
 
     #
     # フッククラスの処理を実行する
@@ -640,7 +642,7 @@ module Meteor
         if elm.empty then
           elm2 = elm.child(elm)
           execute(elm2)
-          elm2.flush
+          #elm2.flush
         end
       end
 
@@ -671,7 +673,7 @@ module Meteor
             execute(elm2, item)
             elm2.print
           end
-          elm2.flush
+          #elm2.flush
         end
       end
 
@@ -2391,9 +2393,13 @@ module Meteor
         @e_cache.values.each do |item|
           if item.usable then
             #puts "#{item.name}:#{item.document}"
-            if item.name == EMPTY then
+            #if item.name == EMPTY then
+            if item.copy then
+              #item.document = item.copy.parser.root_element.hook_document
               @pattern = Meteor::Core::Util::PatternCache.get(item.pattern)
-              @root.document.sub!(@pattern,item.document)
+              @root.document.sub!(@pattern,item.copy.parser.root_element.hook_document)
+              #@root.document.sub!(@pattern,item.document)
+              item.copy = nil
             else
               edit_document_1(item)
               edit_pattern_(item)
@@ -2510,19 +2516,19 @@ module Meteor
       end
       private :set_mono_info
       
-      #
-      # 反映する
-      #
-      def flush
-        if @root.element && @root.element.origin then
-          ##@root.element.origin.parser.reflect
-          ##@root.element.origin.parser.replace(@root.element.origin, @root.hook_document)
-          ##puts "[aa]"
-          ##puts @root.hook_document
-          @root.element.origin.document = @root.hook_document
-          @root.element.origin.name = EMPTY
-        end
-      end
+      ##
+      ## 反映する
+      ##
+      #def flush
+      #  #if @root.element && @root.element.origin then
+      #  #  ##@root.element.origin.parser.reflect
+      #  #  ##@root.element.origin.parser.replace(@root.element.origin, @root.hook_document)
+      #  #  ##puts "[aa]"
+      #  #  ##puts @root.hook_document
+      #  #  @root.element.origin.document = @root.hook_document
+      #  #  @root.element.origin.name = EMPTY
+      #  #end
+      #end
       
       #
       # フッククラスの処理を実行する

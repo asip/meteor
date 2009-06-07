@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.2
+# @version 0.9.2.3
 #
 
 module Meteor
 
-  VERSION = "0.9.2.2"
+  VERSION = "0.9.2.3"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -119,6 +119,21 @@ module Meteor
     end
     private :initialize_e    
 
+    attr_accessor :name
+    attr_accessor :attributes
+    attr_accessor :mixed_content
+    attr_accessor :pattern
+    attr_accessor :document
+    attr_accessor :empty
+    attr_accessor :cx
+    attr_accessor :mono
+    attr_accessor :parser
+    attr_accessor :type_value
+    attr_accessor :arguments
+    attr_accessor :usable
+    attr_accessor :origin
+    attr_accessor :copy
+
     #
     # コピーを作成する
     # @param [Array] args 引数配列
@@ -164,21 +179,6 @@ module Meteor
         @obj
       end
     end
-
-    attr_accessor :name
-    attr_accessor :attributes
-    attr_accessor :mixed_content
-    attr_accessor :pattern
-    attr_accessor :document
-    attr_accessor :empty
-    attr_accessor :cx
-    attr_accessor :mono
-    attr_accessor :parser
-    attr_accessor :type_value
-    attr_accessor :arguments
-    attr_accessor :usable
-    attr_accessor :origin
-    attr_accessor :copy
 
 	#
 	# 子要素を取得する
@@ -244,7 +244,8 @@ module Meteor
     # @param [String] value 属性の値or内容
     #
     def []=(name,value)
-      if !name.kind_of?(String) || name != CONTENT_STR then
+      #if !name.kind_of?(String) || CONTENT_STR != name then
+      if CONTENT_STR != name then
         attribute(name,value)
       else
         @parser.content(self,value)
@@ -258,7 +259,8 @@ module Meteor
     # @return [String] 属性の値or内容
     #
     def [](name)
-      if !name.kind_of?(String) || name != CONTENT_STR then
+      #if !name.kind_of?(String) || CONTENT_STR != name  then
+      if CONTENT_STR != name then
         attribute(name)
       else
         content()
@@ -283,11 +285,7 @@ module Meteor
     
     def print
       @parser.print
-    end
-    
-    #def flush
-    #  @parser.flush
-    #end
+    end    
 
     #
     # フッククラスの処理を実行する
@@ -433,7 +431,7 @@ module Meteor
     # @param name 属性名
     #
     def delete(name)
-      if @map[name] && @recordable then
+      if @recordable && @map[name] then
         @map[name].removed = true
         @map[name].changed = false
       end
@@ -1670,7 +1668,7 @@ module Meteor
                       @sbuf << @pattern_cc_1_2
                     end
 
-                    @cnt << 1
+                    @cnt += 1
 
                     @position = @position2
                   else
@@ -1695,7 +1693,7 @@ module Meteor
                     @sbuf << @pattern_cc_1_2
                   end
 
-                  @cnt += ONE
+                  @cnt += 1
 
                   @position = @position2
                 end
@@ -1844,13 +1842,13 @@ module Meteor
       #
       def attribute(*args)
         case args.length
-        when ONE
-          get_attribute_value_1(args[0])
+        #when ONE
+        #  get_attribute_value_1(args[0])
         when TWO
           if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             get_attribute_value_2(args[0],args[1])
-          elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
-            set_attribute_2(args[0],args[1])
+          #elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
+          #  set_attribute_2(args[0],args[1])
           elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
             set_attribute_2_m(args[0],args[1])
           else
@@ -1993,19 +1991,19 @@ module Meteor
       end
       private :edit_pattern_
 
-      #
-      # 要素の属性を編集する
-      # 
-      # @param [String] attr_name 属性名
-      # @param [String] attr_value 属性値
-      #
-      def set_attribute_2(attr_name,attr_value)
-        if @root.element.origin then
-          set_attribute_3(@root.element, attr_name, attr_value)
-        end
-        @root.element
-      end
-      private :set_attribute_2
+      ##
+      ## 要素の属性を編集する
+      ##
+      ## @param [String] attr_name 属性名
+      ## @param [String] attr_value 属性値
+      ##
+      #def set_attribute_2(attr_name,attr_value)
+      #  if @root.element.origin then
+      #    set_attribute_3(@root.element, attr_name, attr_value)
+      #  end
+      #  @root.element
+      #end
+      #private :set_attribute_2
       
       #
       # 要素の属性値を取得する
@@ -2034,20 +2032,20 @@ module Meteor
       end
       private :get_attribute_value_
       
-      #
-      # 要素の属性値を取得する
-      # 
-      # @param [String] attr_name 属性名
-      # @return [String] 属性値
-      #
-      def get_attribute_value_1(attr_name)
-        if @root.element then
-          get_attribute_value_2(@root.element, attr_name)
-        else
-          nil
-        end
-      end
-      private :get_attribute_value_1
+      ##
+      ## 要素の属性値を取得する
+      ##
+      ## @param [String] attr_name 属性名
+      ## @return [String] 属性値
+      ##
+      #def get_attribute_value_1(attr_name)
+      #  if @root.element then
+      #    get_attribute_value_2(@root.element, attr_name)
+      #  else
+      #    nil
+      #  end
+      #end
+      #private :get_attribute_value_1
       
       #
       # 属性マップを取得する
@@ -2127,19 +2125,22 @@ module Meteor
       def content(*args)
         case args.length
         when ONE
-          if args[0].kind_of?(Meteor::Element) then
-            get_content_1(args[0])
-          elsif args[0].kind_of?(String) then
-            set_content_1(args[0])
-          end
+          #if args[0].kind_of?(Meteor::Element) then
+          get_content_1(args[0])
+          #elsif args[0].kind_of?(String) then
+          #  set_content_1(args[0])
+          #else
+          #  raise ArgumentError
+          #end
         when TWO
-          if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
-            set_content_2_s(args[0],args[1])
-          elsif args[0].kind_of?(String) && (args[1].kind_of?(TrueClass) || args[1].kind_of?(FalseClass)) then
-            set_content_2_b(args[0],args[1])
-          else
-            raise ArgumentError
-          end
+          #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
+          set_content_2_s(args[0],args[1])
+          #elsif args[0].kind_of?(String) && (args[1].eql?(true) || args[1].eql?(false)) then
+          ##elsif args[0].kind_of?(String) && (args[1].kinf_of?(TrueClass) || args[1].kind_of?(FalseClass)) then
+          #  set_content_2_b(args[0],args[1])
+          #else
+          #  raise ArgumentError
+          #end
         when THREE
           set_content_3(args[0],args[1],args[2])
         else
@@ -2157,11 +2158,9 @@ module Meteor
       def set_content_3(elm,content,entity_ref=true)
 
         if entity_ref then
-          content = escape_content(content,elm.name)
-        end
-        
+          escape_content(content,elm.name)
+        end    
         elm.mixed_content = content
-
         elm
       end
       private :set_content_3
@@ -2173,36 +2172,38 @@ module Meteor
       # @param [String] content 要素の内容
       #
       def set_content_2_s(elm,content)
-        set_content_3(elm, content)
+        #set_content_3(elm, content)
+        elm.mixed_content = escape_content(content,elm.name)
+        elm
       end
       private :set_content_2_s
       
-      #
-      # 要素の内容を編集する
-      # 
-      # @param [String] content 内容
-      #
-      def set_content_1(content)
-        if @root.element && @root.element.mono then
-          set_content_2_s(@root.element, content)
-        end
-      end
-      private :set_content_1
+      ##
+      ## 要素の内容を編集する
+      ##
+      ## @param [String] content 内容
+      ##
+      #def set_content_1(content)
+      #  if @root.element && @root.element.mono then
+      #    set_content_2_s(@root.element, content)
+      #  end
+      #end
+      #private :set_content_1
       
+      ##
+      ## 要素の内容を編集する
+      ##
+      ## @param [String] content 内容
+      ## @param [TrueClass,FalseClass] entity_ref エンティティ参照フラグ
+      ##
+      #def set_content_2_b(content,entity_ref)
+      #  if @root.element && @root.element.mono then
+      #    set_content_3(@root.element, content, entity_ref)
+      #  end
       #
-      # 要素の内容を編集する
-      # 
-      # @param [String] content 内容
-      # @param [TrueClass,FalseClass] entity_ref エンティティ参照フラグ
-      #
-      def set_content_2_b(content,entity_ref)
-        if @root.element && @root.element.mono then
-          set_content_3(@root.element, content, entity_ref)
-        end
-
-        @root.element
-      end
-      private :set_content_2_b
+      #  @root.element
+      #end
+      #private :set_content_2_b
       
       def get_content_1(elm)
         if !elm.cx then
@@ -2485,7 +2486,6 @@ module Meteor
           
           pif2 = create(self)
           
-          #@elm_ = Element.new(elm,pif2)
           @elm_ = Element.new!(elm,pif2)
 
           if !elm.mono then
@@ -2493,42 +2493,15 @@ module Meteor
           else
             pif2.root_element.document = String.new(elm.document)
           end
-          #pif2.root_element.element = @elm_
           
           @elm_
         end
       end
-      private :shadow
-      
-      ##
-      ## 子パーサを取得する
-      ## 
-      ## @param [Meteor::Element] elm 要素
-      ## @return [Meteor::Parser] 子パーサ
-      ##
-      #def child(elm)
-      #  if shadow(elm) then
-      #    @elm_.parser
-      #  end
-      #end
+      private :shadow      
       
       def set_mono_info(elm)
       end
-      private :set_mono_info
-      
-      ##
-      ## 反映する
-      ##
-      #def flush
-      #  #if @root.element && @root.element.origin then
-      #  #  ##@root.element.origin.parser.reflect
-      #  #  ##@root.element.origin.parser.replace(@root.element.origin, @root.hook_document)
-      #  #  ##puts "[aa]"
-      #  #  ##puts @root.hook_document
-      #  #  @root.element.origin.document = @root.hook_document
-      #  #  @root.element.origin.name = EMPTY
-      #  #end
-      #end
+      private :set_mono_info      
       
       #
       # フッククラスの処理を実行する
@@ -2620,19 +2593,9 @@ module Meteor
 
       def is_match(regex,str)
         if regex.kind_of?(Regexp) then
-          if regex.match(str.downcase) then
-            true
-          else
-            false
-          end
+          is_match_r(regex,str)
         elsif regex.kind_of?(Array) then
-          str = str.downcase
-          regex.each do |item|
-            if item.eql?(str) then
-              return true
-            end
-          end
-          return false
+          is_match_a(regex,str)
         elsif regex.kind_of?(String) then
           if regex.eql?(str.downcase) then
             true
@@ -2644,6 +2607,36 @@ module Meteor
         end
       end
       private :is_match
+
+
+      def is_match_r(regex,str)
+        if regex.match(str.downcase) then
+          true
+        else
+          false
+        end
+      end
+      private :is_match_r
+
+      def is_match_a(regex,str)
+        str = str.downcase
+        regex.each do |item|
+          if item.eql?(str) then
+            return true
+          end
+        end
+        return false
+      end
+      private :is_match_a
+
+      def is_match_s(regex,str)
+        if regex.match(str.downcase) then
+          true
+        else
+          false
+        end
+      end
+      private :is_match_s
 
       def create(pif)
         if pif.instance_of?(Meteor::Core::Html::ParserImpl) then
@@ -2659,31 +2652,6 @@ module Meteor
       end
       private :create
       
-      ##
-      ## 要素の属性or内容をセットする
-      ## @param [String] name 属性名
-      ## @param [String] value 属性値or内容
-      ##
-      #def []=(name,value)
-      #  if !name.kind_of?(String)|| name != CONTENT_STR then
-      #    attribute(name,value)
-      #  else
-      #    content(value)
-      #  end
-      #end
-      #
-      ##
-      ## 要素の属性値or内容を取得する
-      ## @param [String] name 属性名
-      ## @return [String] 属性値or内容
-      ##
-      #def [](name)  
-      #  if !name.kind_of?(String)|| name != CONTENT_STR then
-      #    attribute(name)
-      #  else
-      #    content()
-      #  end
-      #end
     end
 
     module Util
@@ -2767,7 +2735,7 @@ module Meteor
       end
 
       if RUBY_VERSION < RUBY_VERSION_1_9_0 then
-        class OrderHash <Hash
+        class OrderHash < Hash
 
           def initialize
             @keys = Array.new
@@ -3417,7 +3385,7 @@ module Meteor
           elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
             get_attribute_value_2_r(elm,@@pattern_disabled_m)
             #get_attribute_value_2_r(elm,DISABLED_M)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match_S(INPUT,elm.name) && is_match_S(RADIO, get_type(elm)) then
             get_attribute_value_2_r(elm,@@pattern_checked_m)
             #get_attribute_value_2_r(elm,CHECKED_M)
           elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then

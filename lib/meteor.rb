@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.3
+# @version 0.9.2.4
 #
 
 module Meteor
 
-  VERSION = "0.9.2.3"
+  VERSION = "0.9.2.4"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -105,6 +105,7 @@ module Meteor
     # @param [Meteor::Element] elm 要素
     #
     def initialize_e(elm)
+      #if !elm.origin then
       @name = elm.name
       @attributes = String.new(elm.attributes)
       @pattern = String.new(elm.pattern)
@@ -112,27 +113,38 @@ module Meteor
       @empty = elm.empty
       @cx = elm.cx
       @mono = elm.mono
-      @parser = elm.parser
       @arguments = AttributeMap.new(elm.arguments)
       @origin = elm
-      @usable = true   
+      #else
+      #  @name = elm.origin.name
+      #  @attributes = String.new(elm.origin.attributes)
+      #  @pattern = String.new(elm.origin.pattern)
+      #  @document = String.new(elm.origin.document)
+      #  @empty = elm.origin.empty
+      #  @cx = elm.origin.cx
+      #  @mono = elm.origin.mono
+      #  @arguments = AttributeMap.new(elm.origin.arguments)
+      #  @origin = elm
+      #end
+      @parser = elm.parser
+      @usable = true
     end
     private :initialize_e    
 
-    attr_accessor :name
-    attr_accessor :attributes
-    attr_accessor :mixed_content
-    attr_accessor :pattern
-    attr_accessor :document
-    attr_accessor :empty
-    attr_accessor :cx
-    attr_accessor :mono
-    attr_accessor :parser
-    attr_accessor :type_value
-    attr_accessor :arguments
-    attr_accessor :usable
-    attr_accessor :origin
-    attr_accessor :copy
+    attr_accessor :name #要素名
+    attr_accessor :attributes #属性群
+    attr_accessor :mixed_content #内容
+    attr_accessor :pattern #パターン
+    attr_accessor :document #ドキュメント
+    attr_accessor :empty #内容存在フラグ
+    attr_accessor :cx #コメント拡張タグフラグ
+    attr_accessor :mono #子要素存在フラグ
+    attr_accessor :parser #パーサ
+    attr_accessor :type_value #タイプ属性
+    attr_accessor :arguments #パターン変更用属性マップ
+    attr_accessor :usable #有効・無効フラグ
+    attr_accessor :origin #原本ポインタ
+    attr_accessor :copy #複製ポインタ
 
     #
     # コピーを作成する
@@ -141,7 +153,8 @@ module Meteor
     def self.new!(*args)
       case args.length
       when ONE
-         self.new_1!(args[0])
+         #self.new_1!(args[0])
+         args[0].clone
       when TWO
         @obj = args[1].root_element.element
         if @obj then
@@ -157,26 +170,25 @@ module Meteor
           @obj
         end
       end
-    end
+    end    
 
     #
-    # コピーを作成する
-    # @param [Element] elm 要素
+    # 複製する 
     #
-    def self.new_1!(elm)
-      @obj = elm.parser.e_cache[elm.object_id]
-      if @obj then
-        @obj.attributes = String.new(elm.attributes)
-        @obj.mixed_content = String.new(elm.mixed_content)
-        @obj.pattern = String.new(elm.pattern)
-        @obj.document = String.new(elm.document)
-        @obj.arguments = AttributeMap.new(elm.arguments)
-        @obj.usable = true
-        @obj
+    def clone
+      obj = self.parser.e_cache[self.object_id]
+      if obj then
+        obj.attributes = String.new(self.attributes)
+        obj.mixed_content = String.new(self.mixed_content)
+        obj.pattern = String.new(self.pattern)
+        obj.document = String.new(self.document)
+        obj.arguments = AttributeMap.new(self.arguments)
+        obj.usable = true
+        obj
       else
-        @obj = self.new(elm)
-        elm.parser.e_cache[elm.object_id] = @obj
-        @obj
+        obj = self.new(self)
+        self.parser.e_cache[self.object_id] = obj
+        obj
       end
     end
 
@@ -283,8 +295,8 @@ module Meteor
       @parser.remove_element(self)
     end
     
-    def print
-      @parser.print
+    def flush
+      @parser.flush
     end    
 
     #
@@ -639,8 +651,7 @@ module Meteor
         #内容あり要素の場合
         if elm.empty then
           elm2 = elm.child(elm)
-          execute(elm2)
-          #elm2.flush
+          execute(elm2)    
         end
       end
 
@@ -669,9 +680,8 @@ module Meteor
               elm2.parser.root_element.document = elm.mixed_content
             end
             execute(elm2, item)
-            elm2.print
-          end
-          #elm2.flush
+            elm2.flush
+          end     
         end
       end
 
@@ -797,7 +807,6 @@ module Meteor
       #getAttributeValue
       GET_ATTR_1 = '="([^"]*)"'
       #attributeMap
-      #todo
       GET_ATTRS_MAP = '([^\\s]*)="([^\"]*)"'
       #removeAttribute
       ERASE_ATTR_1 = '="[^\"]*"\\s'
@@ -2414,7 +2423,7 @@ module Meteor
       #
       # 出力する
       #
-      def print
+      def flush
         reflect
 
         #puts @root.document
@@ -3385,7 +3394,7 @@ module Meteor
           elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
             get_attribute_value_2_r(elm,@@pattern_disabled_m)
             #get_attribute_value_2_r(elm,DISABLED_M)
-          elsif is_match(CHECKED, attr_name) && is_match_S(INPUT,elm.name) && is_match_S(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
             get_attribute_value_2_r(elm,@@pattern_checked_m)
             #get_attribute_value_2_r(elm,CHECKED_M)
           elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then

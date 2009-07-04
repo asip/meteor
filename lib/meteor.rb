@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.5
+# @version 0.9.2.6
 #
 
 module Meteor
 
-  VERSION = "0.9.2.5"
+  VERSION = "0.9.2.6"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -45,7 +45,7 @@ module Meteor
   #
   # 要素クラス
   #
-  class Element
+  class Element  
 
     #
     # イニシャライザ
@@ -65,7 +65,8 @@ module Meteor
           @name = args[0].name
           @attributes = String.new(args[0].attributes)
           @mixed_content = String.new(args[0].mixed_content)
-          @pattern = String.new(args[0].pattern)
+          #@pattern = String.new(args[0].pattern)
+          @pattern = args[0].pattern
           @document = String.new(args[0].document)
           @empty = args[0].empty
           @cx = args[0].cx
@@ -108,7 +109,8 @@ module Meteor
       #if !elm.origin then
       @name = elm.name
       @attributes = String.new(elm.attributes)
-      @pattern = String.new(elm.pattern)
+      #@pattern = String.new(elm.pattern)
+      @pattern = elm.pattern
       @document = String.new(elm.document)
       @empty = elm.empty
       @cx = elm.cx
@@ -135,7 +137,9 @@ module Meteor
     attr_accessor :attributes #属性群
     attr_accessor :mixed_content #内容
     attr_accessor :pattern #パターン
-    attr_accessor :document #ドキュメント
+    #attr_accessor :document #ドキュメント
+    #attr_writer :document
+    attr_accessor :document_sync
     attr_accessor :empty #内容存在フラグ
     attr_accessor :cx #コメント拡張タグフラグ
     attr_accessor :mono #子要素存在フラグ
@@ -160,7 +164,7 @@ module Meteor
           if @obj then
             @obj.attributes = String.new(args[0].attributes)
             @obj.mixed_content = String.new(args[0].mixed_content)
-            @obj.pattern = String.new(args[0].pattern)
+            #@obj.pattern = String.new(args[0].pattern)
             @obj.document = String.new(args[0].document)
             #@obj.arguments = AttributeMap.new(args[0].arguments)
             @obj
@@ -180,7 +184,7 @@ module Meteor
       if obj then
         obj.attributes = String.new(self.attributes)
         obj.mixed_content = String.new(self.mixed_content)
-        obj.pattern = String.new(self.pattern)
+        #obj.pattern = String.new(self.pattern)
         obj.document = String.new(self.document)
         #obj.arguments = AttributeMap.new(self.arguments)
         obj.usable = true
@@ -286,6 +290,45 @@ module Meteor
     #
     def remove_attribute(*args)
       @parser.remove_attribute(self,*args)
+    end
+
+    def document=(doc)
+      @document_sync = false
+      @document = doc
+    end
+
+    def document
+      if @document_sync then
+        @document_sync = false
+        case @parser.doc_type
+          when Parser::HTML then
+            if @cx then
+              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
+              @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+            else
+              if @empty then
+                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
+                @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+              else
+                @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE
+              end
+            end
+          when Parser::XHTML,Parser::XML then
+            if @cx then
+              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
+              @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+            else
+              if @empty then
+                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
+                @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+              else
+                @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE3
+              end
+            end
+        end
+      else
+        @document
+      end
     end
 
     #
@@ -563,14 +606,17 @@ module Meteor
         when Parser::HTML then
           html = Meteor::Core::Html::ParserImpl.new()
           html.read(path, encoding)
+          html.doc_type = Parser::HTML
           psf.parser = html
         when Parser::XHTML then
           xhtml = Meteor::Core::Xhtml::ParserImpl.new()
           xhtml.read(path, encoding)
+          xhtml.doc_type = Parser::XHTML
           psf.parser = xhtml
         when Parser::XML then
           xml = Meteor::Core::Xml::ParserImpl.new()
           xml.read(path, encoding)
+          xml.doc_type = Parser::XML
           psf.parser = xml
       end
 
@@ -592,14 +638,17 @@ module Meteor
         when Parser::HTML then
           html = Meteor::Core::Html::ParserImpl.new()
           html.parse(document)
+          html.doc_type = Parser::HTML
           psf.parser = html
         when Parser::XHTML then
           xhtml = Meteor::Core::Xhtml::ParserImpl.new()
           xhtml.parse(document)
+          xhtml.doc_type = Parser::XHTML
           psf.parser = xhtml
         when Parser::XML then
           xml = Meteor::Core::Xml::ParserImpl.new()
           xml.parse(document)
+          xml.doc_type = Parser::XML
           psf.parser = xml
       end
 
@@ -809,13 +858,19 @@ module Meteor
       #attributeMap
       GET_ATTRS_MAP = '([^\\s]*)="([^\"]*)"'
       #removeAttribute
-      ERASE_ATTR_1 = '="[^\"]*"\\s'
+      ERASE_ATTR_1 = '="[^"]*"\\s?'
 
       #cxtag
+      #SEARCH_CX_1 = '<!--\\s@'
+      #SEARCH_CX_2 = '\\s([^<>]*id="'
+      #SEARCH_CX_3 = '\"[^<>]*)-->(((?!(<!--\\s\\/@'
+      #SEARCH_CX_4 = ')).)*)<!--\\s\\/@'
+      #SEARCH_CX_5 = '\\s-->'
+      #SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
       SEARCH_CX_1 = '<!--\\s@'
       SEARCH_CX_2 = '\\s([^<>]*id="'
-      SEARCH_CX_3 = '\"[^<>]*)-->(((?!(<!--\\s\\/@'
-      SEARCH_CX_4 = ')).)*)<!--\\s\\/@'
+      SEARCH_CX_3 = '"[^<>]*)-->(((?!(<!--\\s/@'
+      SEARCH_CX_4 = ')).)*)<!--\\s/@'
       SEARCH_CX_5 = '\\s-->'
       SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
 
@@ -970,6 +1025,7 @@ module Meteor
       end
 
       attr_accessor :element_cache
+      attr_accessor :doc_type
 
       #
       # 文字エンコーディングをセットする
@@ -1869,11 +1925,13 @@ module Meteor
               #elsif args[0].kind_of?(String) && args[1].kind_of?(String) then
               #  set_attribute_2(args[0],args[1])
             elsif args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
+              args[0].document_sync = true
               set_attribute_2_m(args[0],args[1])
             else
               raise ArgumentError
             end
           when THREE
+            args[0].document_sync = true
             set_attribute_3(args[0],args[1],args[2])
           else
             raise ArgumentError
@@ -2153,6 +2211,7 @@ module Meteor
           #end
           when TWO
             #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
+            args[0].document_sync = true
             set_content_2_s(args[0],args[1])
           #elsif args[0].kind_of?(String) && (args[1].eql?(true) || args[1].eql?(false)) then
           ##elsif args[0].kind_of?(String) && (args[1].kinf_of?(TrueClass) || args[1].kind_of?(FalseClass)) then
@@ -2161,6 +2220,7 @@ module Meteor
           #  raise ArgumentError
           #end
           when THREE
+            args[0].document_sync = true
             set_content_3(args[0],args[1],args[2])
           else
             raise ArgumentError
@@ -2228,9 +2288,11 @@ module Meteor
         if !elm.cx then
           if elm.empty then
             unescape_content(elm.mixed_content,elm.name)
+          else
+            nil
           end
         else
-          nil
+          unescape_content(elm.mixed_content,elm.name)
         end
       end
       private :get_content_1
@@ -2242,8 +2304,8 @@ module Meteor
       #
       def remove_attribute(*args)
         case args.length
-          when ONE
-            remove_attribute_1(args[0])
+          #when ONE
+          #  remove_attribute_1(args[0])
           when TWO
             remove_attribute_2(args[0],args[1])
           else
@@ -2260,6 +2322,7 @@ module Meteor
       def remove_attribute_2(elm,attr_name)
         if !elm.cx then
 
+          elm.document_sync = true
           remove_attributes_(elm,attr_name)
 
           #if !elm.origin then
@@ -2267,6 +2330,7 @@ module Meteor
           #    elm.arguments.delete(attr_name)
           #  end
           #end
+
         end
 
         elm
@@ -2281,19 +2345,19 @@ module Meteor
       end
       private :remove_attributes_
 
+      ##
+      ## 要素の属性を消す
+      ##
+      ## @param [String] attr_name 属性名
+      ##
+      #def remove_attribute_1(attr_name)
+      #  if @root.element then
+      #    remove_attribute_2(@root.element, attr_name)
+      #  end
       #
-      # 要素の属性を消す
-      # 
-      # @param [String] attr_name 属性名
-      #
-      def remove_attribute_1(attr_name)
-        if @root.element then
-          remove_attribute_2(@root.element, attr_name)
-        end
-
-        @root.element
-      end
-      private :remove_attribute_1
+      #  @root.element
+      #end
+      #private :remove_attribute_1
 
       #
       # 要素を消す
@@ -2315,8 +2379,14 @@ module Meteor
         case args.length
           when ONE
             cxtag_1(args[0])
+            if @elm_ then
+              @element_cache.store(@elm_.object_id,@elm_)
+            end
           when TWO
             cxtag_2(args[0],args[1])
+            if @elm_ then
+              @element_cache.store(@elm_.object_id,@elm_)
+            end
           else
             raise ArgumentError
         end
@@ -2334,7 +2404,8 @@ module Meteor
         #CXタグ検索用パターン
         #@pattern_cc = '' << SEARCH_CX_1 << elm_name << SEARCH_CX_2
         #@pattern_cc << id << SEARCH_CX_3 << elm_name << SEARCH_CX_4 << elm_name << SEARCH_CX_5
-        @pattern_cc = "<!--\\s@#{elm_name}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{elm_name})).)*)<!--\\s\\/@#{elm_name}\\s-->"
+        #@pattern_cc = "<!--\\s@#{elm_name}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{elm_name})).)*)<!--\\s\\/@#{elm_name}\\s-->"
+        @pattern_cc = "<!--\\s@#{elm_name}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s/@#{elm_name})).)*)<!--\\s/@#{elm_name}\\s-->"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         #CXタグ検索
@@ -2845,10 +2916,12 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
-        KAIGYO_CODE = '(\r?\n|\r)'
+        #KAIGYO_CODE = "\r?\n|\r"
+        #KAIGYO_CODE = "\r\n|\n|\r"
+        KAIGYO_CODE = ["\r\n","\n","\r"]
         NBSP_2 = '&nbsp;'
         NBSP_3 = 'nbsp'
-        BR_1 = '\r?\n|\r'
+        BR_1 = "\r?\n|\r"
         BR_2 = '<br>'
 
         META = 'META'
@@ -2953,6 +3026,7 @@ module Meteor
 
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
           @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+          @@pattern_br_2 = Regexp.new(BR_2)
         else
           @@pattern_and_1 = Regexp.new(AND_1)
           @@pattern_lt_1 = Regexp.new(LT_1)
@@ -3013,6 +3087,8 @@ module Meteor
           #@root.hook = ps.root_element.hook
           #@root.mono_hook = ps.root_element.mono_hook
           @root.content_type = String.new(ps.content_type);
+          @root.kaigyo_code = ps.root_element.kaigyo_code
+          @doc_type = ps.doc_type
         end
         private :initialize_1
 
@@ -3081,12 +3157,21 @@ module Meteor
         #
         def analyze_kaigyo_code()
           #改行コード取得
-          @pattern = Regexp.new(KAIGYO_CODE)
-          @res = @pattern.match(@root.document)
+          #@pattern = Regexp.new(KAIGYO_CODE)
+          #@res = @pattern.match(@root.document)
 
-          if @res then
-            @root.kaigyo_code = @res[1]
+          #if @res then
+          #  @root.kaigyo_code = @res[0]
+          #  puts "test"
+          #  puts @res[0]
+          #end
+
+          for a in KAIGYO_CODE
+            if @root.document.include?(a) then
+              @root.kaigyo_code = a       
+            end
           end
+
         end
         private :analyze_kaigyo_code
 
@@ -3488,16 +3573,16 @@ module Meteor
             elm.mono = true
             if elm.cx then
               #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              @pattern_cc = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
+              elm.document = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
             else
               if elm.empty then
                 #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                @pattern_cc = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
+                elm.document = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
               else
-                @pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE
+                elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE
               end
             end
-            elm.document = @pattern_cc
+            #elm.document = @pattern_cc
           end
         end
         private :set_mono_info
@@ -3570,7 +3655,7 @@ module Meteor
           #if content.include?(AND_2) then
           #  content.gsub!(@@pattern_and_2,AND_1)
           #end
-          content.gsub!(@@pattern_unescape) do
+          content.gsub(@@pattern_unescape) do
             case $1
               when AND_3 then
                 AND_1
@@ -3587,21 +3672,20 @@ module Meteor
             end
           end
 
-          content
         end
         private :unescape
 
         def unescape_content(content,elm_name)
-          content = unescape(content)
+          content_ = unescape(content)
 
           if !is_match(MATCH_TAG_2,elm_name) then
             #「<br>」->「¥r?¥n」
             if content.include?(BR_2) then
-              content.gsub!(@@pattern_br_2, @root.kaigyo_code)
+              content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
             end
           end
 
-          content
+          content_
         end
         private :unescape_content
 
@@ -3615,10 +3699,11 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
-        KAIGYO_CODE = '(\r?\n|\r)'
+        #KAIGYO_CODE = "\r?\n|\r"
+        KAIGYO_CODE = ["\r\n","\n","\r"]
         NBSP_2 = '&nbsp;'
         NBSP_3 = 'nbsp'
-        BR_1 = '\r?\n|\r'
+        BR_1 = "\r?\n|\r"
         BR_2 = '<br/>'
         BR_3 = '<br\\/>'
 
@@ -3728,7 +3813,7 @@ module Meteor
           PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
           @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-
+          @@pattern_br_2 = Regexp.new(BR_3)
         else
 
           @@pattern_and_1 = Regexp.new(AND_1)
@@ -3786,7 +3871,9 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.content_type = String.new(ps.content_type);
+          @root.content_type = String.new(ps.content_type)
+          @root.kaigyo_code = ps.root_element.kaigyo_code
+          @doc_type = ps.doc_type
         end
         private :initialize_1
 
@@ -3855,11 +3942,17 @@ module Meteor
         #
         def analyze_kaigyo_code()
           #改行コード取得
-          @pattern = Regexp.new(KAIGYO_CODE)
-          @res = @pattern.match(@root.document)
+          #@pattern = Regexp.new(KAIGYO_CODE)
+          #@res = @pattern.match(@root.document)
 
-          if @res then
-            @root.kaigyo_code = @res[1]
+          #if @res then
+          #  @root.kaigyo_code = @res[0]
+          #end
+
+          for a in KAIGYO_CODE
+            if @root.document.include?(a) then
+              @root.kaigyo_code = a
+            end
           end
         end
         private :analyze_kaigyo_code
@@ -4005,16 +4098,16 @@ module Meteor
             elm.mono = true
             if elm.cx then
               #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              @pattern_cc = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
+              elm.document = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
             else
               if elm.empty then
                 #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                @pattern_cc = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
+                elm.document = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
               else
-                @pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
+                elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
               end
             end
-            elm.document = @pattern_cc
+            #elm.document = @pattern_cc
           end
         end
         private :set_mono_info
@@ -4092,7 +4185,7 @@ module Meteor
           #if content.include?(AND_2) then
           #  content.gsub!(@@pattern_and_2,AND_1)
           #end
-          content.gsub!(@@pattern_unescape) do
+          content.gsub(@@pattern_unescape) do
             case $1
               when AND_3 then
                 AND_1
@@ -4109,21 +4202,21 @@ module Meteor
             end
           end
 
-          content
+          #content
         end
         private :unescape
 
         def unescape_content(content,elm_name)
-          content = unescape(content)
+          content_ = unescape(content)
 
           if !is_match(MATCH_TAG_2,elm_name) then
             #「<br>」->「¥r?¥n」
             if content.include?(BR_2) then
-              content.gsub!(@@pattern_br_2, @root.kaigyo_code)
+              content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
             end
           end
 
-          content
+          content_
         end
         private :unescape_content
 
@@ -4200,6 +4293,7 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
+          @doc_type = ps.doc_type
         end
         private :initialize_1
 
@@ -4312,7 +4406,7 @@ module Meteor
           #    content.gsub!(@@pattern_and_2,AND_1)
           #  end
           #else
-          content.gsub!(@@pattern_unescape) do
+          content.gsub(@@pattern_unescape) do
             case $1
               when AND_3 then
                 AND_1
@@ -4328,7 +4422,7 @@ module Meteor
           end
           #end
 
-          content
+          #content
         end
         private :unescape
 

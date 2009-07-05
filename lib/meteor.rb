@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.6
+# @version 0.9.2.7
 #
 
 module Meteor
 
-  VERSION = "0.9.2.6"
+  VERSION = "0.9.2.7"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -2066,21 +2066,7 @@ module Meteor
       #    end
       #  end
       #end
-      #private :edit_pattern_
-
-      ##
-      ## 要素の属性を編集する
-      ##
-      ## @param [String] attr_name 属性名
-      ## @param [String] attr_value 属性値
-      ##
-      #def set_attribute_2(attr_name,attr_value)
-      #  if @root.element.origin then
-      #    set_attribute_3(@root.element, attr_name, attr_value)
-      #  end
-      #  @root.element
-      #end
-      #private :set_attribute_2
+      #private :edit_pattern_   
 
       #
       # 要素の属性値を取得する
@@ -2107,22 +2093,7 @@ module Meteor
           nil
         end
       end
-      private :get_attribute_value_
-
-      ##
-      ## 要素の属性値を取得する
-      ##
-      ## @param [String] attr_name 属性名
-      ## @return [String] 属性値
-      ##
-      #def get_attribute_value_1(attr_name)
-      #  if @root.element then
-      #    get_attribute_value_2(@root.element, attr_name)
-      #  else
-      #    nil
-      #  end
-      #end
-      #private :get_attribute_value_1
+      private :get_attribute_value_   
 
       #
       # 属性マップを取得する
@@ -2131,9 +2102,7 @@ module Meteor
       # @return [Meteor::AttributeMap] 属性マップ
       #
       def attribute_map(*args)
-        case args.length
-          when ZERO
-            get_attribute_map_0
+        case args.length     
           when ONE
             get_attribute_map_1(args[0])
           else
@@ -2157,21 +2126,7 @@ module Meteor
 
         attrs
       end
-      private :get_attribute_map_1
-
-      #
-      # 要素の属性マップを取得する
-      # 
-      # @return [Meteor::AttributeMap] 属性マップ
-      #
-      def get_attribute_map_0()
-        if @root.element then
-          get_attribute_map_1(@root.element)
-        else
-          nil
-        end
-      end
-      private :get_attribute_map_0
+      private :get_attribute_map_1   
 
       #
       # 要素の属性を編集する
@@ -2204,21 +2159,16 @@ module Meteor
           when ONE
             #if args[0].kind_of?(Meteor::Element) then
             get_content_1(args[0])
-          #elsif args[0].kind_of?(String) then
-          #  set_content_1(args[0])
-          #else
-          #  raise ArgumentError
-          #end
+            #else
+            #  raise ArgumentError
+            #end
           when TWO
             #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             args[0].document_sync = true
-            set_content_2_s(args[0],args[1])
-          #elsif args[0].kind_of?(String) && (args[1].eql?(true) || args[1].eql?(false)) then
-          ##elsif args[0].kind_of?(String) && (args[1].kinf_of?(TrueClass) || args[1].kind_of?(FalseClass)) then
-          #  set_content_2_b(args[0],args[1])
-          #else
-          #  raise ArgumentError
-          #end
+            set_content_2_s(args[0],args[1])      
+            #else
+            #  raise ArgumentError
+            #end
           when THREE
             args[0].document_sync = true
             set_content_3(args[0],args[1],args[2])
@@ -2237,7 +2187,7 @@ module Meteor
       def set_content_3(elm,content,entity_ref=true)
 
         if entity_ref then
-          escape_content(content,elm.name)
+          escape_content(content,elm)
         end
         elm.mixed_content = content
         elm
@@ -2252,47 +2202,25 @@ module Meteor
       #
       def set_content_2_s(elm,content)
         #set_content_3(elm, content)
-        elm.mixed_content = escape_content(content,elm.name)
+        elm.mixed_content = escape_content(content,elm)
         elm
       end
       private :set_content_2_s
 
-      ##
-      ## 要素の内容を編集する
-      ##
-      ## @param [String] content 内容
-      ##
-      #def set_content_1(content)
-      #  if @root.element && @root.element.mono then
-      #    set_content_2_s(@root.element, content)
-      #  end
-      #end
-      #private :set_content_1
-
-      ##
-      ## 要素の内容を編集する
-      ##
-      ## @param [String] content 内容
-      ## @param [TrueClass,FalseClass] entity_ref エンティティ参照フラグ
-      ##
-      #def set_content_2_b(content,entity_ref)
-      #  if @root.element && @root.element.mono then
-      #    set_content_3(@root.element, content, entity_ref)
-      #  end
       #
-      #  @root.element
-      #end
-      #private :set_content_2_b
-
+      # 要素の内容を取得する
+      #
+      # @param [Meteor::Element] elm 要素
+      #
       def get_content_1(elm)
         if !elm.cx then
           if elm.empty then
-            unescape_content(elm.mixed_content,elm.name)
+            unescape_content(elm.mixed_content,elm)
           else
             nil
           end
         else
-          unescape_content(elm.mixed_content,elm.name)
+          unescape_content(elm.mixed_content,elm)
         end
       end
       private :get_content_1
@@ -2343,21 +2271,7 @@ module Meteor
         #属性の置換
         elm.attributes.sub!(@pattern,EMPTY)
       end
-      private :remove_attributes_
-
-      ##
-      ## 要素の属性を消す
-      ##
-      ## @param [String] attr_name 属性名
-      ##
-      #def remove_attribute_1(attr_name)
-      #  if @root.element then
-      #    remove_attribute_2(@root.element, attr_name)
-      #  end
-      #
-      #  @root.element
-      #end
-      #private :remove_attribute_1
+      private :remove_attributes_   
 
       #
       # 要素を消す
@@ -2484,7 +2398,6 @@ module Meteor
         @element_cache.values.each do |item|
           if item.usable then
             #puts "#{item.name}:#{item.document}"
-            #if item.name == EMPTY then
             if item.copy then
               #item.document = item.copy.parser.root_element.hook_document
               @pattern = Meteor::Core::Util::PatternCache.get(item.pattern)
@@ -2516,17 +2429,13 @@ module Meteor
               #@root.hookDocument << @root.element.mixed_content << SET_CX_3
               #@root.hookDocument << @root.element.name << SET_CX_4
               @root.hook_document << "<!-- @#{@root.element.name} #{@root.element.attributes}-->#{@root.element.mixed_content}<!-- /@#{@root.element.name} -->"
-              #@root.hook_document << @root.document
             else
               #@root.hookDocument << TAG_OPEN << @root.element.name
               #@root.hookDocument << @root.element.attributes << TAG_CLOSE << @root.element.mixed_content
               #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
               @root.hook_document << "<#{@root.element.name}#{@root.element.attributes}>#{@root.element.mixed_content}</#{@root.element.name}>"
-              #@root.hook_document << @root.document
             end
-            #@root.hook_document << @root.document
             @root.element = Element.new!(@root.element.origin,self)
-            #@root.document = String.new(@root.element.document)
           else
             reflect
             @_attributes = @root.element.attributes
@@ -2545,8 +2454,6 @@ module Meteor
             end
             @root.element = Element.new!(@root.element.origin,self)
           end
-          #@root.element.origin.document = @root.hook_document
-          #@root.element.origin.name = EMPTY
         else
           reflect
           @element_cache.clear
@@ -2657,10 +2564,10 @@ module Meteor
 
       #
       # @param [String] content 入力文字列
-      # @param [String] elm_name 要素名
+      # @param [String] elm 要素
       # @return [String] 出力文字列
       #
-      def escape_content(content,elm_name)
+      def escape_content(content,elm)
         content
       end
       private :escape_content
@@ -2676,10 +2583,10 @@ module Meteor
 
       #
       # @param [String] content 入力文字列
-      # @param [String] elm_name 要素名
+      # @param [String] elm 要素
       # @return [String] 出力文字列
       #
-      def unescape_content(content,elm_name)
+      def unescape_content(content,elm)
         content
       end
       private :unescape_content
@@ -3018,6 +2925,8 @@ module Meteor
                   '<' => '&lt;',
                   '>' => '&gt;',
                   ' ' => '&nbsp;',
+                  "\r\n" => '<br>',
+                  "\r" => '<br>',
                   "\n" => '<br>',
                   }
 
@@ -3084,8 +2993,6 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          #@root.hook = ps.root_element.hook
-          #@root.mono_hook = ps.root_element.mono_hook
           @root.content_type = String.new(ps.content_type);
           @root.kaigyo_code = ps.root_element.kaigyo_code
           @doc_type = ps.doc_type
@@ -3582,7 +3489,6 @@ module Meteor
                 elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE
               end
             end
-            #elm.document = @pattern_cc
           end
         end
         private :set_mono_info
@@ -3617,11 +3523,11 @@ module Meteor
         end
         private :escape
 
-        def escape_content(content,elm_name)
+        def escape_content(content,elm)
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             content = escape(content)
 
-            if !is_match(MATCH_TAG_2,elm_name) then
+            if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
               #「¥r?¥n」->「<br>」
               content.gsub!(@@pattern_br_1, BR_2)
             end
@@ -3671,14 +3577,13 @@ module Meteor
                 SPACE
             end
           end
-
         end
         private :unescape
 
-        def unescape_content(content,elm_name)
+        def unescape_content(content,elm)
           content_ = unescape(content)
 
-          if !is_match(MATCH_TAG_2,elm_name) then
+          if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
             #「<br>」->「¥r?¥n」
             if content.include?(BR_2) then
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
@@ -3806,6 +3711,8 @@ module Meteor
                   '<' => '&lt;',
                   '>' => '&gt;',
                   ' ' => '&nbsp;',
+                  "\r\n" => '<br/>',
+                  "\r" => '<br/>',
                   "\n" => '<br/>',
                   }
 
@@ -4107,7 +4014,6 @@ module Meteor
                 elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
               end
             end
-            #elm.document = @pattern_cc
           end
         end
         private :set_mono_info
@@ -4147,12 +4053,12 @@ module Meteor
         end
         private :escape
 
-        def escape_content(content,elm_name)
+        def escape_content(content,elm)
 
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             content = escape(content)
 
-            if !is_match(MATCH_TAG_2,elm_name) then
+            if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
               #「¥r?¥n」->「<br>」
               content.gsub!(@@pattern_br_1, BR_2)
             end
@@ -4201,15 +4107,13 @@ module Meteor
                 SPACE
             end
           end
-
-          #content
         end
         private :unescape
 
-        def unescape_content(content,elm_name)
+        def unescape_content(content,elm)
           content_ = unescape(content)
 
-          if !is_match(MATCH_TAG_2,elm_name) then
+          if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
             #「<br>」->「¥r?¥n」
             if content.include?(BR_2) then
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
@@ -4332,16 +4236,15 @@ module Meteor
             elm.mono = true
             if elm.cx then
               #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              @pattern_cc = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
+              elm.document = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
             else
               if elm.empty then
                 #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                @pattern_cc = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
+                elm.document = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
               else
-                @pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
+                elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
               end
             end
-            elm.document = @pattern_cc
           end
         end
         private :set_mono_info
@@ -4377,7 +4280,7 @@ module Meteor
         end
         private :escape
 
-        def escape_content(content,elm_name)
+        def escape_content(content,elm)
           escape(content)
         end
         private :escape_content
@@ -4421,12 +4324,10 @@ module Meteor
             end
           end
           #end
-
-          #content
         end
         private :unescape
 
-        def unescape_content(content,elm_name)
+        def unescape_content(content,elm)
           unescape(content)
         end
         private :unescape_content

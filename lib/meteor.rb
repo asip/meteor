@@ -18,17 +18,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.7
+# @version 0.9.2.8
 #
 
 module Meteor
 
-  VERSION = "0.9.2.7"
+  VERSION = "0.9.2.8"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
   if RUBY_VERSION < RUBY_VERSION_1_9_0 then
     require 'Kconv'
+    E_UTF8 = 'UTF8'
   end
 
   ZERO = 0
@@ -915,7 +916,17 @@ module Meteor
       #SUB_REGEX2 = '\\1\\1\\\\\\\\\\2'
       #SUB_REGEX3 = '\\1\\1\\1\\1\\\\\\\\\\\\\\\\\\2'
 
-      @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
+      if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+        @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
+
+        @@pattern_clean1 = Regexp.new(CLEAN_1)
+        @@pattern_clean2 = Regexp.new(CLEAN_2)
+      else
+        @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP,nil,E_UTF8)
+
+        @@pattern_clean1 = Regexp.new(CLEAN_1,nil,E_UTF8)
+        @@pattern_clean2 = Regexp.new(CLEAN_2,nil,E_UTF8)
+      end
 
       #BRAC_OPEN_1 = "\\\("
       #BRAC_OPEN_2 = "\\\\\\("
@@ -953,10 +964,6 @@ module Meteor
       #@@pattern_asterisk = Regexp.new(ASTERISK_1)
 
       #@@pattern_sub_regex1 = Regexp.new(SUB_REGEX1)
-
-      @@pattern_clean1 = Regexp.new(CLEAN_1)
-      @@pattern_clean2 = Regexp.new(CLEAN_2)
-
 
       #
       # イニシャライザ
@@ -1066,14 +1073,24 @@ module Meteor
         @character_encoding = encoding
         #ファイルのオープン
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          io = File.open(file_path,'r:' << encoding)
+          if "UTF-8".eql?(encoding) then
+            io = File.open(file_path,'r:' << encoding)
+          else
+            io = File.open(file_path,'r:' << encoding << ':utf-8')
+          end
+
           #読込及び格納
           @root.document = io.read
         else
           #読込及び格納
           io = open(file_path,'r')
           @root.document = io.read
-          @root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
+          #@root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
+          #enc = Kconv.guess(@root.document)
+          enc = get_encoding()
+          if !Kconv::UTF8.equal?(enc) then
+            @root.document = @root.document.kconv(Kconv::UTF8, enc)
+          end
         end
 
         #ファイルのクローズ
@@ -1093,15 +1110,19 @@ module Meteor
 
       end
 
+      #if RUBY_VERSION < RUBY_VERSION_1_9_0 then
       def get_encoding()
         case @character_encoding
-          when 'UTF-8'
+          when 'UTF-8','UTF8','u','U'
+            @encoding = 'UTF8'
             Kconv::UTF8
-          when 'ISO-2022-JP'
+          when 'ISO-2022-JP','JIS'
             Kconv::JIS
-          when 'Shift_JIS'
+          when 'Shift_JIS','SJIS','s','S'
+            @encoding = 'SJIS'
             Kconv::SJIS
-          when 'EUC-JP'
+          when 'EUC-JP','EUC','e','E'
+            @encoding = 'EUC'
             Kconv::EUC
           when 'ASCII'
             Kconv::ASCII
@@ -1112,6 +1133,7 @@ module Meteor
         end
       end
       private :get_encoding
+      #end
 
       #
       # 要素を取得する
@@ -1139,7 +1161,7 @@ module Meteor
             end
           when THREE
             element_3(args[0],args[1],args[2])
-            if @elm_ then
+            if @elm_ then       
               @element_cache.store(@elm_.object_id,@elm_)
             end
           when FOUR
@@ -2692,14 +2714,22 @@ module Meteor
             if !@@regex_cache[regex.to_sym] then
               #pattern = Regexp.new(regex)
               #@@regex_cache[regex] = pattern
-              @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE)
+              if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+                @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE)
+              else
+                @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE,E_UTF8)
+              end
             end
 
             #return pattern
             @@regex_cache[regex.to_sym]
           elsif regex.kind_of?(Symbol) then
             if !@@regex_cache[regex] then
-              @@regex_cache[regex] = Regexp.new(regex.to_s, Regexp::MULTILINE)
+              if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+                @@regex_cache[regex] = Regexp.new(regex.to_s, Regexp::MULTILINE)
+              else
+                @@regex_cache[regex] = Regexp.new(regex.to_s, Regexp::MULTILINE,E_UTF8)
+              end
             end
 
             @@regex_cache[regex]
@@ -2719,14 +2749,14 @@ module Meteor
             if !@@regex_cache[regex.to_sym] then
               #pattern = Regexp.new(regex)
               #@@regex_cache[regex] = pattern
-              @@regex_cache[regex.to_sym] = Regexp.new(regex, option)
+              @@regex_cache[regex.to_sym] = Regexp.new(regex, option,E_UTF8)
             end
 
             #return pattern
             @@regex_cache[regex.to_sym]
           elsif regex.kind_of?(Symbol) then
             if !@@regex_cache[regex] then
-              @@regex_cache[regex] = Regexp.new(regex.to_s, option)
+              @@regex_cache[regex] = Regexp.new(regex.to_s, option,E_UTF8)
             end
 
             @@regex_cache[regex]
@@ -2734,87 +2764,91 @@ module Meteor
         end
       end
 
-      if RUBY_VERSION < RUBY_VERSION_1_9_0 then
-        class OrderHash < Hash
 
-          def initialize
-            @keys = Array.new
-            @values = Array.new
+      #if RUBY_VERSION < RUBY_VERSION_1_9_0 then
+
+      class OrderHash < Hash
+
+        def initialize
+          @keys = Array.new
+          @values = Array.new
+        end
+
+        attr_accessor :keys
+        attr_accessor :values
+
+        def store(key, value)
+          unless @keys.include?(key)
+            @keys << key
+            @values << value
           end
+          super(key, value)
+        end
 
-          attr_accessor :keys
-          attr_accessor :values
+        def clear
+          @keys.clear
+          @values.clear
+          super
+        end
 
-          def store(key, value)
-            super(key, value)
-            unless @keys.include?(key)
-              @keys << key
-              @values << value
-            end
-          end
-
-          def clear
-            @keys.clear
-            @values.clear
-            super
-          end
-
-          def delete(key)
-            if @keys.include?(key)
-              @keys.delete(key)
-              @values.delete(fetch(key))
-              super(key)
-            elsif yield(key)
-            end
-          end
-
-          #superとして、Hash#[]=を呼び出す
-
-          def []=(key, value)
-            store(key, value)
-          end
-
-          def each
-            @keys.each do |k|
-              arr_tmp = Array.new
-              arr_tmp << k
-              arr_tmp << self[k]
-              yield(arr_tmp)
-            end
-            return self
-          end
-
-          def each_pair
-            @keys.each do |k|
-              yield(k, self[k])
-            end
-            return self
-          end
-
-          def map
-            arr_tmp = Array.new
-            @keys.each do |k|
-              arg_arr = Array.new
-              arg_arr << k
-              arg_arr << self[k]
-              arr_tmp << yield(arg_arr)
-            end
-            return arr_tmp
-          end
-
-          def sort_hash(&block)
-            if block_given?
-              arr_tmp = self.sort(&block)
-            elsif arr_tmp = self.sort
-            end
-            hash_tmp = OrderHash.new
-            arr_tmp.each do |item|
-              hash_tmp[item[0]] = item[1]
-            end
-            return hash_tmp
+        def delete(key)
+          if @keys.include?(key)
+            @keys.delete(key)
+            @values.delete(fetch(key))
+            super(key)
+          elsif yield(key)
           end
         end
+
+        #superとして、Hash#[]=を呼び出す
+
+        def []=(key, value)
+          store(key, value)
+        end
+
+        def each
+          @keys.each do |k|
+            arr_tmp = Array.new
+            arr_tmp << k
+            arr_tmp << self[k]
+            yield(arr_tmp)
+          end
+          return self
+        end
+
+        def each_pair
+          @keys.each do |k|
+            yield(k, self[k])
+          end
+          return self
+        end
+
+        def map
+          arr_tmp = Array.new
+          @keys.each do |k|
+            arg_arr = Array.new
+            arg_arr << k
+            arg_arr << self[k]
+            arr_tmp << yield(arg_arr)
+          end
+          return arr_tmp
+        end
+
+        def sort_hash(&block)
+          if block_given?
+            arr_tmp = self.sort(&block)
+          elsif arr_tmp = self.sort
+          end
+          hash_tmp = OrderHash.new
+          arr_tmp.each do |item|
+            hash_tmp[item[0]] = item[1]
+          end
+          return hash_tmp
+        end
       end
+
+      #end
+   
     end
 
     module Html
@@ -2888,17 +2922,6 @@ module Meteor
         #MULTIPLE_M = [' multiple ',' multiple',' MULTIPLE ',' MULTIPLE']
         MULTIPLE_R = 'multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$'
 
-        @@pattern_selected_m = Regexp.new(SELECTED_M)
-        @@pattern_selected_r = Regexp.new(SELECTED_R)
-        @@pattern_checked_m = Regexp.new(CHECKED_M)
-        @@pattern_checked_r = Regexp.new(CHECKED_R)
-        @@pattern_disabled_m = Regexp.new(DISABLED_M)
-        @@pattern_disabled_r = Regexp.new(DISABLED_R)
-        @@pattern_readonly_m = Regexp.new(READONLY_M)
-        @@pattern_readonly_r = Regexp.new(READONLY_R)
-        @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
-
         TRUE = 'true'
         FALSE = 'false'
 
@@ -2908,7 +2931,21 @@ module Meteor
         TYPE_L = 'type'
         TYPE_U = 'TYPE'
 
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
+        GET_ATTRS_MAP2='\\s(disabled|readonly|checked|selected|multiple)'
+
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+          @@pattern_selected_m = Regexp.new(SELECTED_M)
+          @@pattern_selected_r = Regexp.new(SELECTED_R)
+          @@pattern_checked_m = Regexp.new(CHECKED_M)
+          @@pattern_checked_r = Regexp.new(CHECKED_R)
+          @@pattern_disabled_m = Regexp.new(DISABLED_M)
+          @@pattern_disabled_r = Regexp.new(DISABLED_R)
+          @@pattern_readonly_m = Regexp.new(READONLY_M)
+          @@pattern_readonly_r = Regexp.new(READONLY_R)
+          @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
+          @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
+
           TABLE_FOR_ESCAPE_ = {
                   '&' => '&amp;',
                   '"' => '&quot;',
@@ -2936,31 +2973,42 @@ module Meteor
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
           @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
           @@pattern_br_2 = Regexp.new(BR_2)
+
+          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
+          @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
         else
-          @@pattern_and_1 = Regexp.new(AND_1)
-          @@pattern_lt_1 = Regexp.new(LT_1)
-          @@pattern_gt_1 = Regexp.new(GT_1)
-          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-          @@pattern_space_1 = Regexp.new(SPACE)
-          @@pattern_br_1 = Regexp.new(BR_1)
-          @@pattern_lt_2 = Regexp.new(LT_2)
-          @@pattern_gt_2 = Regexp.new(GT_2)
-          @@pattern_dq_2 = Regexp.new(QO_2)
-          @@pattern_space_2 = Regexp.new(NBSP_2)
-          @@pattern_and_2 = Regexp.new(AND_2)
-          @@pattern_br_2 = Regexp.new(BR_2)
+          @@pattern_selected_m = Regexp.new(SELECTED_M,nil,E_UTF8)
+          @@pattern_selected_r = Regexp.new(SELECTED_R,nil,E_UTF8)
+          @@pattern_checked_m = Regexp.new(CHECKED_M,nil,E_UTF8)
+          @@pattern_checked_r = Regexp.new(CHECKED_R,nil,E_UTF8)
+          @@pattern_disabled_m = Regexp.new(DISABLED_M,nil,E_UTF8)
+          @@pattern_disabled_r = Regexp.new(DISABLED_R,nil,E_UTF8)
+          @@pattern_readonly_m = Regexp.new(READONLY_M,nil,E_UTF8)
+          @@pattern_readonly_r = Regexp.new(READONLY_R,nil,E_UTF8)
+          @@pattern_multiple_m = Regexp.new(MULTIPLE_M,nil,E_UTF8)
+          @@pattern_multiple_r = Regexp.new(MULTIPLE_R,nil,E_UTF8)
+
+          @@pattern_and_1 = Regexp.new(AND_1,nil,E_UTF8)
+          @@pattern_lt_1 = Regexp.new(LT_1,nil,E_UTF8)
+          @@pattern_gt_1 = Regexp.new(GT_1,nil,E_UTF8)
+          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION,nil,E_UTF8)
+          @@pattern_space_1 = Regexp.new(SPACE,nil,E_UTF8)
+          @@pattern_br_1 = Regexp.new(BR_1,nil,E_UTF8)
+          @@pattern_lt_2 = Regexp.new(LT_2,nil,E_UTF8)
+          @@pattern_gt_2 = Regexp.new(GT_2,nil,E_UTF8)
+          @@pattern_dq_2 = Regexp.new(QO_2,nil,E_UTF8)
+          @@pattern_space_2 = Regexp.new(NBSP_2,nil,E_UTF8)
+          @@pattern_and_2 = Regexp.new(AND_2,nil,E_UTF8)
+          @@pattern_br_2 = Regexp.new(BR_2,nil,E_UTF8)
+
+          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE,nil,E_UTF8)
+          @@pattern_set_mono1 = Regexp.new(SET_MONO_1,nil,E_UTF8)
+          @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2,nil,E_UTF8)
         end
 
-
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-
         #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
-
-        GET_ATTRS_MAP2='\\s(disabled|readonly|checked|selected|multiple)'
-        @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
 
         #
         # イニシャライザ
@@ -3672,29 +3720,31 @@ module Meteor
         CONTENT_TYPE = 'Content-Type'
         CONTENT = 'content'
 
-        @@pattern_selected_m = Regexp.new(SELECTED_M)
-        @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
-        @@pattern_selected_r = Regexp.new(SELECTED_R)
-        @@pattern_checked_m = Regexp.new(CHECKED_M)
-        @@pattern_checked_m1 = Regexp.new(CHECKED_M1)
-        @@pattern_checked_r = Regexp.new(CHECKED_R)
-        @@pattern_disabled_m = Regexp.new(DISABLED_M)
-        @@pattern_disabled_m1 = Regexp.new(DISABLED_M1)
-        @@pattern_disabled_r = Regexp.new(DISABLED_R)
-        @@pattern_readonly_m = Regexp.new(READONLY_M)
-        @@pattern_readonly_m1 = Regexp.new(READONLY_M1)
-        @@pattern_readonly_r = Regexp.new(READONLY_R)
-        @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-        @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
-        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
-
         TRUE = 'true'
         FALSE = 'false'
 
         TYPE_L = 'type'
         TYPE_U = 'TYPE'
 
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
+
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+          @@pattern_selected_m = Regexp.new(SELECTED_M)
+          @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
+          @@pattern_selected_r = Regexp.new(SELECTED_R)
+          @@pattern_checked_m = Regexp.new(CHECKED_M)
+          @@pattern_checked_m1 = Regexp.new(CHECKED_M1)
+          @@pattern_checked_r = Regexp.new(CHECKED_R)
+          @@pattern_disabled_m = Regexp.new(DISABLED_M)
+          @@pattern_disabled_m1 = Regexp.new(DISABLED_M1)
+          @@pattern_disabled_r = Regexp.new(DISABLED_R)
+          @@pattern_readonly_m = Regexp.new(READONLY_M)
+          @@pattern_readonly_m1 = Regexp.new(READONLY_M1)
+          @@pattern_readonly_r = Regexp.new(READONLY_R)
+          @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
+          @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
+          @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
+
           TABLE_FOR_ESCAPE_ = {
                   '&' => '&amp;',
                   '"' => '&quot;',
@@ -3721,30 +3771,46 @@ module Meteor
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
           @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
           @@pattern_br_2 = Regexp.new(BR_3)
+
+          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         else
+          @@pattern_selected_m = Regexp.new(SELECTED_M,nil,E_UTF8)
+          @@pattern_selected_m1 = Regexp.new(SELECTED_M1,nil,E_UTF8)
+          @@pattern_selected_r = Regexp.new(SELECTED_R,nil,E_UTF8)
+          @@pattern_checked_m = Regexp.new(CHECKED_M,nil,E_UTF8)
+          @@pattern_checked_m1 = Regexp.new(CHECKED_M1,nil,E_UTF8)
+          @@pattern_checked_r = Regexp.new(CHECKED_R,nil,E_UTF8)
+          @@pattern_disabled_m = Regexp.new(DISABLED_M,nil,E_UTF8)
+          @@pattern_disabled_m1 = Regexp.new(DISABLED_M1,nil,E_UTF8)
+          @@pattern_disabled_r = Regexp.new(DISABLED_R,nil,E_UTF8)
+          @@pattern_readonly_m = Regexp.new(READONLY_M,nil,E_UTF8)
+          @@pattern_readonly_m1 = Regexp.new(READONLY_M1,nil,E_UTF8)
+          @@pattern_readonly_r = Regexp.new(READONLY_R,nil,E_UTF8)
+          @@pattern_multiple_m = Regexp.new(MULTIPLE_M,nil,E_UTF8)
+          @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1,nil,E_UTF8)
+          @@pattern_multiple_r = Regexp.new(MULTIPLE_R,nil,E_UTF8)
 
-          @@pattern_and_1 = Regexp.new(AND_1)
-          @@pattern_lt_1 = Regexp.new(LT_1)
-          @@pattern_gt_1 = Regexp.new(GT_1)
-          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-          @@pattern_ap_1 = Regexp.new(AP_1)
-          @@pattern_space_1 = Regexp.new(SPACE)
-          @@pattern_br_1 = Regexp.new(BR_1)
-          @@pattern_lt_2 = Regexp.new(LT_2)
-          @@pattern_gt_2 = Regexp.new(GT_2)
-          @@pattern_dq_2 = Regexp.new(QO_2)
-          @@pattern_ap_2 = Regexp.new(AP_2)
-          @@pattern_space_2 = Regexp.new(NBSP_2)
-          @@pattern_and_2 = Regexp.new(AND_2)
-          @@pattern_br_2 = Regexp.new(BR_3)
+          @@pattern_and_1 = Regexp.new(AND_1,nil,E_UTF8)
+          @@pattern_lt_1 = Regexp.new(LT_1,nil,E_UTF8)
+          @@pattern_gt_1 = Regexp.new(GT_1,nil,E_UTF8)
+          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION,nil,E_UTF8)
+          @@pattern_ap_1 = Regexp.new(AP_1,nil,E_UTF8)
+          @@pattern_space_1 = Regexp.new(SPACE,nil,E_UTF8)
+          @@pattern_br_1 = Regexp.new(BR_1,nil,E_UTF8)
+          @@pattern_lt_2 = Regexp.new(LT_2,nil,E_UTF8)
+          @@pattern_gt_2 = Regexp.new(GT_2,nil,E_UTF8)
+          @@pattern_dq_2 = Regexp.new(QO_2,nil,E_UTF8)
+          @@pattern_ap_2 = Regexp.new(AP_2,nil,E_UTF8)
+          @@pattern_space_2 = Regexp.new(NBSP_2,nil,E_UTF8)
+          @@pattern_and_2 = Regexp.new(AND_2,nil,E_UTF8)
+          @@pattern_br_2 = Regexp.new(BR_3,nil,E_UTF8)
 
+          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE,nil,E_UTF8)
+          @@pattern_set_mono1 = Regexp.new(SET_MONO_1,nil,E_UTF8)
         end
 
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-
         #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
 
         #
@@ -4134,6 +4200,8 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
+
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
           TABLE_FOR_ESCAPE_ = {
                   '&' => '&amp;',
@@ -4144,25 +4212,24 @@ module Meteor
                   }
           PATTERN_ESCAPE = '[&\"\'<>]'
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+
+          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         else
-          @@pattern_and_1 = Regexp.new(AND_1)
-          @@pattern_lt_1 = Regexp.new(LT_1)
-          @@pattern_gt_1 = Regexp.new(GT_1)
-          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-          @@pattern_ap_1 = Regexp.new(AP_1)
-          @@pattern_lt_2 = Regexp.new(LT_2)
-          @@pattern_gt_2 = Regexp.new(GT_2)
-          @@pattern_dq_2 = Regexp.new(QO_2)
-          @@pattern_ap_2 = Regexp.new(AP_2)
-          @@pattern_and_2 = Regexp.new(AND_2)
+          @@pattern_and_1 = Regexp.new(AND_1,nil,E_UTF8)
+          @@pattern_lt_1 = Regexp.new(LT_1,nil,E_UTF8)
+          @@pattern_gt_1 = Regexp.new(GT_1,nil,E_UTF8)
+          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION,nil,E_UTF8)
+          @@pattern_ap_1 = Regexp.new(AP_1,nil,E_UTF8)
+          @@pattern_lt_2 = Regexp.new(LT_2,nil,E_UTF8)
+          @@pattern_gt_2 = Regexp.new(GT_2,nil,E_UTF8)
+          @@pattern_dq_2 = Regexp.new(QO_2,nil,E_UTF8)
+          @@pattern_ap_2 = Regexp.new(AP_2,nil,E_UTF8)
+          @@pattern_and_2 = Regexp.new(AND_2,nil,E_UTF8)
+
+          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE,nil,E_UTF8)
+          @@pattern_set_mono1 = Regexp.new(SET_MONO_1,nil,E_UTF8)
         end
-
-
-
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-
-        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
 
         #
         # イニシャライザ

@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.8
+# @version 0.9.2.9
 #
 
 module Meteor
 
-  VERSION = "0.9.2.8"
+  VERSION = "0.9.2.9"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -575,103 +575,58 @@ module Meteor
   #
   class ParserFactory
 
+    attr_accessor :base_dir
+
+
     #
-    # パーサファクトリを生成する
-    # 
-    # @param [Array] args 引数配列
-    # @return [Meteor::ParserFactory] パーサファクトリ
+    # イニシャライザ
+    # @params [Array] args 引数配列
     #
-    def self.build(*args)
+    def initialize(*args)
       case args.length
-        when THREE
-          build_3(args[0],args[1],args[2])
-        when TWO
-          build_2(args[0],args[1])
+        when 0 then
+          initialize_0
+        when 1 then
+          initialize_1(args[0])
         else
           raise ArgumentError
       end
     end
 
     #
-    # パーサファクトリを生成する
-    # 
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] path ファイルパス
-    # @param [String] encoding エンコーディング
-    # @return [Meteor::ParserFactory] パーサファクトリ
+    # イニシャライザ
     #
-    def self.build_3(type,path,encoding)
-      psf = ParserFactory.new
-
-      case type
-        when Parser::HTML then
-          html = Meteor::Core::Html::ParserImpl.new()
-          html.read(path, encoding)
-          html.doc_type = Parser::HTML
-          psf.parser = html
-        when Parser::XHTML then
-          xhtml = Meteor::Core::Xhtml::ParserImpl.new()
-          xhtml.read(path, encoding)
-          xhtml.doc_type = Parser::XHTML
-          psf.parser = xhtml
-        when Parser::XML then
-          xml = Meteor::Core::Xml::ParserImpl.new()
-          xml.read(path, encoding)
-          xml.doc_type = Parser::XML
-          psf.parser = xml
-      end
-
-      psf
+    def initialize_0
+      @cache = Hash.new
+      @base_dir = "."
     end
-    #protected :build_3
+    private :initialize_0
 
     #
-    # パーサファクトリを生成する
-    # 
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] document ドキュメント
-    # @return [Meteor::ParserFactory] パーサファクトリ
+    # イニシャライザ
+    # @param [String] bs_dir 基準ディレクトリ
     #
-    def self.build_2(type,document)
-      psf = ParserFactory.new
-
-      case type
-        when Parser::HTML then
-          html = Meteor::Core::Html::ParserImpl.new()
-          html.parse(document)
-          html.doc_type = Parser::HTML
-          psf.parser = html
-        when Parser::XHTML then
-          xhtml = Meteor::Core::Xhtml::ParserImpl.new()
-          xhtml.parse(document)
-          xhtml.doc_type = Parser::XHTML
-          psf.parser = xhtml
-        when Parser::XML then
-          xml = Meteor::Core::Xml::ParserImpl.new()
-          xml.parse(document)
-          xml.doc_type = Parser::XML
-          psf.parser = xml
-      end
-
-      psf
+    def initialize_1(bs_dir)
+      @cache = Hash.new
+      @base_dir = bs_dir
     end
-    #protected :build_2
+    private :initialize_1  
 
     #
     # パーサをセットする
-    # 
-    # @param [Meteor::Parser] パーサ
     #
-    def parser=(pif)
-      @pif = pif
+    #
+    def parser(*args)
+      case args.length
+        when 1 then
+          parser_1(args[0])
+        when 3 then
+          parser_3(args[0],args[1],args[2])    
+      end
     end
 
-    #
-    # パーサを取得する
-    # 
-    # @return [Meteor::Parser] パーサ
-    #
-    def parser
+    def parser_1(name)
+      @pif = @cache[name]
 
       if @pif.instance_of?(Meteor::Core::Html::ParserImpl) then
         Meteor::Core::Html::ParserImpl.new(@pif)
@@ -680,6 +635,93 @@ module Meteor
       elsif @pif.instance_of?(Meteor::Core::Xml::ParserImpl) then
         Meteor::Core::Xml::ParserImpl.new(@pif)
       end
+    end
+    private :parser_1
+
+    #
+    # パーサをセットする
+    # 
+    # @param [Fixnum] type パーサのタイプ
+    # @param [String] relative_path 相対ファイルパス
+    # @param [String] encoding エンコーディング
+    # @return [Meteor::ParserFactory] パーサファクトリ
+    #
+    def parser_3(type,relative_path,encoding)
+
+      paths = File.split(relative_path)
+
+      if '.'.eql?(paths[0]) then
+        relative_url = File.basename(paths[1],'.*')
+      else
+        relative_url = [paths[0],File.basename(paths[1],'.*')].join("/")
+      end
+
+      case type
+        when Parser::HTML then
+          html = Meteor::Core::Html::ParserImpl.new()
+          html.read(File.expand_path(relative_path,@base_dir), encoding)
+          html.doc_type = Parser::HTML
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Core::Xhtml::ParserImpl.new()
+          xhtml.read(File.expand_path(relative_path,@base_dir), encoding)
+          xhtml.doc_type = Parser::XHTML
+          @cache[relative_url] = xhtml
+        when Parser::XML then
+          xml = Meteor::Core::Xml::ParserImpl.new()
+          xml.read(File.expand_path(relative_path,@base_dir), encoding)
+          xml.doc_type = Parser::XML
+          @cache[relative_url] = xml
+      end
+      
+    end
+    private :parser_3
+
+    #
+    # パーサをセットする
+    #
+    # @param [Fixnum] type パーサのタイプ
+    # @param [String] relative_url 相対URL
+    # @param [String] document ドキュメント
+    # @return [Meteor::ParserFactory] パーサファクトリ
+    #
+    def parser_str(type,relative_url,document)
+      case type
+        when Parser::HTML then
+          html = Meteor::Core::Html::ParserImpl.new()
+          html.parse(document)
+          html.doc_type = Parser::HTML
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Core::Xhtml::ParserImpl.new()
+          xhtml.parse(document)
+          xhtml.doc_type = Parser::XHTML
+          @cache[relative_url] = xhtml
+        when Parser::XML then
+          xml = Meteor::Core::Xml::ParserImpl.new()
+          xml.parse(document)
+          xml.doc_type = Parser::XML
+          @cache[relative_url] = xml
+      end   
+    end    
+
+    #
+    # パーサをセットする
+    # @param [String] name 名前
+    # @param [Meteor::Parser] pif パーサ
+    #
+    def []=(name,pif)
+      @cache[path] = pif
+    end
+
+    #
+    # パーサを取得する
+    #
+    #
+    # @return [Meteor::Parser] パーサ
+    #
+    def [](name)
+      self.parser(name)
     end
 
   end

@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.2.9
+# @version 0.9.3.0
 #
 
 module Meteor
 
-  VERSION = "0.9.2.9"
+  VERSION = "0.9.3.0"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -576,7 +576,7 @@ module Meteor
   class ParserFactory
 
     attr_accessor :base_dir
-
+    attr_accessor :base_encoding
 
     #
     # イニシャライザ
@@ -588,6 +588,8 @@ module Meteor
           initialize_0
         when 1 then
           initialize_1(args[0])
+        when 2 then
+          initialize_2(args[0],args[1])
         else
           raise ArgumentError
       end
@@ -598,7 +600,8 @@ module Meteor
     #
     def initialize_0
       @cache = Hash.new
-      @base_dir = "."
+      @base_dir = '.'
+      @base_encoding = 'UTF-8' 
     end
     private :initialize_0
 
@@ -609,8 +612,21 @@ module Meteor
     def initialize_1(bs_dir)
       @cache = Hash.new
       @base_dir = bs_dir
+      @base_encoding = 'UTF-8'
     end
     private :initialize_1  
+
+    #
+    # イニシャライザ
+    # @param [String] bs_dir 基準ディレクトリ
+    # @param [String] bs_encoding エンコーディング
+    #
+    def initialize_2(bs_dir,bs_encoding)
+      @cache = Hash.new
+      @base_dir = bs_dir
+      @base_encoding = bs_encoding
+    end
+    private :initialize_1
 
     #
     # パーサをセットする
@@ -620,11 +636,17 @@ module Meteor
       case args.length
         when 1 then
           parser_1(args[0])
+        when 2 then
+          parser_2(args[0],args[1])
         when 3 then
           parser_3(args[0],args[1],args[2])    
       end
     end
 
+    #
+    # パーサを取得する
+    # @param [String] name 名前 
+    #
     def parser_1(name)
       @pif = @cache[name]
 
@@ -673,9 +695,46 @@ module Meteor
           xml.doc_type = Parser::XML
           @cache[relative_url] = xml
       end
-      
     end
     private :parser_3
+
+    #
+    # パーサをセットする
+    #
+    # @param [Fixnum] type パーサのタイプ
+    # @param [String] relative_path 相対ファイルパス  
+    # @return [Meteor::ParserFactory] パーサファクトリ
+    #
+    def parser_2(type,relative_path)
+
+      paths = File.split(relative_path)
+
+      if '.'.eql?(paths[0]) then
+        relative_url = File.basename(paths[1],'.*')
+      else
+        relative_url = [paths[0],File.basename(paths[1],'.*')].join("/")
+      end
+
+      case type
+        when Parser::HTML then
+          html = Meteor::Core::Html::ParserImpl.new()
+          html.read(File.expand_path(relative_path,@base_dir), @base_encoding)
+          html.doc_type = Parser::HTML
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Core::Xhtml::ParserImpl.new()
+          xhtml.read(File.expand_path(relative_path,@base_dir), @base_encoding)
+          xhtml.doc_type = Parser::XHTML
+          @cache[relative_url] = xhtml
+        when Parser::XML then
+          xml = Meteor::Core::Xml::ParserImpl.new()
+          xml.read(File.expand_path(relative_path,@base_dir), @base_encoding)
+          xml.doc_type = Parser::XML
+          @cache[relative_url] = xml
+      end
+
+    end
+    private :parser_2
 
     #
     # パーサをセットする
@@ -2011,7 +2070,7 @@ module Meteor
       #
       def set_attribute_3(elm,attr_name,attr_value)
         if !elm.cx then
-          attr_value = escape(attr_value)
+          attr_value = escape(attr_value.to_s)
           #属性群の更新
           edit_attributes_(elm,attr_name,attr_value)
 
@@ -3455,7 +3514,7 @@ module Meteor
 
         def edit_attributes_5(elm,attr_name,attr_value,match_p,replace)
 
-          if is_match(TRUE, attr_value) then
+          if true.equal?(attr_value) || is_match(TRUE, attr_value) then
             @res = match_p.match(elm.attributes)
 
             if !@res then
@@ -3467,7 +3526,7 @@ module Meteor
               elm.attributes << SPACE << attr_name
               #else
             end
-          elsif is_match(FALSE, attr_value) then
+          elsif false.equal?(attr_value) || is_match(FALSE, attr_value) then
             elm.attributes.sub!(replace,EMPTY)
           end
 
@@ -3995,7 +4054,7 @@ module Meteor
 
           #attr_value = escape(attr_value)
 
-          if is_match(TRUE,attr_value) then
+          if true.equal?(attr_value) || is_match(TRUE,attr_value) then
 
             @res = match_p.match(elm.attributes)
 
@@ -4010,7 +4069,7 @@ module Meteor
               #属性の置換
               elm.attributes.gsub!(replace_regex,replace_update)
             end
-          elsif is_match(FALSE,attr_value) then
+          elsif false.equal?(attr_value) || is_match(FALSE,attr_value) then
             #attr_name属性が存在するなら削除
             #属性の置換
             elm.attributes.gsub!(replace_regex, EMPTY)

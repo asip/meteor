@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.3.0
+# @version 0.9.3.1
 #
 
 module Meteor
 
-  VERSION = "0.9.3.0"
+  VERSION = "0.9.3.1"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -286,7 +286,7 @@ module Meteor
 
     #
     # 属性を削除する
-    # 
+    #
     # @param args 引数配列
     #
     def remove_attribute(*args)
@@ -298,6 +298,9 @@ module Meteor
       @document = doc
     end
 
+    #
+    # ドキュメントを取得する    
+    #
     def document
       if @document_sync then
         @document_sync = false
@@ -575,6 +578,11 @@ module Meteor
   #
   class ParserFactory
 
+    ABST_EXT_NAME = '.*'
+    CURRENT_DIR = '.'
+    SLASH = '/'
+    ENC_UTF8 = 'UTF-8'
+
     attr_accessor :base_dir
     attr_accessor :base_encoding
 
@@ -600,8 +608,8 @@ module Meteor
     #
     def initialize_0
       @cache = Hash.new
-      @base_dir = '.'
-      @base_encoding = 'UTF-8' 
+      @base_dir = CURRENT_DIR
+      @base_encoding = ENC_UTF8 
     end
     private :initialize_0
 
@@ -612,14 +620,14 @@ module Meteor
     def initialize_1(bs_dir)
       @cache = Hash.new
       @base_dir = bs_dir
-      @base_encoding = 'UTF-8'
+      @base_encoding = ENC_UTF8
     end
     private :initialize_1  
 
     #
     # イニシャライザ
     # @param [String] bs_dir 基準ディレクトリ
-    # @param [String] bs_encoding エンコーディング
+    # @param [String] bs_encoding デフォルトエンコーディング
     #
     def initialize_2(bs_dir,bs_encoding)
       @cache = Hash.new
@@ -630,7 +638,8 @@ module Meteor
 
     #
     # パーサをセットする
-    #
+    # @param [Array] args 引数配列
+    # @return [Meteor::Parser] パーサ
     #
     def parser(*args)
       case args.length
@@ -645,10 +654,11 @@ module Meteor
 
     #
     # パーサを取得する
-    # @param [String] name 名前 
+    # @param [String] key キー
+    # @return [Meteor::Parser] パーサ
     #
-    def parser_1(name)
-      @pif = @cache[name]
+    def parser_1(key)
+      @pif = @cache[key]
 
       if @pif.instance_of?(Meteor::Core::Html::ParserImpl) then
         Meteor::Core::Html::ParserImpl.new(@pif)
@@ -666,16 +676,16 @@ module Meteor
     # @param [Fixnum] type パーサのタイプ
     # @param [String] relative_path 相対ファイルパス
     # @param [String] encoding エンコーディング
-    # @return [Meteor::ParserFactory] パーサファクトリ
+    # @return [Meteor::Parser] パーサ
     #
     def parser_3(type,relative_path,encoding)
 
       paths = File.split(relative_path)
 
-      if '.'.eql?(paths[0]) then
-        relative_url = File.basename(paths[1],'.*')
+      if CURRENT_DIR.eql?(paths[0]) then
+        relative_url = File.basename(paths[1],ABST_EXT_NAME)
       else
-        relative_url = [paths[0],File.basename(paths[1],'.*')].join("/")
+        relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
       end
 
       case type
@@ -703,14 +713,14 @@ module Meteor
     #
     # @param [Fixnum] type パーサのタイプ
     # @param [String] relative_path 相対ファイルパス  
-    # @return [Meteor::ParserFactory] パーサファクトリ
+    # @return [Meteor::Parser] パーサ
     #
     def parser_2(type,relative_path)
 
       paths = File.split(relative_path)
 
       if '.'.eql?(paths[0]) then
-        relative_url = File.basename(paths[1],'.*')
+        relative_url = File.basename(paths[1],ABST_EXT_NAME)
       else
         relative_url = [paths[0],File.basename(paths[1],'.*')].join("/")
       end
@@ -1018,11 +1028,17 @@ module Meteor
       #SUB_REGEX3 = '\\1\\1\\1\\1\\\\\\\\\\\\\\\\\\2'
 
       if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+        MODE_BF = 'r:'
+        MODE_AF = ':utf-8'
+
         @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
 
         @@pattern_clean1 = Regexp.new(CLEAN_1)
         @@pattern_clean2 = Regexp.new(CLEAN_2)
       else
+
+        MODE = 'r'
+
         @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP,nil,E_UTF8)
 
         @@pattern_clean1 = Regexp.new(CLEAN_1,nil,E_UTF8)
@@ -1174,21 +1190,21 @@ module Meteor
         @character_encoding = encoding
         #ファイルのオープン
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          if "UTF-8".eql?(encoding) then
-            io = File.open(file_path,'r:' << encoding)
+          if ParserFactory::ENC_UTF8.eql?(encoding) then
+            io = File.open(file_path,MODE_BF << encoding)
           else
-            io = File.open(file_path,'r:' << encoding << ':utf-8')
+            io = File.open(file_path,MODE_BF << encoding << MODE_AF)
           end
 
           #読込及び格納
           @root.document = io.read
         else
           #読込及び格納
-          io = open(file_path,'r')
+          io = open(file_path,MODE)
           @root.document = io.read
           #@root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
           #enc = Kconv.guess(@root.document)
-          enc = get_encoding()
+          enc = get_encoding
           if !Kconv::UTF8.equal?(enc) then
             @root.document = @root.document.kconv(Kconv::UTF8, enc)
           end
@@ -2066,7 +2082,7 @@ module Meteor
       #
       # @param [Meteor::Element] elm 要素
       # @param [String] attr_name  属性名
-      # @param [String] attr_value 属性値
+      # @param [String,TrueClass,FalseClass] attr_value 属性値
       #
       def set_attribute_3(elm,attr_name,attr_value)
         if !elm.cx then

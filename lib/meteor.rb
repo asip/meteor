@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.3.2
+# @version 0.9.3.3
 #
 
 module Meteor
 
-  VERSION = "0.9.3.2"
+  VERSION = "0.9.3.3"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -837,7 +837,7 @@ module Meteor
     # @param [Meteor::Parser] ps パーサ
     #
     def []=(key,ps)
-      @cache[path] = ps
+      @cache[key] = ps
     end
 
     #
@@ -1150,11 +1150,12 @@ module Meteor
         #@pattern = nil
         #ルート要素
         @root = RootElement.new
-        if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+        #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
           @element_cache = Hash.new()
-        else
-          @element_cache = Meteor::Core::Util::OrderHash.new
-        end
+        #else
+        #  @element_cache = Meteor::Core::Util::OrderHash.new
+        #end
+        
         #@res = nil
         #@_attributes = nil
         #@_mixed_content = nil
@@ -1204,7 +1205,7 @@ module Meteor
       end
 
       attr_accessor :element_cache #[Hash] 要素キャッシュ
-      attr_accessor :doc_type #[String] ドキュメントタイプ
+      attr_accessor :doc_type #[Fixnum] ドキュメントタイプ
 
       #
       # 文字エンコーディングをセットする
@@ -1500,7 +1501,7 @@ module Meteor
         @res2 = @pattern.match(@root.document)
 
         if !@res2 then
-          @res2 = element_with_3_2(elm_name)
+          @res2 = element_with_3_2
           @pattern_cc_2 = @pattern_cc
         end
 
@@ -1579,7 +1580,7 @@ module Meteor
       end
       private :element_with_3_1
 
-      def element_with_3_2(elm_name)
+      def element_with_3_2
 
         #@pattern_cc_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ
         #@pattern_cc_1 << @_attr_value << TAG_SEARCH_2_4_2
@@ -1945,11 +1946,11 @@ module Meteor
 
                   if @position > @position2 then
 
-                    if @cnt == ZERO then
-                      @sbuf << @pattern_cc_1_1
-                    else
-                      @sbuf << @pattern_cc_1_2
-                    end
+                    #if @cnt == ZERO then
+                    #@sbuf << @pattern_cc_1_1
+                    #else
+                    @sbuf << @pattern_cc_1_2
+                    #end
 
                     @cnt += 1
 
@@ -1970,11 +1971,11 @@ module Meteor
                   end
                 else
 
-                  if @cnt == ZERO then
-                    @sbuf << @pattern_cc_1_1
-                  else
-                    @sbuf << @pattern_cc_1_2
-                  end
+                  #if @cnt == ZERO then
+                  #  @sbuf << @pattern_cc_1_1
+                  #else
+                  @sbuf << @pattern_cc_1_2
+                  #end
 
                   @cnt += 1
 
@@ -1983,11 +1984,11 @@ module Meteor
               else
                 @position = @res.end(0)
 
-                if @cnt == ZERO then
-                  @sbuf << @pattern_cc_1_1
-                else
-                  @sbuf << @pattern_cc_1_2
-                end
+                #if @cnt == ZERO then
+                @sbuf << @pattern_cc_1_1
+                #else
+                #  @sbuf << @pattern_cc_1_2
+                #end
 
                 @cnt += ONE
               end
@@ -2003,18 +2004,21 @@ module Meteor
                   @sbuf << @pattern_cc_2_1
                 else
                   @sbuf << @pattern_cc_2_2
+                  break
                 end
 
                 @position = @res.end(0)
-              end
-
-              if @cnt == ZERO then
+              else
                 break
               end
 
-              if !@res then
-                break
-              end
+              #if @cnt == ZERO then
+              #  break
+              #end
+
+              #if !@res then
+              #  break
+              #end
             end
 
             @pattern = @pattern_1b
@@ -2039,11 +2043,11 @@ module Meteor
 
                   if @rx_document2.length > @rx_document.length then
 
-                    if @cnt == ZERO then
-                      @sbuf << @pattern_cc_1_1
-                    else
-                      @sbuf << @pattern_cc_1_2
-                    end
+                    #if @cnt == ZERO then
+                    #  @sbuf << @pattern_cc_1_1
+                    #else
+                    @sbuf << @pattern_cc_1_2
+                    #end
 
                     @cnt += ONE
 
@@ -2056,19 +2060,20 @@ module Meteor
                       @sbuf << @pattern_cc_2_1
                     else
                       @sbuf << @pattern_cc_2_2
-                    end
-
-                    if @cnt == ZERO then
                       break
                     end
+
+                    #if @cnt == ZERO then
+                    #  break
+                    #end
                   end
                 else
 
-                  if @cnt == ZERO then
-                    @sbuf << @pattern_cc_1_1
-                  else
-                    @sbuf << @pattern_cc_1_2
-                  end
+                  #if @cnt == ZERO then
+                  #  @sbuf << @pattern_cc_1_1
+                  #else
+                  @sbuf << @pattern_cc_1_2
+                  #end
 
                   @cnt += ONE
 
@@ -2077,11 +2082,11 @@ module Meteor
               else
                 @rx_document = @res.post_match
 
-                if @cnt == ZERO then
-                  @sbuf << @pattern_cc_1_1
-                else
-                  @sbuf << @pattern_cc_1_2
-                end
+                #if @cnt == ZERO then
+                @sbuf << @pattern_cc_1_1
+                #else
+                #@sbuf << @pattern_cc_1_2
+                #end
 
                 @cnt += ONE
               end
@@ -2097,18 +2102,21 @@ module Meteor
                   @sbuf << @pattern_cc_2_1
                 else
                   @sbuf << @pattern_cc_2_2
+                  break
                 end
 
                 @rx_document = @res.post_match
-              end
-
-              if @cnt == ZERO then
+              else
                 break
               end
 
-              if !@res then
-                break
-              end
+              #if @cnt == ZERO then
+              #  break
+              #end
+
+              #if !@res then
+              #  break
+              #end
             end
 
             @pattern = @pattern_1b
@@ -2818,13 +2826,13 @@ module Meteor
       def create(pif)
         case pif.doc_type
         when Parser::HTML then
-          pif = Meteor::Core::Html::ParserImpl.new
+          Meteor::Core::Html::ParserImpl.new
         when Parser::XHTML then
-          pif = Meteor::Core::Xhtml::ParserImpl.new
+          Meteor::Core::Xhtml::ParserImpl.new
         when Parser::XML then
-          pif = Meteor::Core::Xml::ParserImpl.new
+          Meteor::Core::Xml::ParserImpl.new
         else
-          pif = nil
+          nil
         end
       end
       private :create
@@ -2981,85 +2989,85 @@ module Meteor
         #end
       end
 
-      class OrderHash < Hash
-
-        def initialize
-          @keys = Array.new
-          @values = Array.new
-        end
-
-        attr_accessor :keys
-        attr_accessor :values
-
-        def store(key, value)
-          unless @keys.include?(key)
-            @keys << key
-            @values << value
-          end
-          super(key, value)
-        end
-
-        def clear
-          @keys.clear
-          @values.clear
-          super
-        end
-
-        def delete(key)
-          if @keys.include?(key)
-            @keys.delete(key)
-            @values.delete(fetch(key))
-            super(key)
-          elsif yield(key)
-          end
-        end
-
-        #superとして、Hash#[]=を呼び出す
-
-        def []=(key, value)
-          store(key, value)
-        end
-
-        def each
-          @keys.each do |k|
-            arr_tmp = Array.new
-            arr_tmp << k
-            arr_tmp << self[k]
-            yield(arr_tmp)
-          end
-          return self
-        end
-
-        def each_pair
-          @keys.each do |k|
-            yield(k, self[k])
-          end
-          return self
-        end
-
-        def map
-          arr_tmp = Array.new
-          @keys.each do |k|
-            arg_arr = Array.new
-            arg_arr << k
-            arg_arr << self[k]
-            arr_tmp << yield(arg_arr)
-          end
-          return arr_tmp
-        end
-
-        def sort_hash(&block)
-          if block_given?
-            arr_tmp = self.sort(&block)
-          elsif arr_tmp = self.sort
-          end
-          hash_tmp = OrderHash.new
-          arr_tmp.each do |item|
-            hash_tmp[item[0]] = item[1]
-          end
-          return hash_tmp
-        end
-      end   
+      #class OrderHash < Hash
+      #
+      #  def initialize
+      #    @keys = Array.new
+      #    @values = Array.new
+      #  end
+      #
+      #  attr_accessor :keys
+      #  attr_accessor :values
+      #
+      #  def store(key, value)
+      #    unless @keys.include?(key)
+      #      @keys << key
+      #      @values << value
+      #    end
+      #    super(key, value)
+      #  end
+      #
+      #  def clear
+      #    @keys.clear
+      #    @values.clear
+      #    super
+      #  end
+      #
+      #  def delete(key)
+      #    if @keys.include?(key)
+      #      @keys.delete(key)
+      #      @values.delete(fetch(key))
+      #      super(key)
+      #    elsif yield(key)
+      #    end
+      #  end
+      #
+      #  #superとして、Hash#[]=を呼び出す
+      #
+      #  def []=(key, value)
+      #    store(key, value)
+      #  end
+      #
+      #  def each
+      #    @keys.each do |k|
+      #      arr_tmp = Array.new
+      #      arr_tmp << k
+      #      arr_tmp << self[k]
+      #      yield(arr_tmp)
+      #    end
+      #    return self
+      #  end
+      #
+      #  def each_pair
+      #    @keys.each do |k|
+      #      yield(k, self[k])
+      #    end
+      #    return self
+      #  end
+      #
+      #  def map
+      #    arr_tmp = Array.new
+      #    @keys.each do |k|
+      #      arg_arr = Array.new
+      #      arg_arr << k
+      #      arg_arr << self[k]
+      #      arr_tmp << yield(arg_arr)
+      #    end
+      #    return arr_tmp
+      #  end
+      #
+      #  def sort_hash(&block)
+      #    if block_given?
+      #      arr_tmp = self.sort(&block)
+      #    elsif arr_tmp = self.sort
+      #    end
+      #    hash_tmp = OrderHash.new
+      #    arr_tmp.each do |item|
+      #      hash_tmp[item[0]] = item[1]
+      #    end
+      #    return hash_tmp
+      #  end
+      #end
    
     end
 
@@ -3084,6 +3092,8 @@ module Meteor
         MATCH_TAG = ['br','hr','img','input','meta','base']
         #MATCH_TAG_2 = "textarea|option|pre"
         MATCH_TAG_2 =['textarea','option','pre']
+
+        MATCH_TAG_SNG = ['texarea','option','form']
 
         HTTP_EQUIV = 'http-equiv'
         CONTENT_TYPE = 'Content-Type'
@@ -3435,7 +3445,7 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(@root.document)
 
-            if !@res then
+            if !@res && !is_match(MATCH_TAG_SNG) then
               @res = element_with_3_2(elm_name)
             end
 
@@ -3537,7 +3547,7 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(@root.document)
 
-            if !@res then
+            if !@res && !is_match(MATCH_TAG_SNG) then
               @res = element_with_5_2(elm_name)
             end
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : test.xml
+    Created on : 2008/07/22, 17:32
+    Author     : asip
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+
+<test manbo="mango" />
+
+<test manbo="manbo">
+    <tech mono="mono">こまねち</tech>
+</test>
+<test manbo="mbo">
+    <tech mono="mono">komaneti</tech>
+</test>
+<test manbo="mbo">
+    <tech mono="mono2">komaneti</tech>
+</test>
+<!-- @quark id="mono" --><!-- /@quark -->
+<!-- @quark id="moti" --><!-- /@quark -->
+<momo >komaneti</momo>
+<kobe momo="mono">komaneti</kobe>
+<teo a="aa" b="bb"/>
+<mink>komaneti</mink>
+
+<potato id="aa" lc="/cc">
+    <potato id="/bb"><test></test></potato>
+</potato>
+
+<potato id="aa" id2="bb" lc="/cc">
+    <potato id="/bb"><test></test></potato>
+</potato>
+
+<potato2 id="aa" id2="bb" lc="/cc"/>
+
+<hamachi id="aa" id2="bb" lc="/cc">
+    test
+</hamachi>
+
+<hamachi id="aa" id2="bb" />
+
+<kobe momo="mono" value="komaneti" />
+<!-- @pp id="cs" -->テスト<!-- /@pp -->
+
+</root>

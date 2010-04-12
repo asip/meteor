@@ -1,7 +1,7 @@
 # -* coding: UTF-8 -*-
 # Meteor -  A lightweight (X)HTML & XML parser
 #
-# Copyright (C) 2008-2009 Yasumasa Ashida.
+# Copyright (C) 2008-2010 Yasumasa Ashida.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.3.3
+# @version 0.9.3.4
 #
 
 module Meteor
 
-  VERSION = "0.9.3.3"
+  VERSION = "0.9.3.4"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -872,8 +872,9 @@ module Meteor
         end
       end
 
-      def execute(elm)
-      end
+      #def execute(elm)
+      #end
+      #private :execute
     end
 
     #
@@ -902,13 +903,13 @@ module Meteor
         end
       end
 
-      def init(elm)
-      end
-      private :init
+      #def init(elm)
+      #end
+      #private :init
 
-      def execute(elm,item)
-      end
-      private :execute
+      #def execute(elm,item)
+      #end
+      #private :execute
 
     end
   end
@@ -1120,23 +1121,17 @@ module Meteor
 
       #@@pattern_sub_regex1 = Regexp.new(SUB_REGEX1)
 
+      @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
+
+      @@pattern_clean1 = Regexp.new(CLEAN_1)
+      @@pattern_clean2 = Regexp.new(CLEAN_2)
+
       if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
         MODE_UTF8 = 'r:UTF-8'
         MODE_BF = 'r:'
         MODE_AF = ':utf-8'
-
-        @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
-
-        @@pattern_clean1 = Regexp.new(CLEAN_1)
-        @@pattern_clean2 = Regexp.new(CLEAN_2)
       else
-
-        MODE = 'r'
-
-        @@pattern_get_attrs_map = Regexp.new(GET_ATTRS_MAP)
-
-        @@pattern_clean1 = Regexp.new(CLEAN_1)
-        @@pattern_clean2 = Regexp.new(CLEAN_2)
+        MODE = 'r'  
       end   
 
       #
@@ -1640,8 +1635,7 @@ module Meteor
         #全体
         @elm_.document = @res[0]
         #空要素検索用パターン
-        @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ
-        @pattern_cc << @_attr_value << closer
+        @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ << @_attr_value << closer
         @elm_.pattern = @pattern_cc
 
         @elm_.parser = self
@@ -1946,11 +1940,7 @@ module Meteor
 
                   if @position > @position2 then
 
-                    #if @cnt == ZERO then
-                    #@sbuf << @pattern_cc_1_1
-                    #else
                     @sbuf << @pattern_cc_1_2
-                    #end
 
                     @cnt += 1
 
@@ -1963,19 +1953,13 @@ module Meteor
                       @sbuf << @pattern_cc_2_1
                     else
                       @sbuf << @pattern_cc_2_2
-                    end
-
-                    if @cnt == ZERO then
                       break
                     end
+
                   end
                 else
 
-                  #if @cnt == ZERO then
-                  #  @sbuf << @pattern_cc_1_1
-                  #else
                   @sbuf << @pattern_cc_1_2
-                  #end
 
                   @cnt += 1
 
@@ -1984,15 +1968,13 @@ module Meteor
               else
                 @position = @res.end(0)
 
-                #if @cnt == ZERO then
-                @sbuf << @pattern_cc_1_1
-                #else
-                #  @sbuf << @pattern_cc_1_2
-                #end
+                @sbuf << @pattern_cc_1_1        
 
                 @cnt += ONE
               end
             else
+
+              if @cnt == ZERO then break end
 
               @res = @pattern_2.match(@root.document,@position)
 
@@ -2011,14 +1993,7 @@ module Meteor
               else
                 break
               end
-
-              #if @cnt == ZERO then
-              #  break
-              #end
-
-              #if !@res then
-              #  break
-              #end
+       
             end
 
             @pattern = @pattern_1b
@@ -2043,11 +2018,7 @@ module Meteor
 
                   if @rx_document2.length > @rx_document.length then
 
-                    #if @cnt == ZERO then
-                    #  @sbuf << @pattern_cc_1_1
-                    #else
-                    @sbuf << @pattern_cc_1_2
-                    #end
+                    @sbuf << @pattern_cc_1_2          
 
                     @cnt += ONE
 
@@ -2062,18 +2033,11 @@ module Meteor
                       @sbuf << @pattern_cc_2_2
                       break
                     end
-
-                    #if @cnt == ZERO then
-                    #  break
-                    #end
+          
                   end
                 else
 
-                  #if @cnt == ZERO then
-                  #  @sbuf << @pattern_cc_1_1
-                  #else
                   @sbuf << @pattern_cc_1_2
-                  #end
 
                   @cnt += ONE
 
@@ -2082,15 +2046,13 @@ module Meteor
               else
                 @rx_document = @res.post_match
 
-                #if @cnt == ZERO then
-                @sbuf << @pattern_cc_1_1
-                #else
-                #@sbuf << @pattern_cc_1_2
-                #end
+                @sbuf << @pattern_cc_1_1        
 
                 @cnt += ONE
               end
             else
+
+              if @cnt == ZERO then break end
 
               @res = @pattern_2.match(@rx_document)
 
@@ -2109,14 +2071,7 @@ module Meteor
               else
                 break
               end
-
-              #if @cnt == ZERO then
-              #  break
-              #end
-
-              #if !@res then
-              #  break
-              #end
+              
             end
 
             @pattern = @pattern_1b
@@ -2337,7 +2292,7 @@ module Meteor
           when TWO
             #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             args[0].document_sync = true
-            set_content_2(args[0],args[1])      
+            set_content_2(args[0],args[1])
             #else
             #  raise ArgumentError
             #end
@@ -2699,9 +2654,9 @@ module Meteor
       end
       private :shadow
 
-      def set_mono_info(elm)
-      end
-      private :set_mono_info
+      #def set_mono_info(elm)
+      #end
+      #private :set_mono_info
 
       #
       # フッククラスの処理を実行する
@@ -3156,17 +3111,25 @@ module Meteor
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
         GET_ATTRS_MAP2='\\s(disabled|readonly|checked|selected|multiple)'
 
+        @@pattern_selected_m = Regexp.new(SELECTED_M)
+        @@pattern_selected_r = Regexp.new(SELECTED_R)
+        @@pattern_checked_m = Regexp.new(CHECKED_M)
+        @@pattern_checked_r = Regexp.new(CHECKED_R)
+        @@pattern_disabled_m = Regexp.new(DISABLED_M)
+        @@pattern_disabled_r = Regexp.new(DISABLED_R)
+        @@pattern_readonly_m = Regexp.new(READONLY_M)
+        @@pattern_readonly_r = Regexp.new(READONLY_R)
+        @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
+        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
+
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
+        @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
+
+        #@@pattern_match_tag = Regexp.new(MATCH_TAG)
+        #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)    
+
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          @@pattern_selected_m = Regexp.new(SELECTED_M)
-          @@pattern_selected_r = Regexp.new(SELECTED_R)
-          @@pattern_checked_m = Regexp.new(CHECKED_M)
-          @@pattern_checked_r = Regexp.new(CHECKED_R)
-          @@pattern_disabled_m = Regexp.new(DISABLED_M)
-          @@pattern_disabled_r = Regexp.new(DISABLED_R)
-          @@pattern_readonly_m = Regexp.new(READONLY_M)
-          @@pattern_readonly_r = Regexp.new(READONLY_R)
-          @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-          @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
           TABLE_FOR_ESCAPE_ = {
                   '&' => '&amp;',
@@ -3196,23 +3159,7 @@ module Meteor
           @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
           @@pattern_br_2 = Regexp.new(BR_2)
 
-          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
-          @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
-
-          #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-          #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
         else
-          @@pattern_selected_m = Regexp.new(SELECTED_M)
-          @@pattern_selected_r = Regexp.new(SELECTED_R)
-          @@pattern_checked_m = Regexp.new(CHECKED_M)
-          @@pattern_checked_r = Regexp.new(CHECKED_R)
-          @@pattern_disabled_m = Regexp.new(DISABLED_M)
-          @@pattern_disabled_r = Regexp.new(DISABLED_R)
-          @@pattern_readonly_m = Regexp.new(READONLY_M)
-          @@pattern_readonly_r = Regexp.new(READONLY_R)
-          @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-          @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
           @@pattern_and_1 = Regexp.new(AND_1)
           @@pattern_lt_1 = Regexp.new(LT_1)
@@ -3226,13 +3173,7 @@ module Meteor
           @@pattern_space_2 = Regexp.new(NBSP_2)
           @@pattern_and_2 = Regexp.new(AND_2)
           @@pattern_br_2 = Regexp.new(BR_2)
-
-          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
-          @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
-
-          #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-          #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
+          
         end
 
         #
@@ -3948,22 +3889,31 @@ module Meteor
 
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
 
+        @@pattern_selected_m = Regexp.new(SELECTED_M)
+        @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
+        @@pattern_selected_r = Regexp.new(SELECTED_R)
+        @@pattern_checked_m = Regexp.new(CHECKED_M)
+        @@pattern_checked_m1 = Regexp.new(CHECKED_M1)
+        @@pattern_checked_r = Regexp.new(CHECKED_R)
+        @@pattern_disabled_m = Regexp.new(DISABLED_M)
+        @@pattern_disabled_m1 = Regexp.new(DISABLED_M1)
+        @@pattern_disabled_r = Regexp.new(DISABLED_R)
+        @@pattern_readonly_m = Regexp.new(READONLY_M)
+        @@pattern_readonly_m1 = Regexp.new(READONLY_M1)
+        @@pattern_readonly_r = Regexp.new(READONLY_R)
+        @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
+        @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
+        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)    
+
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)   
+
+        @@pattern_br_2 = Regexp.new(BR_3)
+
+        #@@pattern_match_tag = Regexp.new(MATCH_TAG)
+        #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
+
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          @@pattern_selected_m = Regexp.new(SELECTED_M)
-          @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
-          @@pattern_selected_r = Regexp.new(SELECTED_R)
-          @@pattern_checked_m = Regexp.new(CHECKED_M)
-          @@pattern_checked_m1 = Regexp.new(CHECKED_M1)
-          @@pattern_checked_r = Regexp.new(CHECKED_R)
-          @@pattern_disabled_m = Regexp.new(DISABLED_M)
-          @@pattern_disabled_m1 = Regexp.new(DISABLED_M1)
-          @@pattern_disabled_r = Regexp.new(DISABLED_R)
-          @@pattern_readonly_m = Regexp.new(READONLY_M)
-          @@pattern_readonly_m1 = Regexp.new(READONLY_M1)
-          @@pattern_readonly_r = Regexp.new(READONLY_R)
-          @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-          @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
-          @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
           TABLE_FOR_ESCAPE_ = {
                   '&' => '&amp;',
@@ -3989,30 +3939,9 @@ module Meteor
           PATTERN_ESCAPE = '[&"\'<> ]'
           PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-          @@pattern_br_2 = Regexp.new(BR_3)
-
-          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
-
-          #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-          #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
-        else
-          @@pattern_selected_m = Regexp.new(SELECTED_M)
-          @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
-          @@pattern_selected_r = Regexp.new(SELECTED_R)
-          @@pattern_checked_m = Regexp.new(CHECKED_M)
-          @@pattern_checked_m1 = Regexp.new(CHECKED_M1)
-          @@pattern_checked_r = Regexp.new(CHECKED_R)
-          @@pattern_disabled_m = Regexp.new(DISABLED_M)
-          @@pattern_disabled_m1 = Regexp.new(DISABLED_M1)
-          @@pattern_disabled_r = Regexp.new(DISABLED_R)
-          @@pattern_readonly_m = Regexp.new(READONLY_M)
-          @@pattern_readonly_m1 = Regexp.new(READONLY_M1)
-          @@pattern_readonly_r = Regexp.new(READONLY_R)
-          @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-          @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
-          @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
+          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)     
+     
+        else     
 
           @@pattern_and_1 = Regexp.new(AND_1)
           @@pattern_lt_1 = Regexp.new(LT_1)
@@ -4029,11 +3958,6 @@ module Meteor
           @@pattern_and_2 = Regexp.new(AND_2)
           @@pattern_br_2 = Regexp.new(BR_3)
 
-          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
-
-          #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-          #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
         end
 
         #
@@ -4423,6 +4347,9 @@ module Meteor
 
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
 
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
+
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
           TABLE_FOR_ESCAPE_ = {
                   '&' => '&amp;',
@@ -4434,8 +4361,6 @@ module Meteor
           PATTERN_ESCAPE = '[&\"\'<>]'
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
 
-          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         else
           @@pattern_and_1 = Regexp.new(AND_1)
           @@pattern_lt_1 = Regexp.new(LT_1)
@@ -4448,8 +4373,6 @@ module Meteor
           @@pattern_ap_2 = Regexp.new(AP_2)
           @@pattern_and_2 = Regexp.new(AND_2)
 
-          @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-          @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         end
 
         #

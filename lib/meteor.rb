@@ -850,7 +850,7 @@ module Meteor
       def do_action(elm)
         #内容あり要素の場合
         if elm.empty then
-          elm2 = elm.child(elm)
+          elm2 = elm.child()
           execute(elm2)
         end
       end
@@ -874,7 +874,7 @@ module Meteor
       def do_action(elm,list)
         #内容あり要素の場合
         if elm.empty then
-          elm2 = elm.child(elm)
+          elm2 = elm.child()
           init(elm2)
           list.each do |item|
             if  !elm2.mono then
@@ -1019,13 +1019,20 @@ module Meteor
       #SEARCH_CX_4 = ')).)*)<!--\\s\\/@'
       #SEARCH_CX_5 = '\\s-->'
       #SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
-      SEARCH_CX_1 = '<!--\\s@'
-      SEARCH_CX_2 = '\\s([^<>]*id="'
-      SEARCH_CX_3 = '"[^<>]*)-->(((?!(<!--\\s/@'
-      SEARCH_CX_4 = ')).)*)<!--\\s/@'
-      SEARCH_CX_5 = '\\s-->'
-      SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
 
+      SEARCH_CX_1 = '<!--\\s@'
+      #SEARCH_CX_1 = "<!--\\s@"
+      SEARCH_CX_2 = '\\s([^<>]*id="'
+      #SEARCH_CX_2 = "\\s([^<>]*id=\""
+      SEARCH_CX_3 = '"[^<>]*)-->(((?!(<!--\\s/@'
+      #SEARCH_CX_3 = "\"[^<>]*)-->(((?!(<!--\\s/@"
+      SEARCH_CX_4 = ')).)*)<!--\\s/@'
+      #SEARCH_CX_4 = ")).)*)<!--\\s/@"
+      SEARCH_CX_5 = '\\s-->'
+      #SEARCH_CX_5 = "\\s-->"
+      SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
+      #SEARCH_CX_6 = "<!--\\s@([^<>]*)\\s[^<>]*id=\""
+      
       #setElementToCXTag
       SET_CX_1 = '<!-- @'
       SET_CX_2 = '-->'

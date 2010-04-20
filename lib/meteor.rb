@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.3.5
+# @version 0.9.3.7
 #
 
 module Meteor
 
-  VERSION = "0.9.3.5"
+  VERSION = "0.9.3.7"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -1041,6 +1041,8 @@ module Meteor
 
       #setMonoInfo
       SET_MONO_1 = '\\A[^<>]*\\Z'
+
+      @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
 
       #clean
       CLEAN_1 = '<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->'
@@ -2557,9 +2559,15 @@ module Meteor
       end
       private :shadow
 
-      #def set_mono_info(elm)
-      #end
-      #private :set_mono_info
+      def set_mono_info(elm)
+
+        @res = @@pattern_set_mono1.match(elm.mixed_content)
+
+        if @res then
+          elm.mono = true
+        end
+      end
+      private :set_mono_info
 
       #
       # @overload def execute(elm,hook)
@@ -2603,43 +2611,43 @@ module Meteor
       end
       private :escape_regex
 
-      #
-      # @param [String] content 入力文字列
-      # @return [String] 出力文字列
-      #
-      def escape(content)
-        content
-      end
-      private :escape
+      ##
+      ## @param [String] content 入力文字列
+      ## @return [String] 出力文字列
+      ##
+      #def escape(content)
+      #  content
+      #end
+      #private :escape
 
-      #
-      # @param [String] content 入力文字列
-      # @param [String] elm 要素
-      # @return [String] 出力文字列
-      #
-      def escape_content(content,elm)
-        content
-      end
-      private :escape_content
+      ##
+      ## @param [String] content 入力文字列
+      ## @param [String] elm 要素
+      ## @return [String] 出力文字列
+      ##
+      #def escape_content(content,elm)
+      #  content
+      #end
+      #private :escape_content
 
-      #
-      # @param [String] content 入力文字列
-      # @return [String] 出力文字列
-      #
-      def unescape(content)
-        content
-      end
-      private :unescape
+      ##
+      ## @param [String] content 入力文字列
+      ## @return [String] 出力文字列
+      ##
+      #def unescape(content)
+      #  content
+      #end
+      #private :unescape
 
-      #
-      # @param [String] content 入力文字列
-      # @param [String] elm 要素
-      # @return [String] 出力文字列
-      #
-      def unescape_content(content,elm)
-        content
-      end
-      private :unescape_content
+      ##
+      ## @param [String] content 入力文字列
+      ## @param [String] elm 要素
+      ## @return [String] 出力文字列
+      ##
+      #def unescape_content(content,elm)
+      #  content
+      #end
+      #private :unescape_content
 
       def is_match(regex,str)
         if regex.kind_of?(Regexp) then
@@ -2939,7 +2947,6 @@ module Meteor
         @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
         @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
 
         #@@pattern_match_tag = Regexp.new(MATCH_TAG)
@@ -3491,27 +3498,6 @@ module Meteor
         end
         private :remove_attrs_
 
-        def set_mono_info(elm)
-
-          @res = @@pattern_set_mono1.match(elm.mixed_content)
-
-          if @res then
-            elm.mono = true
-            if elm.cx then
-              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              elm.document = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
-            else
-              if elm.empty then
-                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                elm.document = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
-              else
-                elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE
-              end
-            end
-          end
-        end
-        private :set_mono_info
-
         def escape(content)
           #特殊文字の置換
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
@@ -3700,8 +3686,7 @@ module Meteor
         @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
         @@pattern_multiple_r = Regexp.new(MULTIPLE_R)    
 
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)   
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE) 
 
         @@pattern_br_2 = Regexp.new(BR_3)
 
@@ -4003,27 +3988,6 @@ module Meteor
         end
         private :get_attr_map
 
-        def set_mono_info(elm)
-
-          @res = @@pattern_set_mono1.match(elm.mixed_content)
-
-          if @res then
-            elm.mono = true
-            if elm.cx then
-              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              elm.document = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
-            else
-              if elm.empty then
-                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                elm.document = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
-              else
-                elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
-              end
-            end
-          end
-        end
-        private :set_mono_info
-
         def escape(content)
           #特殊文字の置換
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
@@ -4128,7 +4092,6 @@ module Meteor
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-        @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
 
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
           TABLE_FOR_ESCAPE_ = {
@@ -4214,27 +4177,6 @@ module Meteor
         def content_type()
           @root.content_type
         end
-
-        def set_mono_info(elm)
-
-          @res = @@pattern_set_mono1.match(elm.mixed_content)
-
-          if @res then
-            elm.mono = true
-            if elm.cx then
-              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              elm.document = "<!-- @#{elm.name} #{elm.attributes} -->#{elm.mixed_content}<!-- /@#{elm.name} -->"
-            else
-              if elm.empty then
-                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                elm.document = "<#{elm.name}#{elm.attributes}>#{elm.mixed_content}</#{elm.name}>"
-              else
-                elm.document = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE3
-              end
-            end
-          end
-        end
-        private :set_mono_info
 
         def escape(content)
           #特殊文字の置換

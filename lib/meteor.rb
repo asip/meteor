@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.3.7
+# @version 0.9.4.0
 #
 
 module Meteor
 
-  VERSION = "0.9.3.7"
+  VERSION = "0.9.4.0"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -203,7 +203,7 @@ module Meteor
       if @document_sync then
         @document_sync = false
         case @parser.doc_type
-          when Parser::HTML then
+          when Parser::HTML,Parser::HTML5 then
             if @cx then
               #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
               @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
@@ -215,7 +215,7 @@ module Meteor
                 @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE
               end
             end
-          when Parser::XHTML,Parser::XML then
+          when Parser::XHTML,Parser::XHTML5,Parser::XML then
             if @cx then
               #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
               @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
@@ -416,6 +416,7 @@ module Meteor
 
     attr_accessor :content_type #[String] コンテントタイプ
     attr_accessor :kaigyo_code #[String] 改行コード
+    attr_accessor :charset #[String] 文字コード
     attr_accessor :character_encoding #[String] エンコーディング
     attr_accessor :document #[String] ドキュメント
     attr_accessor :hook_document #[String] フック・ドキュメント
@@ -605,7 +606,9 @@ module Meteor
   class Parser
     HTML = ZERO
     XHTML = ONE
-    XML = 2
+    HTML5 = TWO
+    XHTML5 = THREE
+    XML = FOUR
   end
 
   #
@@ -730,6 +733,14 @@ module Meteor
           xhtml = Meteor::Core::Xhtml::ParserImpl.new()
           xhtml.read(File.expand_path(relative_path,@base_dir), encoding)
           @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Core::Html5::ParserImpl.new()
+          html5.read(File.expand_path(relative_path,@base_dir), encoding)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Core::Xhtml5::ParserImpl.new()
+          xhtml5.read(File.expand_path(relative_path,@base_dir), encoding)
+          @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Core::Xml::ParserImpl.new()
           xml.read(File.expand_path(relative_path,@base_dir), encoding)
@@ -763,6 +774,14 @@ module Meteor
           xhtml = Meteor::Core::Xhtml::ParserImpl.new()
           xhtml.read(File.expand_path(relative_path,@base_dir), @base_encoding)
           @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Core::Html5::ParserImpl.new()
+          html5.read(File.expand_path(relative_path,@base_dir), @base_encoding)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Core::Xhtml5::ParserImpl.new()
+          xhtml5.read(File.expand_path(relative_path,@base_dir), @base_encoding)
+          @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Core::Xml::ParserImpl.new()
           xml.read(File.expand_path(relative_path,@base_dir), @base_encoding)
@@ -784,6 +803,10 @@ module Meteor
         Meteor::Core::Html::ParserImpl.new(@pif)
       elsif Meteor::Parser::XHTML == @pif.doc_type then
         Meteor::Core::Xhtml::ParserImpl.new(@pif)
+      elsif Meteor::Parser::HTML5 == @pif.doc_type then
+        Meteor::Core::Html5::ParserImpl.new(@pif)
+      elsif Meteor::Parser::XHTML5 == @pif.doc_type then
+        Meteor::Core::Xhtml5::ParserImpl.new(@pif)
       elsif Meteor::Parser::XML == @pif.doc_type then
         Meteor::Core::Xml::ParserImpl.new(@pif)
       end
@@ -807,6 +830,14 @@ module Meteor
           xhtml = Meteor::Core::Xhtml::ParserImpl.new()
           xhtml.parse(document)
           @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Core::Html5::ParserImpl.new()
+          html5.parse(document)
+          @cache[relative_url] = html5
+        when Parser::XHTML then
+          xhtml5 = Meteor::Core::Xhtml5::ParserImpl.new()
+          xhtml5.parse(document)
+          @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Core::Xml::ParserImpl.new()
           xml.parse(document)
@@ -2701,6 +2732,10 @@ module Meteor
           Meteor::Core::Html::ParserImpl.new
         when Parser::XHTML then
           Meteor::Core::Xhtml::ParserImpl.new
+        when Parser::HTML5 then
+          Meteor::Core::Html5::ParserImpl.new
+        when Parser::XHTML5 then
+          Meteor::Core::Xhtml5::ParserImpl.new
         when Parser::XML then
           Meteor::Core::Xml::ParserImpl.new
         else
@@ -2868,27 +2903,27 @@ module Meteor
         META_S = 'meta'
 
         #MATCH_TAG = "br|hr|img|input|meta|base"
-        MATCH_TAG = ['br','hr','img','input','meta','base']
-        #MATCH_TAG_2 = "textarea|option|pre"
-        MATCH_TAG_2 =['textarea','option','pre']
+        @@match_tag = ['br','hr','img','input','meta','base'] #[Array] 内容のない要素
+        #@@match_tag_2 = "textarea|option|pre"
+        @@match_tag_2 =['textarea','option','pre'] #[Array] 改行を<br>に変換する必要のない要素
 
-        MATCH_TAG_SNG = ['texarea','option','form']
+        @@match_tag_sng = ['texarea','select','option','form','fieldset'] #[Array] 入れ子にできない要素
 
         HTTP_EQUIV = 'http-equiv'
         CONTENT_TYPE = 'Content-Type'
         CONTENT = 'content'
 
-        ATTR_LOGIC = ['disabled','readonly','checked','selected','multiple']
+        @@attr_logic = ['disabled','readonly','checked','selected','multiple'] #[Array] 論理値で指定する属性
         OPTION = 'option'
         SELECTED = 'selected'
         INPUT = 'input'
         CHECKED = 'checked'
         RADIO = 'radio'
         #DISABLE_ELEMENT = "input|textarea|select|optgroup"
-        DISABLE_ELEMENT = ['input','textarea','select','optgroup']
+        DISABLE_ELEMENT = ['input','textarea','select','optgroup'] #[Array] disabled属性のある要素
         DISABLED = 'disabled'
         #READONLY_TYPE = "text|password"
-        READONLY_TYPE = ['text','password']
+        READONLY_TYPE = ['text','password'] #[Array] readonly属性のあるinput要素のタイプ
         TEXTAREA = 'textarea'
         READONLY='readonly'
         SELECT = 'select'
@@ -2949,8 +2984,8 @@ module Meteor
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
         @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
 
-        #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-        #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)    
+        #@@pattern_@@match_tag = Regexp.new(@@match_tag)
+        #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
 
@@ -2996,7 +3031,7 @@ module Meteor
           @@pattern_space_2 = Regexp.new(NBSP_2)
           @@pattern_and_2 = Regexp.new(AND_2)
           @@pattern_br_2 = Regexp.new(BR_2)
-          
+
         end
 
         #
@@ -3032,13 +3067,13 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.content_type = String.new(ps.content_type);
+          @root.content_type = String.new(ps.root_element.content_type);
           @root.kaigyo_code = ps.root_element.kaigyo_code
         end
         private :initialize_1
 
         #
-        # ドキュメントをパーサにセットする    
+        # ドキュメントをパーサにセットする
         # @param [String] document ドキュメント
         #
         def parse(document)
@@ -3047,7 +3082,7 @@ module Meteor
         end
 
         #
-        # ファイルを読み込み、パーサにセットする    
+        # ファイルを読み込み、パーサにセットする
         # @param [String] filePath ファイルパス
         # @param [String] encoding エンコーディング
         #
@@ -3111,7 +3146,7 @@ module Meteor
 
           for a in KAIGYO_CODE
             if @root.document.include?(a) then
-              @root.kaigyo_code = a       
+              @root.kaigyo_code = a
             end
           end
 
@@ -3127,7 +3162,7 @@ module Meteor
           @_elm_name = escape_regex(elm_name)
 
           #空要素の場合(<->内容あり要素の場合)
-          if is_match(MATCH_TAG,elm_name) then
+          if is_match(@@match_tag,elm_name) then
             #空要素検索用パターン
             @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_4_2
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -3183,8 +3218,9 @@ module Meteor
           @_elm_name = escape_regex(elm_name)
           @_attr_name = escape_regex(attr_name)
           @_attr_value = escape_regex(attr_value)
+
           #空要素の場合(<->内容あり要素の場合)
-          if is_match(MATCH_TAG,elm_name) then
+          if is_match(@@match_tag,elm_name) then
             #空要素検索パターン
             #@pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ
             #@pattern_cc << @_attr_value << TAG_SEARCH_2_4_3
@@ -3209,7 +3245,7 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(MATCH_TAG_SNG) then
+            if !@res && !is_match(@@match_tag_sng) then
               @res = element_with_3_2(elm_name)
             end
 
@@ -3235,7 +3271,7 @@ module Meteor
         private :element_without_3
 
         #
-        # 属性(属性名="属性値")で検索し、要素を取得する    
+        # 属性(属性名="属性値")で検索し、要素を取得する
         # @param [String] attr_name 属性名
         # @param [String] attr_value 属性値
         # @return [Meteor::Element] 要素
@@ -3262,7 +3298,7 @@ module Meteor
         private :element_2
 
         #
-        # 要素名と属性1・属性2(属性名="属性値")で検索し、要素を取得する    
+        # 要素名と属性1・属性2(属性名="属性値")で検索し、要素を取得する
         # @param [String] elm_name 要素名
         # @param [String] attr_name1 属性名1
         # @param [String] attr_value1 属性値1
@@ -3279,7 +3315,7 @@ module Meteor
           @_attr_value2 = escape_regex(attr_value2)
 
           #空要素の場合(<->内容あり要素の場合)
-          if is_match(MATCH_TAG,elm_name) then
+          if is_match(@@match_tag,elm_name) then
             #空要素検索パターン
             #@pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1_2 << @_attr_name1 << ATTR_EQ
             #@pattern_cc << @_attr_value1 << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ
@@ -3311,7 +3347,7 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(MATCH_TAG_SNG) then
+            if !@res && !is_match(@@match_tag_sng) then
               @res = element_with_5_2(elm_name)
             end
 
@@ -3339,7 +3375,7 @@ module Meteor
 
         #
         # 属性1・属性2(属性名="属性値")で検索し、要素を取得する
-        # 
+        #
         # @param [String] attr_name1 属性名1
         # @param [String] attr_value1 属性値1
         # @param [String] attr_name2 属性名2
@@ -3463,7 +3499,7 @@ module Meteor
 
         #
         # 要素の属性マップを取得する
-        # 
+        #
         # @param [Meteor::Element] elm 要素
         # @return [Meteor::AttributeMap] 属性マップ
         #
@@ -3486,7 +3522,7 @@ module Meteor
 
         def remove_attrs_(elm,attr_name)
           #検索対象属性の論理型是非判定
-          if !is_match(ATTR_LOGIC,attr_name) then
+          if !is_match(@@attr_logic,attr_name) then
             #属性検索用パターン
             @pattern = Meteor::Core::Util::PatternCache.get('' << attr_name << ERASE_ATTR_1)
             elm.attributes.sub!(@pattern, EMPTY)
@@ -3532,7 +3568,7 @@ module Meteor
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             content = escape(content)
 
-            if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
+            if elm.cx || !is_match(@@match_tag_2,elm.name) then
               #「¥r?¥n」->「<br>」
               content.gsub!(@@pattern_br_1, BR_2)
             end
@@ -3573,7 +3609,7 @@ module Meteor
         def unescape_content(content,elm)
           content_ = unescape(content)
 
-          if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
+          if elm.cx || !is_match(@@match_tag_2,elm.name) then
             #「<br>」->「¥r?¥n」
             if content.include?(BR_2) then
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
@@ -3605,20 +3641,20 @@ module Meteor
         META = 'META'
         META_S = 'meta'
 
-        #MATCH_TAG_2 = "textarea|option|pre"
-        MATCH_TAG_2 = ['textarea','option','pre']
+        #@@match_tag_2 = "textarea|option|pre"
+        @@match_tag_2 = ['textarea','option','pre'] #[Array] 改行を<br/>に変換する必要のない要素
 
-        ATTR_LOGIC = ['disabled','readonly','checked','selected','multiple']
+        @@attr_logic = ['disabled','readonly','checked','selected','multiple'] #[Array] 論理値で指定する属性
         OPTION = 'option'
         SELECTED = 'selected'
         INPUT = 'input'
         CHECKED = 'checked'
         RADIO = 'radio'
         #DISABLE_ELEMENT = "input|textarea|select|optgroup"
-        DISABLE_ELEMENT = ['input','textarea','select','optgroup']
+        DISABLE_ELEMENT = ['input','textarea','select','optgroup'] #[Array] disabled属性のある要素
         DISABLED = 'disabled'
         #READONLY_TYPE = "text|password"
-        READONLY_TYPE = ['text','password']
+        READONLY_TYPE = ['text','password'] #[Array] readonly属性のあるinput要素のタイプ
         TEXTAREA = 'textarea'
         READONLY='readonly'
         SELECT = 'select'
@@ -3684,14 +3720,14 @@ module Meteor
         @@pattern_readonly_r = Regexp.new(READONLY_R)
         @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
         @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
-        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)    
+        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE) 
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
         @@pattern_br_2 = Regexp.new(BR_3)
 
-        #@@pattern_match_tag = Regexp.new(MATCH_TAG)
-        #@@pattern_match_tag2 = Regexp.new(MATCH_TAG_2)
+        #@@pattern_@@match_tag = Regexp.new(@@match_tag)
+        #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
         if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
 
@@ -3719,9 +3755,9 @@ module Meteor
           PATTERN_ESCAPE = '[&"\'<> ]'
           PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
           @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)     
-     
-        else     
+          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+
+        else
 
           @@pattern_and_1 = Regexp.new(AND_1)
           @@pattern_lt_1 = Regexp.new(LT_1)
@@ -3773,7 +3809,7 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.content_type = String.new(ps.content_type)
+          @root.content_type = String.new(ps.root_element.content_type)
           @root.kaigyo_code = ps.root_element.kaigyo_code
         end
         private :initialize_1
@@ -3968,7 +4004,7 @@ module Meteor
 
         #
         # 属性マップを取得する
-        # 
+        #
         # @param [Meteor::Element] elm 要素
         # @return [Meteor::AttributeMap] 属性マップ
         #
@@ -3976,7 +4012,7 @@ module Meteor
           attrs = Meteor::AttributeMap.new
 
           elm.attributes.scan(@@pattern_get_attrs_map) do |a, b|
-            if is_match(ATTR_LOGIC, a) && a==b then
+            if is_match(@@attr_logic, a) && a==b then
               attrs.store(a, TRUE)
             else
               attrs.store(a, unescape(b))
@@ -4028,7 +4064,7 @@ module Meteor
           if RUBY_VERSION < RUBY_VERSION_1_9_0 then
             content = escape(content)
 
-            if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
+            if elm.cx || !is_match(@@match_tag_2,elm.name) then
               #「¥r?¥n」->「<br>」
               content.gsub!(@@pattern_br_1, BR_2)
             end
@@ -4068,7 +4104,7 @@ module Meteor
         def unescape_content(content,elm)
           content_ = unescape(content)
 
-          if elm.cx || !is_match(MATCH_TAG_2,elm.name) then
+          if elm.cx || !is_match(@@match_tag_2,elm.name) then
             #「<br>」->「¥r?¥n」
             if content.include?(BR_2) then
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
@@ -4080,6 +4116,259 @@ module Meteor
         private :unescape_content
 
       end
+    end
+
+    module Html5
+
+      class ParserImpl < Meteor::Core::Html::ParserImpl
+
+        CHARSET = 'charset'
+        UTF8 = 'utf-8'
+
+        MATCH_TAG = ['br','hr','img','input','meta','base','embed','command','keygen'] #[Array] 内容のない要素
+
+        MATCH_TAG_SNG = ['texarea','select','option','form','fieldset','figure','figcaption','video','audio','progress','meter','time','ruby','rt','rp','datalist','output'] #[Array]入れ子にできない要素
+
+        ATTR_LOGIC = ['disabled','readonly','checked','selected','multiple','required'] #[Array] 論理値で指定する属性
+
+        DISABLE_ELEMENT = ['input','textarea','select','optgroup','fieldset'] #[Array] disabled属性のある要素
+
+        REQUIRE_ELEMENT = ['input','textarea'] #[Array] required属性のある要素
+        REQUIRED = 'required'
+
+        REQUIRED_M = '\\srequired\\s|\\srequired$|\\sREQUIRED\\s|\\sREQUIRED$'
+        #REQUIRED_M = [' required ',' required',' REQUIRED ',' REQUIRED']
+        REQUIRED_R = 'required\\s|required$|REQUIRED\\s|REQUIRED$'
+
+        @@pattern_required_m = Regexp.new(REQUIRED_M)
+        @@pattern_required_r = Regexp.new(REQUIRED_R)
+
+        #
+        # イニシャライザ
+        # @overload def initialize
+        # @overload def initialize(ps)
+        #  @param [Meteor::Parser] ps パーサ
+        #
+        def initialize(*args)
+          super()
+          @@match_tag = MATCH_TAG
+          @@match_tag_sng = MATCH_TAG_SNG
+          @@attr_logic = ATTR_LOGIC
+          @doc_type = Parser::HTML5
+          case args.length
+            when ZERO
+              initialize_0
+            when ONE
+              initialize_1(args[0])
+            else
+              raise ArgumentError
+          end
+        end
+
+        #
+        # イニシャライザ
+        # @param [Meteor::Parser] ps パーサ
+        #
+        def initialize_1(ps)
+          @root.document = String.new(ps.document)
+          @root.hook_document = String.new(ps.root_element.hook_document)
+          @root.content_type = String.new(ps.root_element.content_type)
+          @root.charset = ps.root_element.charset
+          @root.kaigyo_code = ps.root_element.kaigyo_code
+        end
+        private :initialize_1
+
+        #
+        # ドキュメントをパースし、コンテントタイプをセットする
+        #
+        def analyze_content_type
+          element(META_S,HTTP_EQUIV,CONTENT_TYPE)
+
+          if !@elm_ then
+            element(META,HTTP_EQUIV,CONTENT_TYPE)
+          end
+
+          if @elm_ then
+            @root.content_type = @elm_.attr(CONTENT)
+            @root.charset = @elm_.attr(CHARSET)
+            if !@root.charset then
+              @root.charset = UTF8
+            end
+          else
+            @root.content_type = EMPTY
+            @root.charset = UTF8
+          end
+        end
+        private :analyze_content_type
+
+        def edit_attrs_(elm,attr_name,attr_value)
+          if is_match(SELECTED, attr_name) && is_match(OPTION,elm.name) then
+            edit_attrs_5(elm,attr_name,attr_value,@@pattern_selected_m,@@pattern_selected_r)
+            #edit_attributes_5(elm,attr_name,attr_value,SELECTED_M,@@pattern_selected_r)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT,elm.name)
+            edit_attrs_5(elm,attr_name,attr_value,@@pattern_multiple_m,@@pattern_multiple_r)
+            #edit_attributes_5(elm,attr_name,attr_value,MULTIPLE_M,@@pattern_multiple_r)
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+            edit_attrs_5(elm,attr_name,attr_value,@@pattern_disabled_m,@@pattern_disabled_r)
+            #edit_attributes_5(elm,attr_name,attr_value,DISABLED_M,@@pattern_disabled_r)
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
+            edit_attrs_5(elm,attr_name,attr_value,@@pattern_checked_m,@@pattern_checked_r)
+            #edit_attributes_5(elm,attr_name,attr_value,CHECKED_M,@@pattern_checked_r)
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+            edit_attrs_5(elm,attr_name,attr_value,@@pattern_readonly_m,@@pattern_readonly_r)
+            #edit_attributes_5(elm,attr_name,attr_value,READONLY_M,@@pattern_readonly_r)
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+            edit_attrs_5(elm,attr_name,attr_value,@@pattern_required_m,@@pattern_required_r)
+          else
+            super(elm,attr_name,attr_value)
+          end
+        end
+        private :edit_attrs_
+
+        def get_attr_value_(elm,attr_name)
+          if is_match(SELECTED, attr_name) && is_match(OPTION,elm.name) then
+            get_attr_value_r(elm,@@pattern_selected_m)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT,elm.name)
+            get_attr_value_r(elm,@@pattern_multiple_m)
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+            get_attr_value_r(elm,@@pattern_disabled_m)
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
+            get_attr_value_r(elm,@@pattern_checked_m)
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+            get_attr_value_r(elm,@@pattern_readonly_m)
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+            get_attr_value_r(elm,@@pattern_required_m)
+          else
+            super(elm,attr_name)
+          end
+        end
+        private :get_attr_value_
+
+      end
+
+    end
+
+    module Xhtml5
+
+      class ParserImpl < Meteor::Core::Xhtml::ParserImpl
+
+        CHARSET = 'charset'
+        UTF8 = 'utf-8'
+
+        ATTR_LOGIC = ['disabled','readonly','checked','selected','multiple','required'] #[Array] 論理値で指定する属性
+
+        DISABLE_ELEMENT = ['input','textarea','select','optgroup','fieldset'] #[Array] disabled属性のある要素
+
+        REQUIRE_ELEMENT = ['input','textarea'] #[Array] required属性のある要素
+        REQUIRED = 'required'
+
+        REQUIRED_M = '\\srequired="[^"]*"\\s|\\srequired="[^"]*"$'
+        REQUIRED_M1 = '\\srequired="([^"]*)"\\s|\\srequired="([^"]*)"$'
+        REQUIRED_R = 'required="[^"]*"'
+        REQUIRED_U = 'required="required"'
+
+        @@pattern_required_m = Regexp.new(REQUIRED_M)
+        @@pattern_required_m1 = Regexp.new(REQUIRED_M1)
+        @@pattern_required_r = Regexp.new(REQUIRED_R)
+
+        #
+        # イニシャライザ
+        # @overload def initialize
+        # @overload def initialize(ps)
+        #  @param [Meteor::Parser] ps パーサ
+        #
+        def initialize(*args)
+          super()
+          @@attr_logic = ATTR_LOGIC
+          @doc_type = Parser::XHTML5
+          case args.length
+            when ZERO
+              initialize_0
+            when ONE
+              initialize_1(args[0])
+            else
+              raise ArgumentError
+          end
+        end
+
+        #
+        # イニシャライザ
+        # @param [Meteor::Parser] ps パーサ
+        #
+        def initialize_1(ps)
+          @root.document = String.new(ps.document)
+          @root.hook_document = String.new(ps.root_element.hook_document)
+          @root.content_type = String.new(ps.root_element.content_type)
+          @root.charset = ps.root_element.charset
+          @root.kaigyo_code = ps.root_element.kaigyo_code
+        end
+        private :initialize_1
+
+        #
+        # ドキュメントをパースし、コンテントタイプをセットする
+        #
+        def analyze_content_type
+          element(META_S,HTTP_EQUIV,CONTENT_TYPE)
+
+          if !@elm_ then
+            element(META,HTTP_EQUIV,CONTENT_TYPE)
+          end
+
+          if @elm_ then
+            @root.content_type = @elm_.attr(CONTENT)
+            @root.charset = @elm_.attr(CHARSET)
+            if !@root.charset then
+              @root.charset = UTF8
+            end
+          else
+            @root.content_type = EMPTY
+            @root.charset = UTF8
+          end
+        end
+        private :analyze_content_type
+
+        def edit_attrs_(elm,attr_name,attr_value)
+
+          if is_match(SELECTED, attr_name) && is_match(OPTION,elm.name) then
+            edit_attrs_5(elm,attr_value,@@pattern_selected_m,@@pattern_selected_r,SELECTED_U)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT,elm.name)
+            edit_attrs_5(elm,attr_value,@@pattern_multiple_m,@@pattern_multiple_r,MULTIPLE_U)
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+            edit_attrs_5(elm,attr_value,@@pattern_disabled_m,@@pattern_disabled_r,DISABLED_U)
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO,get_type(elm)) then
+            edit_attrs_5(elm,attr_value,@@pattern_checked_m,@@pattern_checked_r,CHECKED_U)
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+            edit_attrs_5(elm,attr_value,@@pattern_readonly_m,@@pattern_readonly_r,READONLY_U)
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+            edit_attrs_5(elm,attr_value,@@pattern_required_m,@@pattern_required_r,REQUIRED_U)
+          else
+            super(elm,attr_name,attr_value)
+          end
+
+        end
+        private :edit_attrs_
+
+        def get_attr_value_(elm,attr_name)
+          if is_match(SELECTED, attr_name) && is_match(OPTION,elm.name)  then
+            get_attr_value_r(elm,attr_name,@@pattern_selected_m1)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT,elm.name)
+            get_attr_value_r(elm,attr_name,@@pattern_multiple_m1)
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+            get_attr_value_r(elm,attr_name,@@pattern_disabled_m1)
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
+            get_attr_value_r(elm,attr_name,@@pattern_checked_m1)
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+            get_attr_value_r(elm,attr_name,@@pattern_readonly_m1)
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+            get_attr_value_r(elm,attr_name,@@pattern_required_m1)
+          else
+            super(elm,attr_name)
+          end
+        end
+        private :get_attr_value_
+
+      end
+
     end
 
     module Xml

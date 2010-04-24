@@ -23,7 +23,7 @@
 </test>
 <!-- @quark id="mono" --><!-- /@quark -->
 <!-- @quark id="moti" --><!-- /@quark -->
-<momo >komaneti</momo>
+<momo>komaneti</momo>
 <kobe momo="mono">komaneti</kobe>
 <teo a="aa" b="bb"/>
 <mink>komaneti</mink>

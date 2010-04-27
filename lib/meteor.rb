@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.4.1
+# @version 0.9.4.2
 #
 
 module Meteor
 
-  VERSION = "0.9.4.1"
+  VERSION = "0.9.4.2"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -235,6 +235,8 @@ module Meteor
 
     #
     # 子要素を取得する
+    # @overload def child()
+    #  @return [Meteor::Element] 要素
     # @overload def child(elm_name)
     #  @param [String] elm_name 要素名
     #  @return [Meteor::Element] 要素

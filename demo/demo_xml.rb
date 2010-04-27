@@ -1,9 +1,9 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-#require 'rubygems'
-#require 'meteor'
-require '../lib/meteor'
+require 'rubygems'
+require 'meteor'
+#require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
 #pf.parser(Meteor::Parser::XML,'sample.xml', 'UTF-8')
@@ -32,14 +32,16 @@ elm7 = ps.element("kobe")
 #elm1["id2"]="cc"
 
 #ps.attr(elm8,"manbo","mangoo")
-#ps.content(elm9,"\\1")
+##elm9.content("¥¥1")
+#elm9.content = "¥¥1"
 
 #elm2.attr('id3','cc')
-elm3.attr('id3','cc')
+#elm3.attr('id3','cc')
+elm3['id3'] = 'cc'
 #elm4.attr('id3','cc')
 #elm9.attr('id3','cc')
 
-#co_ps = ps.child(elm1)
+#co_ps = elm1.child()
 ##map = co_ps.attr_map
 ##map.names.each { |item| 
 ##  puts item
@@ -66,7 +68,7 @@ elm_ = ps.element(elm7)
 
 10.times { |i|
   elm_["momo"]= i.to_s
-  elm_["eco"] = "えま"
+  elm_["eco"] = "縺医∪"
   elm_.content = i.to_s
   #elm_["content"] = i.to_s
   elm_.flush
@@ -91,7 +93,7 @@ puts ps.document
 puts '' + (end_time - start_time).to_s + ' sec'
 
 #start_time = Time.new.to_f
-#obj = eval("\"#{elm3.name}\"")
+#obj = eval("¥"#{elm3.name}¥"")
 #end_time = Time.new.to_f
 #puts '' + (end_time - start_time).to_s + ' sec'
 #puts obj

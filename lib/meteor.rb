@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.4.0
+# @version 0.9.4.1
 #
 
 module Meteor
 
-  VERSION = "0.9.4.0"
+  VERSION = "0.9.4.1"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -262,7 +262,13 @@ module Meteor
     #  @return [Meteor::Element] 要素
     #
     def child(*args)
-      @parser.element(*args)
+      case args.length
+        when ZERO
+          @parser.element(self)
+        else
+          @parser.element(*args)
+      end
+
     end
 
     #
@@ -718,10 +724,23 @@ module Meteor
 
       paths = File.split(relative_path)
 
-      if CURRENT_DIR.eql?(paths[0]) then
-        relative_url = File.basename(paths[1],ABST_EXT_NAME)
+      if paths.length == 1 then
+        relative_url = File.basename(paths[0],ABST_EXT_NAME)
+        #else if paths.length == 2 then
+        #  if CURRENT_DIR.eql?(paths[0]) then
+        #    relative_url = File.basename(paths[1],ABST_EXT_NAME)
+        #  else
+        #    relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
+        #  end
       else
-        relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1],ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1],ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        end
       end
 
       case type
@@ -759,10 +778,23 @@ module Meteor
 
       paths = File.split(relative_path)
 
-      if CURRENT_DIR.eql?(paths[0]) then
-        relative_url = File.basename(paths[1],ABST_EXT_NAME)
+      if paths.length == 1 then
+        relative_url = File.basename(paths[0],ABST_EXT_NAME)
+        #else if paths.length == 2 then
+        #  if CURRENT_DIR.eql?(paths[0]) then
+        #    relative_url = File.basename(paths[1],ABST_EXT_NAME)
+        #  else
+        #    relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
+        #  end
       else
-        relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1],ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1],ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        end
       end
 
       case type

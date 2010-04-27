@@ -1,9 +1,9 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-#require 'rubygems'
-#require 'meteor'
-require '../lib/meteor'
+require 'rubygems'
+require 'meteor'
+#require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
 pf.parser(Meteor::Parser::HTML,'sample.html', 'UTF-8')
@@ -13,11 +13,14 @@ ps = pf.parser('sample')
 start_time = Time.new.to_f
 
 elm_hello = ps.element('id','hello')
-ps.attr(elm_hello,'color','red')
+#elm_hello.attr('color','red')
+elm_hello['color'] = 'red'
+
 #elm_hello.remove_attribute('color')
 
 elm_hello2 = ps.element('id','hello2')
-ps.content(elm_hello2,'Hello,Tester')
+#elm_hello2.content('Hello,Tester')
+elm_hello2.content = 'Hello,Tester'
 
 #elm_hello3 = ps.cxtag('hello3')
 #elm_hello3.content = "Hello,Hello\ntt"
@@ -29,8 +32,10 @@ ps.content(elm_hello2,'Hello,Tester')
 #puts elm_hello3.mixed_content
 
 elm_text1 = ps.element('id','text1')
-ps.attr(elm_text1,'value','めも')
-ps.attr(elm_text1,'disabled',true)
+#elm_text1.attr('value','めも')
+elm_text1['value'] = 'めも'
+#ps.attr(elm_text1,'disabled',true)
+elm_text1['disabled'] = true
 
 #elm_text1.remove_attr('disabled')
 #map = elm_text1.attr_map
@@ -40,27 +45,30 @@ ps.attr(elm_text1,'disabled',true)
 #}
 
 #elm_radio1 = ps.element('input','id','radio1','type','radio')
-#ps.attr(elm_radio1,'checked','true')
+##elm_radio1.attr('checked','true')
+#elm_radio1['checked'] = 'true'
 #puts elm_radio1.document
 
 #elm_select1 = ps.element('select','id','select1')
-#elm_select1 = ps.element('select')
-#ps.attr(elm_select1,'multiple','true')
-#puts ps.attr(elm_select1,'multiple')
+##elm_select1 = ps.element('select')
+##elm_select1.attr('multiple','true')
+#elm_select1['multiple'] = true
+##puts elm_select1.attr('multiple')
 #puts elm_select1['multiple']
 
 #elm_option1 = ps.element('option','id','option1')
-#ps.attr(elm_option1,'selected','true')
+##elm_option1.attr('selected','true')
+#elm_option1['selected'] = true
 #ps.remove_attr(elm_option1,'selected')
 #elm_option1.remove_attr('selected')
-#puts ps.attr(elm_option1,'selected')
+##puts elm_option1.attr('selected')
 #puts elm_option1['selected']
 #puts ps.attr(elm_text1,'readonly')
 
 #elm_select2 = ps.element('select','id','select2')
 #elm_select2['multiple'] = 'true'
 #elm_option2 = ps.element('option','id','option2')
-#co_ps = ps.child(elm_option2)
+#co_ps = elm_option2.child()
 #10.times { |i|
 #  co_ps.attr('value',i.to_s)
 #  #'<' +

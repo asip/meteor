@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.4.2
+# @version 0.9.4.3
 #
 
 module Meteor
 
-  VERSION = "0.9.4.2"
+  VERSION = "0.9.4.3"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -2564,7 +2564,7 @@ module Meteor
           else
             reflect
             @_attributes = @root.element.attributes
-            #replace2regex(@_attributes)
+            
             if @root.element.origin.cx then
               #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
               #@root.hookDocument << @_attributes << SET_CX_2
@@ -3279,7 +3279,7 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(@@match_tag_sng) then
+            if !@res && !is_match(@@match_tag_sng,elm_name) then
               @res = element_with_3_2(elm_name)
             end
 
@@ -3381,7 +3381,7 @@ module Meteor
             #内容あり要素検索
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(@@match_tag_sng) then
+            if !@res && !is_match(@@match_tag_sng,elm_name) then
               @res = element_with_5_2(elm_name)
             end
 

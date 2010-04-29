@@ -2,16 +2,16 @@
 
 Gem::Specification.new do |s|
   s.name = %q{meteor}
-  s.version = "0.9.4.2"
+  s.version = "0.9.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["asip"]
   s.autorequire = %q{meteor}
-  s.date = %q{2010-04-28}
+  s.date = %q{2010-04-29}
   s.description = %q{A lightweight (X)HTML & XML parser}
   s.email = %q{ys.ashida@gmail.com}
   s.extra_rdoc_files = ["README", "ChangeLog"]
-  s.files = ["README", "ChangeLog", "Rakefile", "test/meteor_test.rb", "test/test_helper.rb", "lib/meteor.rb"]
+  s.files = ["README", "ChangeLog", "Rakefile", "doc/_index.html", "doc/class_list.html", "doc/css", "doc/css/common.css", "doc/css/full_list.css", "doc/css/style.css", "doc/file.README.html", "doc/file_list.html", "doc/frames.html", "doc/index.html", "doc/js", "doc/js/app.js", "doc/js/full_list.js", "doc/js/jquery.js", "doc/Meteor", "doc/Meteor/_E3_82_AF_E3", "doc/Meteor/_E3_82_AF_E3/es_5_28.html", "doc/Meteor/_E3_82_AF_E3/lue_2C_40", "doc/Meteor/_E3_82_AF_E3/lue_2C_40/e_m_2C_40_40patt.html", "doc/Meteor/_E3_82_AF_E3/lue_2C_40.html", "doc/Meteor/_E3_82_AF_E3/w.html", "doc/Meteor/_E3_82_AF_E3.html", "doc/Meteor/_E3_82_AF_E3.t", "doc/Meteor/_E3_82_AF_E3.t/gsub.html", "doc/Meteor/arse.html", "doc/Meteor/Attribute.html", "doc/Meteor/AttributeMap.html", "doc/Meteor/Core", "doc/Meteor/Core/Html", "doc/Meteor/Core/Html/ParserImpl.html", "doc/Meteor/Core/Html.html", "doc/Meteor/Core/Html5", "doc/Meteor/Core/Html5/ParserImpl.html", "doc/Meteor/Core/Html5.html", "doc/Meteor/Core/Kernel.html", "doc/Meteor/Core/Util", "doc/Meteor/Core/Util/PatternCache.html", "doc/Meteor/Core/Util.html", "doc/Meteor/Core/Xhtml", "doc/Meteor/Core/Xhtml/ParserImpl.html", "doc/Meteor/Core/Xhtml.html", "doc/Meteor/Core/Xhtml5", "doc/Meteor/Core/Xhtml5/ParserImpl.html", "doc/Meteor/Core/Xhtml5.html", "doc/Meteor/Core/Xml", "doc/Meteor/Core/Xml/ParserImpl.html", "doc/Meteor/Core/Xml.html", "doc/Meteor/Core.html", "doc/Meteor/Element.html", "doc/Meteor/Hook", "doc/Meteor/Hook/Hooker.html", "doc/Meteor/Hook/Looper.html", "doc/Meteor/Hook.html", "doc/Meteor/Parser.html", "doc/Meteor/ParserFactory.html", "doc/Meteor/RootElement.html", "doc/Meteor.html", "doc/method_list.html", "doc/top-level-namespace.html", "test/meteor_test.rb", "test/test_helper.rb", "lib/meteor.rb"]
   s.has_rdoc = false
   s.homepage = %q{http://meteor.rubyforge.org}
   s.rdoc_options = ["--title", "meteor documentation", "--charset", "utf-8", "--opname", "index.html", "--line-numbers", "--main", "README", "--inline-source", "--exclude", "^(examples|extras)/"]

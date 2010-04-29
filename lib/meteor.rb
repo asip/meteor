@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.4.3
+# @version 0.9.4.5
 #
 
 module Meteor
 
-  VERSION = "0.9.4.3"
+  VERSION = "0.9.4.5"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -728,12 +728,6 @@ module Meteor
 
       if paths.length == 1 then
         relative_url = File.basename(paths[0],ABST_EXT_NAME)
-        #else if paths.length == 2 then
-        #  if CURRENT_DIR.eql?(paths[0]) then
-        #    relative_url = File.basename(paths[1],ABST_EXT_NAME)
-        #  else
-        #    relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
-        #  end
       else
         if CURRENT_DIR.eql?(paths[0]) then
           paths.delete_at 0
@@ -782,12 +776,6 @@ module Meteor
 
       if paths.length == 1 then
         relative_url = File.basename(paths[0],ABST_EXT_NAME)
-        #else if paths.length == 2 then
-        #  if CURRENT_DIR.eql?(paths[0]) then
-        #    relative_url = File.basename(paths[1],ABST_EXT_NAME)
-        #  else
-        #    relative_url = [paths[0],File.basename(paths[1],ABST_EXT_NAME)].join(SLASH)
-        #  end
       else
         if CURRENT_DIR.eql?(paths[0]) then
           paths.delete_at 0
@@ -868,7 +856,7 @@ module Meteor
           html5 = Meteor::Core::Html5::ParserImpl.new()
           html5.parse(document)
           @cache[relative_url] = html5
-        when Parser::XHTML then
+        when Parser::XHTML5 then
           xhtml5 = Meteor::Core::Xhtml5::ParserImpl.new()
           xhtml5.parse(document)
           @cache[relative_url] = xhtml5
@@ -4238,19 +4226,14 @@ module Meteor
         def edit_attrs_(elm,attr_name,attr_value)
           if is_match(SELECTED, attr_name) && is_match(OPTION,elm.name) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_selected_m,@@pattern_selected_r)
-            #edit_attributes_5(elm,attr_name,attr_value,SELECTED_M,@@pattern_selected_r)
           elsif is_match(MULTIPLE, attr_name) && is_match(SELECT,elm.name)
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_multiple_m,@@pattern_multiple_r)
-            #edit_attributes_5(elm,attr_name,attr_value,MULTIPLE_M,@@pattern_multiple_r)
           elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_disabled_m,@@pattern_disabled_r)
-            #edit_attributes_5(elm,attr_name,attr_value,DISABLED_M,@@pattern_disabled_r)
           elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_checked_m,@@pattern_checked_r)
-            #edit_attributes_5(elm,attr_name,attr_value,CHECKED_M,@@pattern_checked_r)
           elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_readonly_m,@@pattern_readonly_r)
-            #edit_attributes_5(elm,attr_name,attr_value,READONLY_M,@@pattern_readonly_r)
           elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_required_m,@@pattern_required_r)
           else

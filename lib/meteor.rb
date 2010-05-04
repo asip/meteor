@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.4.7
+# @version 0.9.5.0
 #
 
 module Meteor
 
-  VERSION = "0.9.4.7"
+  VERSION = "0.9.5.0"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -49,11 +49,13 @@ module Meteor
 
     #
     # イニシャライザ
-    # @param [Array] args 引数配列
     # @overload def initialize(name)
     #  @param [String] name 名前
     # @overload def initialize(elm)
     #  @param [Meteor::Element] elm 要素
+    # @overload def initialize(elm,ps)
+    #  @param [Meteor::Element] elm 要素
+    #  @param [Meteor::Parser] ps パーサ
     #
     def initialize(*args)
       case args.length
@@ -87,7 +89,7 @@ module Meteor
 
     #
     # イニシャライザ
-    # @param [String] name タグ名
+    # @param [String] name 名前
     #
     def initialize_s(name)
       @name = name
@@ -127,7 +129,10 @@ module Meteor
 
     #
     # コピーを作成する
-    # @param [Array] args 引数配列
+    # @overload def new!(elm,ps)
+    #  @param [Meteor::Element] elm 要素
+    #  @param [Meteor::Parser] ps パーサ
+    #  @return [Meteor::Element] 要素
     #
     def self.new!(*args)
       case args.length
@@ -236,20 +241,25 @@ module Meteor
     #
     # 子要素を取得する
     # @overload def child()
+    #  子要素を取得する
     #  @return [Meteor::Element] 要素
     # @overload def child(elm_name)
+    #  要素名で子要素を取得する
     #  @param [String] elm_name 要素名
     #  @return [Meteor::Element] 要素
     # @overload def child(elm_name,attr_name,attr_value)
+    #  要素名と属性(属性名="属性値")で要素を取得する
     #  @param [String] elm_name  要素名
     #  @param [String] attr_name 属性名
     #  @param [String] attr_value 属性値
     #  @return [Meteor::Element] 要素
     # @overload def child(attr_name,attr_value)
+    #  属性(属性名="属性値")で要素を取得する
     #  @param [String] attr_name 属性名
     #  @param [String] attr_value 属性値
     #  @return [Meteor::Element] 要素
     # @overload def child(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+    #  要素名と属性１・属性２(属性名="属性値")で要素を取得する
     #  @param [String] elm_name  要素の名前
     #  @param [String] attr_name1 属性名1
     #  @param [String] attr_value1 属性値2
@@ -257,6 +267,7 @@ module Meteor
     #  @param [String] attr_value2 属性値2
     #  @return [Meteor::Element] 要素
     # @overload def child(attr_name1,attr_value1,attr_name2,attr_value2)
+    #  属性１・属性２(属性名="属性値")で要素を取得する
     #  @param [String] attr_name1 属性名1
     #  @param [String] attr_value1 属性値2
     #  @param [String] attr_name2 属性名2
@@ -285,10 +296,12 @@ module Meteor
     #
     # CX(コメント拡張)タグを取得する
     # @overload def cxtag(elm_name,id)
+    #  要素名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
     #  @param [String] elm_name 要素名
     #  @param [String] id ID属性値
     #  @return [Meteor::Element] 要素
     # @overload def cxtag(id)
+    #  ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
     #  @param [String] id ID属性値
     #  @return [Meteor::Element] 要素
     #
@@ -398,8 +411,9 @@ module Meteor
     #  Hookerクラスの処理を実行する
     #  @param [Meteor::Hook::Hooker] hook Hookerオブジェクト
     # @overload def execute(loop,list)
+    #  Looperクラスの処理を実行する
     #  @param [Meteor::Element::Looper] loop Looperオブジェクト
-    #  @param [Array] 配列
+    #  @param [Array] list 配列
     #
     def execute(*args)
       @parser.execute(self,*args)
@@ -698,13 +712,13 @@ module Meteor
 
     #
     # @overload def parser(type,relative_path,encoding)
-    #  パーサをセットする
+    #  パーサを作成する
     #  @param [Fixnum] type パーサのタイプ
     #  @param [String] relative_path 相対ファイルパス
     #  @param [String] encoding エンコーディング
     #  @return [Meteor::Parser] パーサ
     # @overload def parser(type,relative_path)
-    #  パーサをセットする
+    #  パーサを作成する
     #  @param [Fixnum] type パーサのタイプ
     #  @param [String] relative_path 相対ファイルパス
     #  @return [Meteor::Parser] パーサ
@@ -725,7 +739,7 @@ module Meteor
     end
 
     #
-    # パーサをセットする
+    # パーサを作成する
     # @param [Fixnum] type パーサのタイプ
     # @param [String] relative_path 相対ファイルパス
     # @param [String] encoding エンコーディング
@@ -774,7 +788,7 @@ module Meteor
     private :parser_3
 
     #
-    # パーサをセットする
+    # パーサを作成する
     # @param [Fixnum] type パーサのタイプ
     # @param [String] relative_path 相対ファイルパス  
     # @return [Meteor::Parser] パーサ
@@ -845,11 +859,11 @@ module Meteor
     private :parser_1
 
     #
-    # パーサをセットする  
+    # パーサを作成する  
     # @param [Fixnum] type パーサのタイプ
     # @param [String] relative_url 相対URL
     # @param [String] document ドキュメント
-    # @return [Meteor::ParserFactory] パーサファクトリ
+    # @return [Meteor::Parser] パーサ
     #
     def parser_str(type,relative_url,document)
       case type
@@ -1306,19 +1320,23 @@ module Meteor
 
       #
       # 要素を取得する
-      # @overload def element(elm_name)   
+      # @overload def element(elm_name)
+      #  要素名で要素を取得する
       #  @param [String] elm_name 要素名
       #  @return [Meteor::Element] 要素
       # @overload def element(elm_name,attr_name,attr_value)
+      #  要素名と属性(属性名="属性値")で要素を取得する
       #  @param [String] elm_name  要素名
       #  @param [String] attr_name 属性名
       #  @param [String] attr_value 属性値
       #  @return [Meteor::Element] 要素
       # @overload def element(attr_name,attr_value)
+      #  属性(属性名="属性値")で要素を取得する
       #  @param [String] attr_name 属性名
       #  @param [String] attr_value 属性値
       #  @return [Meteor::Element] 要素
       # @overload def element(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+      #  要素名と属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [String] elm_name  要素の名前
       #  @param [String] attr_name1 属性名1
       #  @param [String] attr_value1 属性値2
@@ -1326,6 +1344,7 @@ module Meteor
       #  @param [String] attr_value2 属性値2
       #  @return [Meteor::Element] 要素
       # @overload def element(attr_name1,attr_value1,attr_name2,attr_value2)
+      #  属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [String] attr_name1 属性名1
       #  @param [String] attr_value1 属性値2
       #  @param [String] attr_name2 属性名2
@@ -1420,7 +1439,6 @@ module Meteor
 
       #
       # 要素名で検索し、要素を取得する
-      #
       # @param [String] elm_name 要素名
       # @return [Meteor::Element] 要素
       #
@@ -1517,12 +1535,11 @@ module Meteor
       private :element_without_1
 
       #
-      # 要素名と属性で検索し、要素を取得する
+      # 要素名と属性(属性名="属性値")で検索し、要素を取得する
       # @param [String] elm_name  要素名
       # @param [String] attrName 属性名
       # @param [String] attr_value 属性値
       # @return [Meteor::Element] 要素
-      #
       def element_3(elm_name,attr_name,attr_value)
 
         @_elm_name = escape_regex(elm_name)
@@ -1727,8 +1744,7 @@ module Meteor
       private :element_2
 
       #
-      # 要素名と属性1・属性2で検索し、要素を取得する
-      # 
+      # 要素名と属性1・属性2(属性名="属性値")で検索し、要素を取得する
       # @param [String] elm_name  要素の名前
       # @param [String] attr_name1 属性名1
       # @param [String] attr_value1 属性値2
@@ -2441,10 +2457,12 @@ module Meteor
       #
       # CX(コメント拡張)タグを取得する
       # @overload def cxtag(elm_name,id)
+      #  要素名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
       #  @param [String] elm_name 要素名
       #  @param [String] id ID属性値
       #  @return [Meteor::Element] 要素
       # @overload def cxtag(id)
+      #  ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
       #  @param [String] id ID属性値
       #  @return [Meteor::Element] 要素
       #
@@ -2466,7 +2484,7 @@ module Meteor
       end
 
       #
-      # 要素名とID属性で検索し、CX(コメント拡張)タグを取得する
+      # 要素名とID属性(id="ID属性値")で検索し、CX(コメント拡張)タグを取得する
       # @param [String] elm_name 要素名
       # @param [String] id ID属性値
       # @return [Meteor::Element] 要素
@@ -2509,7 +2527,7 @@ module Meteor
       private :cxtag_2
 
       #
-      # ID属性で検索し、CX(コメント拡張)タグを取得する
+      # ID属性(id="ID属性値")で検索し、CX(コメント拡張)タグを取得する
       # @param [String] id ID属性値
       # @return [Meteor::Element] 要素
       #
@@ -2701,6 +2719,7 @@ module Meteor
       #  @param [Meteor::Element] elm 要素
       #  @param [Meteor::Hook::Hooker] hook Hookerオブジェクト
       # @overload def execute(elm,loop,list)
+      #  Looperクラスの処理を実行する
       #  @param [Meteor::Element] elm 要素
       #  @param [Meteor::Element::Looper] loop Looperオブジェクト
       #  @param [Array] 配列
@@ -3594,7 +3613,6 @@ module Meteor
 
         #
         # 要素の属性マップを取得する
-        #
         # @param [Meteor::Element] elm 要素
         # @return [Meteor::AttributeMap] 属性マップ
         #
@@ -4099,7 +4117,6 @@ module Meteor
 
         #
         # 属性マップを取得する
-        #
         # @param [Meteor::Element] elm 要素
         # @return [Meteor::AttributeMap] 属性マップ
         #

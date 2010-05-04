@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.4.5
+# @version 0.9.4.7
 #
 
 module Meteor
 
-  VERSION = "0.9.4.5"
+  VERSION = "0.9.4.7"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -271,6 +271,15 @@ module Meteor
           @parser.element(*args)
       end
 
+    end
+
+    #
+    # 子要素を取得する
+    # @param selector [String] セレクタ
+    # @return [Meteor::Element] 要素
+    #
+    def find(selector)
+      @parser.find(selector)
     end
 
     #
@@ -1056,6 +1065,23 @@ module Meteor
       #TAG_SEARCH_NC_4_7 = "\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
       #TAG_SEARCH_NC_4_7_2 = "\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
 
+      #find
+      PATTERN_FIND_1 = '^([^,\\[\\]#\\.]+)$'
+      PATTERN_FIND_2_1 = '^#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_2_2 = '^\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_2_3 = '^\\[([^\\[\\],]+)=([^\\[\\],]+)\\]$'
+      PATTERN_FIND_3 = '^([^\\.,\\[\\]#][^,\\[\\]#]*)\\[([^,\\[\\]]+)=([^,\\[\\]]+)\\]$'
+      PATTERN_FIND_4 = '^\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
+      PATTERN_FIND_5 = '^([^\\.,\\[\\]#][^,\\[\\]#]*)\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
+
+      @@pattern_find_1 = Regexp.new(PATTERN_FIND_1)
+      @@pattern_find_2_1 = Regexp.new(PATTERN_FIND_2_1)
+      @@pattern_find_2_2 = Regexp.new(PATTERN_FIND_2_2)      
+      @@pattern_find_2_3 = Regexp.new(PATTERN_FIND_2_3)
+      @@pattern_find_3 = Regexp.new(PATTERN_FIND_3)
+      @@pattern_find_4 = Regexp.new(PATTERN_FIND_4)
+      @@pattern_find_5 = Regexp.new(PATTERN_FIND_5)
+
       #setAttribute
       SET_ATTR_1 = '="[^"]*"'
       #getAttributeValue
@@ -1342,6 +1368,53 @@ module Meteor
           else
             @elm_ = nil
             raise ArgumentError
+        end
+      end
+
+      #
+      # 要素を取得する
+      # @param [String] selector セレクタ
+      # @return [Meteor::Element] 要素
+      #
+      def find(selector)
+        #puts selector
+        if @res = @@pattern_find_1.match(selector) then
+          element_1(@res[1])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        elsif @res = @@pattern_find_2_1.match(selector) then
+          element_2('id',@res[1])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        elsif @res = @@pattern_find_3.match(selector) then
+          element_3(@res[1],@res[2],@res[3])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        elsif @res = @@pattern_find_5.match(selector) then
+          element_5(@res[1],@res[2],@res[3],@res[4],@res[5])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        elsif @res = @@pattern_find_2_3.match(selector) then
+          element_2(@res[1],@res[2])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        elsif @res = @@pattern_find_4.match(selector) then
+          element_4(@res[1],@res[2],@res[3],@res[4])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        elsif @res = @@pattern_find_2_2.match(selector) then
+          element_2('class',@res[1])
+          if @elm_ then
+            @element_cache.store(@elm_.object_id,@elm_)
+          end
+        else
+          nil
         end
       end
 
@@ -1690,7 +1763,7 @@ module Meteor
         #@pattern_cc_2 << @_attr_value2 << TAG_SEARCH_2_6 << @_attr_name1 << ATTR_EQ
         #@pattern_cc_2 << @_attr_value1 << TAG_SEARCH_2_2_2 << @_elm_name
         #@pattern_cc_2 << TAG_SEARCH_1_2 << @_elm_name << TAG_CLOSE
-        @pattern_cc_1 = "<#{@_elm_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_elm_name}[^<>]*>)).)*)<\\/#{@_elm_name}>"
+        @pattern_cc_2 = "<#{@_elm_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_elm_name}[^<>]*>)).)*)<\\/#{@_elm_name}>"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
         #内容あり要素検索
@@ -1752,7 +1825,7 @@ module Meteor
           #@pattern_cc << @_attr_value2 << TAG_SEARCH_NC_2_6 << @_attr_name1 << ATTR_EQ
           #@pattern_cc << @_attr_value1 << TAG_SEARCH_NC_2_2_2 << @_elm_name
           #@pattern_cc << TAG_SEARCH_NC_1_2 << @_elm_name << TAG_CLOSE
-          @pattern_cc = "<#{@_elm_name}\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*>((?!(#{@_elm_name}[^<>]*>)).)*<\\/#{@_elm_name}>"
+          #@pattern_cc = "<#{@_elm_name}\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*>((?!(#{@_elm_name}[^<>]*>)).)*<\\/#{@_elm_name}>"
 
           @elm_.pattern = @pattern_cc
           #
@@ -1796,7 +1869,7 @@ module Meteor
         #@pattern_cc_1_1 << @_attr_value2 << TAG_SEARCH_2_7 << @_attr_name2 << ATTR_EQ
         #@pattern_cc_1_1 << @_attr_value2 << TAG_SEARCH_2_6 << @_attr_name1 << ATTR_EQ
         #@pattern_cc_1_1 << @_attr_value1 << TAG_SEARCH_4_7_2
-        @pattern_cc_1 = "<#{@_elm_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+        @pattern_cc_1_1 = "<#{@_elm_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
 
         @pattern_cc_1_2 = '' << TAG_SEARCH_4_2 << @_elm_name << TAG_SEARCH_4_3
 
@@ -1883,7 +1956,7 @@ module Meteor
         #@pattern_cc << @_attr_value1 << TAG_SEARCH_2_4_2_3
         @pattern_cc = "<([^<>\"]*)\\s([^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\""
 
-        @pattern = PatternCache.get(@pattern_cc)
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
         @res = @pattern.match(@root.document)
 
@@ -3417,7 +3490,7 @@ module Meteor
           #@pattern_cc << TAG_SEARCH_2_4_3_2
           @pattern_cc = "<([^<>\"]*)\\s([^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>"
 
-          @pattern = PatternCache.get(@pattern_cc)
+          @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
           @res = @pattern.match(@root.document)
 

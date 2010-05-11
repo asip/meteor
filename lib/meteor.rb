@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.5.0
+# @version 0.9.5.1
 #
 
 module Meteor
 
-  VERSION = "0.9.5.0"
+  VERSION = "0.9.5.1"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -973,6 +973,82 @@ module Meteor
     end
   end
 
+  module Exception
+
+    #
+    # 要素検索例外
+    #
+    class NoSuchElementException
+
+      attr_accessor :message #[String] メッセージ
+
+      #
+      # イニシャライザ
+      # @overload def initialize(elm_name)
+      #  @param [String] elm_name 要素名
+      # @overload def initialize(attr_name,attr_value)
+      #  @param [String] attr_name 属性名
+      #  @param [String] attr_value 属性値
+      # @overload def initialize(elm_name,attr_name,attr_value)
+      #  @param [String] elm_name 要素名
+      #  @param [String] attr_name 属性名
+      #  @param [String] attr_value 属性値
+      # @overload def initialize(attr_name1,attr_value1,attr_name2,attr_value2)
+      #  @param [String] attr_name1 属性名１
+      #  @param [String] attr_value1 属性値１
+      #  @param [String] attr_name2 属性名２
+      #  @param [String] attr_value2 属性値２
+      # @overload def initialize(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+      #  @param [String] elm_name 要素名
+      #  @param [String] attr_name1 属性名１
+      #  @param [String] attr_value1 属性値１
+      #  @param [String] attr_name2 属性名２
+      #  @param [String] attr_value2 属性値２
+      #
+      def initialize(*args)
+        case args.length
+          when ONE
+            initialize_1(args[0])
+          when TWO
+            initialize_2(args[0],args[1])
+          when THREE
+            initialize_3(args[0],args[1],args[2])
+          when FOUR
+            initialize_4(args[0],args[1],args[2],args[3])
+          when FIVE
+            initialize_5(args[0],args[1],args[2],args[3],args[4])
+        end
+      end
+
+      def initialize_1(elm_name)
+        self.message="element not found : #{elm_name}"
+      end
+      private :initialize_1
+
+      def initialize_2(attr_name,attr_value)
+        self.message="element not found : [#{attr_name}=#{attr_value}]"
+      end
+      private :initialize_2
+
+      def initialize_3(elm_name,attr_name,attr_value)
+        self.message="element not found : #{elm_name}[#{attr_name}=#{attr_value}]"
+      end
+      private :initialize_3
+
+      def initialize_4(attr_name1,attr_value1,attr_name2,attr_value2)
+        self.message="element not found : [#{attr_name1}=#{attr_value1}][#{attr_name2}=#{attr_value2}]"
+      end
+      private :initialize_4
+
+      def initialize_5(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+        self.message="element not found : #{elm_name}[#{attr_name1}=#{attr_value1}][#{attr_name2}=#{attr_value2}]"
+      end
+      private :initialize_5
+
+    end
+
+  end
+
   module Core
 
     #
@@ -992,19 +1068,19 @@ module Meteor
       ATTR_EQ = '="'
       #element
       #TAG_SEARCH_1_1 = "([^<>]*)>(((?!(<\\/"
-      TAG_SEARCH_1_1 = '(\\s?[^<>]*)>(((?!('
+      TAG_SEARCH_1_1 = '(|\\s[^<>]*)>(((?!('
       #TAG_SEARCH_1_2 = ")).)*)<\\/";
       TAG_SEARCH_1_2 = '[^<>]*>)).)*)<\\/'
-      TAG_SEARCH_1_3 = '(\\s?[^<>]*)\\/>'
+      TAG_SEARCH_1_3 = '(|\\s[^<>]*)\\/>'
       #TAG_SEARCH_1_4 = "([^<>\\/]*)>"
       TAG_SEARCH_1_4 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_1_4_2 = '(\\s[^<>]*)>'
+      TAG_SEARCH_1_4_2 = '(|\\s[^<>]*)>'
 
-      TAG_SEARCH_NC_1_1 = '\\s?[^<>]*>((?!('
+      TAG_SEARCH_NC_1_1 = '(?:|\\s[^<>]*)>((?!('
       TAG_SEARCH_NC_1_2 = '[^<>]*>)).)*<\\/'
-      TAG_SEARCH_NC_1_3 = '\\s?[^<>]*\\/>'
+      TAG_SEARCH_NC_1_3 = '(?:|\\s[^<>]*)\\/>'
       TAG_SEARCH_NC_1_4 = '(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_NC_1_4_2 = '\\s[^<>]*>'
+      TAG_SEARCH_NC_1_4_2 = '(?:|\\s[^<>]*)>'
 
       #TAG_SEARCH_2_1 = "\\s([^<>]*"
       TAG_SEARCH_2_1 = '(\\s[^<>]*'
@@ -1456,7 +1532,7 @@ module Meteor
         #内容あり要素検索用パターン
         #@pattern_cc_2 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_1 << elm_name
         #@pattern_cc_2 << TAG_SEARCH_1_2 << @_elm_name << TAG_CLOSE
-        @pattern_cc_2 = "<#{@_elm_name}(\\s?[^<>]*)>(((?!(#{@_elm_name}[^<>]*>)).)*)<\\/#{@_elm_name}>"
+        @pattern_cc_2 = "<#{@_elm_name}((?:|\\s[^<>]*))>(((?!(#{@_elm_name}[^<>]*>)).)*)<\\/#{@_elm_name}>"
 
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
@@ -1477,13 +1553,16 @@ module Meteor
           @res = @res1
           @pattern_cc = @pattern_cc_1
           element_without_1(elm_name)
-        elsif !@res1 && @res2 then
+        #elsif !@res1 && @res2 then
+        elsif @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
           element_with_1(elm_name)
-        elsif !@res1 && !@res2 then
+        #elsif !@res1 && !@res2 then
+        else
+          #raise Meteor::Exception::NoSuchElementException.new(elm_name)
+          puts Meteor::Exception::NoSuchElementException.new(elm_name).message
           @elm_ = nil
-          #raise NoSuchElementException.new(elm_name);
         end
 
         @elm_
@@ -1500,9 +1579,9 @@ module Meteor
         #全体
         @elm_.document = @res[0]
 
-        #@pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_1_1 << elm_name
+        #@pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_1_1 << @_elm_name
         #@pattern_cc << TAG_SEARCH_NC_1_2 << @_elm_name << TAG_CLOSE
-        @pattern_cc = "<#{@_elm_name}\\s?[^<>]*>((?!(#{@_elm_name}[^<>]*>)).)*<\\/#{@_elm_name}>"
+        @pattern_cc = "<#{@_elm_name}(?:|\\s[^<>]*)>((?!(#{@_elm_name}[^<>]*>)).)*<\\/#{@_elm_name}>"
 
         #内容あり要素検索用パターン
         @elm_.pattern = @pattern_cc
@@ -1584,13 +1663,16 @@ module Meteor
           @res = @res1
           @pattern_cc = @pattern_cc_1
           element_without_3(elm_name)
-        elsif !@res1 && @res2 then
+        #elsif !@res1 && @res2 then
+        elsif @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
           element_with_3_1(elm_name)
-        elsif !@res1 && !@res2 then
+        #elsif !@res1 && !@res2 then
+        else
+          #raise Meteor::Exception::NoSuchElementException.new(elm_name,attr_name,attr_value);
+          puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name,attr_value).message
           @elm_ = nil
-          #raise NoSuchElementException.new(elm_name,attr_name,attr_value);
         end
 
         #if @elm_ then
@@ -1668,10 +1750,10 @@ module Meteor
         #内容あり要素検索
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
 
-        @sbuf = '';
+        @sbuf = ''
 
         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
+        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
 
         @cnt = 0
 
@@ -1680,7 +1762,6 @@ module Meteor
         @pattern_cc = @sbuf
 
         if @sbuf.length == ZERO || @cnt != ZERO then
-          #  raise NoSuchElementException.new(elm_name,attr_name,attr_value);
           return nil;
         end
 
@@ -1701,7 +1782,7 @@ module Meteor
         #要素
         @elm_ = Element.new(elm_name)
         #属性
-        @elm_.attributes = @res[1];
+        @elm_.attributes = @res[1]
         #全体
         @elm_.document = @res[0]
         #空要素検索用パターン
@@ -1736,6 +1817,7 @@ module Meteor
         if @res then
           element_3(@res[1], attr_name, attr_value)
         else
+          puts Meteor::Exception::NoSuchElementException.new(attr_name,attr_value).message
           @elm_ = nil
         end
 
@@ -1786,7 +1868,7 @@ module Meteor
         @res2 = @pattern.match(@root.document)
 
         if !@res2 then
-          @res2 = element_with_5_2(elm_name)
+          @res2 = element_with_5_2
           @pattern_cc_2 = @pattern_cc
         end
 
@@ -1804,13 +1886,16 @@ module Meteor
           @res = @res1
           @pattern_cc = @pattern_cc_1
           element_without_5(elm_name)
-        elsif !@res1 && @res2 then
+        #elsif !@res1 && @res2 then
+        elsif @res2 then
           @res = @res2
           @pattern_cc = @pattern_cc_2
           element_with_5_1(elm_name)
-        elsif !@res1 && !@res2 then
+        #elsif !@res1 && !@res2 then
+        else
+          #raise Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2);
+          puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2).message
           @elm_ = nil
-          #raise NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2);
         end
 
         #if @elm_ then
@@ -1869,7 +1954,7 @@ module Meteor
       end
       private :element_with_5_1
 
-      def element_with_5_2(elm_name)
+      def element_with_5_2
 
         #@pattern_cc_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1_2 << @_attr_name1 << ATTR_EQ
         #@pattern_cc_1 << @_attr_value1 << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ
@@ -1878,7 +1963,7 @@ module Meteor
         #@pattern_cc_1 << @_attr_value1 << TAG_SEARCH_2_4_2_2
         @pattern_cc_1 = "<#{@_elm_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))"
 
-        @pattern_cc_1b = '' << TAG_OPEN << elm_name << TAG_SEARCH_1_4
+        @pattern_cc_1b = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_4
 
         #@pattern_cc_1_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1_2 << @_attr_name1 << ATTR_EQ
         #@pattern_cc_1_1 << @_attr_value1 << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ
@@ -1901,7 +1986,7 @@ module Meteor
         @sbuf = ''
 
         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b);
+        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
 
         @cnt = 0
 
@@ -1910,7 +1995,6 @@ module Meteor
         @pattern_cc = @sbuf
 
         if @sbuf.length == ZERO || @cnt != ZERO then
-          #  raise NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2);
           return nil
         end
 
@@ -1980,6 +2064,7 @@ module Meteor
           #@elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2);
           element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2);
         else
+          puts Meteor::Exception::NoSuchElementException.new(attr_name1,attr_value1,attr_name2,attr_value2).message
           @elm_ = nil
         end
 
@@ -2491,11 +2576,14 @@ module Meteor
       #
       def cxtag_2(elm_name,id)
 
+        @_elm_name = escape_regex(elm_name)
+        @_id = escape_regex(id)
+
         #CXタグ検索用パターン
-        #@pattern_cc = '' << SEARCH_CX_1 << elm_name << SEARCH_CX_2
-        #@pattern_cc << id << SEARCH_CX_3 << elm_name << SEARCH_CX_4 << elm_name << SEARCH_CX_5
+        #@pattern_cc = '' << SEARCH_CX_1 << @_elm_name << SEARCH_CX_2
+        #@pattern_cc << id << SEARCH_CX_3 << @_elm_name << SEARCH_CX_4 << @_elm_name << SEARCH_CX_5
         #@pattern_cc = "<!--\\s@#{elm_name}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{elm_name})).)*)<!--\\s\\/@#{elm_name}\\s-->"
-        @pattern_cc = "<!--\\s@#{elm_name}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s/@#{elm_name})).)*)<!--\\s/@#{elm_name}\\s-->"
+        @pattern_cc = "<!--\\s@#{@_elm_name}\\s([^<>]*id=\"#{@_id}\"[^<>]*)-->(((?!(<!--\\s/@#{@_elm_name})).)*)<!--\\s/@#{@_elm_name}\\s-->"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         #CXタグ検索
@@ -2533,7 +2621,9 @@ module Meteor
       #
       def cxtag_1(id)
 
-        @pattern_cc = '' << SEARCH_CX_6 << id << DOUBLE_QUATATION
+        @_id = escape_regex(id)
+
+        @pattern_cc = '' << SEARCH_CX_6 << @_id << DOUBLE_QUATATION
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
@@ -3181,7 +3271,7 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           @root.hook_document = String.new(ps.root_element.hook_document)
-          @root.content_type = String.new(ps.root_element.content_type);
+          @root.content_type = String.new(ps.root_element.content_type)
           @root.kaigyo_code = ps.root_element.kaigyo_code
         end
         private :initialize_1
@@ -3284,13 +3374,14 @@ module Meteor
             if @res then
               element_without_1(elm_name)
             else
+              puts Meteor::Exception::NoSuchElementException.new(elm_name).message
               @elm_ = nil
             end
           else
             #内容あり要素検索用パターン
             #@pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_1 << elm_name
             #@pattern_cc << TAG_SEARCH_1_2 << @_elm_name << TAG_CLOSE
-            @pattern_cc = "<#{elm_name}(\\s?[^<>]*)>(((?!(#{elm_name}[^<>]*>)).)*)<\\/#{elm_name}>"
+            @pattern_cc = "<#{elm_name}(|\\s[^<>]*)>(((?!(#{elm_name}[^<>]*>)).)*)<\\/#{elm_name}>"
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             #内容あり要素検索
@@ -3299,6 +3390,7 @@ module Meteor
             if @res then
               element_with_1(elm_name)
             else
+              puts Meteor::Exception::NoSuchElementException.new(elm_name).message
               @elm_ = nil
             end
           end
@@ -3346,6 +3438,7 @@ module Meteor
             if @res then
               element_without_3(elm_name)
             else
+              puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name,attr_value).message
               @elm_ = nil
             end
           else
@@ -3360,12 +3453,13 @@ module Meteor
             @res = @pattern.match(@root.document)
 
             if !@res && !is_match(@@match_tag_sng,elm_name) then
-              @res = element_with_3_2(elm_name)
+              @res = element_with_3_2
             end
 
             if @res then
               element_with_3_1(elm_name)
             else
+              puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name,attr_value).message
               @elm_ = nil
             end
           end
@@ -3404,6 +3498,7 @@ module Meteor
           if @res then
             element_3(@res[1],attr_name,attr_value)
           else
+            puts Meteor::Exception::NoSuchElementException.new(attr_name,attr_value).message
             @elm_ = nil
           end
 
@@ -3445,6 +3540,7 @@ module Meteor
             if @res then
               element_without_5(elm_name)
             else
+              puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2).message
               @elm_ = nil
             end
           else
@@ -3462,12 +3558,13 @@ module Meteor
             @res = @pattern.match(@root.document)
 
             if !@res && !is_match(@@match_tag_sng,elm_name) then
-              @res = element_with_5_2(elm_name)
+              @res = element_with_5_2
             end
 
             if @res then
               element_with_5_1(elm_name)
             else
+              puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2).message
               @elm_ = nil
             end
           end
@@ -3516,6 +3613,7 @@ module Meteor
           if @res then
             element_5(@res[1],attr_name1,attr_value1,attr_name2,attr_value2)
           else
+            puts Meteor::Exception::NoSuchElementException.new(attr_name1,attr_value1,attr_name2,attr_value2).message
             @elm_ = nil
           end
 

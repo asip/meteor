@@ -78,7 +78,6 @@ module Meteor
           @cx = args[0].cx
           @mono = args[0].mono
           @parser = args[1]
-          #@arguments = AttributeMap.new(args[0].arguments)
           #@usable = false
           @origin = args[0]
           args[0].copy = self
@@ -102,7 +101,6 @@ module Meteor
       #@cx = false
       #@mono = false
       #@parent = false
-      #@arguments = AttributeMap.new
       @usable = true
     end
     private :initialize_s
@@ -120,7 +118,6 @@ module Meteor
       @empty = elm.empty
       @cx = elm.cx
       @mono = elm.mono
-      #@arguments = AttributeMap.new(elm.arguments)
       @origin = elm
       @parser = elm.parser
       @usable = true
@@ -136,9 +133,6 @@ module Meteor
     #
     def self.new!(*args)
       case args.length
-        #when ONE
-        #  #self.new_1!(args[0])
-        #  args[0].clone
         when TWO
           @obj = args[1].root_element.element
           if @obj then
@@ -146,13 +140,14 @@ module Meteor
             @obj.mixed_content = String.new(args[0].mixed_content)
             #@obj.pattern = String.new(args[0].pattern)
             @obj.document = String.new(args[0].document)
-            #@obj.arguments = AttributeMap.new(args[0].arguments)
             @obj
           else
             @obj = self.new(args[0],args[1])
             args[1].root_element.element = @obj
             @obj
           end
+        else
+          raise ArgumentError
       end
     end
 
@@ -166,7 +161,6 @@ module Meteor
         obj.mixed_content = String.new(self.mixed_content)
         #obj.pattern = String.new(self.pattern)
         obj.document = String.new(self.document)
-        #obj.arguments = AttributeMap.new(self.arguments)
         obj.usable = true
         obj
       else
@@ -186,7 +180,6 @@ module Meteor
     attr_accessor :mono #[true,false] 子要素存在フラグ
     attr_accessor :parser #[Meteor::Parser] パーサ
     attr_accessor :type_value #[String] タイプ属性
-    #attr_accessor :arguments #パターン変更用属性マップ
     attr_accessor :usable #[true,false] 有効・無効フラグ
     attr_accessor :origin #[Meteor::Element] 原本ポインタ
     attr_accessor :copy #[Meteor::Element] 複製ポインタ
@@ -1067,12 +1060,9 @@ module Meteor
       TAG_CLOSE3 = '/>'
       ATTR_EQ = '="'
       #element
-      #TAG_SEARCH_1_1 = "([^<>]*)>(((?!(<\\/"
       TAG_SEARCH_1_1 = '(|\\s[^<>]*)>(((?!('
-      #TAG_SEARCH_1_2 = ")).)*)<\\/";
       TAG_SEARCH_1_2 = '[^<>]*>)).)*)<\\/'
       TAG_SEARCH_1_3 = '(|\\s[^<>]*)\\/>'
-      #TAG_SEARCH_1_4 = "([^<>\\/]*)>"
       TAG_SEARCH_1_4 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       TAG_SEARCH_1_4_2 = '(|\\s[^<>]*)>'
 
@@ -1082,18 +1072,14 @@ module Meteor
       TAG_SEARCH_NC_1_4 = '(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       TAG_SEARCH_NC_1_4_2 = '(?:|\\s[^<>]*)>'
 
-      #TAG_SEARCH_2_1 = "\\s([^<>]*"
       TAG_SEARCH_2_1 = '(\\s[^<>]*'
       TAG_SEARCH_2_1_2 = '(\\s[^<>]*(?:'
-      #TAG_SEARCH_2_2 = "\"[^<>]*)>(((?!(<\\/"
       TAG_SEARCH_2_2 = '"[^<>]*)>(((?!('
       TAG_SEARCH_2_2_2 = '")[^<>]*)>(((?!('
       TAG_SEARCH_2_3 = '"[^<>]*)'
       TAG_SEARCH_2_3_2 = '"[^<>]*)\\/>'
       TAG_SEARCH_2_3_2_2 = '")[^<>]*)\\/>'
-      #TAG_SEARCH_2_4 = "\"[^<>\\/]*>"
       TAG_SEARCH_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      #TAG_SEARCH_2_4_2 = "\"[^<>\\/]*)>"
       TAG_SEARCH_2_4_2 = '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
       TAG_SEARCH_2_4_2_2 = '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'
       TAG_SEARCH_2_4_2_3 = '"'
@@ -1131,12 +1117,10 @@ module Meteor
 
       TAG_SEARCH_4_1 = '(\\s[^<>\\/]*)>('
       TAG_SEARCH_4_2 = '.*?<'
-      #TAG_SEARCH_4_3 = "\\s[^<>\\/]*>"
       TAG_SEARCH_4_3 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       TAG_SEARCH_4_4 = '<\\/'
       TAG_SEARCH_4_5 = '.*?<\/'
       TAG_SEARCH_4_6 = '.*?)<\/'
-      #TAG_SEARCH_4_7 = '\"[^<>\\/]*)>(''
       TAG_SEARCH_4_7 = '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
       TAG_SEARCH_4_7_2 = '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
 
@@ -1675,11 +1659,6 @@ module Meteor
           @elm_ = nil
         end
 
-        #if @elm_ then
-        #  @elm_.arguments.store(attr_name, attr_value)
-        #  @elm_.arguments.recordable = true
-        #end
-
         @elm_
       end
       private :element_3
@@ -1897,12 +1876,6 @@ module Meteor
           puts Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2).message
           @elm_ = nil
         end
-
-        #if @elm_ then
-        #  @elm_.arguments.store(attr_name1, attr_value1)
-        #  @elm_.arguments.store(attr_name2, attr_value2)
-        #  @elm_.arguments.recordable = true
-        #end
 
         @elm_
       end
@@ -2279,12 +2252,6 @@ module Meteor
           attr_value = escape(attr_value.to_s)
           #属性群の更新
           edit_attrs_(elm,attr_name,attr_value)
-
-          #if !elm.origin then
-          #  if elm.arguments.map.include?(attr_name) then
-          #    elm.arguments.store(attr_name, attr_value)
-          #  end
-          #end
         end
         elm
       end
@@ -2505,15 +2472,8 @@ module Meteor
       #
       def remove_attr(elm,attr_name)
         if !elm.cx then
-
           elm.document_sync = true
           remove_attrs_(elm,attr_name)
-
-          #if !elm.origin then
-          #  if elm.arguments.map.include?(attr_name) then
-          #    elm.arguments.delete(attr_name)
-          #  end
-          #end
         end
 
         elm
@@ -2533,8 +2493,6 @@ module Meteor
       # @param [Meteor::Element] elm 要素
       #
       def remove_element(elm)
-        #replace(elm,EMPTY)
-        #elm.usable = false
         elm.removed = true
         nil
       end
@@ -2846,44 +2804,6 @@ module Meteor
       end
       private :escape_regex
 
-      ##
-      ## @param [String] content 入力文字列
-      ## @return [String] 出力文字列
-      ##
-      #def escape(content)
-      #  content
-      #end
-      #private :escape
-
-      ##
-      ## @param [String] content 入力文字列
-      ## @param [String] elm 要素
-      ## @return [String] 出力文字列
-      ##
-      #def escape_content(content,elm)
-      #  content
-      #end
-      #private :escape_content
-
-      ##
-      ## @param [String] content 入力文字列
-      ## @return [String] 出力文字列
-      ##
-      #def unescape(content)
-      #  content
-      #end
-      #private :unescape
-
-      ##
-      ## @param [String] content 入力文字列
-      ## @param [String] elm 要素
-      ## @return [String] 出力文字列
-      ##
-      #def unescape_content(content,elm)
-      #  content
-      #end
-      #private :unescape_content
-
       def is_match(regex,str)
         if regex.kind_of?(Regexp) then
           is_match_r(regex,str)
@@ -2947,27 +2867,6 @@ module Meteor
         end
       end
       private :create
-
-      #def edit_pattern_(elm)
-      #
-      #  elm.arguments.map.each do |name, attr|
-      #    if attr.changed then
-      #      @_attr_value = escape_regex(attr.value)
-      #      ##replace2regex(@_attr_value)
-      #      #@pattern_cc = '' << name << SET_ATTR_1
-      #      @pattern_cc = "#{attr.name}=\"[^\"]*\""
-      #      @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-      #      #elm.pattern.gsub!(@pattern,'' << name << ATTR_EQ << @_attr_value << DOUBLE_QUATATION)
-      #      elm.pattern.sub!(@pattern, "#{attr.name}=\"#{@_attr_value}\"")
-      #    elsif attr.removed then
-      #      @pattern_cc = '' << name << SET_ATTR_1
-      #      #@pattern_cc = "#{attr_name}=\"[^\"]*\""
-      #      @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-      #      elm.pattern.gsub!(@pattern, EMPTY)
-      #    end
-      #  end
-      #end
-      #private :edit_pattern_
 
     end
 
@@ -3464,11 +3363,6 @@ module Meteor
             end
           end
 
-          #if @elm_ then
-          #  @elm_.arguments.store(attr_name, attr_value)
-          #  @elm_.arguments.recordable = true
-          #end
-
           @elm_
         end
         private :element_3
@@ -3569,12 +3463,6 @@ module Meteor
             end
           end
 
-          #if @elm_ then
-          #  @elm_.arguments.store(attr_name1, attr_value1)
-          #  @elm_.arguments.store(attr_name2, attr_value2)
-          #  @elm_.arguments.recordable = true
-          #end
-
           @elm_
         end
         private :element_5
@@ -3624,19 +3512,14 @@ module Meteor
         def edit_attrs_(elm,attr_name,attr_value)
           if is_match(SELECTED, attr_name) && is_match(OPTION,elm.name) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_selected_m,@@pattern_selected_r)
-            #edit_attributes_5(elm,attr_name,attr_value,SELECTED_M,@@pattern_selected_r)
           elsif is_match(MULTIPLE, attr_name) && is_match(SELECT,elm.name)
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_multiple_m,@@pattern_multiple_r)
-            #edit_attributes_5(elm,attr_name,attr_value,MULTIPLE_M,@@pattern_multiple_r)
           elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_disabled_m,@@pattern_disabled_r)
-            #edit_attributes_5(elm,attr_name,attr_value,DISABLED_M,@@pattern_disabled_r)
           elsif is_match(CHECKED, attr_name) && is_match(INPUT,elm.name) && is_match(RADIO, get_type(elm)) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_checked_m,@@pattern_checked_r)
-            #edit_attributes_5(elm,attr_name,attr_value,CHECKED_M,@@pattern_checked_r)
           elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA,elm.name) || (is_match(INPUT,elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
             edit_attrs_5(elm,attr_name,attr_value,@@pattern_readonly_m,@@pattern_readonly_r)
-            #edit_attributes_5(elm,attr_name,attr_value,READONLY_M,@@pattern_readonly_r)
           else
             super(elm,attr_name,attr_value)
           end
@@ -4703,8 +4586,8 @@ module Meteor
         end
         private :escape
 
-        def escape_content(content,elm)
-          escape(content)
+        def escape_content(*args)
+          escape(args[0])
         end
         private :escape_content
 
@@ -4732,8 +4615,8 @@ module Meteor
         end
         private :unescape
 
-        def unescape_content(content,elm)
-          unescape(content)
+        def unescape_content(*args)
+          unescape(args[0])
         end
         private :unescape_content
 

@@ -16,8 +16,9 @@ start_time = Time.new.to_f
 elm1 = ps.element('test','manbo','manbo')
 #elm1 = ps.element("manbo","manbo")
 #elm2 = ps.element("potato","id","aa","id2","bb")
-elm3 = ps.element("potato","id","aa")
-#elm4 = ps.element("potato2","id","aa","id2","bb")
+#elm3 = ps.element("potato","id","aa")
+#elm4 = ps.element("potato","id","aa","id2","bb")
+#elm4 = ps.element("potato","id2","bb")
 elm7 = ps.element("kobe")
 #elm8 = ps.element("manbo","mango")
 
@@ -32,12 +33,12 @@ elm7 = ps.element("kobe")
 #elm1["id2"]="cc"
 
 #ps.attr(elm8,"manbo","mangoo")
-##elm9.content("¥¥1")
-#elm9.content = "¥¥1"
+##elm9.content("\\1")
+#elm9.content = "\\1"
 
 #elm2.attr('id3','cc')
 #elm3.attr('id3','cc')
-elm3['id3'] = 'cc'
+#elm3['id3'] = 'cc'
 #elm4.attr('id3','cc')
 #elm9.attr('id3','cc')
 
@@ -68,7 +69,7 @@ elm_ = ps.element(elm7)
 
 10.times { |i|
   elm_["momo"]= i.to_s
-  elm_["eco"] = "縺医∪"
+  elm_["eco"] = "えま"
   elm_.content = i.to_s
   #elm_["content"] = i.to_s
   elm_.flush
@@ -93,7 +94,7 @@ puts ps.document
 puts '' + (end_time - start_time).to_s + ' sec'
 
 #start_time = Time.new.to_f
-#obj = eval("¥"#{elm3.name}¥"")
+#obj = eval("\"#{elm3.name}\"")
 #end_time = Time.new.to_f
 #puts '' + (end_time - start_time).to_s + ' sec'
 #puts obj

@@ -6,36 +6,28 @@ require 'meteor'
 #require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
-pf.parser(Meteor::Parser::HTML,'sample.html', 'UTF-8')
+pf.parser(Meteor::Parser::HTML5,'sample_5.html', 'UTF-8')
 
-ps = pf.parser('sample')
+ps = pf.parser('sample_5')
 
 start_time = Time.new.to_f
 
 elm_hello = ps.element('id','hello')
 #elm_hello.attr('color','red')
 elm_hello['color'] = 'red'
-
 #elm_hello.remove_attribute('color')
 
 elm_hello2 = ps.element('id','hello2')
 #elm_hello2.content('Hello,Tester')
 elm_hello2.content = 'Hello,Tester'
 
-#elm_hello3 = ps.cxtag('hello3')
-#elm_hello3.content = "Hello,Hello\ntt"
-#elm_hello3.content = "Hello,Hello"
-#puts elm_hello3.pattern
-#puts elm_hello3.mixed_content
-#puts elm_hello3.document
-#puts elm_hello3.content
-#puts elm_hello3.mixed_content
-
 elm_text1 = ps.element('id','text1')
 #elm_text1.attr('value','めも')
 elm_text1['value'] = 'めも'
-#ps.attr(elm_text1,'disabled',true)
+#elm_text1.attr('disabled',true)
 elm_text1['disabled'] = true
+#elm_text1.attr('required',true)
+elm_text1['required'] = true
 
 #elm_text1.remove_attr('disabled')
 #map = elm_text1.attr_map
@@ -45,12 +37,12 @@ elm_text1['disabled'] = true
 #}
 
 #elm_radio1 = ps.element('input','id','radio1','type','radio')
-##elm_radio1.attr('checked','true')
-#elm_radio1['checked'] = 'true'
+##elm_radio1.attr(,'checked','true')
+#elm_radio1['checked'] = true
 #puts elm_radio1.document
 
 #elm_select1 = ps.element('select','id','select1')
-##elm_select1 = ps.element('select')
+#elm_select1 = ps.element('select')
 ##elm_select1.attr('multiple','true')
 #elm_select1['multiple'] = true
 ##puts elm_select1.attr('multiple')
@@ -59,11 +51,11 @@ elm_text1['disabled'] = true
 #elm_option1 = ps.element('option','id','option1')
 ##elm_option1.attr('selected','true')
 #elm_option1['selected'] = true
-#ps.remove_attr(elm_option1,'selected')
 #elm_option1.remove_attr('selected')
 ##puts elm_option1.attr('selected')
 #puts elm_option1['selected']
-#puts ps.attr(elm_text1,'readonly')
+##puts elm_text1.attr('readonly')
+#puts elm_text1['readonly']
 
 #elm_select2 = ps.element('select','id','select2')
 #elm_select2['multiple'] = 'true'

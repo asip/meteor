@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.0
+# @version 0.9.6.1
 #
 
 module Meteor
 
-  VERSION = "0.9.6.0"
+  VERSION = "0.9.6.1"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 

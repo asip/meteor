@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--title", "meteor documentation", "--charset", "utf-8", "--opname", "index.html", "--line-numbers", "--main", "README", "--inline-source", "--exclude", "^(examples|extras)/"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{meteor}
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{A lightweight (X)HTML & XML parser}
   s.test_files = ["test/meteor_test.rb"]
 

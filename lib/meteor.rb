@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.1
+# @version 0.9.6.2
 #
 
 module Meteor
 
-  VERSION = "0.9.6.1"
+  VERSION = "0.9.6.2"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -3169,24 +3169,18 @@ module Meteor
           case args.length
             when ONE
               #get_1(args[0])
-              if !@@regex_cache[args[0].to_sym] then
-                #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+              if @@regex_cache[args[0].to_sym] then
+                @@regex_cache[args[0].to_sym]
+              else
                 @@regex_cache[args[0].to_sym] = Regexp.new(args[0], Regexp::MULTILINE)
-                #else
-                #  @@regex_cache[args[0].to_sym] = Regexp.new(args[0], Regexp::MULTILINE,E_UTF8)
-                #end
               end
-              @@regex_cache[args[0].to_sym]
             when TWO
               #get_2(args[0], args[1])
-              if !@@regex_cache[args[0].to_sym] then
-                #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+              if @@regex_cache[args[0].to_sym] then
+                @@regex_cache[args[0].to_sym]
+              else
                 @@regex_cache[args[0].to_sym] = Regexp.new(args[0], args[1])
-                #else
-                #  @@regex_cache[args[0].to_sym] = Regexp.new(args[0], args[1],E_UTF8)
-                #end
               end
-              @@regex_cache[args[0].to_sym]
             else
               raise ArgumentError
           end

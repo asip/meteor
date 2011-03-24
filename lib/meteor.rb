@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.2
+# @version 0.9.6.3
 #
 
 module Meteor
 
-  VERSION = "0.9.6.2"
+  VERSION = "0.9.6.3"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -298,26 +298,61 @@ module Meteor
       # @overload def child(elm_name,attrs)
       #  要素名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [String] elm_name  要素名
-      #  @param [Hash] attrs 属性群
+      #  @param [Hash] attrs 属性マップ
       #  @return [Meteor::Element] 要素
       # @overload def child(attrs)
       #  属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
-      #  @param [Hash] attrs 属性群
+      #  @param [Hash] attrs 属性マップ
+      #  @return [Meteor::Element] 要素
+      # @overload def child(elm_name,attr_name,attr_value)
+      #  要素名と属性(属性名="属性値")で要素を取得する
+      #  @param [String] elm_name  要素名
+      #  @param [String] attr_name 属性名
+      #  @param [String] attr_value 属性値
+      #  @return [Meteor::Element] 要素
+      # @overload def child(attr_name,attr_value)
+      #  属性(属性名="属性値")で要素を取得する
+      #  @param [String] attr_name 属性名
+      #  @param [String] attr_value 属性値
+      #  @return [Meteor::Element] 要素
+      # @overload def child(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+      #  要素名と属性１・属性２(属性名="属性値")で要素を取得する
+      #  @param [String] elm_name  要素の名前
+      #  @param [String] attr_name1 属性名1
+      #  @param [String] attr_value1 属性値2
+      #  @param [String] attr_name2 属性名2
+      #  @param [String] attr_value2 属性値2
+      #  @return [Meteor::Element] 要素
+      # @overload def child(attr_name1,attr_value1,attr_name2,attr_value2)
+      #  属性１・属性２(属性名="属性値")で要素を取得する
+      #  @param [String] attr_name1 属性名1
+      #  @param [String] attr_value1 属性値2
+      #  @param [String] attr_name2 属性名2
+      #  @param [String] attr_value2 属性値2
       #  @return [Meteor::Element] 要素
       # @overload def child(elm)
       #  要素を射影する
       #  @param [Meteor::Element] elm 要素
       #  @return [Meteor::Element] 要素
       #
-      def child(elm = nil, attrs = nil)
+      def child(elm = nil, attrs = nil,*args)
         #case args.length
         #when ZERO
         if !elm && !attrs
           @parser.element(self)
         else
-          @parser.element(elm, attrs)
+          @parser.element(elm, attrs,*args)
         end
       end
+      #def child(elm = nil, attrs = nil)
+      #  #case args.length
+      #  #when ZERO
+      #  if !elm && !attrs
+      #    @parser.element(self)
+      #  else
+      #    @parser.element(elm, attrs)
+      #  end
+      #end
     end
 
     #
@@ -362,6 +397,10 @@ module Meteor
       end
     else
       #
+      # @overload def attribute(attr)
+      #  要素の属性をセットする
+      #  @param [Hash] attr 属性
+      #  @return [Meteor::Element] 要素
       # @overload def attribute(attr_name,attr_value)
       #  要素の属性をセットする
       #  @param [String] attr_name  属性名
@@ -372,9 +411,12 @@ module Meteor
       #  @param [String] attr_name 属性名
       #  @return [String] 属性値
       #
-      def attr(attrs)
-        @parser.attr(self, attrs)
+      def attr(attrs,*args)
+        @parser.attr(self, attrs,*args)
       end
+      #def attr(attrs)
+      #  @parser.attr(self, attrs)
+      #end
     end
 
     #
@@ -1589,18 +1631,44 @@ module Meteor
         # @overload def element(elm_name,attrs)
         #  要素名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
         #  @param [String] elm_name  要素名
-        #  @param [Hash] attrs 属性群
+        #  @param [Hash] attrs 属性マップ
         #  @return [Meteor::Element] 要素
         # @overload def element(attrs)
         #  属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
-        #  @param [Hash] attrs 属性群
+        #  @param [Hash] attrs 属性マップ
+        #  @return [Meteor::Element] 要素
+        # @overload def element(elm_name,attr_name,attr_value)
+        #  要素名と属性(属性名="属性値")で要素を取得する
+        #  @param [String] elm_name  要素名
+        #  @param [String] attr_name 属性名
+        #  @param [String] attr_value 属性値
+        #  @return [Meteor::Element] 要素
+        # @overload def element(attr_name,attr_value)
+        #  属性(属性名="属性値")で要素を取得する
+        #  @param [String] attr_name 属性名
+        #  @param [String] attr_value 属性値
+        #  @return [Meteor::Element] 要素
+        # @overload def element(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+        #  要素名と属性１・属性２(属性名="属性値")で要素を取得する
+        #  @param [String] elm_name  要素の名前
+        #  @param [String] attr_name1 属性名1
+        #  @param [String] attr_value1 属性値2
+        #  @param [String] attr_name2 属性名2
+        #  @param [String] attr_value2 属性値2
+        #  @return [Meteor::Element] 要素
+        # @overload def element(attr_name1,attr_value1,attr_name2,attr_value2)
+        #  属性１・属性２(属性名="属性値")で要素を取得する
+        #  @param [String] attr_name1 属性名1
+        #  @param [String] attr_value1 属性値2
+        #  @param [String] attr_name2 属性名2
+        #  @param [String] attr_value2 属性値2
         #  @return [Meteor::Element] 要素
         # @overload def element(elm)
         #  要素を射影する
         #  @param [Meteor::Element] elm 要素
         #  @return [Meteor::Element] 要素
         #
-        def element(elm, attrs = nil)
+        def element(elm, attrs = nil,*args)
           if !attrs
             if elm.kind_of?(String)
               element_1(elm)
@@ -1641,11 +1709,83 @@ module Meteor
               @elm_ = nil
               raise ArgumentError
             end
+          elsif attrs.kind_of?(String)
+            case args.length
+              when ZERO
+                element_2(elm,attrs)
+                if @elm_ then
+                  @element_cache.store(@elm_.object_id, @elm_)
+                end
+              when ONE
+                element_3(elm, attrs, args[0])
+                if @elm_ then
+                  @element_cache.store(@elm_.object_id, @elm_)
+                end
+              when TWO
+                element_4(elm, attrs, args[0],args[1])
+                if @elm_ then
+                  @element_cache.store(@elm_.object_id, @elm_)
+                end
+              when THREE
+                element_5(elm, attrs, args[0],args[1],args[2])
+                if @elm_ then
+                  @element_cache.store(@elm_.object_id, @elm_)
+                end
+              else
+              @elm_ = nil
+              raise ArgumentError
+            end
           else
             @elm_ = nil
             raise ArgumentError
           end
         end
+        #def element(elm, attrs = nil)
+        #  if !attrs
+        #    if elm.kind_of?(String)
+        #      element_1(elm)
+        #      if @elm_ then
+        #        @element_cache.store(@elm_.object_id, @elm_)
+        #      end
+        #    elsif elm.kind_of?(Meteor::Element)
+        #      shadow(elm)
+        #    elsif elm.kind_of?(Hash)
+        #      if elm.size == ONE
+        #        element_2(elm.keys[0], elm.values[0])
+        #        if @elm_ then
+        #          @element_cache.store(@elm_.object_id, @elm_)
+        #        end
+        #      elsif elm.size == TWO
+        #        element_4(elm.keys[0], elm.values[0], elm.keys[1], elm.values[1])
+        #        if @elm_ then
+        #          @element_cache.store(@elm_.object_id, @elm_)
+        #        end
+        #      else
+        #        raise ArgumentError
+        #      end
+        #    else
+        #      raise ArgumentError
+        #    end
+        #  elsif attrs.kind_of?(Hash)
+        #    if attrs.size == ONE
+        #      element_3(elm, attrs.keys[0], attrs.values[0])
+        #      if @elm_ then
+        #        @element_cache.store(@elm_.object_id, @elm_)
+        #      end
+        #    elsif attrs.size == TWO
+        #      element_5(elm, attrs.keys[0], attrs.values[0], attrs.keys[1], attrs.values[1])
+        #      if @elm_ then
+        #        @element_cache.store(@elm_.object_id, @elm_)
+        #      end
+        #    else
+        #      @elm_ = nil
+        #      raise ArgumentError
+        #    end
+        #  else
+        #    @elm_ = nil
+        #    raise ArgumentError
+        #  end
+        #end
       end
 
       #
@@ -2464,15 +2604,28 @@ module Meteor
         #  @param [Meteor::Element] elm 要素
         #  @param [Hash] attr 属性
         #  @return [Meteor::Element] 要素
+        # @overload def attribute(elm,attr_name,attr_value)
+        #  要素の属性をセットする
+        #  @param [Meteor::Element] elm 要素
+        #  @param [String] attr_name  属性名
+        #  @param [String,true,false] attr_value 属性値
+        #  @return [Meteor::Element] 要素
         # @overload def attribute(elm,attr_name)
         #  要素の属性値を取得する
         #  @param [Meteor::Element] elm 要素
         #  @param [String] attr_name 属性名
         #  @return [String] 属性値
         #
-        def attr(elm, attrs)
+        def attr(elm, attrs,*args)
           if attrs.kind_of?(String)
-            get_attr_value(elm, attrs)
+            case args.length
+              when ZERO
+                get_attr_value(elm, attrs)
+              when ONE
+                elm.document_sync = true
+                set_attribute_3(elm, attrs,args[0])
+            end
+
           elsif attrs.kind_of?(Hash) && attrs.size == 1
             elm.document_sync = true
             set_attribute_3(elm, attrs.keys[0], attrs.values[0])
@@ -2480,6 +2633,16 @@ module Meteor
             raise ArgumentError
           end
         end
+        #def attr(elm, attrs)
+        #  if attrs.kind_of?(String)
+        #    get_attr_value(elm, attrs)
+        #  elsif attrs.kind_of?(Hash) && attrs.size == 1
+        #    elm.document_sync = true
+        #    set_attribute_3(elm, attrs.keys[0], attrs.values[0])
+        #  else
+        #    raise ArgumentError
+        #  end
+        #end
       end
 
       #

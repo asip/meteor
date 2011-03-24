@@ -3,7 +3,7 @@
 
 require 'rubygems'
 require 'meteor'
-#require '../lib/meteor'
+#require '../../lib/meteor'
 
 pf = Meteor::ParserFactory.new
 pf.parser(Meteor::Parser::HTML5,'sample_5.html', 'UTF-8')

@@ -3,7 +3,7 @@
 
 require 'rubygems'
 require 'meteor'
-#require '../lib/meteor'
+#require '../../lib/meteor'
 
 pf = Meteor::ParserFactory.new
 pf.parser(Meteor::Parser::XHTML,"sample_x.html", "UTF-8")
@@ -39,7 +39,7 @@ elm_hello2.content = "Hello,Tester"
 #}
 
 #elm_radio1 = ps.element("input","id","radio1","type","radio")
-##elm_radio1.attribute("checked","true")
+##elm_radio1.attr("checked","true")
 #elm_radio1['checked'] = true
 
 #elm_select1 = ps.element("select","id","select1")

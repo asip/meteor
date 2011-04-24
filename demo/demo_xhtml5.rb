@@ -3,16 +3,16 @@
 
 require 'rubygems'
 require 'meteor'
-#require '../../lib/meteor'
+#require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
-pf.parser(Meteor::Parser::XHTML,"sample_x.html", "UTF-8")
+pf.parser(Meteor::Parser::XHTML5,"sample_x5.html", "UTF-8")
 
-ps = pf.parser('sample_x')
+ps = pf.parser('sample_x5')
 
 startTime = Time.new.to_f
 
-elm_hello = ps.element("id"=>"hello")
+elm_hello = ps.element("id","hello")
 #elm_hello.attr("color"=>"red")
 elm_hello['color'] = 'red'
 #elm_hello.remove_attr('color')
@@ -20,6 +20,7 @@ elm_hello['color'] = 'red'
 elm_hello2 = ps.element("id"=>"hello2")
 #elm_hello2.content("Hello,Tester")
 elm_hello2.content = "Hello,Tester"
+
 #elm_hello2.remove
 #elm_hello3 = ps.cxtag("hello3")
 ##elm_hello3.content("Hello,Hello\ntt")
@@ -27,11 +28,13 @@ elm_hello2.content = "Hello,Tester"
 #puts elm_hello3.content
 #puts elm_hello3.mixed_content
 
-#elm_text1 = ps.element("id"=>"text1")
-##elm_text1.attr("value","めも")
-#elm_text1['value'] = 'めも'
-##elm_text1.attr("disabled"=>true)
-#elm_text1['diaabled'] = true
+elm_text1 = ps.element("id"=>"text1")
+#elm_text1.attr("value","めも")
+elm_text1['value'] = 'めも'
+#elm_text1.attr("disabled"=>true)
+elm_text1['disabled'] = true
+#elm_text1.attr('required'=>true)
+elm_text1['required'] = true
 #map = elm_text1.attr_map
 #map.names.each { |item| 
 #  puts item
@@ -45,14 +48,16 @@ elm_hello2.content = "Hello,Tester"
 #elm_select1 = ps.element("select","id"=>"select1")
 #elm_select1 = ps.element("select")
 ##elm_select1.attr("multiple"=>true)
-#elm_select1('multiple') = true
+#elm_select1['multiple'] = true
 ##puts elm_select1.attr("multiple")
 #puts elm_select1['multiple']
 #elm_option1 = ps.element("option","id"=>"option1")
 ##elm_option1.attr("selected"=>"true")
 #elm_option1['selected'] = true
-#puts elm_option1.attr("selected")
-#puts elm_text1.attr("readonly")
+##puts elm_option1.attr("selected")
+#puts elm_option1['selected']
+##puts elm_text1.attr("readonly")
+#puts elm_text1['readonly']
 
 #elm_select2 = ps.element("select","id"=>"select2")
 #elm_select2["multiple"] = "true"
@@ -75,7 +80,7 @@ elm_hello2.content = "Hello,Tester"
 #}
 
 elm_tr1 = ps.element('tr','id'=>'loop')
-elm_ = elm_tr1.child
+elm_ = ps.shadow(elm_tr1)
 elm_dt1_ = elm_.child('id'=>'aa')
 elm_dt2_ = elm_.child('id'=>'bb')
 elm_dt3_ = elm_.child('id'=>'cc')

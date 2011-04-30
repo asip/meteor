@@ -2965,18 +2965,6 @@ module Meteor
 
       private :execute_3
 
-      #
-      # 正規表現対象文字を置換する
-      #
-      # @param [String] str 入力文字列
-      # @return [String] 出力文字列
-      #
-      #def escape_regex(str)
-      #  Regexp.quote(str)
-      #end
-      #
-      #private :escape_regex
-
       def is_match(regex, str)
         if regex.kind_of?(Regexp) then
           is_match_r(regex, str)

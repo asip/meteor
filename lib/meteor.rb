@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.5
+# @version 0.9.6.7
 #
 
 module Meteor
 
-  VERSION = "0.9.6.5"
+  VERSION = "0.9.6.7"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -1631,7 +1631,7 @@ module Meteor
       #
       def element_1(elm_name)
 
-        @_elm_name = escape_regex(elm_name)
+        @_elm_name = Regexp.quote(elm_name)
 
         #空要素検索用パターン
         @pattern_cc_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_3
@@ -1735,9 +1735,9 @@ module Meteor
       # @return [Meteor::Element] 要素
       def element_3(elm_name, attr_name, attr_value)
 
-        @_elm_name = escape_regex(elm_name)
-        @_attr_name = escape_regex(attr_name)
-        @_attr_value = escape_regex(attr_value)
+        @_elm_name = Regexp.quote(elm_name)
+        @_attr_name = Regexp.quote(attr_name)
+        @_attr_value = Regexp.quote(attr_value)
 
         #空要素検索用パターン
         #@pattern_cc_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ
@@ -1917,8 +1917,8 @@ module Meteor
       #
       def element_2(attr_name, attr_value)
 
-        @_attr_name = escape_regex(attr_name)
-        @_attr_value = escape_regex(attr_value)
+        @_attr_name = Regexp.quote(attr_name)
+        @_attr_value = Regexp.quote(attr_value)
 
         ##@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4
         #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4_2_3
@@ -1951,11 +1951,11 @@ module Meteor
       #
       def element_5(elm_name, attr_name1, attr_value1, attr_name2, attr_value2)
 
-        @_elm_name = escape_regex(elm_name)
-        @_attr_name1 = escape_regex(attr_name1)
-        @_attr_name2 = escape_regex(attr_name2)
-        @_attr_value1 = escape_regex(attr_value1)
-        @_attr_value2 = escape_regex(attr_value2)
+        @_elm_name = Regexp.quote(elm_name)
+        @_attr_name1 = Regexp.quote(attr_name1)
+        @_attr_name2 = Regexp.quote(attr_name2)
+        @_attr_value1 = Regexp.quote(attr_value1)
+        @_attr_value2 = Regexp.quote(attr_value2)
 
         #空要素検索用パターン
         #@pattern_cc_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1_2 << @_attr_name1 << ATTR_EQ
@@ -2158,10 +2158,10 @@ module Meteor
       #
       def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
-        @_attr_name1 = escape_regex(attr_name1)
-        @_attr_name2 = escape_regex(attr_name2)
-        @_attr_value1 = escape_regex(attr_value1)
-        @_attr_value2 = escape_regex(attr_value2)
+        @_attr_name1 = Regexp.quote(attr_name1)
+        @_attr_name2 = Regexp.quote(attr_name2)
+        @_attr_value1 = Regexp.quote(attr_value1)
+        @_attr_value2 = Regexp.quote(attr_value2)
 
         #@pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attr_name1 << ATTR_EQ
         #@pattern_cc << @_attr_value1 << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ
@@ -2695,8 +2695,8 @@ module Meteor
       #
       def cxtag_2(elm_name, id)
 
-        @_elm_name = escape_regex(elm_name)
-        @_id = escape_regex(id)
+        @_elm_name = Regexp.quote(elm_name)
+        @_id = Regexp.quote(id)
 
         #CXタグ検索用パターン
         #@pattern_cc = '' << SEARCH_CX_1 << @_elm_name << SEARCH_CX_2
@@ -2741,7 +2741,7 @@ module Meteor
       #
       def cxtag_1(id)
 
-        @_id = escape_regex(id)
+        @_id = Regexp.quote(id)
 
         @pattern_cc = '' << SEARCH_CX_6 << @_id << DOUBLE_QUATATION
 
@@ -2971,11 +2971,11 @@ module Meteor
       # @param [String] str 入力文字列
       # @return [String] 出力文字列
       #
-      def escape_regex(str)
-        Regexp.quote(str)
-      end
-
-      private :escape_regex
+      #def escape_regex(str)
+      #  Regexp.quote(str)
+      #end
+      #
+      #private :escape_regex
 
       def is_match(regex, str)
         if regex.kind_of?(Regexp) then
@@ -3442,7 +3442,7 @@ module Meteor
         # @return [Meteor::Element] 要素
         #
         def element_1(elm_name)
-          @_elm_name = escape_regex(elm_name)
+          @_elm_name = Regexp.quote(elm_name)
 
           #空要素の場合(<->内容あり要素の場合)
           if is_match(@@match_tag, elm_name) then
@@ -3502,9 +3502,9 @@ module Meteor
         #
         def element_3(elm_name, attr_name, attr_value)
 
-          @_elm_name = escape_regex(elm_name)
-          @_attr_name = escape_regex(attr_name)
-          @_attr_value = escape_regex(attr_value)
+          @_elm_name = Regexp.quote(elm_name)
+          @_attr_name = Regexp.quote(attr_name)
+          @_attr_value = Regexp.quote(attr_value)
 
           #空要素の場合(<->内容あり要素の場合)
           if is_match(@@match_tag, elm_name) then
@@ -3563,8 +3563,8 @@ module Meteor
         # @return [Meteor::Element] 要素
         #
         def element_2(attr_name, attr_value)
-          @_attr_name = escape_regex(attr_name)
-          @_attr_value = escape_regex(attr_value)
+          @_attr_name = Regexp.quote(attr_name)
+          @_attr_value = Regexp.quote(attr_value)
 
           #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value
           #@pattern_cc << TAG_SEARCH_2_4_4
@@ -3596,11 +3596,11 @@ module Meteor
         #
         def element_5(elm_name, attr_name1, attr_value1, attr_name2, attr_value2)
 
-          @_elm_name = escape_regex(elm_name)
-          @_attr_name1 = escape_regex(attr_name1)
-          @_attr_value1 = escape_regex(attr_value1)
-          @_attr_name2 = escape_regex(attr_name2)
-          @_attr_value2 = escape_regex(attr_value2)
+          @_elm_name = Regexp.quote(elm_name)
+          @_attr_name1 = Regexp.quote(attr_name1)
+          @_attr_value1 = Regexp.quote(attr_value1)
+          @_attr_name2 = Regexp.quote(attr_name2)
+          @_attr_value2 = Regexp.quote(attr_value2)
 
           #空要素の場合(<->内容あり要素の場合)
           if is_match(@@match_tag, elm_name) then
@@ -3669,10 +3669,10 @@ module Meteor
         # @return [Meteor::Element] 要素
         #
         def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
-          @_attr_name1 = escape_regex(attr_name1)
-          @_attr_value1 = escape_regex(attr_value1)
-          @_attr_name2 = escape_regex(attr_name2)
-          @_attr_value2 = escape_regex(attr_value2)
+          @_attr_name1 = Regexp.quote(attr_name1)
+          @_attr_value1 = Regexp.quote(attr_value1)
+          @_attr_name2 = Regexp.quote(attr_name2)
+          @_attr_value2 = Regexp.quote(attr_value2)
 
           #@pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attr_name1 << ATTR_EQ << @_attr_value1
           #@pattern_cc << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ << @_attr_value2

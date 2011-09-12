@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.7
+# @version 0.9.6.8
 #
 
 module Meteor
 
-  VERSION = "0.9.6.7"
+  VERSION = "0.9.6.8"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -43,19 +43,19 @@ module Meteor
   SEVEN = 7
 
   #
-  # 要素クラス
+  # Element Class (要素クラス)
   #
   class Element
 
     #
-    # initializer(イニシャライザ)
-    # @overload def initialize(name)
-    #  @param [String] name 名前
-    # @overload def initialize(elm)
-    #  @param [Meteor::Element] elm 要素
-    # @overload def initialize(elm,ps)
-    #  @param [Meteor::Element] elm 要素
-    #  @param [Meteor::Parser] ps パーサ
+    # initializer (イニシャライザ)
+    # @overload initialize(name)
+    #  @param [String] name element name (名前)
+    # @overload initialize(elm)
+    #  @param [Meteor::Element] elm element (要素)
+    # @overload initialize(elm,ps)
+    #  @param [Meteor::Element] elm element (要素)
+    #  @param [Meteor::Parser] ps parser (パーサ)
     #
     def initialize(*args)
       case args.length
@@ -87,8 +87,8 @@ module Meteor
     end
 
     #
-    # イニシャライザ
-    # @param [String] name 名前
+    # initializer (イニシャライザ)
+    # @param [String] name element name (名前)
     #
     def initialize_s(name)
       @name = name
@@ -107,8 +107,8 @@ module Meteor
     private :initialize_s
 
     #
-    # イニシャライザ
-    # @param [Meteor::Element] elm 要素
+    # initializer (イニシャライザ)
+    # @param [Meteor::Element] elm element (要素)
     #
     def initialize_e(elm)
       @name = elm.name
@@ -127,11 +127,11 @@ module Meteor
     private :initialize_e
 
     #
-    # コピーを作成する
-    # @overload def new!(elm,ps)
-    #  @param [Meteor::Element] elm 要素
-    #  @param [Meteor::Parser] ps パーサ
-    #  @return [Meteor::Element] 要素
+    # make copy (コピーを作成する)
+    # @overload new!(elm,ps)
+    #  @param [Meteor::Element] elm element (要素)
+    #  @param [Meteor::Parser] ps parser (パーサ)
+    #  @return [Meteor::Element] element (要素)
     #
     def self.new!(*args)
       case args.length
@@ -154,8 +154,8 @@ module Meteor
     end
 
     #
-    # 複製する
-    #@return [Meteor::Element] element(要素)
+    # clone (複製する)
+    #@return [Meteor::Element] element (要素)
     #
     def clone
       obj = self.parser.element_cache[self.object_id]
@@ -173,24 +173,24 @@ module Meteor
       end
     end
 
-    attr_accessor :name #[String] 要素名
-    attr_accessor :attributes #[String] 属性群
-    attr_accessor :mixed_content #[String] 内容
-    attr_accessor :pattern #[String] pattern(パターン)
-    attr_accessor :document_sync #[true,false] ドキュメント更新フラグ
-    attr_accessor :empty #[true,false] 内容存在フラグ
+    attr_accessor :name #[String] element name (要素名)
+    attr_accessor :attributes #[String] attributes (属性群)
+    attr_accessor :mixed_content #[String] content (内容)
+    attr_accessor :pattern #[String] pattern (パターン)
+    attr_accessor :document_sync #[true,false] document update flag (ドキュメント更新フラグ)
+    attr_accessor :empty #[true,false] content empty flag (内容存在フラグ)
     attr_accessor :cx #[true,false] コメント拡張タグフラグ
-    attr_accessor :mono #[true,false] 子要素存在フラグ
-    attr_accessor :parser #[Meteor::Parser] パーサ
+    attr_accessor :mono #[true,false] child element existance flag (子要素存在フラグ)
+    attr_accessor :parser #[Meteor::Parser] parser(パーサ)
     attr_accessor :type_value #[String] タイプ属性
-    attr_accessor :usable #[true,false] 有効・無効フラグ
-    attr_accessor :origin #[Meteor::Element] 原本ポインタ
-    attr_accessor :copy #[Meteor::Element] 複製ポインタ
-    attr_accessor :removed #[true,false] 削除フラグ
+    attr_accessor :usable #[true,false] usable flag (有効・無効フラグ)
+    attr_accessor :origin #[Meteor::Element] original pointer (原本ポインタ)
+    attr_accessor :copy #[Meteor::Element] copy pointer (複製ポインタ)
+    attr_accessor :removed #[true,false] delete flag (削除フラグ)
 
     #
-    # ドキュメントをセットする
-    # @param [String] doc ドキュメント
+    # set document (ドキュメントをセットする)
+    # @param [String] doc document (ドキュメント)
     #
     def document=(doc)
       @document_sync = false
@@ -198,8 +198,8 @@ module Meteor
     end
 
     #
-    # ドキュメントを取得する
-    # @return [String] document
+    # get document (ドキュメントを取得する)
+    # @return [String] document (ドキュメント)
     #
     def document
       if @document_sync then
@@ -236,53 +236,53 @@ module Meteor
     end
 
     #
-    # 子要素を取得する
-    # @overload def child()
-    #  子要素を取得する
+    # get child element (子要素を取得する)
+    # @overload child()
+    #  get child element (子要素を取得する)
+    #  @return [Meteor::Element] element (要素)
+    # @overload child(elm_name)
+    #  get child element using element name (要素名で子要素を取得する)
+    #  @param [String] elm_name element name (要素名)
     #  @return [Meteor::Element] 要素
-    # @overload def child(elm_name)
-    #  要素名で子要素を取得する
-    #  @param [String] elm_name 要素名
+    # @overload child(elm_name,attrs)
+    #  get element using element name and attribute map (要素名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [String] elm_name element name (要素名)
+    #  @param [Hash] attrs attribute map (属性マップ)
+    #  @return [Meteor::Element] element (要素)
+    # @overload child(attrs)
+    #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [Hash] attrs attribute map (属性マップ)
     #  @return [Meteor::Element] 要素
-    # @overload def child(elm_name,attrs)
-    #  要素名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
-    #  @param [String] elm_name  要素名
-    #  @param [Hash] attrs 属性マップ
-    #  @return [Meteor::Element] 要素
-    # @overload def child(attrs)
-    #  属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
-    #  @param [Hash] attrs 属性マップ
-    #  @return [Meteor::Element] 要素
-    # @overload def child(elm_name,attr_name,attr_value)
-    #  要素名と属性(属性名="属性値")で要素を取得する
-    #  @param [String] elm_name  要素名
+    # @overload child(elm_name,attr_name,attr_value)
+    #  get element using element name and attribute(name="value") (要素名と属性(属性名="属性値")で要素を取得する)
+    #  @param [String] elm_name  element name (要素名)
+    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String] attr_value attribute value (属性値)
+    #  @return [Meteor::Element] element (要素)
+    # @overload child(attr_name,attr_value)
+    #  get element using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
     #  @param [String] attr_name 属性名
     #  @param [String] attr_value 属性値
     #  @return [Meteor::Element] 要素
-    # @overload def child(attr_name,attr_value)
-    #  属性(属性名="属性値")で要素を取得する
-    #  @param [String] attr_name 属性名
-    #  @param [String] attr_value 属性値
-    #  @return [Meteor::Element] 要素
-    # @overload def child(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
-    #  要素名と属性１・属性２(属性名="属性値")で要素を取得する
-    #  @param [String] elm_name  要素の名前
+    # @overload child(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+    #  get element using element name and attribute1,2(name="value") (要素名と属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [String] elm_name  element name (要素名)
+    #  @param [String] attr_name1 attribute name1 (属性名1)
+    #  @param [String] attr_value1 attribute value1 (属性値1)
+    #  @param [String] attr_name2 attribute name2 (属性名2)
+    #  @param [String] attr_value2 attribute value2 (属性値2)
+    #  @return [Meteor::Element] element (要素)
+    # @overload child(attr_name1,attr_value1,attr_name2,attr_value2)
+    #  get element using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] attr_name1 属性名1
-    #  @param [String] attr_value1 属性値2
+    #  @param [String] attr_value1 属性値1
     #  @param [String] attr_name2 属性名2
     #  @param [String] attr_value2 属性値2
     #  @return [Meteor::Element] 要素
-    # @overload def child(attr_name1,attr_value1,attr_name2,attr_value2)
-    #  属性１・属性２(属性名="属性値")で要素を取得する
-    #  @param [String] attr_name1 属性名1
-    #  @param [String] attr_value1 属性値2
-    #  @param [String] attr_name2 属性名2
-    #  @param [String] attr_value2 属性値2
-    #  @return [Meteor::Element] 要素
-    # @overload def child(elm)
-    #  要素を射影する
-    #  @param [Meteor::Element] elm 要素
-    #  @return [Meteor::Element] 要素
+    # @overload child(elm)
+    #  mirror element (要素を射影する)
+    #  @param [Meteor::Element] elm element(要素)
+    #  @return [Meteor::Element] element(要素)
     #
     def child(elm = nil, attrs = nil,*args)
       #case args.length
@@ -295,22 +295,22 @@ module Meteor
     end
 
     #
-    # 子要素を取得する
-    # @param selector [String] セレクタ
-    # @return [Meteor::Element] 要素
+    # get child element using selector (子要素を取得する)
+    # @param selector [String] selector (セレクタ)
+    # @return [Meteor::Element] element (要素)
     #
     def find(selector)
       @parser.find(selector)
     end
 
     #
-    # CX(コメント拡張)タグを取得する
-    # @overload def cxtag(elm_name,id)
+    # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
+    # @overload cxtag(elm_name,id)
     #  要素名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
     #  @param [String] elm_name 要素名
     #  @param [String] id ID属性値
     #  @return [Meteor::Element] 要素
-    # @overload def cxtag(id)
+    # @overload cxtag(id)
     #  ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
     #  @param [String] id ID属性値
     #  @return [Meteor::Element] 要素
@@ -320,69 +320,69 @@ module Meteor
     end
 
     #
-    # @overload def attr(attr)
-    #  要素の属性をセットする
-    #  @param [Hash] attr 属性
-    #  @return [Meteor::Element] 要素
-    # @overload def attr(attr_name,attr_value)
-    #  要素の属性をセットする
-    #  @param [String] attr_name  属性名
-    #  @param [String,true,false] attr_value 属性値
-    #  @return [Meteor::Element] 要素
-    # @overload def attr(attr_name)
-    #  要素の属性値を取得する
-    #  @param [String] attr_name 属性名
-    #  @return [String] 属性値
+    # @overload attr(attr)
+    #  set attribute of element (要素の属性をセットする)
+    #  @param [Hash] attr attribute map (属性)
+    #  @return [Meteor::Element] element (要素)
+    # @overload attr(attr_name,attr_value)
+    #  set attribute of element (要素の属性をセットする)
+    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String,true,false] attr_value attribute value (属性値)
+    #  @return [Meteor::Element] element (要素)
+    # @overload attr(attr_name)
+    #  get attribute value of element (要素の属性値を取得する)
+    #  @param [String] attr_name attribute name (属性名)
+    #  @return [String] attribute value (属性値)
     #
     def attr(attrs,*args)
       @parser.attr(self, attrs,*args)
     end
 
     #
-    # @overload def attr_map(attr_map)
-    #  属性マップをセットする
-    #  @param [Meteor::AttributeMap] attr_map 属性マップ
-    #  @return [Meteor::Element] 要素
-    # @overload def attr_map()
-    #  属性マップを取得する  
-    #  @return [Meteor::AttributeMap] 属性マップ
+    # @overload attr_map(attr_map)
+    #  set attribute map (属性マップをセットする)
+    #  @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
+    #  @return [Meteor::Element] element (要素)
+    # @overload attr_map()
+    #  get attribute map (属性マップを取得する)
+    #  @return [Meteor::AttributeMap] attribute map (属性マップ)
     #
     def attr_map(*args)
       @parser.attr_map(self, *args)
     end
 
     #
-    # @overload def content(content,entity_ref=true)
-    #  要素の内容をセットする  
-    #  @param [String] content 要素の内容
-    #  @param [true,false] entity_ref エンティティ参照フラグ
-    #  @return [Meteor::Element] 要素
-    # @overload def content(content)
-    #  要素の内容をセットする
-    #  @param [String] content 要素の内容
-    #  @return [Meteor::Element] 要素
-    # @overload def content()
-    #  要素の内容を取得する
-    #  @return [String] 内容
+    # @overload content(content,entity_ref=true)
+    #  set content of element (要素の内容をセットする)
+    #  @param [String] content content of element (要素の内容)
+    #  @param [true,false] entity_ref entity reference flag (エンティティ参照フラグ)
+    #  @return [Meteor::Element] element (要素)
+    # @overload content(content)
+    #  set content of element (要素の内容をセットする)
+    #  @param [String] content content of element (要素の内容)
+    #  @return [Meteor::Element] element (要素)
+    # @overload content()
+    #  get content of element (要素の内容を取得する)
+    #  @return [String] content (内容)
     #
     def content(*args)
       @parser.content(self, *args)
     end
 
     #
-    # 内容をセットする
-    # @param [String] value 内容
-    # @return [Meteor::Element] 要素
+    # set content of element (内容をセットする)
+    # @param [String] value content (内容)
+    # @return [Meteor::Element] element (要素)
     #
     def content=(value)
       @parser.content(self, value)
     end
 
     #
-    # 属性をセットする
-    # @param [String] name 属性の名前
-    # @param [String] value 属性の値
-    # @return [Meteor::Element] 要素
+    # set attribute (属性をセットする)
+    # @param [String] name attribute name (属性の名前)
+    # @param [String] value attribute value (属性の値)
+    # @return [Meteor::Element] element (要素)
     #
     def []=(name, value)
       @parser.attr(self, name, value)
@@ -390,43 +390,43 @@ module Meteor
 
     #
     # 属性の値を取得する
-    # @param [String] name 属性の名前
-    # @return [String] 属性の値
+    # @param [String] name attribute name (属性の名前)
+    # @return [String] attribute value (属性の値)
     #
     def [](name)
       @parser.attr(self, name)
     end
 
     #
-    # 要素の属性を消す
-    # @param [String] attr_name 属性名
-    # @return [Meteor::Element] 要素
+    # remove attribute of element (要素の属性を消す)
+    # @param [String] attr_name attribute name (属性名)
+    # @return [Meteor::Element] element (要素)
     #
     def remove_attr(attr_name)
       @parser.remove_attr(self, attr_name)
     end
 
     #
-    # 要素を削除する
+    # remove element (要素を削除する)
     #
     def remove
       @parser.remove_element(self)
     end
 
     #
-    # 反映する
+    # reflect (反映する)
     #
     def flush
       @parser.flush
     end
 
     #
-    # @overload def execute(hook)
-    #  Hookerクラスの処理を実行する
-    #  @param [Meteor::Hook::Hooker] hook Hookerオブジェクト
-    # @overload def execute(loop,list)
-    #  Looperクラスの処理を実行する
-    #  @param [Meteor::Element::Looper] loop Looperオブジェクト
+    # @overload execute(hook)
+    #  run action of Hooker (Hookerクラスの処理を実行する)
+    #  @param [Meteor::Hook::Hooker] hook Hooker object (Hookerオブジェクト)
+    # @overload execute(loop,list)
+    #  run action of Looper (Looperクラスの処理を実行する)
+    #  @param [Meteor::Hook::Looper] loop Looper object (Looperオブジェクト)
     #  @param [Array] list 配列
     #
     def execute(*args)
@@ -436,7 +436,7 @@ module Meteor
   end
 
   #
-  # ルート要素クラス
+  # root element class (ルート要素クラス)
   #
   class RootElement
 
@@ -459,25 +459,25 @@ module Meteor
       #@element = nil
     end
 
-    attr_accessor :content_type #[String] コンテントタイプ
-    attr_accessor :kaigyo_code #[String] 改行コード
-    attr_accessor :charset #[String] 文字コード
-    attr_accessor :character_encoding #[String] エンコーディング
-    attr_accessor :document #[String] ドキュメント
-    attr_accessor :hook_document #[String] フック・ドキュメント
-    attr_accessor :element #[Meteor::Element] 要素
+    attr_accessor :content_type #[String] content type (コンテントタイプ)
+    attr_accessor :kaigyo_code #[String] newline (改行コード)
+    attr_accessor :charset #[String] charset (文字コード)
+    attr_accessor :character_encoding #[String] character encoding (エンコーディング)
+    attr_accessor :document #[String] document (ドキュメント)
+    attr_accessor :hook_document #[String] hook document (フック・ドキュメント)
+    attr_accessor :element #[Meteor::Element] element (要素)
   end
 
   #
-  # 属性マップクラス
+  # Attribute Map Class (属性マップクラス)
   #
   class AttributeMap
 
     #
-    # イニシャライザ
-    # @overload def initialize
-    # @overload def initialize(attr_map)
-    #  @param [Meteor::AttributeMap] attr_map 属性マップ
+    # initializer (イニシャライザ)
+    # @overload initialize
+    # @overload initialize(attr_map)
+    #  @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
     #
     def initialize(*args)
       case args.length
@@ -492,7 +492,7 @@ module Meteor
 
     if RUBY_VERSION < RUBY_VERSION_1_9_0
       #
-      # イニシャライザ
+      # initializer (イニシャライザ)
       #
       def initialize_0
         @map = Hash.new
@@ -501,7 +501,7 @@ module Meteor
       end
     else
       #
-      # イニシャライザ
+      # initializer (イニシャライザ)
       #
       def initialize_0
         @map = Hash.new
@@ -513,8 +513,8 @@ module Meteor
 
     if RUBY_VERSION < RUBY_VERSION_1_9_0
       #
-      # イニシャライザ
-      # @param [Meteor::AttributeMap] attr_map 属性マップ
+      # initializer (イニシャライザ)
+      # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
       #
       def initialize_1(attr_map)
         #@map = Marshal.load(Marshal.dump(attr_map.map))
@@ -524,8 +524,8 @@ module Meteor
       end
     else
       #
-      # イニシャライザ
-      # @param [Meteor::AttributeMap] attr_map 属性マップ
+      # initializer (イニシャライザ)
+      # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
       #
       def initialize_1(attr_map)
         #@map = Marshal.load(Marshal.dump(attr_map.map))
@@ -538,9 +538,9 @@ module Meteor
 
     if RUBY_VERSION < RUBY_VERSION_1_9_0
       #
-      # 属性名と属性値を対としてセットする
-      # @param [String] name 属性名
-      # @param [String] value 属性値
+      # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
+      # @param [String] name attribute name (属性名)
+      # @param [String] value attribute value (属性値)
       #
       def store(name, value)
 
@@ -565,9 +565,9 @@ module Meteor
       end
     else
       #
-      # 属性名と属性値を対としてセットする
-      # @param [String] name 属性名
-      # @param [String] value 属性値
+      # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
+      # @param [String] name attribute name (属性名)
+      # @param [String] value attribute value (属性値)
       #
       def store(name, value)
 
@@ -593,16 +593,16 @@ module Meteor
 
     if RUBY_VERSION < RUBY_VERSION_1_9_0
       #
-      # 属性名配列を取得する
-      # @return [Array] 属性名配列
+      # get attribute name array (属性名配列を取得する)
+      # @return [Array] attribute name array (属性名配列)
       #
       def names
         @names
       end
     else
       #
-      # 属性名配列を取得する
-      # @return [Array] 属性名配列
+      # get attribute name array (属性名配列を取得する)
+      # @return [Array] attribute name array (属性名配列)
       #
       def names
         @map.keys
@@ -610,9 +610,9 @@ module Meteor
     end
 
     #
-    # 属性名で属性値を取得する  
-    # @param [String] name 属性名
-    # @return [String] 属性値
+    # get attribute value using attribute name (属性名で属性値を取得する)
+    # @param [String] name attribute name (属性名)
+    # @return [String] attribute value (属性値)
     #
     def fetch(name)
       if @map[name] && !@map[name].removed then
@@ -621,8 +621,8 @@ module Meteor
     end
 
     #
-    # 属性名に対応した属性を削除する  
-    # @param name 属性名
+    # delete attribute using attribute name (属性名に対応した属性を削除する)
+    # @param name attribute name (属性名)
     #
     def delete(name)
       if @recordable && @map[name] then
@@ -632,8 +632,8 @@ module Meteor
     end
 
     #
-    # 属性名で属性の変更状況を取得する  
-    # @return [true,false] 属性の変更状況
+    # get update flag of attribute using attribute name (属性名で属性の変更フラグを取得する)
+    # @return [true,false] update flag of attribute (属性の変更状況)
     #
     def changed(name)
       if @map[name] then
@@ -642,8 +642,8 @@ module Meteor
     end
 
     #
-    # 属性名で属性の削除状況を取得する
-    # @return [true,false] 属性の削除状況
+    # get delete flag of attribute using attribute name (属性名で属性の削除状況を取得する)
+    # @return [true,false] delete flag of attribute (属性の削除状況)
     #
     def removed(name)
       if @map[name] then
@@ -655,20 +655,20 @@ module Meteor
     attr_accessor :recordable
 
     #
-    # 属性名と属性値を対としてセットする
+    # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
     # 
-    # @param [String] name 属性名
-    # @param [String] value 属性値
+    # @param [String] name attribute name (属性名)
+    # @param [String] value attribute value (属性値)
     #
-    def [](name, value)
+    def []=(name, value)
       store(name, value)
     end
 
     #
-    # 属性名で属性値を取得する
+    # get attribute value using attribute name (属性名で属性値を取得する)
     # 
-    # @param [String] name 属性名
-    # @return [String] 属性値
+    # @param [String] name attribute name (属性名)
+    # @return [String] attribute value (属性値)
     #
     def [](name)
       fetch(name)
@@ -676,12 +676,12 @@ module Meteor
   end
 
   #
-  # 属性クラス
+  # Attribute class (属性クラス)
   #
   class Attribute
 
     #
-    # イニシャライザ
+    # initializer (イニシャライザ)
     #
     def initialize
       #@name = nil
@@ -690,15 +690,15 @@ module Meteor
       #@removed = false
     end
 
-    attr_accessor :name #[String] 名前
-    attr_accessor :value #[String] 値
-    attr_accessor :changed #[true,false] 更新フラグ
-    attr_accessor :removed #[true,false] 削除フラグ
+    attr_accessor :name #[String] attribute name (名前)
+    attr_accessor :value #[String] attribute value (値)
+    attr_accessor :changed #[true,false] update flag (更新フラグ)
+    attr_accessor :removed #[true,false] delete flag (削除フラグ)
 
   end
 
   #
-  # パーサ共通クラス
+  # Parser Class (パーサ共通クラス)
   #
   class Parser
     HTML = ZERO
@@ -709,7 +709,7 @@ module Meteor
   end
 
   #
-  # パーサファクトリクラス
+  # Parser Factory Class (パーサファクトリクラス)
   #
   class ParserFactory
 
@@ -718,17 +718,17 @@ module Meteor
     SLASH = '/'
     ENC_UTF8 = 'UTF-8'
 
-    attr_accessor :base_dir #[String] 基準ディレクトリ
-    attr_accessor :base_encoding #[String] デフォルトエンコーディング
+    attr_accessor :base_dir #[String] base directory (基準ディレクトリ)
+    attr_accessor :base_encoding #[String] default character encoding (デフォルトエンコーディング)
 
     #
-    # イニシャライザ
-    # @overload def initialize()
-    # @overload def initialize(bs_dir)
-    #  @param [String] bs_dir 基準ディレクトリ
-    # @overload def initialize(bs_dir,bs_encoding)
-    #  @param [String] bs_dir 基準ディレクトリ
-    #  @param [String] bs_encoding デフォルトエンコーディング   
+    # initializer (イニシャライザ)
+    # @overload initialize()
+    # @overload initialize(bs_dir)
+    #  @param [String] bs_dir base directory (基準ディレクトリ)
+    # @overload initialize(bs_dir,bs_encoding)
+    #  @param [String] bs_dir base directory (基準ディレクトリ)
+    #  @param [String] bs_encoding default character encoding (デフォルトエンコーディング)
     #
     def initialize(*args)
       case args.length
@@ -744,7 +744,7 @@ module Meteor
     end
 
     #
-    # イニシャライザ
+    # initializer (イニシャライザ)
     #
     def initialize_0
       @cache = Hash.new
@@ -768,8 +768,8 @@ module Meteor
 
     #
     # イニシャライザ
-    # @param [String] bs_dir 基準ディレクトリ
-    # @param [String] bs_encoding デフォルトエンコーディング
+    # @param [String] bs_dir base directory (基準ディレクトリ)
+    # @param [String] bs_encoding default character encoding (デフォルトエンコーディング)
     #
     def initialize_2(bs_dir, bs_encoding)
       @cache = Hash.new
@@ -780,21 +780,21 @@ module Meteor
     private :initialize_1
 
     #
-    #@overload def parser(type,relative_path,encoding)
-    # パーサを作成する
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] relative_path 相対ファイルパス
-    # @param [String] encoding エンコーディング
-    # @return [Meteor::Parser] パーサ
-    #@overload def parser(type,relative_path)
-    # パーサを作成する
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] relative_path 相対ファイルパス
-    # @return [Meteor::Parser] パーサ
-    #@overload def parser(key)
-    # パーサを取得する
-    # @param [String] key キー
-    # @return [Meteor::Parser] パーサ
+    #@overload parser(type,relative_path,encoding)
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] encoding character encoding (エンコーディング)
+    # @return [Meteor::Parser] parser (パーサ)
+    #@overload parser(type,relative_path)
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
+    #@overload parser(key)
+    # get parser (パーサを取得する)
+    # @param [String] key identifier (キー)
+    # @return [Meteor::Parser] parser (パーサ)
     def parser(*args)
       case args.length
         when 1 then
@@ -807,11 +807,11 @@ module Meteor
     end
 
     #
-    # パーサを作成する
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] relative_path 相対ファイルパス
-    # @param [String] encoding エンコーディング
-    # @return [Meteor::Parser] パーサ
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] encoding character encoding (エンコーディング)
+    # @return [Meteor::Parser] parser(パーサ)
     #
     def parser_3(type, relative_path, encoding)
 
@@ -857,10 +857,10 @@ module Meteor
     private :parser_3
 
     #
-    # パーサを作成する
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] relative_path 相対ファイルパス  
-    # @return [Meteor::Parser] パーサ
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser(パーサのタイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
     #
     def parser_2(type, relative_path)
 
@@ -907,9 +907,9 @@ module Meteor
     private :parser_2
 
     #
-    # パーサを取得する
-    # @param [String] key キー
-    # @return [Meteor::Parser] パーサ
+    # get parser (パーサを取得する)
+    # @param [String] key identifier (キー)
+    # @return [Meteor::Parser] parser (パーサ)
     #
     def parser_1(key)
       @pif = @cache[key]
@@ -930,11 +930,11 @@ module Meteor
     private :parser_1
 
     #
-    # パーサを作成する  
-    # @param [Fixnum] type パーサのタイプ
-    # @param [String] relative_url 相対URL
-    # @param [String] document ドキュメント
-    # @return [Meteor::Parser] パーサ
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [String] relative_url relative URL (相対URL)
+    # @param [String] document document (ドキュメント)
+    # @return [Meteor::Parser] parser (パーサ)
     #
     def parser_str(type, relative_url, document)
       case type
@@ -962,18 +962,18 @@ module Meteor
     end
 
     #
-    # パーサをセットする
-    # @param [String] kay キー
-    # @param [Meteor::Parser] ps パーサ
+    # set parser (パーサをセットする)
+    # @param [String] key identifier (キー)
+    # @param [Meteor::Parser] ps parser (パーサ)
     #
     def []=(key, ps)
       @cache[key] = ps
     end
 
     #
-    # パーサを取得する
-    # @param [String] key キー 
-    # @return [Meteor::Parser] パーサ
+    # get parser (パーサを取得する)
+    # @param [String] key identifier (キー)
+    # @return [Meteor::Parser] parser (パーサ)
     #
     def [](key)
       self.parser(key)
@@ -984,12 +984,12 @@ module Meteor
   module Hook
 
     #
-    # フッククラス
+    # Hook Class (フッククラス)
     #
     class Hooker
 
       #
-      # イニシャライザ
+      # initializer (イニシャライザ)
       #
       def initialize
       end
@@ -1008,12 +1008,12 @@ module Meteor
     end
 
     #
-    # ループフッククラス
+    # Lopp Hook Class (ループフッククラス)
     #
     class Looper
 
       #
-      # イニシャライザ
+      # initializer (イニシャライザ)
       #
       def initialize
       end
@@ -1047,34 +1047,34 @@ module Meteor
   module Exception
 
     #
-    # 要素検索例外
+    # Element Search Exception (要素検索例外)
     #
     class NoSuchElementException
 
-      attr_accessor :message #[String] メッセージ
+      attr_accessor :message #[String] message (メッセージ)
 
       #
-      # イニシャライザ
-      # @overload def initialize(elm_name)
-      #  @param [String] elm_name 要素名
-      # @overload def initialize(attr_name,attr_value)
-      #  @param [String] attr_name 属性名
-      #  @param [String] attr_value 属性値
-      # @overload def initialize(elm_name,attr_name,attr_value)
-      #  @param [String] elm_name 要素名
-      #  @param [String] attr_name 属性名
-      #  @param [String] attr_value 属性値
-      # @overload def initialize(attr_name1,attr_value1,attr_name2,attr_value2)
-      #  @param [String] attr_name1 属性名１
-      #  @param [String] attr_value1 属性値１
-      #  @param [String] attr_name2 属性名２
-      #  @param [String] attr_value2 属性値２
-      # @overload def initialize(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
-      #  @param [String] elm_name 要素名
-      #  @param [String] attr_name1 属性名１
-      #  @param [String] attr_value1 属性値１
-      #  @param [String] attr_name2 属性名２
-      #  @param [String] attr_value2 属性値２
+      # initializer (イニシャライザ)
+      # @overload initialize(elm_name)
+      #  @param [String] elm_name element name (要素名)
+      # @overload initialize(attr_name,attr_value)
+      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String] attr_value attribute value (属性値)
+      # @overload initialize(elm_name,attr_name,attr_value)
+      #  @param [String] elm_name element name (要素名)
+      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String] attr_value attribute value (属性値)
+      # @overload initialize(attr_name1,attr_value1,attr_name2,attr_value2)
+      #  @param [String] attr_name1 attribute name1 (属性名１)
+      #  @param [String] attr_value1 attribute value1 (属性値１)
+      #  @param [String] attr_name2 attribute name2 (属性名２)
+      #  @param [String] attr_value2 attribute value2 (属性値２)
+      # @overload initialize(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+      #  @param [String] elm_name element name (要素名)
+      #  @param [String] attr_name1 attribute name1 (属性名１)
+      #  @param [String] attr_value1 attribute value1 (属性値１)
+      #  @param [String] attr_name2 attribute name2 (属性名２)
+      #  @param [String] attr_value2 attribute value2 (属性値２)
       #
       def initialize(*args)
         case args.length
@@ -1128,7 +1128,7 @@ module Meteor
   module Core
 
     #
-    # パーサコアクラス
+    # Parser Core Class (パーサコアクラス)
     #
     class Kernel < Meteor::Parser
 
@@ -1367,7 +1367,7 @@ module Meteor
       #
       def initialize
         #親要素
-        #@parent = nil;
+        #@parent = nil
 
         #正規表現パターン
         #@pattern = nil
@@ -1395,37 +1395,37 @@ module Meteor
         @root.document
       end
 
-      attr_accessor :element_cache #[Hash] 要素キャッシュ
-      attr_accessor :doc_type #[Fixnum] ドキュメントタイプ
+      attr_accessor :element_cache #[Hash] element cache (要素キャッシュ)
+      attr_accessor :doc_type #[Fixnum] document type (ドキュメントタイプ)
 
       #
-      # 文字エンコーディングをセットする
-      # @param [String] enc 文字エンコーディング
+      # set character encoding (文字エンコーディングをセットする)
+      # @param [String] enc character encoding (文字エンコーディング)
       #
       def character_encoding=(enc)
         @root.character_encoding = enc
       end
 
       #
-      # 文字エンコーディングを取得する    
-      # @param [String] 文字エンコーディング
+      # get character encoding (文字エンコーディングを取得する)
+      # @return [String] character encoding (文字エンコーディング)
       #
       def character_encoding
         @root.character_encoding
       end
 
       #
-      # ルート要素を取得する
-      # @return [Meteor::RootElement] ルート要素
+      # get root element (ルート要素を取得する)
+      # @return [Meteor::RootElement] root element (ルート要素)
       #
       def root_element
         @root
       end
 
       #
-      # ファイルを読み込み、パーサにセットする
-      # @param [String] filePath 入力ファイルの絶対パス
-      # @param [String] encoding 入力ファイルの文字コード
+      # read file , set in parser (ファイルを読み込み、パーサにセットする)
+      # @param [String] file_path absolute path of input file (入力ファイルの絶対パス)
+      # @param [String] encoding character encoding of input file (入力ファイルの文字コード)
       #
       def read(file_path, encoding)
 
@@ -1437,7 +1437,7 @@ module Meteor
             #io = File.open(file_path,MODE_BF << encoding)
             io = File.open(file_path, MODE_UTF8)
           else
-            io = File.open(file_path, MODE_BF << encoding << MODE_AF)
+            io = File.open(file_path, '' << MODE_BF << encoding << MODE_AF)
           end
 
           #読込及び格納
@@ -1459,32 +1459,32 @@ module Meteor
       end
 
       #
-      # 要素を取得する
-      # @overload def element(elm_name)
+      # get element (要素を取得する)
+      # @overload element(elm_name)
       #  要素名で要素を取得する
       #  @param [String] elm_name 要素名
       #  @return [Meteor::Element] 要素
-      # @overload def element(elm_name,attrs)
+      # @overload element(elm_name,attrs)
       #  要素名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [String] elm_name  要素名
       #  @param [Hash] attrs 属性マップ
       #  @return [Meteor::Element] 要素
-      # @overload def element(attrs)
+      # @overload element(attrs)
       #  属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [Hash] attrs 属性マップ
       #  @return [Meteor::Element] 要素
-      # @overload def element(elm_name,attr_name,attr_value)
+      # @overload element(elm_name,attr_name,attr_value)
       #  要素名と属性(属性名="属性値")で要素を取得する
       #  @param [String] elm_name  要素名
       #  @param [String] attr_name 属性名
       #  @param [String] attr_value 属性値
       #  @return [Meteor::Element] 要素
-      # @overload def element(attr_name,attr_value)
+      # @overload element(attr_name,attr_value)
       #  属性(属性名="属性値")で要素を取得する
       #  @param [String] attr_name 属性名
       #  @param [String] attr_value 属性値
       #  @return [Meteor::Element] 要素
-      # @overload def element(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+      # @overload element(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
       #  要素名と属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [String] elm_name  要素の名前
       #  @param [String] attr_name1 属性名1
@@ -1492,14 +1492,14 @@ module Meteor
       #  @param [String] attr_name2 属性名2
       #  @param [String] attr_value2 属性値2
       #  @return [Meteor::Element] 要素
-      # @overload def element(attr_name1,attr_value1,attr_name2,attr_value2)
+      # @overload element(attr_name1,attr_value1,attr_name2,attr_value2)
       #  属性１・属性２(属性名="属性値")で要素を取得する
       #  @param [String] attr_name1 属性名1
       #  @param [String] attr_value1 属性値2
       #  @param [String] attr_name2 属性名2
       #  @param [String] attr_value2 属性値2
       #  @return [Meteor::Element] 要素
-      # @overload def element(elm)
+      # @overload element(elm)
       #  要素を射影する
       #  @param [Meteor::Element] elm 要素
       #  @return [Meteor::Element] 要素
@@ -1578,9 +1578,9 @@ module Meteor
       end
 
       #
-      # 要素を取得する
-      # @param [String] selector セレクタ
-      # @return [Meteor::Element] 要素
+      # get element (要素を取得する)
+      # @param [String] selector selector (セレクタ)
+      # @return [Meteor::Element] element (要素)
       #
       def find(selector)
         #puts selector
@@ -1784,7 +1784,7 @@ module Meteor
           element_with_3_1(elm_name)
           #elsif !@res1 && !@res2 then
         else
-          #raise Meteor::Exception::NoSuchElementException.new(elm_name,attr_name,attr_value);
+          #raise Meteor::Exception::NoSuchElementException.new(elm_name,attr_name,attr_value)
           puts Meteor::Exception::NoSuchElementException.new(elm_name, attr_name, attr_value).message
           @elm_ = nil
         end
@@ -1873,7 +1873,7 @@ module Meteor
         @pattern_cc = @sbuf
 
         if @sbuf.length == ZERO || @cnt != ZERO then
-          return nil;
+          return nil
         end
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -2008,7 +2008,7 @@ module Meteor
           element_with_5_1(elm_name)
           #elsif !@res1 && !@res2 then
         else
-          #raise Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2);
+          #raise Meteor::Exception::NoSuchElementException.new(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
           puts Meteor::Exception::NoSuchElementException.new(elm_name, attr_name1, attr_value1, attr_name2, attr_value2).message
           @elm_ = nil
         end
@@ -2118,7 +2118,7 @@ module Meteor
       private :element_with_5_2
 
       def element_without_5(elm_name)
-        element_without_5_1(elm_name, TAG_SEARCH_NC_2_3_2_2);
+        element_without_5_1(elm_name, TAG_SEARCH_NC_2_3_2_2)
       end
 
       private :element_without_5
@@ -2175,8 +2175,8 @@ module Meteor
         @res = @pattern.match(@root.document)
 
         if @res then
-          #@elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2);
-          element_5(@res[1], attr_name1, attr_value1, attr_name2, attr_value2);
+          #@elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2)
+          element_5(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
         else
           puts Meteor::Exception::NoSuchElementException.new(attr_name1, attr_value1, attr_name2, attr_value2).message
           @elm_ = nil
@@ -2354,18 +2354,18 @@ module Meteor
       private :create_element_pattern
 
       #
-      # @overload def attr(elm,attr)
+      # @overload attr(elm,attr)
       #  要素の属性をセットする
       #  @param [Meteor::Element] elm 要素
       #  @param [Hash] attr 属性
       #  @return [Meteor::Element] 要素
-      # @overload def attr(elm,attr_name,attr_value)
+      # @overload attr(elm,attr_name,attr_value)
       #  要素の属性をセットする
       #  @param [Meteor::Element] elm 要素
       #  @param [String] attr_name  属性名
       #  @param [String,true,false] attr_value 属性値
       #  @return [Meteor::Element] 要素
-      # @overload def attr(elm,attr_name)
+      # @overload attr(elm,attr_name)
       #  要素の属性値を取得する
       #  @param [Meteor::Element] elm 要素
       #  @param [String] attr_name 属性名
@@ -2391,8 +2391,8 @@ module Meteor
 
 
       #
-      # 要素の属性を編集する
-      # @param [Meteor::Element] elm 要素
+      # edit attribute of element (要素の属性を編集する)
+      # @param [Meteor::Element] elm element param (要素)
       # @param [String] attr_name  属性名
       # @param [String,true,false] attr_value 属性値
       # @return [Meteor::Element] 要素
@@ -2469,13 +2469,13 @@ module Meteor
       private :get_attr_value_
 
       #
-      # @overload def attr_map(elm,attr_map)
-      #  属性マップをセットする
+      # @overload attr_map(elm,attr_map)
+      #  set attribute map (属性マップをセットする)
       #  @param [Meteor::Element] elm 要素
       #  @param [Meteor::AttributeMap] attr_map 属性マップ
       #  @return [Meteor::Element] 要素
-      # @overload def attr_map(elm)
-      #  属性マップを取得する
+      # @overload attr_map(elm)
+      #  get attribute map (属性マップを取得する)
       #  @param [Meteor::Element] elm 要素
       #  @return [Meteor::AttributeMap] 属性マップ
       #
@@ -2533,18 +2533,18 @@ module Meteor
       private :set_attr_map
 
       #
-      # @overload def content(elm,content,entity_ref=true)
+      # @overload content(elm,content,entity_ref=true)
       #  set contents of element (要素の内容をセットする)
       #  @param [Meteor::Element] elm 要素
       #  @param [String] content 要素の内容
       #  @param [true,false] entity_ref エンティティ参照フラグ
       #  @return [Meteor::Element] 要素
-      # @overload def content(elm,content)
+      # @overload content(elm,content)
       #  要素の内容をセットする
       #  @param [Meteor::Element] elm 要素
       #  @param [String] content 要素の内容
       #  @return [Meteor::Element] 要素
-      # @overload def content(elm)
+      # @overload content(elm)
       #  要素の内容を取得する
       #  @param [Meteor::Element] elm 要素
       #  @return [String] 内容   
@@ -2660,12 +2660,12 @@ module Meteor
 
       #
       # CX(コメント拡張)タグを取得する
-      # @overload def cxtag(elm_name,id)
+      # @overload cxtag(elm_name,id)
       #  要素名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
       #  @param [String] elm_name 要素名
       #  @param [String] id ID属性値
       #  @return [Meteor::Element] 要素
-      # @overload def cxtag(id)
+      # @overload cxtag(id)
       #  ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
       #  @param [String] id ID属性値
       #  @return [Meteor::Element] 要素
@@ -2932,11 +2932,11 @@ module Meteor
       private :set_mono_info
 
       #
-      # @overload def execute(elm,hook)
+      # @overload execute(elm,hook)
       #  Hookerクラスの処理を実行する
       #  @param [Meteor::Element] elm 要素
       #  @param [Meteor::Hook::Hooker] hook Hookerオブジェクト
-      # @overload def execute(elm,loop,list)
+      # @overload execute(elm,loop,list)
       #  Looperクラスの処理を実行する
       #  @param [Meteor::Element] elm 要素
       #  @param [Meteor::Element::Looper] loop Looperオブジェクト
@@ -3053,10 +3053,10 @@ module Meteor
 
         #
         # get pattern(パターンを取得する)
-        # @overload def get(regex)
+        # @overload get(regex)
         #  @param [String] regex regular expression(正規表現)
         #  @return [Regexp] パターン
-        # @overload def get(regex,option)
+        # @overload get(regex,option)
         #  @param [String] regex 正規表現
         #  @param [Fixnum] option option_of_Regex(オプション)
         #  @return [Regexp] pattern(パターン)
@@ -3302,8 +3302,8 @@ module Meteor
 
         #
         # イニシャライザ
-        # @overload def initialize
-        # @overload def initialize(ps)
+        # @overload initialize
+        # @overload initialize(ps)
         #  @param [Meteor::Parser] ps パーサ
         #
         def initialize(*args)
@@ -4070,8 +4070,8 @@ module Meteor
 
         #
         # イニシャライザ
-        # @overload def initialize
-        # @overload def initialize(ps)
+        # @overload initialize
+        # @overload initialize(ps)
         #  @param [Meteor::Parser] ps パーサ
         #
         def initialize(*args)
@@ -4442,7 +4442,7 @@ module Meteor
 
         MATCH_TAG = ['br', 'hr', 'img', 'input', 'meta', 'base', 'embed', 'command', 'keygen'] #[Array] 内容のない要素
 
-        MATCH_TAG_SNG = ['texarea', 'select', 'option', 'form', 'fieldset', 'figure', 'figcaption', 'video', 'audio', 'progress', 'meter', 'time', 'ruby', 'rt', 'rp', 'datalist', 'output'] #[Array]入れ子にできない要素
+        MATCH_TAG_SNG = ['texarea', 'select', 'option', 'form', 'fieldset', 'figure', 'figcaption', 'video', 'audio', 'progress', 'meter', 'time', 'ruby', 'rt', 'rp', 'datalist', 'output'] #[Array] 入れ子にできない要素
 
         ATTR_LOGIC = ['disabled', 'readonly', 'checked', 'selected', 'multiple', 'required'] #[Array] 論理値で指定する属性
 
@@ -4460,9 +4460,9 @@ module Meteor
 
         #
         # イニシャライザ
-        # @overload def initialize
-        # @overload def initialize(ps)
-        #  @param [Meteor::Parser] ps パーサ
+        # @overload initialize
+        # @overload initialize(ps)
+        #  @param [Meteor::Parser] ps paser (パーサ)
         #
         def initialize(*args)
           super()
@@ -4587,8 +4587,8 @@ module Meteor
 
         #
         # イニシャライザ
-        # @overload def initialize
-        # @overload def initialize(ps)
+        # @overload initialize
+        # @overload initialize(ps)
         #  @param [Meteor::Parser] ps パーサ
         #
         def initialize(*args)
@@ -4727,8 +4727,8 @@ module Meteor
 
         #
         # イニシャライザ
-        # @overload def initialize
-        # @overload def initialize(ps)
+        # @overload initialize
+        # @overload initialize(ps)
         #  @param [Meteor::Parser] ps パーサ
         #
         def initialize(*args)

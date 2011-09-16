@@ -179,7 +179,7 @@ module Meteor
     attr_accessor :pattern #[String] pattern (パターン)
     attr_accessor :document_sync #[true,false] document update flag (ドキュメント更新フラグ)
     attr_accessor :empty #[true,false] content empty flag (内容存在フラグ)
-    attr_accessor :cx #[true,false] コメント拡張タグフラグ
+    attr_accessor :cx #[true,false] comment extension tag flag (コメント拡張タグフラグ)
     attr_accessor :mono #[true,false] child element existance flag (子要素存在フラグ)
     attr_accessor :parser #[Meteor::Parser] parser(パーサ)
     attr_accessor :type_value #[String] タイプ属性

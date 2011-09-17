@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.8
+# @version 0.9.6.9
 #
 
 module Meteor
 
-  VERSION = "0.9.6.8"
+  VERSION = "0.9.6.9"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -499,19 +499,7 @@ module Meteor
         @names = Array.new
         @recordable = false
       end
-    else
-      #
-      # initializer (イニシャライザ)
-      #
-      def initialize_0
-        @map = Hash.new
-        @recordable = false
-      end
-    end
 
-    private :initialize_0
-
-    if RUBY_VERSION < RUBY_VERSION_1_9_0
       #
       # initializer (イニシャライザ)
       # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
@@ -522,21 +510,7 @@ module Meteor
         @names = Array.new(attr_map.names)
         @recordable = attr_map.recordable
       end
-    else
-      #
-      # initializer (イニシャライザ)
-      # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
-      #
-      def initialize_1(attr_map)
-        #@map = Marshal.load(Marshal.dump(attr_map.map))
-        @map = attr_map.map.dup
-        @recordable = attr_map.recordable
-      end
-    end
 
-    private :initialize_1
-
-    if RUBY_VERSION < RUBY_VERSION_1_9_0
       #
       # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
       # @param [String] name attribute name (属性名)
@@ -563,7 +537,34 @@ module Meteor
           attr.value = value
         end
       end
+
+      #
+      # get attribute name array (属性名配列を取得する)
+      # @return [Array] attribute name array (属性名配列)
+      #
+      def names
+        @names
+      end
+
     else
+      #
+      # initializer (イニシャライザ)
+      #
+      def initialize_0
+        @map = Hash.new
+        @recordable = false
+      end
+
+      #
+      # initializer (イニシャライザ)
+      # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
+      #
+      def initialize_1(attr_map)
+        #@map = Marshal.load(Marshal.dump(attr_map.map))
+        @map = attr_map.map.dup
+        @recordable = attr_map.recordable
+      end
+
       #
       # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
       # @param [String] name attribute name (属性名)
@@ -589,17 +590,7 @@ module Meteor
           attr.value = value
         end
       end
-    end
 
-    if RUBY_VERSION < RUBY_VERSION_1_9_0
-      #
-      # get attribute name array (属性名配列を取得する)
-      # @return [Array] attribute name array (属性名配列)
-      #
-      def names
-        @names
-      end
-    else
       #
       # get attribute name array (属性名配列を取得する)
       # @return [Array] attribute name array (属性名配列)
@@ -607,7 +598,11 @@ module Meteor
       def names
         @map.keys
       end
+
     end
+
+    private :initialize_0
+    private :initialize_1
 
     #
     # get attribute value using attribute name (属性名で属性値を取得する)
@@ -3838,18 +3833,7 @@ module Meteor
 
             content
           end
-        else
-          def escape(content)
-            #特殊文字の置換
-            content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
 
-            content
-          end
-        end
-
-        private :escape
-
-        if RUBY_VERSION < RUBY_VERSION_1_9_0 then
           def escape_content(content, elm)
             content = escape(content)
 
@@ -3861,6 +3845,13 @@ module Meteor
             content
           end
         else
+          def escape(content)
+            #特殊文字の置換
+            content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
+
+            content
+          end
+
           def escape_content(content, elm)
             content.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
 
@@ -3868,6 +3859,7 @@ module Meteor
           end
         end
 
+        private :escape
         private :escape_content
 
         def unescape(content)
@@ -4356,18 +4348,7 @@ module Meteor
 
             content
           end
-        else
-          def escape(content)
-            #特殊文字の置換
-            content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
 
-            content
-          end
-        end
-
-        private :escape
-
-        if RUBY_VERSION < RUBY_VERSION_1_9_0 then
           def escape_content(content, elm)
             content = escape(content)
 
@@ -4379,6 +4360,13 @@ module Meteor
             content
           end
         else
+          def escape(content)
+            #特殊文字の置換
+            content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
+
+            content
+          end
+
           def escape_content(content, elm)
             content.gsub!(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
 
@@ -4386,6 +4374,7 @@ module Meteor
           end
         end
 
+        private :escape
         private :escape_content
 
         def unescape(content)

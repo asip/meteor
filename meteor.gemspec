@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{meteor}
-  s.version = "0.9.6.9"
+  s.version = "0.9.6.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yasumasa Ashida"]
   #s.autorequire = %q{meteor}
-  s.date = %q{2011-09-17}
-  s.description = %q{A lightweight (X)HTML & XML parser}
+  s.date = %q{2011-10-05}
+  s.description = %q{A lightweight (X)HTML(5) & XML parser}
   s.email = %q{ys.ashida@gmail.com}
   s.extra_rdoc_files = ["README", "ChangeLog"]
   s.files = ["README", "ChangeLog", "Rakefile", "test/meteor_test.rb", "test/test_helper.rb", "lib/meteor.rb"]
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{meteor}
   s.rubygems_version = %q{1.7.2}
-  s.summary = %q{A lightweight (X)HTML & XML parser}
+  s.summary = %q{A lightweight (X)HTML(5) & XML parser}
   s.test_files = ["test/meteor_test.rb"]
 
   if s.respond_to? :specification_version then

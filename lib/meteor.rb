@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.10
+# @version 0.9.6.11
 #
 
 module Meteor
 
-  VERSION = "0.9.6.10"
+  VERSION = "0.9.6.11"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -136,7 +136,7 @@ module Meteor
     def self.new!(*args)
       case args.length
         when TWO
-          @obj = args[1].root_element.element
+          @obj = args[1].element_hook
           if @obj then
             @obj.attributes = String.new(args[0].attributes)
             @obj.mixed_content = String.new(args[0].mixed_content)
@@ -145,7 +145,7 @@ module Meteor
             @obj
           else
             @obj = self.new(args[0], args[1])
-            args[1].root_element.element = @obj
+            args[1].element_hook = @obj
             @obj
           end
         else
@@ -438,7 +438,7 @@ module Meteor
   #
   # root element class (ルート要素クラス)
   #
-  class RootElement
+  class RootElement < Element
 
     EMPTY = ''
 
@@ -452,20 +452,13 @@ module Meteor
       #@kaigyoCode = ''
       #文字コード
       #@character_encoding=''
-
-      #フックドキュメント
-      @hook_document = ''
-      #変更可能要素
-      #@element = nil
     end
 
     attr_accessor :content_type #[String] content type (コンテントタイプ)
     attr_accessor :kaigyo_code #[String] newline (改行コード)
     attr_accessor :charset #[String] charset (文字コード)
     attr_accessor :character_encoding #[String] character encoding (エンコーディング)
-    attr_accessor :document #[String] document (ドキュメント)
-    attr_accessor :hook_document #[String] hook document (フック・ドキュメント)
-    attr_accessor :element #[Meteor::Element] element (要素)
+    #attr_accessor :document #[String] document (ドキュメント)
   end
 
   #
@@ -1367,7 +1360,8 @@ module Meteor
         @root = RootElement.new
         #要素キャッシュ
         @element_cache = Hash.new()
-
+        #フックドキュメント
+        @document_hook = ''
       end
 
       #
@@ -1389,6 +1383,8 @@ module Meteor
 
       attr_accessor :element_cache #[Hash] element cache (要素キャッシュ)
       attr_accessor :doc_type #[Fixnum] document type (ドキュメントタイプ)
+      attr_accessor :document_hook  #[String] hook document (フック・ドキュメント)
+      attr_accessor :element_hook #[Meteor::Element] element (要素)
 
       #
       # set character encoding (文字エンコーディングをセットする)
@@ -2680,7 +2676,7 @@ module Meteor
             if !item.removed then
               if item.copy then
                 @pattern = Meteor::Core::Util::PatternCache.get(item.pattern)
-                @root.document.sub!(@pattern, item.copy.parser.root_element.hook_document)
+                @root.document.sub!(@pattern, item.copy.parser.document_hook)
                 #item.copy.parser.element_cache.clear
                 item.copy = nil
               else
@@ -2737,38 +2733,38 @@ module Meteor
       #
       def flush
 
-        if @root.element then
-          if @root.element.origin.mono then
-            if @root.element.origin.cx then
+        if self.element_hook then
+          if self.element_hook.origin.mono then
+            if self.element_hook.origin.cx then
               #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
               #@root.hookDocument << @root.element.attributes << SET_CX_2
               #@root.hookDocument << @root.element.mixed_content << SET_CX_3
               #@root.hookDocument << @root.element.name << SET_CX_4
-              @root.hook_document << "<!-- @#{@root.element.name} #{@root.element.attributes}-->#{@root.element.mixed_content}<!-- /@#{@root.element.name} -->"
+              self.document_hook << "<!-- @#{@self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
             else
               #@root.hookDocument << TAG_OPEN << @root.element.name
               #@root.hookDocument << @root.element.attributes << TAG_CLOSE << @root.element.mixed_content
               #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
-              @root.hook_document << "<#{@root.element.name}#{@root.element.attributes}>#{@root.element.mixed_content}</#{@root.element.name}>"
+              self.document_hook << "<#{self.element_hook.name}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.name}>"
             end
-            @root.element = Element.new!(@root.element.origin, self)
+            self.element_hook = Element.new!(self.element_hook.origin, self)
           else
             reflect
-            @_attributes = @root.element.attributes
+            @_attributes = self.element_hook.attributes
 
-            if @root.element.origin.cx then
+            if self.element_hook.origin.cx then
               #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
               #@root.hookDocument << @_attributes << SET_CX_2
               #@root.hookDocument << @root.document << SET_CX_3
               #@root.hookDocument << @root.element.name << SET_CX_4
-              @root.hook_document << "<!-- @#{@root.element.name} #{@_attributes}-->#{@root.document}<!-- /@#{@root.element.name} -->"
+              self.document_hook << "<!-- @#{self.element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.name} -->"
             else
               #@root.hookDocument << TAG_OPEN << @root.element.name
               #@root.hookDocument << @_attributes << TAG_CLOSE << @root.document
               #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
-              @root.hook_document << "<#{@root.element.name}#{@_attributes}>#{@root.document}</#{@root.element.name}>"
+              self.document_hook << "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>"
             end
-            @root.element = Element.new!(@root.element.origin, self)
+            self.element_hook = Element.new!(self.element_hook.origin, self)
           end
         else
           reflect
@@ -3325,7 +3321,7 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hook_document = String.new(ps.root_element.hook_document)
+          self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.kaigyo_code = ps.root_element.kaigyo_code
         end
@@ -4087,7 +4083,7 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hook_document = String.new(ps.root_element.hook_document)
+          self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.kaigyo_code = ps.root_element.kaigyo_code
         end
@@ -4490,7 +4486,7 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hook_document = String.new(ps.root_element.hook_document)
+          self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.charset = ps.root_element.charset
           @root.kaigyo_code = ps.root_element.kaigyo_code
@@ -4618,7 +4614,7 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hook_document = String.new(ps.root_element.hook_document)
+          self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.charset = ps.root_element.charset
           @root.kaigyo_code = ps.root_element.kaigyo_code
@@ -4753,7 +4749,7 @@ module Meteor
         #
         def initialize_1(ps)
           @root.document = String.new(ps.document)
-          @root.hook_document = String.new(ps.root_element.hook_document)
+          ps.document_hook = String.new(ps.document_hook)
         end
 
         private :initialize_1

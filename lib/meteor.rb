@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.11
+# @version 0.9.6.12
 #
 
 module Meteor
 
-  VERSION = "0.9.6.11"
+  VERSION = "0.9.6.12"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -1358,6 +1358,7 @@ module Meteor
         #@pattern = nil
         #ルート要素
         @root = RootElement.new
+        @root.parser = self
         #要素キャッシュ
         @element_cache = Hash.new()
         #フックドキュメント

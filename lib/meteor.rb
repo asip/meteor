@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.14
+# @version 0.9.7.0
 #
 
 module Meteor
 
-  VERSION = "0.9.6.14"
+  VERSION = "0.9.7.0"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -236,35 +236,35 @@ module Meteor
     end
 
     #
-    # get child element (子要素を取得する)
-    # @overload child()
-    #  get child element (子要素を取得する)
+    # get element (要素を取得する)
+    # @overload element()
+    #  get element (要素を取得する)
     #  @return [Meteor::Element] element (要素)
-    # @overload child(elm_name)
-    #  get child element using element name (要素名で子要素を取得する)
+    # @overload element(elm_name)
+    #  get element using element name (要素名で要素を取得する)
     #  @param [String] elm_name element name (要素名)
     #  @return [Meteor::Element] 要素
-    # @overload child(elm_name,attrs)
+    # @overload element(elm_name,attrs)
     #  get element using element name and attribute map (要素名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] elm_name element name (要素名)
     #  @param [Hash] attrs attribute map (属性マップ)
     #  @return [Meteor::Element] element (要素)
-    # @overload child(attrs)
+    # @overload element(attrs)
     #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [Hash] attrs attribute map (属性マップ)
     #  @return [Meteor::Element] 要素
-    # @overload child(elm_name,attr_name,attr_value)
+    # @overload element(elm_name,attr_name,attr_value)
     #  get element using element name and attribute(name="value") (要素名と属性(属性名="属性値")で要素を取得する)
     #  @param [String] elm_name  element name (要素名)
     #  @param [String] attr_name attribute name (属性名)
     #  @param [String] attr_value attribute value (属性値)
     #  @return [Meteor::Element] element (要素)
-    # @overload child(attr_name,attr_value)
+    # @overload element(attr_name,attr_value)
     #  get element using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
     #  @param [String] attr_name 属性名
     #  @param [String] attr_value 属性値
     #  @return [Meteor::Element] 要素
-    # @overload child(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
+    # @overload element(elm_name,attr_name1,attr_value1,attr_name2,attr_value2)
     #  get element using element name and attribute1,2(name="value") (要素名と属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] elm_name  element name (要素名)
     #  @param [String] attr_name1 attribute name1 (属性名1)
@@ -272,19 +272,19 @@ module Meteor
     #  @param [String] attr_name2 attribute name2 (属性名2)
     #  @param [String] attr_value2 attribute value2 (属性値2)
     #  @return [Meteor::Element] element (要素)
-    # @overload child(attr_name1,attr_value1,attr_name2,attr_value2)
+    # @overload element(attr_name1,attr_value1,attr_name2,attr_value2)
     #  get element using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] attr_name1 属性名1
     #  @param [String] attr_value1 属性値1
     #  @param [String] attr_name2 属性名2
     #  @param [String] attr_value2 属性値2
     #  @return [Meteor::Element] 要素
-    # @overload child(elm)
+    # @overload element(elm)
     #  mirror element (要素を射影する)
     #  @param [Meteor::Element] elm element(要素)
     #  @return [Meteor::Element] element(要素)
     #
-    def child(elm = nil, attrs = nil,*args)
+    def element(elm = nil, attrs = nil,*args)
       #case args.length
       #when ZERO
       if !elm && !attrs
@@ -293,6 +293,8 @@ module Meteor
         @parser.element(elm, attrs,*args)
       end
     end
+
+    alias child element
 
     #
     # get child element using selector (子要素を取得する)
@@ -917,6 +919,15 @@ module Meteor
     end
 
     private :parser_1
+
+    #
+    # get root element (ルート要素を取得する)
+    # @param [String] key identifier (キー)
+    # @return [Meteor::RootElement] root element (ルート要素)
+    #
+    def element(key)
+      parser_1(key).root_element
+    end
 
     #
     # generate parser (パーサを作成する)

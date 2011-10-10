@@ -8,18 +8,18 @@ require 'meteor'
 pf = Meteor::ParserFactory.new
 pf.parser(Meteor::Parser::HTML,'sample.html', 'UTF-8')
 
-ps = pf.parser('sample')
+root = pf.element('sample')
 
 start_time = Time.new.to_f
 
-#elm_hello = ps.element('id'=>'hello')
-elm_hello = ps.find('[id=hello]')
+#elm_hello = root.element('id'=>'hello')
+elm_hello = root.find('[id=hello]')
 #elm_hello.attr('color'=>'red')
 elm_hello['color'] = 'red'
 
 #elm_hello.remove_attribute('color')
 
-elm_hello2 = ps.element('id','hello2')
+elm_hello2 = root.element('id','hello2')
 #elm_hello2.content('Hello,Tester')
 elm_hello2.content = 'Hello,Tester'
 
@@ -32,10 +32,10 @@ elm_hello2.content = 'Hello,Tester'
 #puts elm_hello3.content
 #puts elm_hello3.mixed_content
 
-elm_text1 = ps.element('input','id'=>'text1')
+elm_text1 = root.element('input','id'=>'text1')
 #elm_text1.attr('value'=>'めも')
 elm_text1['value'] = 'めも'
-#ps.attr(elm_text1,'disabled'=>true)
+#elm_text1.attr('disabled'=>true)
 elm_text1['disabled'] = true
 
 #elm_text1.remove_attr('disabled')
@@ -45,31 +45,31 @@ elm_text1['disabled'] = true
 #  puts map.fetch(item)
 #}
 
-#elm_radio1 = ps.element('input','id'=>'radio1','type'=>'radio')
-#elm_radio1 = ps.find('input[id=radio1][type=radio]')
-#elm_radio1 = ps.find('#radio1')
-#elm_radio1 = ps.find('.test')
-#elm_radio1 = ps.find('[id=radio1][type=radio]')
+#elm_radio1 = root.element('input','id'=>'radio1','type'=>'radio')
+#elm_radio1 = root.find('input[id=radio1][type=radio]')
+#elm_radio1 = root.find('#radio1')
+#elm_radio1 = root.find('.test')
+#elm_radio1 = root.find('[id=radio1][type=radio]')
 ##elm_radio1.attr('checked','true')
 #elm_radio1['checked'] = 'true'
 #puts elm_radio1.document
 
-#elm_select1 = ps.element('select','id'=>'select1')
-#elm_select1 = ps.element('select')
-##elm_select1 = ps.find('select')
+#elm_select1 = root.element('select','id'=>'select1')
+#elm_select1 = root.element('select')
+##elm_select1 = root.find('select')
 #elm_select1.attr('multiple','true')
 #elm_select1['multiple'] = true
 ##puts elm_select1.attr('multiple')
 #puts elm_select1['multiple']
 
-#elm_option1 = ps.element('option','id'=>'option1')
+#elm_option1 = root.element('option','id'=>'option1')
 ##elm_option1.attr('selected'=>'true')
 #elm_option1['selected'] = true
 #ps.remove_attr(elm_option1,'selected')
 #elm_option1.remove_attr('selected')
 ##puts elm_option1.attr('selected')
 #puts elm_option1['selected']
-#puts ps.attr(elm_text1,'readonly')
+#puts elm_text1.attr('readonly')
 
 #elm_select2 = ps.element('select','id'=>'select2')
 #elm_select2['multiple'] = 'true'
@@ -88,12 +88,12 @@ elm_text1['disabled'] = true
 #  co_ps.flush
 #}
 
-elm_tr1 = ps.element('tr','id'=>'loop')
+elm_tr1 = root.element('tr','id'=>'loop')
 #elm_tr1 = ps.find('tr[id=loop]')
-elm_ = ps.element(elm_tr1)
-elm_dt1_ = elm_.child('id'=>'aa')
-elm_dt2_ = elm_.child('id'=>'bb')
-elm_dt3_ = elm_.child('id'=>'cc')
+elm_ = root.element(elm_tr1)
+elm_dt1_ = elm_.element('id'=>'aa')
+elm_dt2_ = elm_.element('id'=>'bb')
+elm_dt3_ = elm_.element('id'=>'cc')
 10.times do |i|
   elm_['loop'] = i.to_s
   elm_dt1 = elm_dt1_.clone
@@ -106,10 +106,10 @@ elm_dt3_ = elm_.child('id'=>'cc')
   elm_.flush
 end
 
-ps.flush
+root.flush
 
 end_time = Time.new.to_f
 
-puts ps.document
+puts root.document
 
 puts '' + (end_time - start_time).to_s + ' sec'

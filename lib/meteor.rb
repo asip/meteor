@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.6.12
+# @version 0.9.6.14
 #
 
 module Meteor
 
-  VERSION = "0.9.6.12"
+  VERSION = "0.9.6.14"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -2741,7 +2741,7 @@ module Meteor
               #@root.hookDocument << @root.element.attributes << SET_CX_2
               #@root.hookDocument << @root.element.mixed_content << SET_CX_3
               #@root.hookDocument << @root.element.name << SET_CX_4
-              self.document_hook << "<!-- @#{@self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
+              self.document_hook << "<!-- @#{self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
             else
               #@root.hookDocument << TAG_OPEN << @root.element.name
               #@root.hookDocument << @root.element.attributes << TAG_CLOSE << @root.element.mixed_content

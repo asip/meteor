@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.7.1
+# @version 0.9.7.2
 #
 
 module Meteor
 
-  VERSION = "0.9.7.1"
+  VERSION = "0.9.7.2"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -1630,7 +1630,7 @@ module Meteor
 
         if @res
           if @res[1]
-             element_without_1(elm_name)
+            element_without_1(elm_name)
           else
             element_with_1(elm_name)
           end
@@ -1894,10 +1894,9 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def element_2(attr_name, attr_value)
-
         @_attr_name = Regexp.quote(attr_name)
         @_attr_value = Regexp.quote(attr_value)
-
+#=begin
         ##@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4
         #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4_2_3
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\""
@@ -1912,11 +1911,209 @@ module Meteor
           puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
           @elm_ = nil
         end
+#=end
+
+=begin
+       @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(\\3[^<>]*>)).)*)<\\/\\3>"
+
+
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+        @res1 = @pattern.match(@root.document)
+
+        if @res1 && @res1[1] || !@res1 then
+          @res2 = element_with_2_2
+          @pattern_cc_2 = @pattern_cc
+
+          #puts @res2.captures.length
+          #puts @res2.regexp.to_s
+        end
+
+        if @res1 && @res2 then
+          if @res1.begin(0) < @res2.begin(0) then
+            @res = @res1
+            #@pattern_cc = @pattern_cc_1
+            if @res[1]
+              element_without_2
+            else
+              element_with_2_1
+            end
+          elsif @res1.begin(0) > @res2.begin(0)
+            @res = @res2
+            #@pattern_cc = @pattern_cc_2
+            element_with_2_1
+          end
+        elsif @res1 && !@res2 then
+          @res = @res1
+          #@pattern_cc = @pattern_cc_1
+          if @res[1]
+            element_without_2
+          else
+            element_with_2_1
+          end
+        elsif @res2 && !@res1 then
+          @res = @res2
+          #@pattern_cc = @pattern_cc_2
+          element_with_2_1
+        else
+          puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+          @elm_ = nil
+        end
+=end
 
         @elm_
       end
 
       private :element_2
+
+=begin
+     def element_with_2_1()
+        #puts @res.captures.length
+        case @res.captures.length
+          when FOUR
+            @_elm_name = @res[1]
+            #要素
+            @elm_ = Element.new(@_elm_name)
+            #属性
+            @elm_.attributes = @res[2]
+            #内容
+            @elm_.mixed_content = @res[3]
+            #全体
+            @elm_.document = @res[0]
+            #内容あり要素検索用パターン
+            #@pattern_cc = ''<< TAG_OPEN << @_elm_name << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ
+            #@pattern_cc << @_attr_value << TAG_SEARCH_NC_2_2 << @_elm_name
+            #@pattern_cc << TAG_SEARCH_NC_1_2 << @_elm_name << TAG_CLOSE
+            @pattern_cc = "<#{@_elm_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_elm_name}[^<>]*>)).)*<\\/#{@_elm_name}>"
+
+            @elm_.pattern = @pattern_cc
+
+            @elm_.empty = true
+
+            @elm_.parser = self
+
+          when FIVE,SEVEN
+            @_elm_name = @res[3]
+            #要素
+            @elm_ = Element.new(@_elm_name)
+            #属性
+            @elm_.attributes = @res[4]
+            #内容
+            @elm_.mixed_content = @res[5]
+            #全体
+            @elm_.document = @res[0]
+            #内容あり要素検索用パターン
+            #@pattern_cc = ''<< TAG_OPEN << @_elm_name << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ
+            #@pattern_cc << @_attr_value << TAG_SEARCH_NC_2_2 << @_elm_name
+            #@pattern_cc << TAG_SEARCH_NC_1_2 << @_elm_name << TAG_CLOSE
+            @pattern_cc = "<#{@_elm_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_elm_name}[^<>]*>)).)*<\\/#{@_elm_name}>"
+
+            @elm_.pattern = @pattern_cc
+
+            @elm_.empty = true
+
+            @elm_.parser = self
+
+          when THREE,SIX
+            #puts @res[1]
+            #puts @res[3]
+            #@_elm_name = @res[1]
+            #内容
+            @elm_ = Element.new(@_elm_name)
+            #属性
+            @elm_.attributes = @res[1].chop
+            #内容
+            @elm_.mixed_content = @res[3]
+            #全体
+            @elm_.document = @res[0]
+            #内容あり要素検索用パターン
+            @elm_.pattern = @pattern_cc
+
+            @elm_.empty = true
+
+            @elm_.parser = self
+        end
+        @elm_
+      end
+
+      private :element_with_2_1
+
+      def element_with_2_2
+
+        #@pattern_cc_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ
+        #@pattern_cc_1 << @_attr_value << TAG_SEARCH_2_4_2
+        @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
+
+        #内容あり要素検索
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+
+        @sbuf = ''
+
+        @cnt = 0
+
+        create_element_pattern_2(2)
+
+        @pattern_cc = @sbuf
+
+        if @sbuf.length == ZERO || @cnt != ZERO then
+          return nil
+        end
+
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+        @res = @pattern.match(@root.document)
+
+        #@res
+      end
+
+      private :element_with_2_2
+
+      def create_pattern_2(args_cnt)
+
+        #puts @_elm_name
+
+        @pattern_cc_1b = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_4
+
+        #@pattern_cc_1_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ
+        #@pattern_cc_1_1 << @_attr_value << TAG_SEARCH_4_7
+        @pattern_cc_1_1 = "<#{@_elm_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+
+        @pattern_cc_1_2 = '' << TAG_SEARCH_4_2 << @_elm_name << TAG_SEARCH_4_3
+
+        @pattern_cc_2 = '' << TAG_SEARCH_4_4 << @_elm_name << TAG_CLOSE
+
+        @pattern_cc_2_1 = '' << TAG_SEARCH_4_5 << @_elm_name << TAG_CLOSE
+
+        @pattern_cc_2_2 = '' << TAG_SEARCH_4_6 << @_elm_name << TAG_CLOSE
+
+        @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
+        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+
+      end
+
+      def element_without_2
+        element_without_2_1(TAG_SEARCH_NC_2_3_2)
+      end
+
+      private :element_without_2
+
+      def element_without_2_1(closer)
+
+        #要素
+        @elm_ = Element.new(@res[1])
+        #属性
+        @elm_.attributes = @res[2]
+        #全体
+        @elm_.document = @res[0]
+        #空要素検索用パターン
+        @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ << @_attr_value << closer
+        @elm_.pattern = @pattern_cc
+
+        @elm_.parser = self
+
+        @elm_
+      end
+
+      private :element_without_2_1
+=end
 
       #
       # get element using element name and attribute1,2(name="value") (要素名と属性1・属性2(属性名="属性値")で検索し、要素を取得する)
@@ -2160,7 +2357,7 @@ module Meteor
         #@pattern_cc << @_attr_value2 << TAG_SEARCH_2_7 << @_attr_name2 << ATTR_EQ
         #@pattern_cc << @_attr_value2 << TAG_SEARCH_2_6 << @_attr_name1 << ATTR_EQ
         #@pattern_cc << @_attr_value1 << TAG_SEARCH_2_4_2_3
-        @pattern_cc = "<([^<>\"]*)\\s([^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\""
+        @pattern_cc = "<([^<>\"]*)\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
@@ -2261,6 +2458,101 @@ module Meteor
       end
 
       private :create_element_pattern
+
+=begin
+      def create_element_pattern_2(args_cnt)
+        @position = 0
+
+        while (@res = @pattern.match(@root.document, @position)) || @cnt > ZERO
+
+          if @res then
+
+            if @cnt > ZERO then
+
+              @position2 = @res.end(0)
+
+              @res = @pattern_2.match(@root.document, @position)
+
+              if @res then
+
+                @position = @res.end(0)
+
+                if @position > @position2 then
+
+                  @sbuf << @pattern_cc_1_2
+
+                  @cnt += 1
+
+                  @position = @position2
+                else
+
+                  @cnt -= ONE
+
+                  if @cnt != ZERO then
+                    @sbuf << @pattern_cc_2_1
+                  else
+                    @sbuf << @pattern_cc_2_2
+                    break
+                  end
+
+                end
+              else
+
+                @sbuf << @pattern_cc_1_2
+
+                @cnt += 1
+
+                @position = @position2
+              end
+            else
+              @position = @res.end(0)
+
+              @_elm_name = @res[1]
+
+              create_pattern_2(args_cnt)
+
+              @sbuf << @pattern_cc_1_1
+
+              @cnt += ONE
+
+            end
+          else
+
+            if @cnt == ZERO then
+              break
+            end
+
+            @res = @pattern_2.match(@root.document, @position)
+
+            if @res then
+
+              @cnt -= ONE
+
+              if @cnt != ZERO then
+                @sbuf << @pattern_cc_2_1
+              else
+                @sbuf << @pattern_cc_2_2
+                break
+              end
+
+              @position = @res.end(0)
+            else
+              break
+            end
+
+          end
+
+          @pattern = @pattern_1b
+        end
+      end
+
+      private :create_element_pattern_2
+
+      #def create_pattern_2
+      #end
+
+      #private :create_pattern_2
+=end
 
       #
       # @overload attr(elm,attr)

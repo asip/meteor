@@ -1,9 +1,9 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-require 'rubygems'
-require 'meteor'
-#require '../lib/meteor'
+#require 'rubygems'
+#require 'meteor'
+require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
 #pf.parser(Meteor::Parser::XML,'sample.xml', 'UTF-8')
@@ -13,21 +13,36 @@ root = pf.element('sample')
 
 start_time = Time.new.to_f
 
+#elm_ =  root.element('test1')
+#puts elm_.name
+#puts elm_.attributes
+#puts elm_.mixed_content
+
+#elm_ =  root.element('test')
+#puts elm_.name
+#puts elm_.attributes
+#puts elm_.mixed_content
+
 elm1 = root.element('test','manbo'=>'manbo')
 #elm1 = root.element("manbo"=>"manbo")
-#elm2 = root.element("potato","id"=>"aa","id2"=>"bb")
+#elm2 = root.element("id"=>"aa","id2"=>"bb")
+#elm2 = root.element("id"=>"aa")
 #elm3 = root.element("potato","id"=>"aa")
 #elm4 = root.element("potato","id"=>"aa","id2"=>"bb")
 #elm4 = root.element("potato","id2"=>"bb")
 elm7 = root.element("kobe")
+#elm7 = root.element("momo"=>"mono")
 #elm8 = root.element("manbo"=>"mango")
+#elm8 = root.element("momo"=>"momo")
 
 #elm9 = root.element("hamachi","id"=>"aa",'id2'=>'bb')
 #elm_c1 = root.cxtag("cs")
 
 #elm8.attr("manbo"=>"mangoo")
 
-#puts elm7.attributes
+#puts elm8.name
+#puts elm8.attributes
+#puts elm8.mixed_content
 
 #elm1.attr("id2"=>"cc")
 #elm1["id2"]="cc"

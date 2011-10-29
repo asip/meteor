@@ -10,7 +10,7 @@
 
 <root>
 
-<test manbo="mango" />
+<test1 manbo="mango" />
 
 <test manbo="manbo">
     <tech mono="mono">こまねち</tech>
@@ -44,7 +44,7 @@
 
 <hamachi id="aa" id2="bb" />
 
-<kobe momo="mono" value="komaneti" />
+<kobe momo="momo" value="komaneti" />
 <!-- @pp id="cs" -->テスト<!-- /@pp -->
 
 </root>

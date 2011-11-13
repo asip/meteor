@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.7.2
+# @version 0.9.7.3
 #
 
 module Meteor
 
-  VERSION = "0.9.7.2"
+  VERSION = "0.9.7.3"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -215,6 +215,7 @@ module Meteor
                 @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
               else
                 @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE
+                #@document = "<#{@name}#{@attributes}>"
               end
             end
           when Parser::XHTML, Parser::XHTML5, Parser::XML then
@@ -227,6 +228,7 @@ module Meteor
                 @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
               else
                 @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE3
+                #@document = "<#{@name}#{@attributes}/>"
               end
             end
         end
@@ -1622,7 +1624,7 @@ module Meteor
         @_elm_name = Regexp.quote(elm_name)
 
         #要素検索用パターン
-        @pattern_cc = '' << "<#{@_elm_name}(|\\s[^<>]*)\\/>|<#{@_elm_name}((?:|\\s[^<>]*))>(((?!(#{@_elm_name}[^<>]*>)).)*)<\\/#{@_elm_name}>"
+        @pattern_cc = "<#{@_elm_name}(|\\s[^<>]*)\\/>|<#{@_elm_name}((?:|\\s[^<>]*))>(((?!(#{@_elm_name}[^<>]*>)).)*)<\\/#{@_elm_name}>"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         #内容あり要素検索
@@ -1678,6 +1680,7 @@ module Meteor
         @elm_.document = @res[0]
         #空要素検索用パターン
         @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_1_3
+        #@pattern_cc = "<#{@_elm_name}(?:|\\s[^<>]*)\\/>"
         @elm_.pattern = @pattern_cc
 
         @elm_.empty = false
@@ -1823,18 +1826,24 @@ module Meteor
         @pattern_cc_1 = "<#{@_elm_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
 
         @pattern_cc_1b = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_4
+        #@pattern_cc_1b = "<#{@_elm_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
 
         #@pattern_cc_1_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ
         #@pattern_cc_1_1 << @_attr_value << TAG_SEARCH_4_7
         @pattern_cc_1_1 = "<#{@_elm_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
 
         @pattern_cc_1_2 = '' << TAG_SEARCH_4_2 << @_elm_name << TAG_SEARCH_4_3
+        #@pattern_cc_1_2 = ".*?<#{@_elm_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+
 
         @pattern_cc_2 = '' << TAG_SEARCH_4_4 << @_elm_name << TAG_CLOSE
+        #@pattern_cc_2 = '' << "<\\/#{@_elm_name}>"
 
         @pattern_cc_2_1 = '' << TAG_SEARCH_4_5 << @_elm_name << TAG_CLOSE
+        #@pattern_cc_2_1 = ".*?<\\/#{@_elm_name}>"
 
         @pattern_cc_2_2 = '' << TAG_SEARCH_4_6 << @_elm_name << TAG_CLOSE
+        #@pattern_cc_2_2 = ".*?)<\\/#{@_elm_name}>"
 
         #内容あり要素検索
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
@@ -1878,6 +1887,7 @@ module Meteor
         @elm_.document = @res[0]
         #空要素検索用パターン
         @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ << @_attr_value << closer
+        #@pattern_cc = "<#{@_elm_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}#{closer}"
         @elm_.pattern = @pattern_cc
 
         @elm_.parser = self
@@ -2264,6 +2274,7 @@ module Meteor
         @pattern_cc_1 = "<#{@_elm_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))"
 
         @pattern_cc_1b = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_4
+        #@pattern_cc_1b = "<#{@_elm_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
 
         #@pattern_cc_1_1 = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_2_1_2 << @_attr_name1 << ATTR_EQ
         #@pattern_cc_1_1 << @_attr_value1 << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ
@@ -2279,6 +2290,14 @@ module Meteor
         @pattern_cc_2_1 = '' << TAG_SEARCH_4_5 << @_elm_name << TAG_CLOSE
 
         @pattern_cc_2_2 = '' << TAG_SEARCH_4_6 << @_elm_name << TAG_CLOSE
+
+        #@pattern_cc_1_2 = ".*?<#{@_elm_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+        #
+        #@pattern_cc_2 = '' << "<\\/#{@_elm_name}>"
+        #
+        #@pattern_cc_2_1 = ".*?<\\/#{@_elm_name}>"
+        #
+        #@pattern_cc_2_2 = ".*?)<\\/#{@_elm_name}>"
 
         #内容あり要素検索
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
@@ -2621,9 +2640,10 @@ module Meteor
 
           #属性の置換
           @pattern = Meteor::Core::Util::PatternCache.get('' << attr_name << SET_ATTR_1)
+          #@pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"")
 
-          #elm.attributes.sub!(@pattern,'' << attr_name << ATTR_EQ << @_attr_value << DOUBLE_QUATATION)
-          elm.attributes.sub!(@pattern, "#{attr_name}=\"#{@_attr_value}\"")
+          elm.attributes.sub!(@pattern,'' << attr_name << ATTR_EQ << @_attr_value << DOUBLE_QUATATION)
+          #elm.attributes.sub!(@pattern, "#{attr_name}=\"#{@_attr_value}\"")
         else
           #属性文字列の最後に新規の属性を追加する
           @_attr_value = attr_value
@@ -2634,8 +2654,8 @@ module Meteor
             elm.attributes = ''
           end
 
-          #elm.attributes << SPACE << attr_name << ATTR_EQ << @_attr_value << DOUBLE_QUATATION
-          elm.attributes << " #{attr_name}=\"#{@_attr_value}\""
+          elm.attributes << SPACE << attr_name << ATTR_EQ << @_attr_value << DOUBLE_QUATATION
+          #elm.attributes << " #{attr_name}=\"#{@_attr_value}\""
         end
       end
 
@@ -2657,6 +2677,7 @@ module Meteor
 
         #属性検索用パターン
         @pattern = Meteor::Core::Util::PatternCache.get('' << attr_name << GET_ATTR_1)
+        #@pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"([^\"]*)\"")
 
         @res = @pattern.match(elm.attributes)
 
@@ -2844,6 +2865,7 @@ module Meteor
       def remove_attrs_(elm, attr_name)
         #属性検索用パターン
         @pattern = Meteor::Core::Util::PatternCache.get('' << attr_name << ERASE_ATTR_1)
+        #@pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"\\s?")
         #属性の置換
         elm.attributes.sub!(@pattern, EMPTY)
       end
@@ -2945,6 +2967,7 @@ module Meteor
         @_id = Regexp.quote(id)
 
         @pattern_cc = '' << SEARCH_CX_6 << @_id << DOUBLE_QUATATION
+        #@pattern_cc = "<!--\\s@([^<>]*)\\s[^<>]*id=\"#{@_id}\""
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
@@ -3020,6 +3043,7 @@ module Meteor
           else
             #空要素の場合
             elm.document = '' << TAG_OPEN << elm.name << @_attributes << closer
+            #elm.document = "<#{elm.name}#{@_attributes}#{closer}"
           end
         else
           @_content = elm.mixed_content
@@ -3732,6 +3756,7 @@ module Meteor
           if is_match(@@match_tag, elm_name) then
             #空要素検索用パターン
             @pattern_cc = '' << TAG_OPEN << @_elm_name << TAG_SEARCH_1_4_2
+            #@pattern_cc = "<#{@_elm_name}(|\\s[^<>]*)>"
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             @res = @pattern.match(@root.document)
             if @res then
@@ -4098,6 +4123,7 @@ module Meteor
           if !is_match(@@attr_logic, attr_name) then
             #属性検索用パターン
             @pattern = Meteor::Core::Util::PatternCache.get('' << attr_name << ERASE_ATTR_1)
+            #@pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"\\s?")
             elm.attributes.sub!(@pattern, EMPTY)
           else
             #属性検索用パターン

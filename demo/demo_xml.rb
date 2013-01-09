@@ -6,8 +6,8 @@
 require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
-#pf.parser(Meteor::Parser::XML,'sample.xml', 'UTF-8')
-pf.parser(Meteor::Parser::XML,'sample.xml')
+#pf.parser(Meteor::XML,'sample.xml', 'UTF-8')
+pf.parser(Meteor::XML,'sample.xml')
 
 root = pf.element('sample')
 

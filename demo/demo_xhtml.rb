@@ -6,7 +6,7 @@ require 'meteor'
 #require '../lib/meteor'
 
 pf = Meteor::ParserFactory.new
-pf.parser(Meteor::Parser::XHTML,"sample_x.html", "UTF-8")
+pf.parser(Meteor::XHTML,"sample_x.html", "UTF-8")
 
 root = pf.element('sample_x')
 

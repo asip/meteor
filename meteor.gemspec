@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yasumasa Ashida"]
   #s.autorequire = %q{meteor}
-  s.date = %q{2013-01-09}
+  s.date = %q{2013-01-11}
   s.description = %q{A lightweight (X)HTML(5) & XML parser}
   s.email = %q{ys.ashida@gmail.com}
   s.license = 'LGPLv2.1'

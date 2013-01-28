@@ -765,7 +765,7 @@ module Meteor
     SLASH = '/'
     ENC_UTF8 = 'UTF-8'
 
-    attr_accessor :base_type #[FixedNum] default type of parser (デフォルトのパーサ・タイプ)
+    attr_accessor :base_type #[FixNum] default type of parser (デフォルトのパーサ・タイプ)
     attr_accessor :base_dir #[String] base directory (基準ディレクトリ)
     attr_accessor :base_enc #[String] default character encoding (デフォルトエンコーディング)
 

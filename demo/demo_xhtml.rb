@@ -1,14 +1,17 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-require 'rubygems'
+#require 'rubygems'
 require 'meteor'
 #require '../lib/meteor'
 
-pf = Meteor::ParserFactory.new
-pf.parser(Meteor::XHTML,"sample_x.html", "UTF-8")
+#pf = Meteor::ParserFactory.new
+#pf.bind(Meteor::Parser::XHTML,"sample_x.html", "UTF-8")
 
-root = pf.element('sample_x')
+#root = pf.element('sample_x')
+
+Meteor::ElementFactory.bind(Meteor::Parser::XHTML,'sample_x.html', 'UTF-8')
+root = Meteor::ElementFactory.element('sample_x')
 
 startTime = Time.new.to_f
 
@@ -38,9 +41,9 @@ elm_hello2.content = "Hello,Tester"
 #  puts map.fetch(item)
 #}
 
-#elm_radio1 = root.element("input","id"=>"radio1","type"=>"radio")
+elm_radio1 = root.element("input","id"=>"radio1","type"=>"radio")
 ##elm_radio1.attribute("checked"=>"true")
-#elm_radio1['checked'] = true
+elm_radio1['checked'] = true
 
 #elm_select1 = root.element("select","id"=>"select1")
 #elm_select1 = root.element("select")

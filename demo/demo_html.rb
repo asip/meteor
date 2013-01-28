@@ -1,19 +1,25 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-require 'rubygems'
+#require 'rubygems'
 require 'meteor'
 #require '../lib/meteor'
 
-pf = Meteor::ParserFactory.new
-pf.parser(Meteor::HTML,'sample.html', 'UTF-8')
+#pf = Meteor::ParserFactory.new
+#pf.bind(Meteor::HTML,'sample.html', 'UTF-8')
 
-root = pf.element('sample')
+#root = pf.element('sample')
+
+Meteor::ElementFactory.options= {:base_type => Meteor::HTML}
+#Meteor::ElementFactory.bind(Meteor::HTML,'sample.html', 'UTF-8')
+Meteor::ElementFactory.bind('sample.html')
+
+root = Meteor::ElementFactory.element('sample')
 
 start_time = Time.new.to_f
 
-#elm_hello = root.element('id'=>'hello')
-elm_hello = root.find('[id=hello]')
+elm_hello = root.element('id'=>'hello')
+#elm_hello = root.css('[id=hello]')
 #elm_hello.attr('color'=>'red')
 elm_hello['color'] = 'red'
 
@@ -34,21 +40,25 @@ elm_hello2.content = 'Hello,Tester'
 
 elm_text1 = root.element('input','id'=>'text1')
 #elm_text1.attr('value'=>'めも')
-elm_text1['value'] = 'めも'
+#elm_text1['value'] = 'めも'
+#elm_text1.attr = {'value' => 'メモ'}
 #elm_text1.attr('disabled'=>true)
-elm_text1['disabled'] = true
-
+#elm_text1['disabled'] = true
+elm_text1.attrs = {'value' => 'メモ','disabled' => true, 'readonly' => true}
+#puts elm_text1.attrs
 #elm_text1.remove_attr('disabled')
 #map = elm_text1.attr_map
-#map.names.each { |item| 
+#map.names.each { |item|
 #  puts item
 #  puts map.fetch(item)
 #}
 
 #elm_radio1 = root.element('input','id'=>'radio1','type'=>'radio')
-#elm_radio1 = root.find('input[id=radio1][type=radio]')
+#elm_radio1 = root.css('input[id=radio1][type=radio]')
 #elm_radio1 = root.find('#radio1')
+#elm_radio1 = root.find('input#radio1')
 #elm_radio1 = root.find('.test')
+#elm_radio1 = root.find('input.test')
 #elm_radio1 = root.find('[id=radio1][type=radio]')
 ##elm_radio1.attr('checked','true')
 #elm_radio1['checked'] = 'true'

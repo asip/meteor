@@ -1,14 +1,17 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-require 'rubygems'
+#require 'rubygems'
 require 'meteor'
 #require '../lib/meteor'
 
-pf = Meteor::ParserFactory.new
-pf.parser(Meteor::HTML5,'sample_5.html', 'UTF-8')
+#pf = Meteor::ParserFactory.new
+#pf.bind(Meteor::Parser::HTML5,'sample_5.html', 'UTF-8')
 
-root = pf.element('sample_5')
+#root = pf.element('sample_5')
+
+Meteor::ElementFactory.bind(Meteor::Parser::HTML5,"sample_5.html", 'UTF-8')
+root = Meteor::ElementFactory.element('sample_5')
 
 start_time = Time.new.to_f
 

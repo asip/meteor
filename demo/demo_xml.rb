@@ -2,14 +2,17 @@
 # -* coding: UTF-8 -*-
 
 #require 'rubygems'
-#require 'meteor'
-require '../lib/meteor'
+require 'meteor'
+#require '../lib/meteor'
 
-pf = Meteor::ParserFactory.new
-#pf.parser(Meteor::XML,'sample.xml', 'UTF-8')
-pf.parser(Meteor::XML,'sample.xml')
+#pf = Meteor::ParserFactory.new
+#pf.parser(Meteor::Parser::XML,'sample.xml', 'UTF-8')
+#pf.bind(Meteor::Parser::XML,'sample.xml')
 
-root = pf.element('sample')
+#root = pf.element('sample')
+
+Meteor::ElementFactory.bind(Meteor::XML,'sample.xml', 'UTF-8')
+root = Meteor::ElementFactory.element('sample')
 
 start_time = Time.new.to_f
 

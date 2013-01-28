@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.7.4
+# @version 0.9.7.5
 #
 
 module Meteor
 
-  VERSION = "0.9.7.4"
+  VERSION = "0.9.7.5"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -303,7 +303,7 @@ module Meteor
       end
     end
 
-    alias child element
+    alias :child :element
 
     #
     # get child element using selector like css3(CSS3のようにセレクタを用いて子要素を取得する)
@@ -336,8 +336,9 @@ module Meteor
     #
     # @overload attr(attr)
     #  set attribute of element (要素の属性をセットする)
-    #  @param [Hash] attr attribute map (属性)
+    #  @param [Hash] attr attribute (属性)
     #  @return [Meteor::Element] element (要素)
+    #  @deprecated
     # @overload attr(attr_name,attr_value)
     #  set attribute of element (要素の属性をセットする)
     #  @param [String] attr_name attribute name (属性名)
@@ -353,16 +354,51 @@ module Meteor
     end
 
     #
+    # set attribute of element (要素の属性をセットする)
+    # @param [Hash] attr attribute (属性)
+    # @return [Meteor::Element] element (要素)
+    #
+    def attr=(attr)
+      @parser.attr(self,attr)
+    end
+
+    #
+    # set attribute map (要素マップをセットする)
+    # @params [Hash] attr_map attributes (属性マップ)
+    # @return [Meteor::Element] element (要素)
+    def attrs=(attrs)
+      @parser.attrs(self,attrs)
+    end
+
+    #
+    # get attribute map (属性マップを取得する)
+    # @return [Hash] attribute map (属性マップ)
+    #
+    def attrs
+      @parser.attrs(self)
+    end
+
+    #
     # @overload attr_map(attr_map)
     #  set attribute map (属性マップをセットする)
     #  @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
     #  @return [Meteor::Element] element (要素)
+    #  @deprecated
     # @overload attr_map()
     #  get attribute map (属性マップを取得する)
     #  @return [Meteor::AttributeMap] attribute map (属性マップ)
     #
     def attr_map(*args)
       @parser.attr_map(self, *args)
+    end
+
+    #
+    # set attribute map (属性マップをセットする)
+    # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
+    # @return [Meteor::Element] element (要素)
+    #
+    def attr_map=(attr_map)
+      @parser.attr_map(self,attr_map)
     end
 
     #
@@ -384,8 +420,8 @@ module Meteor
     end
 
     #
-    # set content of element (内容をセットする)
-    # @param [String] value content (内容)
+    # set content of element (要素の内容をセットする)
+    # @param [String] value content (要素の内容)
     # @return [Meteor::Element] element (要素)
     #
     def content=(value)
@@ -403,7 +439,7 @@ module Meteor
     end
 
     #
-    # 属性の値を取得する
+    # get attribute value (属性の値を取得する)
     # @param [String] name attribute name (属性の名前)
     # @return [String] attribute value (属性の値)
     #
@@ -471,7 +507,7 @@ module Meteor
     attr_accessor :content_type #[String] content type (コンテントタイプ)
     attr_accessor :kaigyo_code #[String] newline (改行コード)
     attr_accessor :charset #[String] charset (文字コード)
-    attr_accessor :character_encoding #[String] character encoding (エンコーディング)
+    attr_accessor :character_encoding #[String] character encoding (文字エンコーディング)
     #attr_accessor :document #[String] document (ドキュメント)
   end
 
@@ -506,6 +542,8 @@ module Meteor
       @recordable = false
     end
 
+    private :initialize_0
+
     #
     # initializer (イニシャライザ)
     # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
@@ -515,6 +553,8 @@ module Meteor
       @map = attr_map.map.dup
       @recordable = attr_map.recordable
     end
+
+    private :initialize_1
 
     #
     # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
@@ -630,6 +670,8 @@ module Meteor
         @recordable = false
       end
 
+      private :initialize_0
+
       #
       # initializer (イニシャライザ)
       # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
@@ -640,6 +682,8 @@ module Meteor
         @names = Array.new(attr_map.names)
         @recordable = attr_map.recordable
       end
+
+      private :initialize_1
 
       #
       # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
@@ -721,17 +765,24 @@ module Meteor
     SLASH = '/'
     ENC_UTF8 = 'UTF-8'
 
+    attr_accessor :base_type #[FixedNum] default type of parser (デフォルトのパーサ・タイプ)
     attr_accessor :base_dir #[String] base directory (基準ディレクトリ)
-    attr_accessor :base_encoding #[String] default character encoding (デフォルトエンコーディング)
+    attr_accessor :base_enc #[String] default character encoding (デフォルトエンコーディング)
+
+    alias :base_encoding :base_enc
 
     #
     # initializer (イニシャライザ)
     # @overload initialize()
     # @overload initialize(bs_dir)
     #  @param [String] bs_dir base directory (基準ディレクトリ)
-    # @overload initialize(bs_dir,bs_encoding)
+    # @overload initialize(bs_dir,bs_enc)
     #  @param [String] bs_dir base directory (基準ディレクトリ)
-    #  @param [String] bs_encoding default character encoding (デフォルトエンコーディング)
+    #  @param [String] bs_enc default character encoding (デフォルトエンコーディング)
+    # @overload initialize(bs_type,bs_dir,bs_enc)
+    #  @param [FixNum] bs_type default type of parser (デフォルトのパーサ・タイプ)
+    #  @param [String] bs_dir base directory (基準ディレクトリ)
+    #  @param [String] bs_enc default character encoding (デフォルト文字エンコーディング)
     #
     def initialize(*args)
       case args.length
@@ -741,6 +792,8 @@ module Meteor
           initialize_1(args[0])
         when 2 then
           initialize_2(args[0], args[1])
+        when 3 then
+          initialize_3(args[0],args[1],args[2])
         else
           raise ArgumentError
       end
@@ -752,7 +805,7 @@ module Meteor
     def initialize_0
       @cache = Hash.new
       @base_dir = CURRENT_DIR
-      @base_encoding = ENC_UTF8
+      @base_enc = ENC_UTF8
     end
 
     private :initialize_0
@@ -764,7 +817,7 @@ module Meteor
     def initialize_1(bs_dir)
       @cache = Hash.new
       @base_dir = bs_dir
-      @base_encoding = ENC_UTF8
+      @base_enc = ENC_UTF8
     end
 
     private :initialize_1
@@ -772,142 +825,314 @@ module Meteor
     #
     # イニシャライザ
     # @param [String] bs_dir base directory (基準ディレクトリ)
-    # @param [String] bs_encoding default character encoding (デフォルトエンコーディング)
+    # @param [String] bs_enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_2(bs_dir, bs_encoding)
+    def initialize_2(bs_dir, bs_enc)
       @cache = Hash.new
       @base_dir = bs_dir
-      @base_encoding = bs_encoding
+      @base_enc = bs_enc
     end
 
-    private :initialize_1
+    private :initialize_2
 
     #
-    #@overload parser(type,relative_path,encoding)
+    # イニシャライザ
+    # @paeam [FixNum] bs_type default type of parser (デフォルトのパーサ・タイプ)
+    # @param [String] bs_dir base directory (基準ディレクトリ)
+    # @param [String] bs_enc default character encoding (デフォルト文字エンコーディング)
+    #
+    def initialize_3(bs_type , bs_dir, bs_enc)
+      @cache = Hash.new
+      @base_type = bs_type
+      @base_dir = bs_dir
+      @base_enc = bs_enc
+    end
+
+    private :initialize_3
+
+    #
+    # set options (オプションをセットする)
+    # @param [Hash] opts option (オプション)
+    # @option opts [String] :base_dir base directory (基準ディレクトリ)
+    # @option opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
+    # @option opts [FixNum] :base_type default type of parser (デフォルトのパーサ・タイプ)
+    #
+    def options=(opts)
+      if opts.kind_of?(Hash)
+        if opts.include?(:base_dir)
+          @base_dir = opts[:base_dir]
+        end
+        if opts.include?(:base_enc)
+          @base_enc = opts[:base_enc]
+        end
+        if opts.include?(:base_type)
+          @base_type= opts[:base_type]
+        end
+      else
+        raise ArgumentError
+      end
+    end
+
+    #
+    #@overload bind(type,relative_path,enc)
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
-    # @param [String] encoding character encoding (エンコーディング)
+    # @param [String] enc character encoding (エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload parser(type,relative_path)
+    #@overload bind(type,relative_path)
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
+    #
+    def bind(*args)
+      case args.length
+        when 1 then
+          bind_1(args[0])
+        when 2 then
+          if args[0].kind_of?(Fixnum)
+            bind_2_n(args[0], args[1])
+          elsif args[0].kind_of?(String)
+            bind_2_s(args[0], args[1])
+          else
+            raise ArgumentError
+          end
+        when 3 then
+          bind_3(args[0], args[1], args[2])
+        else
+          raise ArgumentError
+      end
+    end
+
+    #
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] enc character encoding (エンコーディング)
+    # @return [Meteor::Parser] parser(パーサ)
+    #
+    def bind_3(type, relative_path, enc)
+
+      paths = File.split(relative_path)
+
+      if paths.length == 1 then
+        relative_url = File.basename(paths[0], ABST_EXT_NAME)
+      else
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        end
+      end
+
+      case type
+        when Parser::HTML then
+          html = Meteor::Ml::Html::ParserImpl.new()
+          html.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
+          xhtml.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Ml::Html5::ParserImpl.new()
+          html5.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
+          xhtml5.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = xhtml5
+        when Parser::XML then
+          xml = Meteor::Ml::Xml::ParserImpl.new()
+          xml.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = xml
+      end
+    end
+
+    private :bind_3
+
+    #
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser(パーサ・タイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
+    #
+    def bind_2_n(type, relative_path)
+
+      paths = File.split(relative_path)
+
+      if paths.length == 1 then
+        relative_url = File.basename(paths[0], ABST_EXT_NAME)
+      else
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        end
+      end
+
+      case type
+        when Parser::HTML then
+          html = Meteor::Ml::Html::ParserImpl.new()
+          html.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
+          xhtml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Ml::Html5::ParserImpl.new()
+          html5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
+          xhtml5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = xhtml5
+        when Parser::XML then
+          xml = Meteor::Ml::Xml::ParserImpl.new()
+          xml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = xml
+      end
+
+    end
+
+    private :bind_2_n
+
+    #
+    # generate parser (パーサを作成する)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] enc character encoding (文字エンコーディング)
+    # @return [Meteor::Parser] parser (パーサ)
+    #
+    def bind_2_s(relative_path,enc)
+
+      paths = File.split(relative_path)
+
+      if paths.length == 1 then
+        relative_url = File.basename(paths[0], ABST_EXT_NAME)
+      else
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        end
+      end
+
+      case @base_type
+        when Parser::HTML then
+          html = Meteor::Ml::Html::ParserImpl.new()
+          html.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
+          xhtml.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Ml::Html5::ParserImpl.new()
+          html5.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
+          xhtml5.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = xhtml5
+        when Parser::XML then
+          xml = Meteor::Ml::Xml::ParserImpl.new()
+          xml.read(File.expand_path(relative_path, @base_dir), enc)
+          @cache[relative_url] = xml
+      end
+
+    end
+
+    private :bind_2_s
+
+    #
+    # generate parser (パーサを作成する)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
+    #
+    def bind_1(relative_path)
+
+      paths = File.split(relative_path)
+
+      if paths.length == 1 then
+        relative_url = File.basename(paths[0], ABST_EXT_NAME)
+      else
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          relative_url = paths.join(SLASH)
+        end
+      end
+
+      case @base_type
+        when Parser::HTML then
+          html = Meteor::Ml::Html::ParserImpl.new()
+          html.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
+          xhtml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Ml::Html5::ParserImpl.new()
+          html5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
+          xhtml5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = xhtml5
+        when Parser::XML then
+          xml = Meteor::Ml::Xml::ParserImpl.new()
+          xml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          @cache[relative_url] = xml
+        else
+          raise ArgumentError
+      end
+
+    end
+
+    private :bind_1
+
+    #
     #@overload parser(key)
     # get parser (パーサを取得する)
     # @param [String] key identifier (キー)
     # @return [Meteor::Parser] parser (パーサ)
+    #@overload parser(type,relative_path,enc)
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] enc character encoding (エンコーディング)
+    # @return [Meteor::Parser] parser (パーサ)
+    # @deprecated
+    #@overload parser(type,relative_path)
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
+    # @deprecated
     def parser(*args)
       case args.length
         when 1 then
           parser_1(args[0])
-        when 2 then
-          parser_2(args[0], args[1])
-        when 3 then
-          parser_3(args[0], args[1], args[2])
+        when 2,3 then
+          bind(args)
       end
+      #parser_1(key)
     end
-
-    #
-    # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサのタイプ)
-    # @param [String] relative_path relative file path (相対ファイルパス)
-    # @param [String] encoding character encoding (エンコーディング)
-    # @return [Meteor::Parser] parser(パーサ)
-    #
-    def parser_3(type, relative_path, encoding)
-
-      paths = File.split(relative_path)
-
-      if paths.length == 1 then
-        relative_url = File.basename(paths[0], ABST_EXT_NAME)
-      else
-        if CURRENT_DIR.eql?(paths[0]) then
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        end
-      end
-
-      case type
-        when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @base_dir), encoding)
-          @cache[relative_url] = html
-        when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @base_dir), encoding)
-          @cache[relative_url] = xhtml
-        when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @base_dir), encoding)
-          @cache[relative_url] = html5
-        when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @base_dir), encoding)
-          @cache[relative_url] = xhtml5
-        when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @base_dir), encoding)
-          @cache[relative_url] = xml
-      end
-    end
-
-    private :parser_3
-
-    #
-    # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser(パーサのタイプ)
-    # @param [String] relative_path relative file path (相対ファイルパス)
-    # @return [Meteor::Parser] parser (パーサ)
-    #
-    def parser_2(type, relative_path)
-
-      paths = File.split(relative_path)
-
-      if paths.length == 1 then
-        relative_url = File.basename(paths[0], ABST_EXT_NAME)
-      else
-        if CURRENT_DIR.eql?(paths[0]) then
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        end
-      end
-
-      case type
-        when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @base_dir), @base_encoding)
-          @cache[relative_url] = html
-        when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @base_dir), @base_encoding)
-          @cache[relative_url] = xhtml
-        when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @base_dir), @base_encoding)
-          @cache[relative_url] = html5
-        when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @base_dir), @base_encoding)
-          @cache[relative_url] = xhtml5
-        when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @base_dir), @base_encoding)
-          @cache[relative_url] = xml
-      end
-
-    end
-
-    private :parser_2
 
     #
     # get parser (パーサを取得する)
@@ -941,37 +1166,98 @@ module Meteor
       parser_1(key).root_element
     end
 
+
+    # @overload bind_str(type, relative_url, doc)
+    #  generate parser (パーサを作成する)
+    #  @param [Fixnum] type type of parser (パーサ・タイプ)
+    #  @param [String] relative_url relative URL (相対URL)
+    #  @param [String] doc document (ドキュメント)
+    #  @return [Meteor::Parser] parser (パーサ)
+    # @overload bind_str(relative_url, doc)
+    #  generate parser (パーサを作成する)
+    #  @param [String] relative_url relative URL (相対URL)
+    #  @param [String] doc document (ドキュメント)
+    #  @return [Meteor::Parser] parser (パーサ)
+    #
+    def bind_str(*args)
+      case args.length
+        when 2 then
+          bind_str_2(args[0],args[1])
+        when 3 then
+          bind_str_3(args[0],args[1],args[2])
+        else
+          raise ArgumentError
+      end
+    end
+
     #
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサのタイプ)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_url relative URL (相対URL)
-    # @param [String] document document (ドキュメント)
+    # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def parser_str(type, relative_url, document)
+    def bind_str_3(type, relative_url, doc)
       case type
         when Parser::HTML then
           html = Meteor::Ml::Html::ParserImpl.new()
-          html.parse(document)
+          html.parse(doc)
           @cache[relative_url] = html
         when Parser::XHTML then
           xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.parse(document)
+          xhtml.parse(doc)
           @cache[relative_url] = xhtml
         when Parser::HTML5 then
           html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.parse(document)
+          html5.parse(doc)
           @cache[relative_url] = html5
         when Parser::XHTML5 then
           xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.parse(document)
+          xhtml5.parse(doc)
           @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.parse(document)
+          xml.parse(doc)
           @cache[relative_url] = xml
       end
     end
+
+    private :bind_str_3
+
+    #
+    # generate parser (パーサを作成する)
+    # @param [String] relative_url relative URL (相対URL)
+    # @param [String] doc document (ドキュメント)
+    # @return [Meteor::Parser] parser (パーサ)
+    #
+    def bind_str_2(relative_url, doc)
+      case @base_type
+        when Parser::HTML then
+          html = Meteor::Ml::Html::ParserImpl.new()
+          html.parse(doc)
+          @cache[relative_url] = html
+        when Parser::XHTML then
+          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
+          xhtml.parse(doc)
+          @cache[relative_url] = xhtml
+        when Parser::HTML5 then
+          html5 = Meteor::Ml::Html5::ParserImpl.new()
+          html5.parse(doc)
+          @cache[relative_url] = html5
+        when Parser::XHTML5 then
+          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
+          xhtml5.parse(doc)
+          @cache[relative_url] = xhtml5
+        when Parser::XML then
+          xml = Meteor::Ml::Xml::ParserImpl.new()
+          xml.parse(doc)
+          @cache[relative_url] = xml
+      end
+    end
+
+    private :bind_str_2
+
+    alias :paraser_str :bind_str
 
     #
     # set parser (パーサをセットする)
@@ -989,6 +1275,63 @@ module Meteor
     #
     def [](key)
       self.parser(key)
+    end
+
+  end
+
+  #
+  # Element Factory Class (要素ファクトリクラス)
+  #
+  class ElementFactory
+
+    @@pf = Meteor::ParserFactory.new
+
+    #
+    # set options (オプションをセットする)
+    # @param [Hash] opts option (オプション)
+    # @option opts [String] :base_dir base directory (基準ディレクトリ)
+    # @option opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
+    # @option opts [FixNum] :base_type default type of parser (デフォルトのパーサ・タイプ)
+    #
+    def self.options=(opts)
+      @@pf.options = opts
+    end
+
+    #
+    #@overload bind(type,relative_path,enc)
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] enc character encoding (エンコーディング)
+    # @return [Meteor::Parser] parser (パーサ)
+    #@overload bind(type,relative_path)
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
+    #
+    def self.bind(*args)
+      @@pf.bind(*args)
+    end
+
+    #
+    # generate parser (パーサを作成する)
+    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [String] relative_url relative URL (相対URL)
+    # @param [String] document document (ドキュメント)
+    # @return [Meteor::Parser] parser (パーサ)
+    #
+    def self.bind_str(type, relative_url, document)
+      @@pf.bind_str(type,relative_url,document)
+    end
+
+    #
+    # get root element (ルート要素を取得する)
+    # @param [String] key identifier (キー)
+    # @return [Meteor::RootElement] root element (ルート要素)
+    #
+    def self.element(key)
+      @@pf.element(key)
     end
 
   end
@@ -1444,25 +1787,33 @@ module Meteor
       #
       # read file , set in parser (ファイルを読み込み、パーサにセットする)
       # @param [String] file_path absolute path of input file (入力ファイルの絶対パス)
-      # @param [String] encoding character encoding of input file (入力ファイルの文字コード)
+      # @param [String] enc character encoding of input file (入力ファイルの文字コード)
       #
-      def read(file_path, encoding)
+      def read(file_path, enc)
 
         #try {
-        @character_encoding = encoding
+        @character_encoding = enc
         #ファイルのオープン
-        if ParserFactory::ENC_UTF8.eql?(encoding) then
-          #io = File.open(file_path,MODE_BF << encoding)
+        if ParserFactory::ENC_UTF8.eql?(enc) then
+          #io = File.open(file_path,MODE_BF << enc)
           io = File.open(file_path, MODE_UTF8)
         else
-          io = File.open(file_path, '' << MODE_BF << encoding << MODE_AF)
+          io = File.open(file_path, '' << MODE_BF << enc << MODE_AF)
         end
 
         #読込及び格納
-        @root.document = io.read
+        parse(io.read)
 
         #ファイルのクローズ
         io.close
+      end
+
+      #
+      # set document in parser (ドキュメントをパーサにセットする)
+      # @param [String] document document (ドキュメント)
+      #
+      def parse(document)
+        @root.document = document
       end
 
       #
@@ -1675,7 +2026,7 @@ module Meteor
 
       def element_with_1(tag)
 
-        @elm_ = Element.new(tag)
+        @elm_ = Meteor::Element.new(tag)
         #属性
         @elm_.attributes = @res[2]
         #内容
@@ -1701,7 +2052,7 @@ module Meteor
 
       def element_without_1(tag)
         #要素
-        @elm_ = Element.new(tag)
+        @elm_ = Meteor::Element.new(tag)
         #属性
         @elm_.attributes = @res[1]
         #全体
@@ -1786,7 +2137,7 @@ module Meteor
         case @res.captures.length
         when FOUR
           #要素
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[1]
           #内容
@@ -1807,7 +2158,7 @@ module Meteor
 
         when FIVE
           #要素
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[2]
           #内容
@@ -1828,7 +2179,7 @@ module Meteor
 
         when THREE,SIX
           #内容
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[1].chop
           #内容
@@ -1908,7 +2259,7 @@ module Meteor
       def element_without_3_1(tag, closer)
 
         #要素
-        @elm_ = Element.new(tag)
+        @elm_ = Meteor::Element.new(tag)
         #属性
         @elm_.attributes = @res[1]
         #全体
@@ -2226,7 +2577,7 @@ module Meteor
         case @res.captures.length
         when FOUR
           #要素
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[1]
           #内容
@@ -2249,7 +2600,7 @@ module Meteor
           @elm_.parser = self
         when FIVE
           #要素
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[2]
           #内容
@@ -2273,7 +2624,7 @@ module Meteor
 
         when THREE,SIX
           #要素
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[1].chop
           #要素
@@ -2362,7 +2713,7 @@ module Meteor
       def element_without_5_1(tag, closer)
 
         #要素
-        @elm_ = Element.new(tag)
+        @elm_ = Meteor::Element.new(tag)
         #属性
         @elm_.attributes = @res[1]
         #全体
@@ -2619,24 +2970,28 @@ module Meteor
       #  @param [String] attr_name attribute name (属性名)
       #  @return [String] attribute value (属性値)
       #
-      def attr(elm, attrs,*args)
-        if attrs.kind_of?(String)
+      def attr(elm, attr,*args)
+        if attr.kind_of?(String)
           case args.length
             when ZERO
-              get_attr_value(elm, attrs)
+              get_attr_value(elm, attr)
             when ONE
               elm.document_sync = true
-              set_attribute_3(elm, attrs,args[0])
+              set_attribute_3(elm, attr,args[0])
           end
 
-        elsif attrs.kind_of?(Hash) && attrs.size == 1
+        elsif attr.kind_of?(Hash) && attr.size == 1
           elm.document_sync = true
-          set_attribute_3(elm, attrs.keys[0], attrs.values[0])
+          set_attribute_3(elm, attr.keys[0], attr.values[0])
+        #elsif attrs.kind_of?(Hash) && attrs.size >= 1
+        #  elm.document_sync = true
+        #  attrs.each{|name,value|
+        #    set_attribute_3(elm,name,value)
+        #  }
         else
           raise ArgumentError
         end
       end
-
 
       #
       # set attribute of element (要素の属性を編集する)
@@ -2719,6 +3074,69 @@ module Meteor
       private :get_attr_value_
 
       #
+      # @overload attrs(elm,attrs)
+      #  @param
+      #
+      # @overload attrs(elm)
+      #
+      def attrs(elm,*args)
+        case args.length
+          when ZERO
+            get_attrs(elm)
+          when ONE
+            if args[0].kind_of?(Hash)
+              if args[0].size == 1
+                elm.document_sync = true
+                set_attribute_3(elm, args[0].keys[0], args[0].values[0])
+              elsif args[0].size >= 1
+                set_attrs(elm, args[0])
+              else
+                raise ArgumentError
+              end
+            else
+              raise ArgumentError
+            end
+          else
+            raise ArgumentError
+        end
+      end
+
+      #
+      # get attribute map (属性マップを取得する)
+      # @param [Meteor::Element] elm element (要素)
+      # @return [Hash] attribute map (属性マップ)
+      #
+      def get_attrs(elm)
+        attrs = Hash.new
+
+        elm.attributes.scan(@@pattern_get_attrs_map) do |a, b|
+          attrs.store(a, unescape(b))
+        end
+
+        attrs
+      end
+
+      private :get_attrs
+
+      #
+      # set attribute map  (要素に属性マップをセットする)
+      # @param [Meteor::Element] elm element (要素)
+      # @param [Hash] attr_map attribute map (属性マップ)
+      # @return [Meteor::Element] element (要素)
+      #
+      def set_attrs(elm, attr_map)
+        if !elm.cx then
+          elm.document_sync = true
+          attr_map.each do |name, value|
+            set_attribute_3(elm, name, value)
+          end
+        end
+        elm
+      end
+
+      private :set_attrs
+
+      #
       # @overload attr_map(elm,attr_map)
       #  set attribute map (属性マップをセットする)
       #  @param [Meteor::Element] elm element (要素)
@@ -2729,15 +3147,15 @@ module Meteor
       #  @param [Meteor::Element] elm element (要素)
       #  @return [Meteor::AttributeMap] attribute map (属性マップ)
       #
-      def attr_map(*args)
+      def attr_map(elm,*args)
         case args.length
+          when ZERO
+            get_attr_map(elm)
           when ONE
-            get_attr_map(args[0])
-          when TWO
-            #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(Meteor::AttributeMap) then
-            args[0].document_sync = true
-            set_attr_map(args[0], args[1])
-          #end
+            #if elm.kind_of?(Meteor::Element) && args[0].kind_of?(Meteor::AttributeMap) then
+            elm.document_sync = true
+            set_attr_map(elm, args[0])
+            #end
           else
             raise ArgumentError
         end
@@ -2961,7 +3379,7 @@ module Meteor
 
         if @res then
           #要素
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
 
           @elm_.cx = true
           #属性
@@ -3296,22 +3714,22 @@ module Meteor
         #
         # read file , set in parser (ファイルを読み込み、パーサにセットする)
         # @param [String] file_path absolute path of input file (入力ファイルの絶対パス)
-        # @param [String] encoding character encoding of input file (入力ファイルの文字コード)
+        # @param [String] enc character encoding of input file (入力ファイルの文字コード)
         #
-        def read(file_path, encoding)
+        def read(file_path, enc)
 
           #try {
-          @character_encoding = encoding
+          @character_encoding = enc
           #ファイルのオープン
 
           #読込及び格納
           io = open(file_path, MODE)
-          @root.document = io.read
+          parse(io.read)
           #@root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
           enc = Kconv.guess(@root.document)
           #enc = get_encoding
           if !Kconv::UTF8.equal?(enc) then
-            @root.document = @root.document.kconv(Kconv::UTF8, enc)
+            parse(@root.document.kconv(Kconv::UTF8, enc))
           end
 
           #ファイルのクローズ
@@ -3700,12 +4118,11 @@ module Meteor
         #
         # read file , set in parser (ファイルを読み込み、パーサにセットする)
         # @param [String] filePath file path (ファイルパス)
-        # @param [String] encoding character encoding (エンコーディング)
+        # @param [String] enc character encoding (エンコーディング)
         #
-        def read(file_path, encoding)
-          super(file_path, encoding)
-          analyze_ml()
-        end
+        #def read(file_path, enc)
+        #  super(file_path, enc)
+        #end
 
         #
         # analyze document (ドキュメントをパースする)
@@ -3817,7 +4234,7 @@ module Meteor
         private :element_1
 
         def element_without_1(tag)
-          @elm_ = Element.new(tag)
+          @elm_ = Meteor::Element.new(tag)
           #属性
           @elm_.attributes = @res[1]
           #空要素検索用パターン
@@ -4124,6 +4541,27 @@ module Meteor
         private :get_attr_value_r
 
         #
+        # get attribute map (属性マップを取得する)
+        # @param [Meteor::Element] elm element (要素)
+        # @return [Hash] attribute map (属性マップ)
+        #
+        def get_attrs(elm)
+          attrs = Hash.new
+
+          elm.attributes.scan(@@pattern_get_attrs_map) do |a, b|
+            attrs.store(a, unescape(b))
+          end
+
+          elm.attributes.scan(@@pattern_get_attrs_map2) do |a|
+            attrs.store(a[0], TRUE)
+          end
+
+          attrs
+        end
+
+        private :get_attrs
+
+        #
         # get attribute map of element (要素の属性マップを取得する)
         # @param [Meteor::Element] elm element (要素)
         # @return [Meteor::AttributeMap] attribute map (属性マップ)
@@ -4136,7 +4574,7 @@ module Meteor
           end
 
           elm.attributes.scan(@@pattern_get_attrs_map2) do |a|
-            attrs.store(a, TRUE)
+            attrs.store(a[0], TRUE)
           end
 
           attrs.recordable = true
@@ -4464,12 +4902,11 @@ module Meteor
         #
         # read file , set in parser (ファイルを読み込み、パーサにセットする)
         # @param file_path file path (ファイルパス)
-        # @param encoding encoding character encoding (エンコーディング)
+        # @param enc character encoding (エンコーディング)
         #
-        def read(file_path, encoding)
-          super(file_path, encoding)
-          analyze_ml()
-        end
+        #def read(file_path, enc)
+        #  super(file_path, enc)
+        #end
 
         #
         # analyze document (ドキュメントをパースする)
@@ -5120,18 +5557,18 @@ module Meteor
         # set document in parser (ドキュメントをパーサにセットする)
         # @param [String] document document (ドキュメント)
         #
-        def parse(document)
-          @root.document = document
-        end
+        #def parse(document)
+        #  @root.document = document
+        #end
 
         #
         # read file , set in parser (ファイルを読み込み、パーサにセットする)
         # @param file_path file path (ファイルパス)
-        # @param encoding character encoding (エンコーディング)
+        # @param enc character encoding (エンコーディング)
         #
-        def read(file_path, encoding)
-          super(file_path, encoding)
-        end
+        #def read(file_path, enc)
+        #  super(file_path, enc)
+        #end
 
         # get content type (コンテントタイプを取得する)
         # @return [Streing] content type (コンテントタイプ)

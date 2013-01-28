@@ -874,11 +874,20 @@ module Meteor
     end
 
     #
+    #@overload bind(relative_path,enc)
+    # generate parser (パーサを作成する)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @param [String] enc character encoding (文字エンコーディング)
+    # @return [Meteor::Parser] parser (パーサ)
+    #@overload bind(relative_path)
+    # generate parser (パーサを作成する)
+    # @param [String] relative_path relative file path (相対ファイルパス)
+    # @return [Meteor::Parser] parser (パーサ)
     #@overload bind(type,relative_path,enc)
     # generate parser (パーサを作成する)
     # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
-    # @param [String] enc character encoding (エンコーディング)
+    # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload bind(type,relative_path)
     # generate parser (パーサを作成する)
@@ -909,7 +918,7 @@ module Meteor
     # generate parser (パーサを作成する)
     # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
-    # @param [String] enc character encoding (エンコーディング)
+    # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser(パーサ)
     #
     def bind_3(type, relative_path, enc)

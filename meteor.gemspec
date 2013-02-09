@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{meteor}
-  s.version = "0.9.7.4"
+  s.version = "0.9.7.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yasumasa Ashida"]
   #s.autorequire = %q{meteor}
-  s.date = %q{2013-01-11}
+  s.date = %q{2013-02-09}
   s.description = %q{A lightweight (X)HTML(5) & XML parser}
   s.email = %q{ys.ashida@gmail.com}
   s.license = 'LGPLv2.1'
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--title", "meteor documentation", "--charset", "utf-8", "--opname", "index.html", "--line-numbers", "--main", "README", "--inline-source", "--exclude", "^(examples|extras)/"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{meteor}
-  s.rubygems_version = %q{1.8.24}
+  s.rubygems_version = %q{1.8.25}
   s.summary = %q{A lightweight (X)HTML(5) & XML parser}
   s.test_files = ["test/meteor_test.rb"]
 

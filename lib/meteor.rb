@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.7.5
+# @version 0.9.7.6
 #
 
 module Meteor
 
-  VERSION = "0.9.7.5"
+  VERSION = "0.9.7.6"
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -3944,6 +3944,7 @@ module Meteor
 
   module Ml
     module Html
+
       #
       # HTML parser (HTMLパーサ)
       #
@@ -4045,35 +4046,35 @@ module Meteor
         #@@pattern_@@match_tag = Regexp.new(@@match_tag)
         #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
-        if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          TABLE_FOR_ESCAPE_ = {
-              '&' => '&amp;',
-              '"' => '&quot;',
-              '\'' => '&apos;',
-              '<' => '&lt;',
-              '>' => '&gt;',
-              ' ' => '&nbsp;',
-          }
+        #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+        TABLE_FOR_ESCAPE_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+        }
 
-          TABLE_FOR_ESCAPE_CONTENT_ = {
-              '&' => '&amp;',
-              '"' => '&quot;',
-              '\'' => '&apos;',
-              '<' => '&lt;',
-              '>' => '&gt;',
-              ' ' => '&nbsp;',
-              "\r\n" => '<br>',
-              "\r" => '<br>',
-              "\n" => '<br>',
-          }
+        TABLE_FOR_ESCAPE_CONTENT_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+            "\r\n" => '<br>',
+            "\r" => '<br>',
+            "\n" => '<br>',
+        }
 
-          PATTERN_ESCAPE = "[&\"'<> ]"
-          PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+        PATTERN_ESCAPE = "[&\"'<> ]"
+        PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
 
-          @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-          @@pattern_br_2 = Regexp.new(BR_2)
-        end
+        @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+        @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+        @@pattern_br_2 = Regexp.new(BR_2)
+        #end
 
         #
         # initializer (イニシャライザ)
@@ -4721,6 +4722,38 @@ module Meteor
             content
           end
         end
+      #else
+      #  class ParserImpl
+      #    #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+      #    TABLE_FOR_ESCAPE_ = {
+      #        '&' => '&amp;',
+      #        '"' => '&quot;',
+      #        '\'' => '&apos;',
+      #        '<' => '&lt;',
+      #        '>' => '&gt;',
+      #        ' ' => '&nbsp;',
+      #    }
+      #
+      #    TABLE_FOR_ESCAPE_CONTENT_ = {
+      #        '&' => '&amp;',
+      #        '"' => '&quot;',
+      #        '\'' => '&apos;',
+      #        '<' => '&lt;',
+      #        '>' => '&gt;',
+      #        ' ' => '&nbsp;',
+      #        "\r\n" => '<br>',
+      #        "\r" => '<br>',
+      #        "\n" => '<br>',
+      #    }
+      #
+      #    PATTERN_ESCAPE = "[&\"'<> ]"
+      #    PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+      #
+      #    @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+      #    @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+      #    @@pattern_br_2 = Regexp.new(BR_2)
+      #    #end
+      #  end
       end
 
     end
@@ -4831,33 +4864,33 @@ module Meteor
         #@@pattern_@@match_tag = Regexp.new(@@match_tag)
         #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
-        if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          TABLE_FOR_ESCAPE_ = {
-              '&' => '&amp;',
-              '"' => '&quot;',
-              '\'' => '&apos;',
-              '<' => '&lt;',
-              '>' => '&gt;',
-              ' ' => '&nbsp;',
-          }
+        #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+        TABLE_FOR_ESCAPE_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+        }
 
-          TABLE_FOR_ESCAPE_CONTENT_ = {
-              '&' => '&amp;',
-              '"' => '&quot;',
-              '\'' => '&apos;',
-              '<' => '&lt;',
-              '>' => '&gt;',
-              ' ' => '&nbsp;',
-              "\r\n" => '<br/>',
-              "\r" => '<br/>',
-              "\n" => '<br/>',
-          }
+        TABLE_FOR_ESCAPE_CONTENT_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            ' ' => '&nbsp;',
+            "\r\n" => '<br/>',
+            "\r" => '<br/>',
+            "\n" => '<br/>',
+        }
 
-          PATTERN_ESCAPE = '[&"\'<> ]'
-          PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
-          @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-          @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-        end
+        PATTERN_ESCAPE = '[&"\'<> ]'
+        PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
+        @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+        @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+        #end
 
         #
         # initializer (イニシャライザ)
@@ -5235,6 +5268,36 @@ module Meteor
           end
 
         end
+      #else
+      #  class ParserImpl
+      #    #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+      #    TABLE_FOR_ESCAPE_ = {
+      #        '&' => '&amp;',
+      #        '"' => '&quot;',
+      #        '\'' => '&apos;',
+      #        '<' => '&lt;',
+      #        '>' => '&gt;',
+      #        ' ' => '&nbsp;',
+      #    }
+      #
+      #    TABLE_FOR_ESCAPE_CONTENT_ = {
+      #        '&' => '&amp;',
+      #        '"' => '&quot;',
+      #        '\'' => '&apos;',
+      #        '<' => '&lt;',
+      #        '>' => '&gt;',
+      #        ' ' => '&nbsp;',
+      #        "\r\n" => '<br/>',
+      #        "\r" => '<br/>',
+      #        "\n" => '<br/>',
+      #    }
+      #
+      #    PATTERN_ESCAPE = '[&"\'<> ]'
+      #    PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
+      #    @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+      #    @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+      #    #end
+      #  end
       end
     end
 
@@ -5511,18 +5574,16 @@ module Meteor
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
-        if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-          TABLE_FOR_ESCAPE_ = {
-              '&' => '&amp;',
-              '"' => '&quot;',
-              '\'' => '&apos;',
-              '<' => '&lt;',
-              '>' => '&gt;',
-          }
-          PATTERN_ESCAPE = '[&\"\'<>]'
-          @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-
-        end
+        #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+        TABLE_FOR_ESCAPE_ = {
+            '&' => '&amp;',
+            '"' => '&quot;',
+            '\'' => '&apos;',
+            '<' => '&lt;',
+            '>' => '&gt;',
+        }
+        PATTERN_ESCAPE = '[&\"\'<>]'
+        @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
 
         #
         # initializer (イニシャライザ)
@@ -5675,6 +5736,21 @@ module Meteor
             content
           end
         end
+      #else
+      #  class ParserImpl
+      #    #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
+      #    TABLE_FOR_ESCAPE_ = {
+      #        '&' => '&amp;',
+      #        '"' => '&quot;',
+      #        '\'' => '&apos;',
+      #        '<' => '&lt;',
+      #        '>' => '&gt;',
+      #    }
+      #    PATTERN_ESCAPE = '[&\"\'<>]'
+      #    @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+      #
+      #    #end
+      #  end
       end
     end
   end

@@ -1,5 +1,5 @@
 
-= meteor - A lightweight (X)HTML & XML Parser 
+= Meteor - A lightweight (X)HTML(5) & XML Parser
 
 by Yasumasa Ashida<ys.ashida@gmail.com>
 
@@ -9,22 +9,17 @@ by Yasumasa Ashida<ys.ashida@gmail.com>
 == Installation
 
 === Archive Installation
-
-	rake install
+  rake install
 
 === Gem Installation
-
-	gem install meteor
-
+  gem install meteor
 
 == Features/Problems
 
 
 == Synopsis
 
-
 == Copyright
-
 Author::    Yasumasa Ashida <ys.ashida@gmail.com>
-Copyright:: Copyright (c) 2008-2011 asip
+Copyright:: Copyright (c) 2008-2013 Yasumasa Ashida
 License::   LGPL V2.1

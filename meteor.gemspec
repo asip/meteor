@@ -11,11 +11,11 @@ Gem::Specification.new do |s|
   s.description = %q{A lightweight (X)HTML(5) & XML parser}
   s.email = %q{ys.ashida@gmail.com}
   s.license = 'LGPLv2.1'
-  s.extra_rdoc_files = ["README", "ChangeLog"]
-  s.files = ["README", "ChangeLog", "Rakefile", "test/meteor_test.rb", "test/test_helper.rb", "lib/meteor.rb"]
+  s.extra_rdoc_files = ["README.md", "ChangeLog"]
+  s.files = ["README.md", "ChangeLog", "Rakefile", "test/meteor_test.rb", "test/test_helper.rb", "lib/meteor.rb"]
   s.has_rdoc = false
   s.homepage = %q{https://github.com/asip/meteor}
-  #s.rdoc_options = ["--title", "meteor documentation", "--charset", "utf-8", "--opname", "index.html", "--line-numbers", "--main", "README", "--inline-source", "--exclude", "^(examples|extras)/"]
+  #s.rdoc_options = ["--title", "meteor documentation", "--charset", "utf-8", "--opname", "index.html", "--line-numbers", "--main", "README.md", "--inline-source", "--exclude", "^(examples|extras)/"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{meteor}
   s.rubygems_version = %q{1.8.25}

@@ -23,7 +23,7 @@
 
 module Meteor
 
-  VERSION = "0.9.7.6"
+  VERSION = '0.9.7.6'
 
   RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -32,6 +32,8 @@ module Meteor
     #E_UTF8 = 'UTF8'
     $KCODE = 'UTF8'
   end
+
+  #require 'fileutils'
 
   ZERO = 0
   ONE = 1
@@ -52,6 +54,21 @@ module Meteor
   # Element Class (要素クラス)
   #
   class Element
+
+    attr_accessor :name #[String] tag name (要素名)
+    attr_accessor :attributes #[String] attributes (属性群)
+    attr_accessor :mixed_content #[String] content (内容)
+    attr_accessor :pattern #[String] pattern (パターン)
+    attr_accessor :document_sync #[true,false] document update flag (ドキュメント更新フラグ)
+    attr_accessor :empty #[true,false] content empty flag (内容存在フラグ)
+    attr_accessor :cx #[true,false] comment extension tag flag (コメント拡張タグフラグ)
+    attr_accessor :mono #[true,false] child element existance flag (子要素存在フラグ)
+    attr_accessor :parser #[Meteor::Parser] parser(パーサ)
+    attr_accessor :type_value #[String] タイプ属性
+    attr_accessor :usable #[true,false] usable flag (有効・無効フラグ)
+    attr_accessor :origin #[Meteor::Element] original pointer (原本ポインタ)
+    attr_accessor :copy #[Meteor::Element] copy pointer (複製ポインタ)
+    attr_accessor :removed #[true,false] delete flag (削除フラグ)
 
     #
     # initializer (イニシャライザ)
@@ -180,21 +197,6 @@ module Meteor
       end
     end
 
-    attr_accessor :name #[String] tag name (要素名)
-    attr_accessor :attributes #[String] attributes (属性群)
-    attr_accessor :mixed_content #[String] content (内容)
-    attr_accessor :pattern #[String] pattern (パターン)
-    attr_accessor :document_sync #[true,false] document update flag (ドキュメント更新フラグ)
-    attr_accessor :empty #[true,false] content empty flag (内容存在フラグ)
-    attr_accessor :cx #[true,false] comment extension tag flag (コメント拡張タグフラグ)
-    attr_accessor :mono #[true,false] child element existance flag (子要素存在フラグ)
-    attr_accessor :parser #[Meteor::Parser] parser(パーサ)
-    attr_accessor :type_value #[String] タイプ属性
-    attr_accessor :usable #[true,false] usable flag (有効・無効フラグ)
-    attr_accessor :origin #[Meteor::Element] original pointer (原本ポインタ)
-    attr_accessor :copy #[Meteor::Element] copy pointer (複製ポインタ)
-    attr_accessor :removed #[true,false] delete flag (削除フラグ)
-
     #
     # set document (ドキュメントをセットする)
     # @param [String] doc document (ドキュメント)
@@ -311,11 +313,11 @@ module Meteor
     # @param selector [String] selector (セレクタ)
     # @return [Meteor::Element] element (要素)
     #
-    def css(selector)
-      @parser.css(selector)
+    def find(selector)
+      @parser.find(selector)
     end
 
-    alias :find :css
+    alias :css :find
 
     #
     # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
@@ -761,28 +763,38 @@ module Meteor
   class ParserFactory
 
     ABST_EXT_NAME = '.*'
+    #CURRENT_DIR = FileUtils.pwd
+    #puts CURRENT_DIR
     CURRENT_DIR = '.'
     SLASH = '/'
     ENC_UTF8 = 'UTF-8'
 
-    attr_accessor :base_type #[FixNum] default type of parser (デフォルトのパーサ・タイプ)
-    attr_accessor :base_dir #[String] base directory (基準ディレクトリ)
-    attr_accessor :base_enc #[String] default character encoding (デフォルトエンコーディング)
+    attr_accessor :type #[FixNum] default type of parser (デフォルトのパーサ・タイプ)
+    attr_accessor :root #[String] root root directory (基準ディレクトリ)
+    attr_accessor :enc #[String] default character encoding (デフォルトエンコーディング)
 
-    alias :base_encoding :base_enc
+    alias_method :base_type, :type
+    alias_method :base_type=, :type=
+    alias_method :base_dir, :root
+    alias_method :base_dir=, :root=
+    alias_method :base_enc, :enc
+    alias_method :base_enc=, :enc=
+
+    alias_method :base_encoding, :enc
+    alias_method :base_encoding=, :enc=
 
     #
     # initializer (イニシャライザ)
     # @overload initialize()
-    # @overload initialize(bs_dir)
-    #  @param [String] bs_dir base directory (基準ディレクトリ)
-    # @overload initialize(bs_dir,bs_enc)
-    #  @param [String] bs_dir base directory (基準ディレクトリ)
-    #  @param [String] bs_enc default character encoding (デフォルトエンコーディング)
-    # @overload initialize(bs_type,bs_dir,bs_enc)
-    #  @param [FixNum] bs_type default type of parser (デフォルトのパーサ・タイプ)
-    #  @param [String] bs_dir base directory (基準ディレクトリ)
-    #  @param [String] bs_enc default character encoding (デフォルト文字エンコーディング)
+    # @overload initialize(root)
+    #  @param [String] root root directory (基準ディレクトリ)
+    # @overload initialize(root, enc)
+    #  @param [String] root root directory (基準ディレクトリ)
+    #  @param [String] enc default character encoding (デフォルトエンコーディング)
+    # @overload initialize(type, root, enc)
+    #  @param [FixNum] type default type of parser (デフォルトのパーサ・タイプ)
+    #  @param [String] root root directory (基準ディレクトリ)
+    #  @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
     def initialize(*args)
       case args.length
@@ -804,33 +816,33 @@ module Meteor
     #
     def initialize_0
       @cache = Hash.new
-      @base_dir = CURRENT_DIR
-      @base_enc = ENC_UTF8
+      @root = CURRENT_DIR
+      @enc = ENC_UTF8
     end
 
     private :initialize_0
 
     #
     # イニシャライザ
-    # @param [String] bs_dir 基準ディレクトリ
+    # @param [String] root root directory (基準ディレクトリ)
     #
-    def initialize_1(bs_dir)
+    def initialize_1(root)
       @cache = Hash.new
-      @base_dir = bs_dir
-      @base_enc = ENC_UTF8
+      @root = root
+      @enc = ENC_UTF8
     end
 
     private :initialize_1
 
     #
     # イニシャライザ
-    # @param [String] bs_dir base directory (基準ディレクトリ)
-    # @param [String] bs_enc default character encoding (デフォルト文字エンコーディング)
+    # @param [String] root root directory (基準ディレクトリ)
+    # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_2(bs_dir, bs_enc)
+    def initialize_2(root, enc)
       @cache = Hash.new
-      @base_dir = bs_dir
-      @base_enc = bs_enc
+      @root = root
+      @enc = enc
     end
 
     private :initialize_2
@@ -838,14 +850,14 @@ module Meteor
     #
     # イニシャライザ
     # @paeam [FixNum] bs_type default type of parser (デフォルトのパーサ・タイプ)
-    # @param [String] bs_dir base directory (基準ディレクトリ)
-    # @param [String] bs_enc default character encoding (デフォルト文字エンコーディング)
+    # @param [String] root root directory (基準ディレクトリ)
+    # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_3(bs_type , bs_dir, bs_enc)
+    def initialize_3(type , root, enc)
       @cache = Hash.new
-      @base_type = bs_type
-      @base_dir = bs_dir
-      @base_enc = bs_enc
+      @type = type
+      @root = root
+      @enc = enc
     end
 
     private :initialize_3
@@ -853,20 +865,29 @@ module Meteor
     #
     # set options (オプションをセットする)
     # @param [Hash] opts option (オプション)
-    # @option opts [String] :base_dir base directory (基準ディレクトリ)
-    # @option opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
-    # @option opts [FixNum] :base_type default type of parser (デフォルトのパーサ・タイプ)
+    # @option opts [String] :root root directory (基準ディレクトリ)
+    # @option @deprecated opts [String] :base_dir root directory (基準ディレクトリ)
+    # @option opts [String] :enc default character encoding (デフォルト文字エンコーディング)
+    # @option @deprecated opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
+    # @option opts [FixNum] :type default type of parser (デフォルトのパーサ・タイプ)
+    # @option @deprecated opts [FixNum] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
     def options=(opts)
       if opts.kind_of?(Hash)
-        if opts.include?(:base_dir)
-          @base_dir = opts[:base_dir]
+        if opts.include?(:root)
+          @root = opts[:root]
+        elsif opts.include?(:base_dir)
+          @root = opts[:base_dir]
         end
-        if opts.include?(:base_enc)
-          @base_enc = opts[:base_enc]
+        if opts.include?(:enc)
+          @enc = opts[:enc]
+        elsif opts.include?(:base_enc)
+          @enc = opts[:base_enc]
         end
-        if opts.include?(:base_type)
-          @base_type= opts[:base_type]
+        if opts.include?(:type)
+          @type = opts[:type]
+        elsif opts.include?(:base_type)
+          @type = opts[:base_type]
         end
       else
         raise ArgumentError
@@ -941,23 +962,23 @@ module Meteor
       case type
         when Parser::HTML then
           html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @base_dir), enc)
+          html.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html
         when Parser::XHTML then
           xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @base_dir), enc)
+          xhtml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml
         when Parser::HTML5 then
           html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @base_dir), enc)
+          html5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html5
         when Parser::XHTML5 then
           xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @base_dir), enc)
+          xhtml5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @base_dir), enc)
+          xml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xml
       end
     end
@@ -990,23 +1011,23 @@ module Meteor
       case type
         when Parser::HTML then
           html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          html.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = html
         when Parser::XHTML then
           xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          xhtml.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = xhtml
         when Parser::HTML5 then
           html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          html5.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = html5
         when Parser::XHTML5 then
           xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          xhtml5.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          xml.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = xml
       end
 
@@ -1037,26 +1058,26 @@ module Meteor
         end
       end
 
-      case @base_type
+      case @type
         when Parser::HTML then
           html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @base_dir), enc)
+          html.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html
         when Parser::XHTML then
           xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @base_dir), enc)
+          xhtml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml
         when Parser::HTML5 then
           html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @base_dir), enc)
+          html5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html5
         when Parser::XHTML5 then
           xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @base_dir), enc)
+          xhtml5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @base_dir), enc)
+          xml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xml
       end
 
@@ -1086,26 +1107,26 @@ module Meteor
         end
       end
 
-      case @base_type
+      case @type
         when Parser::HTML then
           html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          html.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = html
         when Parser::XHTML then
           xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          xhtml.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = xhtml
         when Parser::HTML5 then
           html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          html5.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = html5
         when Parser::XHTML5 then
           xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          xhtml5.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = xhtml5
         when Parser::XML then
           xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @base_dir), @base_enc)
+          xml.read(File.expand_path(relative_path, @root), @enc)
           @cache[relative_url] = xml
         else
           raise ArgumentError
@@ -1240,7 +1261,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def bind_str_2(relative_url, doc)
-      case @base_type
+      case @type
         when Parser::HTML then
           html = Meteor::Ml::Html::ParserImpl.new()
           html.parse(doc)
@@ -1950,7 +1971,7 @@ module Meteor
       # @param [String] selector selector (セレクタ)
       # @return [Meteor::Element] element (要素)
       #
-      def css(selector)
+      def find(selector)
         #puts selector
         if @res = @@pattern_find_1.match(selector) then
           element_1(@res[1])

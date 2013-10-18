@@ -179,7 +179,7 @@ module Meteor
 
     #
     # clone (複製する)
-    #@return [Meteor::Element] element (要素)
+    # @return [Meteor::Element] element (要素)
     #
     def clone
       obj = self.parser.element_cache[self.object_id]
@@ -936,6 +936,30 @@ module Meteor
     end
 
     #
+    # change relative path to relative url (相対パスを相対URLにする)
+    # @param [String] path relative path (相対パス)
+    # @return [String] relative url (相対URL)
+    #
+    def path_to_url(path)
+      paths = File.split(path)
+
+      if paths.length == 1 then
+        return File.basename(paths[0], ABST_EXT_NAME)
+      else
+        if CURRENT_DIR.eql?(paths[0]) then
+          paths.delete_at 0
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          return paths.join(SLASH)
+        else
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
+          return paths.join(SLASH)
+        end
+      end
+    end
+
+    private :path_to_url
+
+    #
     # generate parser (パーサを作成する)
     # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
@@ -944,20 +968,7 @@ module Meteor
     #
     def bind_3(type, relative_path, enc)
 
-      paths = File.split(relative_path)
-
-      if paths.length == 1 then
-        relative_url = File.basename(paths[0], ABST_EXT_NAME)
-      else
-        if CURRENT_DIR.eql?(paths[0]) then
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        end
-      end
+      relative_url = path_to_url(relative_path)
 
       case type
         when Parser::HTML then
@@ -993,20 +1004,7 @@ module Meteor
     #
     def bind_2_n(type, relative_path)
 
-      paths = File.split(relative_path)
-
-      if paths.length == 1 then
-        relative_url = File.basename(paths[0], ABST_EXT_NAME)
-      else
-        if CURRENT_DIR.eql?(paths[0]) then
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        end
-      end
+      relative_url = path_to_url(relative_path)
 
       case type
         when Parser::HTML then
@@ -1043,20 +1041,7 @@ module Meteor
     #
     def bind_2_s(relative_path,enc)
 
-      paths = File.split(relative_path)
-
-      if paths.length == 1 then
-        relative_url = File.basename(paths[0], ABST_EXT_NAME)
-      else
-        if CURRENT_DIR.eql?(paths[0]) then
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        end
-      end
+      relative_url = path_to_url(relative_path)
 
       case @type
         when Parser::HTML then
@@ -1092,20 +1077,7 @@ module Meteor
     #
     def bind_1(relative_path)
 
-      paths = File.split(relative_path)
-
-      if paths.length == 1 then
-        relative_url = File.basename(paths[0], ABST_EXT_NAME)
-      else
-        if CURRENT_DIR.eql?(paths[0]) then
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          relative_url = paths.join(SLASH)
-        end
-      end
+      relative_url = path_to_url(relative_path)
 
       case @type
         when Parser::HTML then

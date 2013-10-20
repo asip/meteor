@@ -1008,26 +1008,19 @@ module Meteor
 
       case type
         when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = html
+          ps = Meteor::Ml::Html::ParserImpl.new()
         when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = xhtml
+          ps = Meteor::Ml::Xhtml::ParserImpl.new()
         when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = html5
+          ps = Meteor::Ml::Html5::ParserImpl.new()
         when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = xhtml5
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
         when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = xml
+          ps = Meteor::Ml::Xml::ParserImpl.new()
       end
+
+      ps.read(File.expand_path(relative_path, @root), @enc)
+      @cache[relative_url] = ps
 
     end
 
@@ -1045,26 +1038,19 @@ module Meteor
 
       case @type
         when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = html
+          ps = Meteor::Ml::Html::ParserImpl.new()
         when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xhtml
+          ps = Meteor::Ml::Xhtml::ParserImpl.new()
         when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = html5
+          ps = Meteor::Ml::Html5::ParserImpl.new()
         when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xhtml5
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
         when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xml
+          ps = Meteor::Ml::Xml::ParserImpl.new()
       end
+
+      ps.read(File.expand_path(relative_path, @root), enc)
+      @cache[relative_url] = ps
 
     end
 
@@ -1081,28 +1067,21 @@ module Meteor
 
       case @type
         when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = html
+          ps = Meteor::Ml::Html::ParserImpl.new()
         when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = xhtml
+          ps = Meteor::Ml::Xhtml::ParserImpl.new()
         when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = html5
+          ps = Meteor::Ml::Html5::ParserImpl.new()
         when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = xhtml5
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
         when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.read(File.expand_path(relative_path, @root), @enc)
-          @cache[relative_url] = xml
+          ps = Meteor::Ml::Xml::ParserImpl.new()
         else
           raise ArgumentError
       end
+
+      ps.read(File.expand_path(relative_path, @root), @enc)
+      @cache[relative_url] = ps
 
     end
 
@@ -1202,26 +1181,20 @@ module Meteor
     def bind_str_3(type, relative_url, doc)
       case type
         when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.parse(doc)
-          @cache[relative_url] = html
+          ps = Meteor::Ml::Html::ParserImpl.new()
         when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.parse(doc)
-          @cache[relative_url] = xhtml
+          ps = Meteor::Ml::Xhtml::ParserImpl.new()
         when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.parse(doc)
-          @cache[relative_url] = html5
+          ps = Meteor::Ml::Html5::ParserImpl.new()
         when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.parse(doc)
-          @cache[relative_url] = xhtml5
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
         when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.parse(doc)
-          @cache[relative_url] = xml
+          ps = Meteor::Ml::Xml::ParserImpl.new()
       end
+
+      ps.dcument = doc
+      ps.parse
+      @cache[relative_url] = ps
     end
 
     private :bind_str_3
@@ -1235,26 +1208,21 @@ module Meteor
     def bind_str_2(relative_url, doc)
       case @type
         when Parser::HTML then
-          html = Meteor::Ml::Html::ParserImpl.new()
-          html.parse(doc)
-          @cache[relative_url] = html
+          ps = Meteor::Ml::Html::ParserImpl.new()
         when Parser::XHTML then
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
-          xhtml.parse(doc)
-          @cache[relative_url] = xhtml
+          ps = Meteor::Ml::Xhtml::ParserImpl.new()
         when Parser::HTML5 then
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
-          html5.parse(doc)
-          @cache[relative_url] = html5
+          ps = Meteor::Ml::Html5::ParserImpl.new()
         when Parser::XHTML5 then
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
-          xhtml5.parse(doc)
-          @cache[relative_url] = xhtml5
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
         when Parser::XML then
-          xml = Meteor::Ml::Xml::ParserImpl.new()
-          xml.parse(doc)
-          @cache[relative_url] = xml
+          ps = Meteor::Ml::Xml::ParserImpl.new()
       end
+
+      ps.document = doc
+      ps.parse
+      @cache[relative_url] = ps
+
     end
 
     private :bind_str_2
@@ -1804,18 +1772,21 @@ module Meteor
         end
 
         #読込及び格納
-        parse(io.read)
+        @root.document = io.read
+
+        parse
 
         #ファイルのクローズ
         io.close
+
+        return @root.document
       end
 
       #
-      # set document in parser (ドキュメントをパーサにセットする)
+      # psrse document (ドキュメントを解析する)
       # @param [String] document document (ドキュメント)
       #
-      def parse(document)
-        @root.document = document
+      def parse
       end
 
       #
@@ -1846,7 +1817,7 @@ module Meteor
       #  @return [Meteor::Element] element (要素)
       # @overload element(tag,attr_name1,attr_value1,attr_name2,attr_value2)
       #  get element using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] tag  tag name (タグ名)
+      #  @param [String] tag tag name (タグ名)
       #  @param [String] attr_name1 attribute name1 (属性名1)
       #  @param [String] attr_value1 attribute value1 (属性値1)
       #  @param [String] attr_name2 attribute name2 (属性名2)
@@ -1856,7 +1827,7 @@ module Meteor
       #  get element using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
       #  @param [String] attr_name1 attribute name1 (属性名1)
       #  @param [String] attr_value1 attribute value1 (属性値1)
-      #  @param [String] attr_name2 attrribute name2 (属性名2)
+      #  @param [String] attr_name2 attribute name2 (属性名2)
       #  @param [String] attr_value2 attribute value2 (属性値2)
       #  @return [Meteor::Element] element (要素)
       # @overload element(elm)
@@ -3726,16 +3697,20 @@ module Meteor
 
           #読込及び格納
           io = open(file_path, MODE)
-          parse(io.read)
+          @root.document = io.read
           #@root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
           enc = Kconv.guess(@root.document)
           #enc = get_encoding
           if !Kconv::UTF8.equal?(enc) then
-            parse(@root.document.kconv(Kconv::UTF8, enc))
+            @root.document = @root.document.kconv(Kconv::UTF8, enc)
           end
+
+          parse
 
           #ファイルのクローズ
           io.close
+
+          return root.document
         end
 
         def create_element_pattern
@@ -4110,11 +4085,9 @@ module Meteor
         private :initialize_1
 
         #
-        # set document in parser (ドキュメントをパーサにセットする)
-        # @param [String] document document (ドキュメント)
+        # parse document (ドキュメントを解析する)
         #
-        def parse(document)
-          @root.document = document
+        def parse
           analyze_ml()
         end
 
@@ -4926,11 +4899,9 @@ module Meteor
         private :initialize_1
 
         #
-        # set document in parser (ドキュメントをパーサにセットする)
-        # @param [String] document document (ドキュメント)
+        # parse document (ドキュメントを解析する)
         #
-        def parse(document)
-          @root.document = document
+        def parse
           analyze_ml()
         end
 

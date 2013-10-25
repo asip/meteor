@@ -13,7 +13,7 @@ Meteor
 ```
 
 ##Explanation
-Sorry, written in Japanae.
+Sorry, written in Japanese.
 
 軽量(簡易?)(X)HTML(5)パーサです。
 XMLパーサとしても使用可能です。

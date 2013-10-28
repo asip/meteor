@@ -1,9 +1,8 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-#require 'rubygems'
+require 'rubygems'
 require 'meteor'
-#require '../lib/meteor'
 
 #pf = Meteor::ParserFactory.new
 #pf.bind(Meteor::Parser::XHTML,"sample_x.html", "UTF-8")

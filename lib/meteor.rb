@@ -53,22 +53,51 @@ module Meteor
   #
   # Element Class (要素クラス)
   #
+  # !@attribute [rw] name
+  #  @return [String] tag name (要素名)
+  # !@attribute [rw] attributes
+  #  @return [String] attributes (属性群)
+  # !@attribute [rw] mixed_content
+  #  @return [String] content (内容)
+  # !@attribute [rw] pattren
+  #  @return [String] pattern (パターン)
+  # !@attribute [rw] document_sync
+  #  @return [true,false] document update flag (ドキュメント更新フラグ)
+  # !@attribute [rw] empty
+  #  @return [true,false] content empty flag (内容存在フラグ)
+  # !@attribute [rw] cx
+  #  @return [true,false] comment extension tag flag (コメント拡張タグフラグ)
+  # !@attribute [rw] mono
+  #  @return [true,false] child element existance flag (子要素存在フラグ)
+  # !@attibute [rw] parser
+  #  @return [Meteor::Parser] parser(パーサ)
+  # !@attribute [rw] type_value
+  #  @return [String] type (タイプ属性)
+  # !@attribute [rw] usable
+  #  @return [true,false] usable flag (有効・無効フラグ)
+  # !@attribute [rw] origin
+  #  @return [Meteor::Element] original pointer (原本ポインタ)
+  # !@attribute [rw] copy
+  #  @return [Meteor::Element] copy pointer (複製ポインタ)
+  # !@attribute [rw] removed
+  #  @return [true,false] delete flag (削除フラグ)
+  #
   class Element
 
-    attr_accessor :name #[String] tag name (要素名)
-    attr_accessor :attributes #[String] attributes (属性群)
-    attr_accessor :mixed_content #[String] content (内容)
-    attr_accessor :pattern #[String] pattern (パターン)
-    attr_accessor :document_sync #[true,false] document update flag (ドキュメント更新フラグ)
-    attr_accessor :empty #[true,false] content empty flag (内容存在フラグ)
-    attr_accessor :cx #[true,false] comment extension tag flag (コメント拡張タグフラグ)
-    attr_accessor :mono #[true,false] child element existance flag (子要素存在フラグ)
-    attr_accessor :parser #[Meteor::Parser] parser(パーサ)
-    attr_accessor :type_value #[String] タイプ属性
-    attr_accessor :usable #[true,false] usable flag (有効・無効フラグ)
-    attr_accessor :origin #[Meteor::Element] original pointer (原本ポインタ)
-    attr_accessor :copy #[Meteor::Element] copy pointer (複製ポインタ)
-    attr_accessor :removed #[true,false] delete flag (削除フラグ)
+    attr_accessor :name
+    attr_accessor :attributes
+    attr_accessor :mixed_content
+    attr_accessor :pattern
+    attr_accessor :document_sync
+    attr_accessor :empty
+    attr_accessor :cx
+    attr_accessor :mono
+    attr_accessor :parser
+    attr_accessor :type_value
+    attr_accessor :usable
+    attr_accessor :origin
+    attr_accessor :copy
+    attr_accessor :removed
 
     #
     # initializer (イニシャライザ)
@@ -490,27 +519,25 @@ module Meteor
   #
   # root element class (ルート要素クラス)
   #
+  # !@attribute [rw] content_type
+  #  @return [String] content type (コンテントタイプ)
+  # !@attribute [rw] kaigyo_code
+  #  @return [String] newline (改行コード)
+  # !@attribute [rw] chaset
+  #  @return [String] charset (文字コード)
+  # !@attribute [rw] character_encoding
+  #  @return [String] character encoding (文字エンコーディング)
+  #
   class RootElement < Element
 
     EMPTY = ''
 
-    ##
-    ## イニシャライザ
-    ##
-    #def initialize()
-    #  #コンテントタイプ
-    #  #@contentType = ''
-    #  #改行コード
-    #  #@kaigyoCode = ''
-    #  #文字コード
-    #  #@character_encoding=''
-    #end
-
-    attr_accessor :content_type #[String] content type (コンテントタイプ)
-    attr_accessor :kaigyo_code #[String] newline (改行コード)
-    attr_accessor :charset #[String] charset (文字コード)
-    attr_accessor :character_encoding #[String] character encoding (文字エンコーディング)
+    attr_accessor :content_type
+    attr_accessor :kaigyo_code
+    attr_accessor :charset
+    attr_accessor :character_encoding
     #attr_accessor :document #[String] document (ドキュメント)
+
   end
 
   #
@@ -591,9 +618,6 @@ module Meteor
     def names
       @map.keys
     end
-
-    private :initialize_0
-    private :initialize_1
 
     #
     # get attribute value using attribute name (属性名で属性値を取得する)
@@ -727,22 +751,31 @@ module Meteor
   #
   # Attribute class (属性クラス)
   #
+  # !@attribute [rw] name
+  #  @return [String] attribute name (名前)
+  # !@attribute [rw] value
+  #  @return [String] attribute value (値)
+  # !@attribute [rw] changed
+  #  @return [true,false] update flag (更新フラグ)
+  # !@attribute [rw] removed
+  #  @return [true,false] delete flag (削除フラグ)
+  #
   class Attribute
 
-    #
-    # initializer (イニシャライザ)
-    #
-    def initialize
-      #@name = nil
-      #@value = nil
-      #@changed = false
-      #@removed = false
-    end
+    attr_accessor :name
+    attr_accessor :value
+    attr_accessor :changed
+    attr_accessor :removed
 
-    attr_accessor :name #[String] attribute name (名前)
-    attr_accessor :value #[String] attribute value (値)
-    attr_accessor :changed #[true,false] update flag (更新フラグ)
-    attr_accessor :removed #[true,false] delete flag (削除フラグ)
+    ##
+    ## initializer (イニシャライザ)
+    ##
+    #def initialize
+    #  #@name = nil
+    #  #@value = nil
+    #  #@changed = false
+    #  #@removed = false
+    #end
 
   end
 
@@ -760,6 +793,13 @@ module Meteor
   #
   # Parser Factory Class (パーサファクトリクラス)
   #
+  # !@attribute [rw] type
+  #  @return [FixNum] default type of parser (デフォルトのパーサ・タイプ)
+  # !@attribute [rw] root
+  #  @return [String] root root directory (基準ディレクトリ)
+  # !@attribute [rw] enc
+  #  @return [String] default character encoding (デフォルトエンコーディング)
+  #
   class ParserFactory
 
     ABST_EXT_NAME = '.*'
@@ -769,9 +809,9 @@ module Meteor
     SLASH = '/'
     ENC_UTF8 = 'UTF-8'
 
-    attr_accessor :type #[FixNum] default type of parser (デフォルトのパーサ・タイプ)
-    attr_accessor :root #[String] root root directory (基準ディレクトリ)
-    attr_accessor :enc #[String] default character encoding (デフォルトエンコーディング)
+    attr_accessor :type
+    attr_accessor :root
+    attr_accessor :enc
 
     alias_method :base_type, :type
     alias_method :base_type=, :type=
@@ -1313,11 +1353,11 @@ module Meteor
     #
     class Hooker
 
-      #
-      # initializer (イニシャライザ)
-      #
-      def initialize
-      end
+      ##
+      ## initializer (イニシャライザ)
+      ##
+      #def initialize
+      #end
 
       def do_action(elm)
         #内容あり要素の場合
@@ -1337,11 +1377,11 @@ module Meteor
     #
     class Looper
 
-      #
-      # initializer (イニシャライザ)
-      #
-      def initialize
-      end
+      ##
+      ## initializer (イニシャライザ)
+      ##
+      #def initialize
+      #end
 
       def do_action(elm, list)
         #内容あり要素の場合
@@ -1374,9 +1414,12 @@ module Meteor
     #
     # Element Search Exception (要素検索例外)
     #
+    # !@attribute [rw] message
+    #  @return [String] message (メッセージ)
+    #
     class NoSuchElementException
 
-      attr_accessor :message #[String] message (メッセージ)
+      attr_accessor :message
 
       #
       # initializer (イニシャライザ)
@@ -1454,6 +1497,15 @@ module Meteor
 
     #
     # Parser Core Class (パーサコアクラス)
+    #
+    # !@attribute [rw] element_cache
+    #  @return [Hash] element cache (要素キャッシュ)
+    # !@attribute [rw] doc_type
+    #  @return [Fixnum] document type (ドキュメントタイプ)
+    # !@attribute [rw] document_hook
+    #  @return [String] hook document (フック・ドキュメント)
+    # !@attribute [rw] element_hook
+    #  @return [Meteor::Element] element (要素)
     #
     class Kernel < Meteor::Parser
 
@@ -1690,27 +1742,14 @@ module Meteor
       CSS_ID = 'id'
       CSS_CLASS = 'class'
 
-      #
-      # initializer (イニシャライザ)
-      #
-      def initialize
-        #親要素
-        #@parent = nil
-
-        #正規表現パターン
-        #@pattern = nil
-        #ルート要素
-        @root = RootElement.new
-        @root.parser = self
-        #要素キャッシュ
-        @element_cache = Hash.new()
-        #フックドキュメント
-        @document_hook = ''
-      end
+      attr_accessor :element_cache
+      attr_accessor :doc_type
+      attr_accessor :document_hook
+      attr_accessor :element_hook
 
       #
       # set document (ドキュメントをセットする)
-      # 
+      #
       # @param [String] doc document (ドキュメント)
       #
       def document=(doc)
@@ -1724,11 +1763,6 @@ module Meteor
       def document
         @root.document
       end
-
-      attr_accessor :element_cache #[Hash] element cache (要素キャッシュ)
-      attr_accessor :doc_type #[Fixnum] document type (ドキュメントタイプ)
-      attr_accessor :document_hook  #[String] hook document (フック・ドキュメント)
-      attr_accessor :element_hook #[Meteor::Element] element (要素)
 
       #
       # set character encoding (文字エンコーディングをセットする)
@@ -1752,6 +1786,24 @@ module Meteor
       #
       def root_element
         @root
+      end
+
+      #
+      # initializer (イニシャライザ)
+      #
+      def initialize
+        #親要素
+        #@parent = nil
+
+        #正規表現パターン
+        #@pattern = nil
+        #ルート要素
+        @root = RootElement.new
+        @root.parser = self
+        #要素キャッシュ
+        @element_cache = Hash.new()
+        #フックドキュメント
+        @document_hook = ''
       end
 
       #
@@ -3809,11 +3861,11 @@ module Meteor
       class PatternCache
         @@regex_cache = Hash.new
 
-        #
-        # intializer (イニシャライザ)
-        #
-        def initialize
-        end
+        ##
+        ## intializer (イニシャライザ)
+        ##
+        #def initialize
+        #end
 
 
         #

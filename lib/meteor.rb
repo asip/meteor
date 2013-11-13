@@ -4753,38 +4753,6 @@ module Meteor
             content
           end
         end
-      #else
-      #  class ParserImpl
-      #    #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-      #    TABLE_FOR_ESCAPE_ = {
-      #        '&' => '&amp;',
-      #        '"' => '&quot;',
-      #        '\'' => '&apos;',
-      #        '<' => '&lt;',
-      #        '>' => '&gt;',
-      #        ' ' => '&nbsp;',
-      #    }
-      #
-      #    TABLE_FOR_ESCAPE_CONTENT_ = {
-      #        '&' => '&amp;',
-      #        '"' => '&quot;',
-      #        '\'' => '&apos;',
-      #        '<' => '&lt;',
-      #        '>' => '&gt;',
-      #        ' ' => '&nbsp;',
-      #        "\r\n" => '<br>',
-      #        "\r" => '<br>',
-      #        "\n" => '<br>',
-      #    }
-      #
-      #    PATTERN_ESCAPE = "[&\"'<> ]"
-      #    PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
-      #
-      #    @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-      #    @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-      #    @@pattern_br_2 = Regexp.new(BR_2)
-      #    #end
-      #  end
       end
 
     end
@@ -5299,36 +5267,6 @@ module Meteor
           end
 
         end
-      #else
-      #  class ParserImpl
-      #    #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-      #    TABLE_FOR_ESCAPE_ = {
-      #        '&' => '&amp;',
-      #        '"' => '&quot;',
-      #        '\'' => '&apos;',
-      #        '<' => '&lt;',
-      #        '>' => '&gt;',
-      #        ' ' => '&nbsp;',
-      #    }
-      #
-      #    TABLE_FOR_ESCAPE_CONTENT_ = {
-      #        '&' => '&amp;',
-      #        '"' => '&quot;',
-      #        '\'' => '&apos;',
-      #        '<' => '&lt;',
-      #        '>' => '&gt;',
-      #        ' ' => '&nbsp;',
-      #        "\r\n" => '<br/>',
-      #        "\r" => '<br/>',
-      #        "\n" => '<br/>',
-      #    }
-      #
-      #    PATTERN_ESCAPE = '[&"\'<> ]'
-      #    PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
-      #    @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-      #    @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-      #    #end
-      #  end
       end
     end
 
@@ -5769,21 +5707,6 @@ module Meteor
             content
           end
         end
-      #else
-      #  class ParserImpl
-      #    #if RUBY_VERSION >= RUBY_VERSION_1_9_0 then
-      #    TABLE_FOR_ESCAPE_ = {
-      #        '&' => '&amp;',
-      #        '"' => '&quot;',
-      #        '\'' => '&apos;',
-      #        '<' => '&lt;',
-      #        '>' => '&gt;',
-      #    }
-      #    PATTERN_ESCAPE = '[&\"\'<>]'
-      #    @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
-      #
-      #    #end
-      #  end
       end
     end
   end

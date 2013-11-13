@@ -4926,7 +4926,7 @@ module Meteor
           @doc_type = Parser::XHTML
           case args.length
             when ZERO
-              initialize_0
+              #initialize_0
             when ONE
               initialize_1(args[0])
             else
@@ -4934,13 +4934,13 @@ module Meteor
           end
         end
 
+        ##
+        ## initializer (イニシャライザ)
+        ##
+        #def initialize_0
+        #end
         #
-        # initializer (イニシャライザ)
-        #
-        def initialize_0
-        end
-
-        private :initialize_0
+        #private :initialize_0
 
         #
         # initializer (イニシャライザ)
@@ -5364,7 +5364,7 @@ module Meteor
           @doc_type = Parser::HTML5
           case args.length
             when ZERO
-              initialize_0
+              #initialize_0
             when ONE
               initialize_1(args[0])
             else
@@ -5492,7 +5492,7 @@ module Meteor
           @doc_type = Parser::XHTML5
           case args.length
             when ZERO
-              initialize_0
+              #initialize_0
             when ONE
               initialize_1(args[0])
             else
@@ -5617,7 +5617,7 @@ module Meteor
           @doc_type = Parser::XML
           case args.length
             when ZERO
-              initialize_0
+              #initialize_0
             when ONE
               initialize_1(args[0])
             else

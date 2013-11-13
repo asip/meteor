@@ -3286,9 +3286,9 @@ module Meteor
             #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String) then
             args[0].document_sync = true
             set_content_2(args[0], args[1])
-          #else
-          #  raise ArgumentError
-          #end
+            #else
+            #  raise ArgumentError
+            #end
           when THREE
             args[0].document_sync = true
             set_content_3(args[0], args[1], args[2])
@@ -4678,6 +4678,8 @@ module Meteor
                 SPACE
             end
           end
+
+          content
         end
 
         private :unescape
@@ -5215,6 +5217,8 @@ module Meteor
                 SPACE
             end
           end
+
+          content
         end
 
         private :unescape
@@ -5712,6 +5716,8 @@ module Meteor
                 LT_1
             end
           end
+
+          content
         end
 
         private :unescape

@@ -1187,7 +1187,7 @@ module Meteor
       parser_1(key).root_element
     end
 
-
+    #
     # @overload bind_str(type, relative_url, doc)
     #  generate parser (パーサを作成する)
     #  @param [Fixnum] type type of parser (パーサ・タイプ)
@@ -1325,14 +1325,20 @@ module Meteor
     end
 
     #
-    # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサ・タイプ)
-    # @param [String] relative_url relative URL (相対URL)
-    # @param [String] document document (ドキュメント)
-    # @return [Meteor::Parser] parser (パーサ)
+    # @overload bind_str(type, relative_url, doc)
+    #  generate parser (パーサを作成する)
+    #  @param [Fixnum] type type of parser (パーサ・タイプ)
+    #  @param [String] relative_url relative URL (相対URL)
+    #  @param [String] doc document (ドキュメント)
+    #  @return [Meteor::Parser] parser (パーサ)
+    # @overload bind_str(relative_url, doc)
+    #  generate parser (パーサを作成する)
+    #  @param [String] relative_url relative URL (相対URL)
+    #  @param [String] doc document (ドキュメント)
+    #  @return [Meteor::Parser] parser (パーサ)
     #
-    def self.bind_str(type, relative_url, document)
-      @@pf.bind_str(type,relative_url,document)
+    def self.bind_str(*args)
+      @@pf.bind_str(args)
     end
 
     #

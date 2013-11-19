@@ -4329,9 +4329,7 @@ module Meteor
         #
         def element_3(tag, attr_name, attr_value)
 
-          @_tag = Regexp.quote(tag)
-          @_attr_name = Regexp.quote(attr_name)
-          @_attr_value = Regexp.quote(attr_value)
+          element_quote_3(tag, attr_name, attr_value)
 
           #空要素の場合(<->内容あり要素の場合)
           if is_match(@@match_tag, tag) then
@@ -4390,8 +4388,8 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_2(attr_name, attr_value)
-          @_attr_name = Regexp.quote(attr_name)
-          @_attr_value = Regexp.quote(attr_value)
+
+          element_quote_2(attr_name, attr_value)
 
           #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value
           #@pattern_cc << TAG_SEARCH_2_4_4
@@ -4423,11 +4421,7 @@ module Meteor
         #
         def element_5(tag, attr_name1, attr_value1, attr_name2, attr_value2)
 
-          @_tag = Regexp.quote(tag)
-          @_attr_name1 = Regexp.quote(attr_name1)
-          @_attr_value1 = Regexp.quote(attr_value1)
-          @_attr_name2 = Regexp.quote(attr_name2)
-          @_attr_value2 = Regexp.quote(attr_value2)
+          element_quote_5(tag, attr_name1, attr_value1, attr_name2, attr_value2)
 
           #空要素の場合(<->内容あり要素の場合)
           if is_match(@@match_tag, tag) then
@@ -4496,10 +4490,8 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
-          @_attr_name1 = Regexp.quote(attr_name1)
-          @_attr_value1 = Regexp.quote(attr_value1)
-          @_attr_name2 = Regexp.quote(attr_name2)
-          @_attr_value2 = Regexp.quote(attr_value2)
+
+          element_quote_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
           #@pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attr_name1 << ATTR_EQ << @_attr_value1
           #@pattern_cc << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ << @_attr_value2

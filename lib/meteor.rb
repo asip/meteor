@@ -2109,12 +2109,9 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       def element_3(tag, attr_name, attr_value)
 
-        @_tag = Regexp.quote(tag)
-        @_attr_name = Regexp.quote(attr_name)
-        @_attr_value = Regexp.quote(attr_value)
+        element_quote_3(tag,attr_name,attr_value)
 
-
-        @pattern_cc_1 = "<#{@_tag}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<#{@_tag}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
+        @pattern_cc_1 = element_pattern_3
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         @res1 = @pattern.match(@root.document)
@@ -2162,6 +2159,21 @@ module Meteor
       end
 
       private :element_3
+
+      def element_pattern_3
+
+        "<#{@_tag}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<#{@_tag}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
+      end
+
+      private :element_pattern_3
+
+      def element_quote_3(tag,attr_name,attr_value)
+        @_tag = Regexp.quote(tag)
+        @_attr_name = Regexp.quote(attr_name)
+        @_attr_value = Regexp.quote(attr_value)
+      end
+
+      private :element_quote_3
 
       def element_with_3_1(tag)
         case @res.captures.length
@@ -2322,7 +2334,9 @@ module Meteor
       #
       def element_2(attr_name, attr_value)
 
-        element_pattern_2(attr_name,attr_value)
+        element_quote_2(attr_name,attr_value)
+
+        element_pattern_2
 
         @res = @pattern.match(@root.document)
 
@@ -2386,9 +2400,15 @@ module Meteor
 
       private :element_2
 
-      def element_pattern_2(attr_name, attr_value)
+      def element_quote_2(attr_name, attr_value)
         @_attr_name = Regexp.quote(attr_name)
         @_attr_value = Regexp.quote(attr_value)
+      end
+
+      private :element_quote_2
+
+      def element_pattern_2
+
         #=begin
         ##@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4
         #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4_2_3
@@ -2396,6 +2416,8 @@ module Meteor
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
       end
+
+      private :element_pattern_2
 
 =begin
      def element_with_2_1()
@@ -2558,12 +2580,7 @@ module Meteor
       #
       def element_5(tag, attr_name1, attr_value1, attr_name2, attr_value2)
 
-        @_tag = Regexp.quote(tag)
-        @_attr_name1 = Regexp.quote(attr_name1)
-        @_attr_name2 = Regexp.quote(attr_name2)
-        @_attr_value1 = Regexp.quote(attr_value1)
-        @_attr_value2 = Regexp.quote(attr_value2)
-
+        element_quote_5(tag, attr_name1, attr_value1, attr_name2, attr_value2)
 
         @pattern_cc_1 = "<#{@_tag}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_tag}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
 
@@ -2613,6 +2630,16 @@ module Meteor
       end
 
       private :element_5
+
+      def element_quote_5(tag, attr_name1, attr_value1, attr_name2, attr_value2)
+        @_tag = Regexp.quote(tag)
+        @_attr_name1 = Regexp.quote(attr_name1)
+        @_attr_name2 = Regexp.quote(attr_name2)
+        @_attr_value1 = Regexp.quote(attr_value1)
+        @_attr_value2 = Regexp.quote(attr_value2)
+      end
+
+      private :element_quote_5
 
       def element_with_5_1(tag)
 
@@ -2796,7 +2823,9 @@ module Meteor
       #
       def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
-        element_pattern_4(attr_name1, attr_value1, attr_name2, attr_value2)
+        element_quote_4(attr_name1, attr_value1, attr_name2, attr_value2)
+
+        element_pattern_4
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         @res = @pattern.match(@root.document)
@@ -2814,11 +2843,16 @@ module Meteor
 
       private :element_4
 
-      def element_pattern_4(attr_name1, attr_value1, attr_name2, attr_value2)
+      def element_quote_4(attr_name1, attr_value1, attr_name2, attr_value2)
         @_attr_name1 = Regexp.quote(attr_name1)
         @_attr_name2 = Regexp.quote(attr_name2)
         @_attr_value1 = Regexp.quote(attr_value1)
         @_attr_value2 = Regexp.quote(attr_value2)
+      end
+
+      private :element_quote_4
+
+      def element_pattern_4
 
         #@pattern_cc = '' << TAG_SEARCH_3_1_2_2 << @_attr_name1 << ATTR_EQ
         #@pattern_cc << @_attr_value1 << TAG_SEARCH_2_6 << @_attr_name2 << ATTR_EQ

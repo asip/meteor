@@ -2338,6 +2338,7 @@ module Meteor
 
         element_pattern_2
 
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         @res = @pattern.match(@root.document)
 
         if @res then
@@ -2413,8 +2414,6 @@ module Meteor
         ##@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4
         #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4_2_3
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\""
-
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
       end
 
       private :element_pattern_2

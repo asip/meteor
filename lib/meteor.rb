@@ -25,13 +25,15 @@ module Meteor
 
   VERSION = '0.9.7.6'
 
-  RUBY_VERSION_1_9_0 = '1.9.0'
+  #RUBY_VERSION_1_9_0 = '1.9.0'
 
+=begin
   if RUBY_VERSION < RUBY_VERSION_1_9_0 then
     require 'Kconv'
     #E_UTF8 = 'UTF8'
     $KCODE = 'UTF8'
   end
+=end
 
   #require 'fileutils'
 
@@ -685,6 +687,7 @@ module Meteor
     end
   end
 
+=begin
   if RUBY_VERSION < RUBY_VERSION_1_9_0 then
     class AttributeMap
       #
@@ -747,6 +750,7 @@ module Meteor
       end
     end
   end
+=end
 
   #
   # Attribute class (属性クラス)
@@ -3776,6 +3780,7 @@ module Meteor
 
     end
 
+=begin
     if RUBY_VERSION < RUBY_VERSION_1_9_0 then
       class Kernel
         MODE = 'r'
@@ -3891,6 +3896,7 @@ module Meteor
         end
       end
     end
+=end
 
     module Util
 
@@ -4726,6 +4732,7 @@ module Meteor
 
       end
 
+=begin
       if RUBY_VERSION < RUBY_VERSION_1_9_0 then
         class ParserImpl
           @@pattern_and_1 = Regexp.new(AND_1)
@@ -4779,6 +4786,7 @@ module Meteor
           end
         end
       end
+=end
 
     end
 
@@ -5231,6 +5239,7 @@ module Meteor
 
       end
 
+=begin
       if RUBY_VERSION < RUBY_VERSION_1_9_0 then
         class ParserImpl
           @@pattern_and_1 = Regexp.new(AND_1)
@@ -5291,6 +5300,8 @@ module Meteor
 
         end
       end
+=end
+
     end
 
     module Html5
@@ -5647,7 +5658,6 @@ module Meteor
           content
         end
 
-
         private :escape
 
         def escape_content(*args)
@@ -5691,6 +5701,7 @@ module Meteor
 
       end
 
+=begin
       if RUBY_VERSION < RUBY_VERSION_1_9_0 then
         class ParserImpl
           @@pattern_and_1 = Regexp.new(AND_1)
@@ -5731,6 +5742,8 @@ module Meteor
           end
         end
       end
+=end
+
     end
   end
 

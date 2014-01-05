@@ -23,7 +23,7 @@
 
 module Meteor
 
-  VERSION = '0.9.7.6'
+  VERSION = '0.9.8'
 
   #RUBY_VERSION_1_9_0 = '1.9.0'
 
@@ -55,38 +55,38 @@ module Meteor
   #
   # Element Class (要素クラス)
   #
-  # !@attribute [rw] name
+  # @!attribute [rw] name
   #  @return [String] tag name (要素名)
-  # !@attribute [rw] attributes
+  # @!attribute [rw] attributes
   #  @return [String] attributes (属性群)
-  # !@attribute [rw] mixed_content
+  # @!attribute [rw] mixed_content
   #  @return [String] content (内容)
-  # !@attribute [rw] pattren
+  # @!attribute [rw] pattern
   #  @return [String] pattern (パターン)
-  # !@attribute [rw] document_sync
+  # @!attribute [rw] document_sync
   #  @return [true,false] document update flag (ドキュメント更新フラグ)
-  # !@attribute [rw] empty
+  # @!attribute [rw] empty
   #  @return [true,false] content empty flag (内容存在フラグ)
-  # !@attribute [rw] cx
+  # @!attribute [rw] cx
   #  @return [true,false] comment extension tag flag (コメント拡張タグフラグ)
-  # !@attribute [rw] mono
+  # @!attribute [rw] mono
   #  @return [true,false] child element existance flag (子要素存在フラグ)
-  # !@attibute [rw] parser
+  # @!attribute [rw] parser
   #  @return [Meteor::Parser] parser(パーサ)
-  # !@attribute [rw] type_value
+  # @!attribute [rw] type_value
   #  @return [String] type (タイプ属性)
-  # !@attribute [rw] usable
+  # @!attribute [rw] usable
   #  @return [true,false] usable flag (有効・無効フラグ)
-  # !@attribute [rw] origin
+  # @!attribute [rw] origin
   #  @return [Meteor::Element] original pointer (原本ポインタ)
-  # !@attribute [rw] copy
+  # @!attribute [rw] copy
   #  @return [Meteor::Element] copy pointer (複製ポインタ)
-  # !@attribute [rw] removed
+  # @!attribute [rw] removed
   #  @return [true,false] delete flag (削除フラグ)
   #
   class Element
 
-    attr_accessor :name
+    attr_accessor :tag
     attr_accessor :attributes
     attr_accessor :mixed_content
     attr_accessor :pattern
@@ -100,6 +100,9 @@ module Meteor
     attr_accessor :origin
     attr_accessor :copy
     attr_accessor :removed
+
+    alias :name :tag
+    alias :name= :tag=
 
     #
     # initializer (イニシャライザ)
@@ -122,7 +125,7 @@ module Meteor
             raise ArgumentError
           end
         when TWO
-          @name = args[0].name
+          @tag = args[0].tag
           @attributes = String.new(args[0].attributes)
           @mixed_content = String.new(args[0].mixed_content)
           #@pattern = String.new(args[0].pattern)
@@ -146,7 +149,7 @@ module Meteor
     # @param [String] tag tag name (タグ名)
     #
     def initialize_s(tag)
-      @name = tag
+      @tag = tag
       #@attributes = nil
       #@mixed_content = nil
       #@pattern = nil
@@ -166,7 +169,7 @@ module Meteor
     # @param [Meteor::Element] elm element (要素)
     #
     def initialize_e(elm)
-      @name = elm.name
+      @tag = elm.tag
       @attributes = String.new(elm.attributes)
       #@pattern = String.new(elm.pattern)
       @pattern = elm.pattern
@@ -247,27 +250,27 @@ module Meteor
         case @parser.doc_type
           when Parser::HTML, Parser::HTML5 then
             if @cx then
-              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+              #@pattern_cc = '' << SET_CX_1 << elm.tag << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.tag << SET_CX_4
+              @document = "<!-- @#{@tag} #{@attributes} -->#{@mixed_content}<!-- /@#{@tag} -->"
             else
               if @empty then
-                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+                #@pattern_cc = '' << TAG_OPEN << elm.tag << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.tag << TAG_CLOSE
+                @document = "<#{@tag}#{@attributes}>#{@mixed_content}</#{@tag}>"
               else
-                @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE
+                @document = '' << Meteor::Core::Kernel::TAG_OPEN << @tag << @attributes << Meteor::Core::Kernel::TAG_CLOSE
                 #@document = "<#{@name}#{@attributes}>"
               end
             end
           when Parser::XHTML, Parser::XHTML5, Parser::XML then
             if @cx then
-              #@pattern_cc = '' << SET_CX_1 << elm.name << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.name << SET_CX_4
-              @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+              #@pattern_cc = '' << SET_CX_1 << elm.tag << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.tag << SET_CX_4
+              @document = "<!-- @#{@tag} #{@attributes} -->#{@mixed_content}<!-- /@#{@tag} -->"
             else
               if @empty then
-                #@pattern_cc = '' << TAG_OPEN << elm.name << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.name << TAG_CLOSE
-                @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+                #@pattern_cc = '' << TAG_OPEN << elm.tag << elm.attributes << TAG_CLOSE << elm.mixed_content << TAG_OPEN3 << elm.tag << TAG_CLOSE
+                @document = "<#{@tag}#{@attributes}>#{@mixed_content}</#{@tag}>"
               else
-                @document = '' << Meteor::Core::Kernel::TAG_OPEN << @name << @attributes << Meteor::Core::Kernel::TAG_CLOSE3
+                @document = '' << Meteor::Core::Kernel::TAG_OPEN << @tag << @attributes << Meteor::Core::Kernel::TAG_CLOSE3
                 #@document = "<#{@name}#{@attributes}/>"
               end
             end
@@ -339,10 +342,56 @@ module Meteor
     alias :child :element
 
     #
-    # get child element using selector like css3(CSS3のようにセレクタを用いて子要素を取得する)
+    # get elements (要素を取得する)
+    # @overload elements(tag)
+    #  get elements using tag name (要素のタグ名で要素を取得する)
+    #  @param [String] tag tag name (タグ名)
+    #  @return [Array<Meteor::Element>] element array(要素配列)
+    # @overload elements(tag,attrs)
+    #  get elements using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [String] tag tag name (タグ名)
+    #  @param [Hash] attrs attribute map (属性マップ)
+    #  @return [Array<Meteor::Element>] element array (要素配列)
+    # @overload elements(attrs)
+    #  get elements using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [Hash] attrs attribute map (属性マップ)
+    #  @return [Array<Meteor::Element>] element array (要素配列)
+    # @overload elements(tag,attr_name,attr_value)
+    #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
+    #  @param [String] tag  tag name (タグ名)
+    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String] attr_value attribute value (属性値)
+    #  @return [Array<Meteor::Element>] element array (要素配列)
+    # @overload elements(attr_name,attr_value)
+    #  get elements using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
+    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String] attr_value attribute value (属性値)
+    #  @return [Array<Meteor::Element>] element array (要素配列)
+    # @overload elements(tag,attr_name1,attr_value1,attr_name2,attr_value2)
+    #  get elements using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [String] tag tag name (タグ名)
+    #  @param [String] attr_name1 attribute name1 (属性名1)
+    #  @param [String] attr_value1 attribute value1 (属性値1)
+    #  @param [String] attr_name2 attribute name2 (属性名2)
+    #  @param [String] attr_value2 attribute value2 (属性値2)
+    #  @return [Array<Meteor::Element>] element array (要素配列)
+    # @overload elements(attr_name1,attr_value1,attr_name2,attr_value2)
+    #  get elements using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
+    #  @param [String] attr_name1 attribute name1 (属性名1)
+    #  @param [String] attr_value1 attribute value1 (属性値1)
+    #  @param [String] attr_name2 attribute name2 (属性名2)
+    #  @param [String] attr_value2 attribute value2 (属性値2)
+    #  @return [Array<Meteor::Element>] element array (要素配列)
+    #
+    def elements(*args)
+      @parser.elements(*args)
+    end
+
+    #
+    # get (child) elements using selector like css3(CSS3のようにセレクタを用いて(子)要素を取得する)
     # CSS3 selector partial support (CSS3セレクタの部分的サポート)
     # @param selector [String] selector (セレクタ)
-    # @return [Meteor::Element] element (要素)
+    # @return [Array<Meteor::Element>] element (要素)
     #
     def find(selector)
       @parser.find(selector)
@@ -397,7 +446,7 @@ module Meteor
 
     #
     # set attribute map (要素マップをセットする)
-    # @params [Hash] attr_map attributes (属性マップ)
+    # @param [Hash] attrs attribute map (属性マップ)
     # @return [Meteor::Element] element (要素)
     def attrs=(attrs)
       @parser.attrs(self,attrs)
@@ -521,13 +570,13 @@ module Meteor
   #
   # root element class (ルート要素クラス)
   #
-  # !@attribute [rw] content_type
+  # @!attribute [rw] content_type
   #  @return [String] content type (コンテントタイプ)
-  # !@attribute [rw] kaigyo_code
+  # @!attribute [rw] kaigyo_code
   #  @return [String] newline (改行コード)
-  # !@attribute [rw] chaset
+  # @!attribute [rw] chaset
   #  @return [String] charset (文字コード)
-  # !@attribute [rw] character_encoding
+  # @!attribute [rw] character_encoding
   #  @return [String] character encoding (文字エンコーディング)
   #
   class RootElement < Element
@@ -755,13 +804,13 @@ module Meteor
   #
   # Attribute class (属性クラス)
   #
-  # !@attribute [rw] name
+  # @!attribute [rw] name
   #  @return [String] attribute name (名前)
-  # !@attribute [rw] value
+  # @!attribute [rw] value
   #  @return [String] attribute value (値)
-  # !@attribute [rw] changed
+  # @!attribute [rw] changed
   #  @return [true,false] update flag (更新フラグ)
-  # !@attribute [rw] removed
+  # @!attribute [rw] removed
   #  @return [true,false] delete flag (削除フラグ)
   #
   class Attribute
@@ -797,11 +846,11 @@ module Meteor
   #
   # Parser Factory Class (パーサファクトリクラス)
   #
-  # !@attribute [rw] type
+  # @!attribute [rw] type
   #  @return [FixNum] default type of parser (デフォルトのパーサ・タイプ)
-  # !@attribute [rw] root
+  # @!attribute [rw] root
   #  @return [String] root root directory (基準ディレクトリ)
-  # !@attribute [rw] enc
+  # @!attribute [rw] enc
   #  @return [String] default character encoding (デフォルトエンコーディング)
   #
   class ParserFactory
@@ -893,7 +942,7 @@ module Meteor
 
     #
     # イニシャライザ
-    # @paeam [FixNum] bs_type default type of parser (デフォルトのパーサ・タイプ)
+    # @param [FixNum] type default type of parser (デフォルトのパーサ・タイプ)
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
@@ -1356,6 +1405,7 @@ module Meteor
 
   end
 
+=begin
   module Hook
 
     #
@@ -1418,13 +1468,14 @@ module Meteor
 
     end
   end
+=end
 
   module Exception
 
     #
     # Element Search Exception (要素検索例外)
     #
-    # !@attribute [rw] message
+    # @!attribute [rw] message
     #  @return [String] message (メッセージ)
     #
     class NoSuchElementException
@@ -1508,13 +1559,13 @@ module Meteor
     #
     # Parser Core Class (パーサコアクラス)
     #
-    # !@attribute [rw] element_cache
+    # @!attribute [rw] element_cache
     #  @return [Hash] element cache (要素キャッシュ)
-    # !@attribute [rw] doc_type
+    # @!attribute [rw] doc_type
     #  @return [Fixnum] document type (ドキュメントタイプ)
-    # !@attribute [rw] document_hook
+    # @!attribute [rw] document_hook
     #  @return [String] hook document (フック・ドキュメント)
-    # !@attribute [rw] element_hook
+    # @!attribute [rw] element_hook
     #  @return [Meteor::Element] element (要素)
     #
     class Kernel < Meteor::Parser
@@ -1858,12 +1909,12 @@ module Meteor
       #  @param [String] tag tag name (タグ名)
       #  @return [Meteor::Element] element(要素)
       # @overload element(tag,attrs)
-      #  要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する
-      #  @param [String] tag  タグ名
-      #  @param [Hash] attrs 属性マップ
-      #  @return [Meteor::Element] 要素
+      #  get element using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+      #  @param [String] tag  tag name (タグ名)
+      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @return [Meteor::Element] element (要素)
       # @overload element(attrs)
-      #  get element using tag name and attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+      #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
       #  @param [Hash] attrs attribute map (属性マップ)
       #  @return [Meteor::Element] element (要素)
       # @overload element(tag,attr_name,attr_value)
@@ -1971,64 +2022,6 @@ module Meteor
       end
 
       #
-      # get element using selector like CSS3 (CSS3のようにセレクタを用いて要素を取得する)
-      # CSS3 selector partial support (CSS3セレクタの部分的サポート)
-      # @param [String] selector selector (セレクタ)
-      # @return [Meteor::Element] element (要素)
-      #
-      def find(selector)
-        #puts selector
-        if @res = @@pattern_find_1.match(selector) then
-          element_1(@res[1])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_2_1.match(selector) then
-          element_2(CSS_ID, @res[1])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_3_1.match(selector) then
-          element_3(@res[1], @res[2], @res[3])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_3_2.match(selector) then
-          element_3(@res[1], CSS_ID, @res[2])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_3_3.match(selector) then
-          element_3(@res[1], CSS_CLASS, @res[2])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_5.match(selector) then
-          element_5(@res[1], @res[2], @res[3], @res[4], @res[5])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_2_3.match(selector) then
-          element_2(@res[1], @res[2])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_4.match(selector) then
-          element_4(@res[1], @res[2], @res[3], @res[4])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        elsif @res = @@pattern_find_2_2.match(selector) then
-          element_2(CSS_CLASS, @res[1])
-          if @elm_ then
-            @element_cache.store(@elm_.object_id, @elm_)
-          end
-        else
-          nil
-        end
-      end
-
-      #
       # get element using tag name (タグ名で検索し、要素を取得する)
       # @param [String] tag tag name (タグ名)
       # @return [Meteor::Element] element(要素)
@@ -2108,7 +2101,7 @@ module Meteor
       #
       # get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で検索し、要素を取得する)
       # @param [String] tag  tag name (タグ名)
-      # @param [String] attrName attribute name (属性名)
+      # @param [String] attr_name attribute name (属性名)
       # @param [String] attr_value attribute value (属性値)
       # @return [Meteor::Element] element (要素)
       def element_3(tag, attr_name, attr_value)
@@ -3046,6 +3039,406 @@ module Meteor
       #private :create_pattern_2
 =end
 
+      # get elements (要素を取得する)
+      # @overload elements(tag)
+      #  get elements using tag name (要素のタグ名で要素を取得する)
+      #  @param [String] tag tag name (タグ名)
+      #  @return [Array<Meteor::Element>] element array(要素配列)
+      # @overload elements(tag,attrs)
+      #  get elements using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+      #  @param [String] tag tag name (タグ名)
+      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @return [Array<Meteor::Element>] element array (要素配列)
+      # @overload elements(attrs)
+      #  get elements using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
+      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @return [Array<Meteor::Element>] element array (要素配列)
+      # @overload elements(tag,attr_name,attr_value)
+      #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
+      #  @param [String] tag  tag name (タグ名)
+      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String] attr_value attribute value (属性値)
+      #  @return [Array<Meteor::Element>] element array (要素配列)
+      # @overload elements(attr_name,attr_value)
+      #  get elements using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
+      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String] attr_value attribute value (属性値)
+      #  @return [Array<Meteor::Element>] element array (要素配列)
+      # @overload elements(tag,attr_name1,attr_value1,attr_name2,attr_value2)
+      #  get elements using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
+      #  @param [String] tag tag name (タグ名)
+      #  @param [String] attr_name1 attribute name1 (属性名1)
+      #  @param [String] attr_value1 attribute value1 (属性値1)
+      #  @param [String] attr_name2 attribute name2 (属性名2)
+      #  @param [String] attr_value2 attribute value2 (属性値2)
+      #  @return [Array<Meteor::Element>] element array (要素配列)
+      # @overload elements(attr_name1,attr_value1,attr_name2,attr_value2)
+      #  get elements using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
+      #  @param [String] attr_name1 attribute name1 (属性名1)
+      #  @param [String] attr_value1 attribute value1 (属性値1)
+      #  @param [String] attr_name2 attribute name2 (属性名2)
+      #  @param [String] attr_value2 attribute value2 (属性値2)
+      #  @return [Array<Meteor::Element>] element array (要素配列)
+      #
+      def elements(elm, attrs = nil,*args)
+        if !attrs
+          if elm.kind_of?(String)
+            elements_(elm)
+          elsif elm.kind_of?(Hash)
+            if elm.size == ONE
+              elements_(elm.keys[0], elm.values[0])
+            elsif elm.size == TWO
+              elements_(elm.keys[0], elm.values[0], elm.keys[1], elm.values[1])
+            else
+              raise ArgumentError
+            end
+          else
+            raise ArgumentError
+          end
+        elsif attrs.kind_of?(Hash)
+          if attrs.size == ONE
+            elements_(elm, attrs.keys[0], attrs.values[0])
+          elsif attrs.size == TWO
+            elements_(elm, attrs.keys[0], attrs.values[0], attrs.keys[1], attrs.values[1])
+          else
+            @elm_ = nil
+            raise ArgumentError
+          end
+        elsif attrs.kind_of?(String)
+          case args.length
+            when ZERO
+              elements_(elm,attrs)
+            when ONE
+              elements_(elm, attrs, args[0])
+            when TWO
+              elements_(elm, attrs, args[0],args[1])
+            when THREE
+              elements_(elm, attrs, args[0],args[1],args[2])
+            else
+              @elm_ = nil
+              raise ArgumentError
+          end
+        else
+          @elm_ = nil
+          raise ArgumentError
+        end
+      end
+
+      def elements_(*args)
+        elm_arr = Array.new
+
+        case args.size
+          when ONE
+            @elm_ = element_1(*args)
+          when TWO
+            @elm_ = element_2(*args)
+          when THREE
+            @elm_ = element_3(*args)
+          when FOUR
+            @elm_ = element_4(*args)
+          when FIVE
+            @elm_ = element_5(*args)
+        end
+
+        if !@elm_
+          return elm_arr
+        end
+
+        @patten_cc = @elm_.pattern
+
+        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+
+        @position = 0
+
+        while (@res = @pattern.match(@root.document,@position))
+
+          if @res then
+            case args.size
+              when ONE
+                if @elm_.empty
+                  element_with_1(@elm_.tag)
+                else
+                  element_without_1(@elm_.tag)
+                end
+              when TWO,THREE
+                if @elm_.empty
+                  element_with_3_1(@elm_.tag)
+                else
+                  element_without_3(@elm_.tag)
+                end
+              when FOUR,FIVE
+                if @elm_.empty
+                  element_with_5_1(@elm_.tag)
+                else
+                  element_without_5(@elm_.tag)
+                end
+            end
+
+            @elm_.pattern = Regexp.quote(@elm_.document)
+            elm_arr << @elm_
+
+            @element_cache.store(@elm_.object_id, @elm_)
+
+            @position = @res.end(0)
+          else
+            break
+          end
+        end
+
+        elm_arr
+      end
+
+      #
+      # get elements using selector like CSS3 (CSS3のようにセレクタを用いて要素を取得する)
+      # CSS3 selector partial support (CSS3セレクタの部分的サポート)
+      # @param [String] selector selector (セレクタ)
+      # @return [Array<Meteor::Element>] element array (要素配列)
+      #
+      def find(selector)
+        #puts selector
+        if @res = @@pattern_find_1.match(selector) then
+          elements_(@res[1])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_2_1.match(selector) then
+          elements_(CSS_ID, @res[1])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_3_1.match(selector) then
+          elements_(@res[1], @res[2], @res[3])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_3_2.match(selector) then
+          elements_(@res[1], CSS_ID, @res[2])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_3_3.match(selector) then
+          elements_(@res[1], CSS_CLASS, @res[2])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_5.match(selector) then
+          elements_(@res[1], @res[2], @res[3], @res[4], @res[5])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_2_3.match(selector) then
+          elements_(@res[1], @res[2])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_4.match(selector) then
+          elements_(@res[1], @res[2], @res[3], @res[4])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        elsif @res = @@pattern_find_2_2.match(selector) then
+          elements_(CSS_CLASS, @res[1])
+          #if @elm_ then
+          #  @element_cache.store(@elm_.object_id, @elm_)
+          #end
+        else
+          nil
+        end
+      end
+
+=begin
+      def elements_1(tag)
+
+        elm_arr = Array.new
+
+        @elm_ = element_1(tag)
+
+        if !@elm_
+          return elm_arr
+        end
+
+        @patten_cc = @elm_.pattern
+
+        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+
+        @position = 0
+
+        while (@res = @pattern.match(@root.document,@position))
+
+          if @res then
+            if @elm_.empty
+              element_with_1(@elm_.tag)
+            else
+              element_without_1(@elm_.tag)
+            end
+
+            @elm_.pattern = Regexp.quote(@elm_.document)
+            elm_arr << @elm_
+            @position = @res.end(0)
+          else
+            break
+          end
+        end
+
+        elm_arr
+      end
+
+      private :elements_1
+
+      def elements_2(attr_name,attr_value)
+
+        elm_arr = Array.new
+
+        @elm_ = element_2(attr_name,attr_value)
+
+        if !@elm_
+          return elm_arr
+        end
+
+        @patten_cc = @elm_.pattern
+
+        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+
+        @position = 0
+
+        while (@res = @pattern.match(@root.document,@position))
+
+          if @res then
+            if @elm_.empty
+              element_with_3_1(@elm_.tag)
+            else
+              element_without_3(@elm_.tag)
+            end
+
+            @elm_.pattern = Regexp.quote(@elm_.document)
+            elm_arr << @elm_
+            @position = @res.end(0)
+          else
+            break
+          end
+        end
+
+        elm_arr
+      end
+
+      private :elements_2
+
+      def elements_3(tag,attr_name,attr_value)
+
+        elm_arr = Array.new
+
+        @elm_ = element_3(tag,attr_name,attr_value)
+
+        if !@elm_
+          return elm_arr
+        end
+
+        @patten_cc = @elm_.pattern
+
+        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+
+        @position = 0
+
+        while (@res = @pattern.match(@root.document,@position))
+
+          if @res then
+            if @elm_.empty
+              element_with_3_1(@elm_.tag)
+            else
+              element_without_3(@elm_.tag)
+            end
+
+            @elm_.pattern = Regexp.quote(@elm_.document)
+            elm_arr << @elm_
+            @position = @res.end(0)
+          else
+            break
+          end
+        end
+
+        elm_arr
+      end
+
+      private :elements_3
+
+      def elements_4(attr_name1,attr_value1,attr_name2,attr_value2)
+
+        elm_arr = Array.new
+
+        @elm_ = element_4(attr_name1,attr_value1,attr_name2,attr_value2)
+
+        if !@elm_
+          return elm_arr
+        end
+
+        @patten_cc = @elm_.pattern
+
+        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+
+        @position = 0
+
+        while (@res = @pattern.match(@root.document,@position))
+
+          if @res then
+            if @elm_.empty
+              element_with_5_1(@elm_.tag)
+            else
+              element_without_5(@elm_.tag)
+            end
+
+            @elm_.pattern = Regexp.quote(@elm_.document)
+            elm_arr << @elm_
+            @position = @res.end(0)
+          else
+            break
+          end
+        end
+
+        elm_arr
+      end
+
+      private :elements_4
+
+      def elements_5(tag,attr_name1,attr_value1,attr_name2,attr_value2)
+
+        elm_arr = Array.new
+
+        @elm_ = element_5(tag,attr_name1,attr_value1,attr_name2,attr_value2)
+
+        if !@elm_
+          return elm_arr
+        end
+
+        @patten_cc = @elm_.pattern
+
+        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+
+        @position = 0
+
+        while (@res = @pattern.match(@root.document,@position))
+
+          if @res then
+            if @elm_.empty
+              element_with_5_1(@elm_.tag)
+            else
+              element_without_5(@elm_.tag)
+            end
+
+            @elm_.pattern = Regexp.quote(@elm_.document)
+            elm_arr << @elm_
+            @position = @res.end(0)
+          else
+            break
+          end
+        end
+
+        elm_arr
+      end
+
+      private :elements_5
+=end
+
+
       #
       # @overload attr(elm,attr)
       #  set attribute of element (要素の属性をセットする)
@@ -3528,7 +3921,7 @@ module Meteor
       #
       # replace element (要素を置換する)
       # @param [Meteor::Element] elm element (要素)
-      # @param [String] replaceDocument string for replacement (置換文字列)
+      # @param [String] replace_document string for replacement (置換文字列)
       #
       def replace(elm, replace_document)
         #タグ置換パターン
@@ -3587,16 +3980,16 @@ module Meteor
         if self.element_hook then
           if self.element_hook.origin.mono then
             if self.element_hook.origin.cx then
-              #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
+              #@root.hookDocument << SET_CX_1 << @root.element.tag << SPACE
               #@root.hookDocument << @root.element.attributes << SET_CX_2
               #@root.hookDocument << @root.element.mixed_content << SET_CX_3
-              #@root.hookDocument << @root.element.name << SET_CX_4
-              self.document_hook << "<!-- @#{self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
+              #@root.hookDocument << @root.element.tag << SET_CX_4
+              self.document_hook << "<!-- @#{self.element_hook.tag} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.tag} -->"
             else
-              #@root.hookDocument << TAG_OPEN << @root.element.name
+              #@root.hookDocument << TAG_OPEN << @root.element.tag
               #@root.hookDocument << @root.element.attributes << TAG_CLOSE << @root.element.mixed_content
-              #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
-              self.document_hook << "<#{self.element_hook.name}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.name}>"
+              #@root.hookDocument << TAG_OPEN3 << @root.element.tag << TAG_CLOSE
+              self.document_hook << "<#{self.element_hook.tag}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.tag}>"
             end
             self.element_hook = Element.new!(self.element_hook.origin, self)
           else
@@ -3604,16 +3997,16 @@ module Meteor
             @_attributes = self.element_hook.attributes
 
             if self.element_hook.origin.cx then
-              #@root.hookDocument << SET_CX_1 << @root.element.name << SPACE
+              #@root.hookDocument << SET_CX_1 << @root.element.tag << SPACE
               #@root.hookDocument << @_attributes << SET_CX_2
               #@root.hookDocument << @root.document << SET_CX_3
-              #@root.hookDocument << @root.element.name << SET_CX_4
-              self.document_hook << "<!-- @#{self.element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.name} -->"
+              #@root.hookDocument << @root.element.tag << SET_CX_4
+              self.document_hook << "<!-- @#{self.element_hook.tag} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.tag} -->"
             else
-              #@root.hookDocument << TAG_OPEN << @root.element.name
+              #@root.hookDocument << TAG_OPEN << @root.element.tag
               #@root.hookDocument << @_attributes << TAG_CLOSE << @root.document
-              #@root.hookDocument << TAG_OPEN3 << @root.element.name << TAG_CLOSE
-              self.document_hook << "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>"
+              #@root.hookDocument << TAG_OPEN3 << @root.element.tag << TAG_CLOSE
+              self.document_hook << "<#{self.element_hook.tag}#{@_attributes}>#{@root.document}</#{self.element_hook.tag}>"
             end
             self.element_hook = Element.new!(self.element_hook.origin, self)
           end
@@ -3632,7 +4025,7 @@ module Meteor
         #CX終了タグ置換
         @pattern = @@pattern_clean2
         @root.document.gsub!(@pattern, EMPTY)
-        #@root.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
+        # @root.document << "<!-- Powered by Meteor (C)Yasumasa Ashida -->"
       end
 
       private :clean
@@ -3799,7 +4192,7 @@ module Meteor
           #読込及び格納
           io = open(file_path, MODE)
           @root.document = io.read
-          #@root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
+          # @root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
           enc = Kconv.guess(@root.document)
           #enc = get_encoding
           if !Kconv::UTF8.equal?(enc) then
@@ -4522,15 +4915,15 @@ module Meteor
         private :element_4
 
         def edit_attrs_(elm, attr_name, attr_value)
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_selected_m, @@pattern_selected_r)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_multiple_m, @@pattern_multiple_r)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_disabled_m, @@pattern_disabled_r)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_checked_m, @@pattern_checked_r)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_readonly_m, @@pattern_readonly_r)
           else
             super(elm, attr_name, attr_value)
@@ -4568,15 +4961,15 @@ module Meteor
         private :edit_document_1
 
         def get_attr_value_(elm, attr_name)
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             get_attr_value_r(elm, @@pattern_selected_m)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             get_attr_value_r(elm, @@pattern_multiple_m)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             get_attr_value_r(elm, @@pattern_disabled_m)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             get_attr_value_r(elm, @@pattern_checked_m)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             get_attr_value_r(elm, @@pattern_readonly_m)
           else
             super(elm, attr_name)
@@ -4718,7 +5111,7 @@ module Meteor
         def unescape_content(content, elm)
           content_ = unescape(content)
 
-          if elm.cx || !is_match(@@match_tag_2, elm.name) then
+          if elm.cx || !is_match(@@match_tag_2, elm.tag) then
             if content.include?(BR_2) then
               #「<br>」->「¥r?¥n」
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
@@ -4777,7 +5170,7 @@ module Meteor
           def escape_content(content, elm)
             content = escape(content)
 
-            if elm.cx || !is_match(@@match_tag_2, elm.name) then
+            if elm.cx || !is_match(@@match_tag_2, elm.tag) then
               #「¥r?¥n」->「<br>」
               content.gsub!(@@pattern_br_1, BR_2)
             end
@@ -5043,15 +5436,15 @@ module Meteor
 
         def edit_attrs_(elm, attr_name, attr_value)
 
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             edit_attrs_5(elm, attr_value, @@pattern_selected_m, @@pattern_selected_r, SELECTED_U)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             edit_attrs_5(elm, attr_value, @@pattern_multiple_m, @@pattern_multiple_r, MULTIPLE_U)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             edit_attrs_5(elm, attr_value, @@pattern_disabled_m, @@pattern_disabled_r, DISABLED_U)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             edit_attrs_5(elm, attr_value, @@pattern_checked_m, @@pattern_checked_r, CHECKED_U)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             edit_attrs_5(elm, attr_value, @@pattern_readonly_m, @@pattern_readonly_r, READONLY_U)
           else
             super(elm, attr_name, attr_value)
@@ -5091,15 +5484,15 @@ module Meteor
         private :edit_attrs_5
 
         def get_attr_value_(elm, attr_name)
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             get_attr_value_r(elm, attr_name, @@pattern_selected_m1)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             get_attr_value_r(elm, attr_name, @@pattern_multiple_m1)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             get_attr_value_r(elm, attr_name, @@pattern_disabled_m1)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             get_attr_value_r(elm, attr_name, @@pattern_checked_m1)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             get_attr_value_r(elm, attr_name, @@pattern_readonly_m1)
           else
             super(elm, attr_name)
@@ -5227,7 +5620,7 @@ module Meteor
         def unescape_content(content, elm)
           content_ = unescape(content)
 
-          if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR_2) then
+          if (elm.cx || !is_match(@@match_tag_2, elm.tag)) && content.include?(BR_2) then
               #「<br>」->「¥r?¥n」
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
           end
@@ -5290,7 +5683,7 @@ module Meteor
           def escape_content(content, elm)
             content = escape(content)
 
-            if elm.cx || !is_match(@@match_tag_2, elm.name) then
+            if elm.cx || !is_match(@@match_tag_2, elm.tag) then
               #「¥r?¥n」->「<br>」
               content.gsub!(@@pattern_br_1, BR_2)
             end
@@ -5393,17 +5786,17 @@ module Meteor
         private :analyze_content_type
 
         def edit_attrs_(elm, attr_name, attr_value)
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_selected_m, @@pattern_selected_r)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_multiple_m, @@pattern_multiple_r)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_disabled_m, @@pattern_disabled_r)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_checked_m, @@pattern_checked_r)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_readonly_m, @@pattern_readonly_r)
-          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.tag) then
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_required_m, @@pattern_required_r)
           else
             super(elm, attr_name, attr_value)
@@ -5413,17 +5806,17 @@ module Meteor
         private :edit_attrs_
 
         def get_attr_value_(elm, attr_name)
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             get_attr_value_r(elm, @@pattern_selected_m)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             get_attr_value_r(elm, @@pattern_multiple_m)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             get_attr_value_r(elm, @@pattern_disabled_m)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             get_attr_value_r(elm, @@pattern_checked_m)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             get_attr_value_r(elm, @@pattern_readonly_m)
-          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.tag) then
             get_attr_value_r(elm, @@pattern_required_m)
           else
             super(elm, attr_name)
@@ -5522,17 +5915,17 @@ module Meteor
 
         def edit_attrs_(elm, attr_name, attr_value)
 
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             edit_attrs_5(elm, attr_value, @@pattern_selected_m, @@pattern_selected_r, SELECTED_U)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             edit_attrs_5(elm, attr_value, @@pattern_multiple_m, @@pattern_multiple_r, MULTIPLE_U)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             edit_attrs_5(elm, attr_value, @@pattern_disabled_m, @@pattern_disabled_r, DISABLED_U)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             edit_attrs_5(elm, attr_value, @@pattern_checked_m, @@pattern_checked_r, CHECKED_U)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             edit_attrs_5(elm, attr_value, @@pattern_readonly_m, @@pattern_readonly_r, READONLY_U)
-          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.tag) then
             edit_attrs_5(elm, attr_value, @@pattern_required_m, @@pattern_required_r, REQUIRED_U)
           else
             super(elm, attr_name, attr_value)
@@ -5543,17 +5936,17 @@ module Meteor
         private :edit_attrs_
 
         def get_attr_value_(elm, attr_name)
-          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.name) then
+          if is_match(SELECTED, attr_name) && is_match(OPTION, elm.tag) then
             get_attr_value_r(elm, attr_name, @@pattern_selected_m1)
-          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.name)
+          elsif is_match(MULTIPLE, attr_name) && is_match(SELECT, elm.tag)
             get_attr_value_r(elm, attr_name, @@pattern_multiple_m1)
-          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.name) then
+          elsif is_match(DISABLED, attr_name) && is_match(DISABLE_ELEMENT, elm.tag) then
             get_attr_value_r(elm, attr_name, @@pattern_disabled_m1)
-          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.name) && is_match(RADIO, get_type(elm)) then
+          elsif is_match(CHECKED, attr_name) && is_match(INPUT, elm.tag) && is_match(RADIO, get_type(elm)) then
             get_attr_value_r(elm, attr_name, @@pattern_checked_m1)
-          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.name) || (is_match(INPUT, elm.name) && is_match(READONLY_TYPE, get_type(elm)))) then
+          elsif is_match(READONLY, attr_name) && (is_match(TEXTAREA, elm.tag) || (is_match(INPUT, elm.tag) && is_match(READONLY_TYPE, get_type(elm)))) then
             get_attr_value_r(elm, attr_name, @@pattern_readonly_m1)
-          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.name) then
+          elsif is_match(REQUIRED, attr_name) && is_match(REQUIRE_ELEMENT, elm.tag) then
             get_attr_value_r(elm, attr_name, @@pattern_required_m1)
           else
             super(elm, attr_name)

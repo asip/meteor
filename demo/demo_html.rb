@@ -115,6 +115,13 @@ elm_dt3_ = elm_.element('id'=>'cc')
   elm_.flush
 end
 
+#elms = root.elements('id' => 'sample')
+#
+#elms.each_with_index{ |elm_,i|
+#  #puts elm_.document
+#  elm_['style'] = elm_['style'] + i.to_s
+#}
+
 root.flush
 
 end_time = Time.new.to_f

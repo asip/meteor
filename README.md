@@ -34,4 +34,4 @@ Licensed under the LGPL V2.1.
  Yasumasa Ashida (ys.ashida@gmail.com)
 
 ##Copyright
-(c) 2008-2013 Yasumasa Ashida
+(c) 2008-2014 Yasumasa Ashida

@@ -115,12 +115,14 @@ elm_dt3_ = elm_.element('id'=>'cc')
   elm_.flush
 end
 
-#elms = root.elements('id' => 'sample')
-#
-#elms.each_with_index{ |elm_,i|
-#  #puts elm_.document
-#  elm_['style'] = elm_['style'] + i.to_s
-#}
+elms = root.elements('id' => 'sample')
+#elms = root.find('div')
+#elms = root.find('div[class=test]')
+
+elms.each_with_index{ |elm_,i|
+  #puts elm_.document
+  elm_['style'] = i.to_s
+}
 
 root.flush
 

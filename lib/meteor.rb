@@ -25,16 +25,6 @@ module Meteor
 
   VERSION = '0.9.8'
 
-  #RUBY_VERSION_1_9_0 = '1.9.0'
-
-=begin
-  if RUBY_VERSION < RUBY_VERSION_1_9_0
-    require 'Kconv'
-    #E_UTF8 = 'UTF8'
-    $KCODE = 'UTF8'
-  end
-=end
-
   #require 'fileutils'
 
   ZERO = 0
@@ -735,71 +725,6 @@ module Meteor
       fetch(name)
     end
   end
-
-=begin
-  if RUBY_VERSION < RUBY_VERSION_1_9_0
-    class AttributeMap
-      #
-      # initializer (イニシャライザ)
-      #
-      def initialize_0
-        @map = Hash.new
-        @names = Array.new
-        @recordable = false
-      end
-
-      private :initialize_0
-
-      #
-      # initializer (イニシャライザ)
-      # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
-      #
-      def initialize_1(attr_map)
-        #@map = Marshal.load(Marshal.dump(attr_map.map))
-        @map = attr_map.map.dup
-        @names = Array.new(attr_map.names)
-        @recordable = attr_map.recordable
-      end
-
-      private :initialize_1
-
-      #
-      # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
-      # @param [String] name attribute name (属性名)
-      # @param [String] value attribute value (属性値)
-      #
-      def store(name, value)
-
-        if !@map[name]
-          attr = Attribute.new
-          attr.name = name
-          attr.value = value
-          if @recordable
-            attr.changed = true
-            attr.removed = false
-          end
-          @map[name] = attr
-          @names << name
-        else
-          attr = @map[name]
-          if @recordable && attr.value != value
-            attr.changed = true
-            attr.removed = false
-          end
-          attr.value = value
-        end
-      end
-
-      #
-      # get attribute name array (属性名配列を取得する)
-      # @return [Array] attribute name array (属性名配列)
-      #
-      def names
-        @names
-      end
-    end
-  end
-=end
 
   #
   # Attribute class (属性クラス)
@@ -3273,7 +3198,6 @@ module Meteor
         end
       end
 
-
       #
       # @overload attr(elm,attr)
       #  set attribute of element (要素の属性をセットする)
@@ -4008,124 +3932,6 @@ module Meteor
 
     end
 
-=begin
-    if RUBY_VERSION < RUBY_VERSION_1_9_0
-      class Kernel
-        MODE = 'r'
-
-        #
-        # read file , set in parser (ファイルを読み込み、パーサにセットする)
-        # @param [String] file_path absolute path of input file (入力ファイルの絶対パス)
-        # @param [String] enc character encoding of input file (入力ファイルの文字コード)
-        #
-        def read(file_path, enc)
-
-          #try {
-          @character_encoding = enc
-          #ファイルのオープン
-
-          #読込及び格納
-          io = open(file_path, MODE)
-          @root.document = io.read
-          # @root.document = @root.document.kconv(get_encoding(), Kconv.guess(@root.document))
-          enc = Kconv.guess(@root.document)
-          #enc = get_encoding
-          if !Kconv::UTF8.equal?(enc)
-            @root.document = @root.document.kconv(Kconv::UTF8, enc)
-          end
-
-          parse
-
-          #ファイルのクローズ
-          io.close
-
-          return root.document
-        end
-
-        def create_element_pattern
-          @rx_document = @root.document
-
-          while (@res = @pattern.match(@rx_document)) || @cnt > ZERO
-
-            if @res
-
-              if @cnt > ZERO
-
-                @rx_document2 = @res.post_match
-
-                @res = @pattern_2.match(@rx_document)
-
-                if @res
-
-                  @rx_document = @res.post_match
-
-                  if @rx_document2.length > @rx_document.length
-
-                    @sbuf << @pattern_cc_1_2
-
-                    @cnt += ONE
-
-                    @rx_document = @rx_document2
-                  else
-
-                    @cnt -= ONE
-
-                    if @cnt != ZERO
-                      @sbuf << @pattern_cc_2_1
-                    else
-                      @sbuf << @pattern_cc_2_2
-                      break
-                    end
-
-                  end
-                else
-
-                  @sbuf << @pattern_cc_1_2
-
-                  @cnt += ONE
-
-                  @rx_document = @rx_document2
-                end
-              else
-                @rx_document = @res.post_match
-
-                @sbuf << @pattern_cc_1_1
-
-                @cnt += ONE
-              end
-            else
-
-              if @cnt == ZERO
-                break
-              end
-
-              @res = @pattern_2.match(@rx_document)
-
-              if @res
-
-                @cnt -= ONE
-
-                if @cnt != ZERO
-                  @sbuf << @pattern_cc_2_1
-                else
-                  @sbuf << @pattern_cc_2_2
-                  break
-                end
-
-                @rx_document = @res.post_match
-              else
-                break
-              end
-
-            end
-
-            @pattern = @pattern_1b
-          end
-        end
-      end
-    end
-=end
-
     module Util
 
       #
@@ -4185,22 +3991,14 @@ module Meteor
         #  if !@@regex_cache[regex.to_sym]
         #    #pattern = Regexp.new(regex)
         #    #@@regex_cache[regex] = pattern
-        #    if RUBY_VERSION >= RUBY_VERSION_1_9_0
-        #      @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE)
-        #    else
-        #      @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE,E_UTF8)
-        #    end
+        #    @@regex_cache[regex.to_sym] = Regexp.new(regex, Regexp::MULTILINE)
         #  end
         #
         #  #return pattern
         #  @@regex_cache[regex.to_sym]
         #  ##elsif regex.kind_of?(Symbol)
         #  ##  if !@@regex_cache[regex]
-        #  ##    if RUBY_VERSION >= RUBY_VERSION_1_9_0
-        #  ##      @@regex_cache[regex.object_id] = Regexp.new(regex.to_s, Regexp::MULTILINE)
-        #  ##    else
-        #  ##      @@regex_cache[regex.object_id] = Regexp.new(regex.to_s, Regexp::MULTILINE,E_UTF8)
-        #  ##    end
+        #  ##    @@regex_cache[regex.object_id] = Regexp.new(regex.to_s, Regexp::MULTILINE)
         #  ##  end
         #  ##
         #  ##  @@regex_cache[regex]
@@ -4344,7 +4142,6 @@ module Meteor
         #@@pattern_@@match_tag = Regexp.new(@@match_tag)
         #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
-        #if RUBY_VERSION >= RUBY_VERSION_1_9_0
         TABLE_FOR_ESCAPE_ = {
             '&' => '&amp;',
             '"' => '&quot;',
@@ -4372,7 +4169,6 @@ module Meteor
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
         @@pattern_br_2 = Regexp.new(BR_2)
-        #end
 
         #
         # initializer (イニシャライザ)
@@ -4960,62 +4756,6 @@ module Meteor
 
       end
 
-=begin
-      if RUBY_VERSION < RUBY_VERSION_1_9_0
-        class ParserImpl
-          @@pattern_and_1 = Regexp.new(AND_1)
-          @@pattern_lt_1 = Regexp.new(LT_1)
-          @@pattern_gt_1 = Regexp.new(GT_1)
-          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-          @@pattern_space_1 = Regexp.new(SPACE)
-          @@pattern_br_1 = Regexp.new(BR_1)
-          @@pattern_lt_2 = Regexp.new(LT_2)
-          @@pattern_gt_2 = Regexp.new(GT_2)
-          @@pattern_dq_2 = Regexp.new(QO_2)
-          @@pattern_space_2 = Regexp.new(NBSP_2)
-          @@pattern_and_2 = Regexp.new(AND_2)
-          @@pattern_br_2 = Regexp.new(BR_2)
-
-          def escape(content)
-            #特殊文字の置換
-            #「&」->「&amp;」
-            if content.include?(AND_1)
-              content.gsub!(@@pattern_and_1, AND_2)
-            end
-            #「<」->「&lt;」
-            if content.include?(LT_1)
-              content.gsub!(@@pattern_lt_1, LT_2)
-            end
-            #「>」->「&gt;」
-            if content.include?(GT_1)
-              content.gsub!(@@pattern_gt_1, GT_2)
-            end
-            #「"」->「&quotl」
-            if content.include?(DOUBLE_QUATATION)
-              content.gsub!(@@pattern_dq_1, QO_2)
-            end
-            #「 」->「&nbsp;」
-            if content.include?(SPACE)
-              content.gsub!(@@pattern_space_1, NBSP_2)
-            end
-
-            content
-          end
-
-          def escape_content(content, elm)
-            content = escape(content)
-
-            if elm.cx || !is_match(@@match_tag_2, elm.tag)
-              #「¥r?¥n」->「<br>」
-              content.gsub!(@@pattern_br_1, BR_2)
-            end
-
-            content
-          end
-        end
-      end
-=end
-
     end
 
     module Xhtml
@@ -5124,7 +4864,6 @@ module Meteor
         #@@pattern_@@match_tag = Regexp.new(@@match_tag)
         #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
-        #if RUBY_VERSION >= RUBY_VERSION_1_9_0
         TABLE_FOR_ESCAPE_ = {
             '&' => '&amp;',
             '"' => '&quot;',
@@ -5150,7 +4889,6 @@ module Meteor
         PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-        #end
 
         #
         # initializer (イニシャライザ)
@@ -5467,69 +5205,6 @@ module Meteor
 
       end
 
-=begin
-      if RUBY_VERSION < RUBY_VERSION_1_9_0
-        class ParserImpl
-          @@pattern_and_1 = Regexp.new(AND_1)
-          @@pattern_lt_1 = Regexp.new(LT_1)
-          @@pattern_gt_1 = Regexp.new(GT_1)
-          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-          @@pattern_ap_1 = Regexp.new(AP_1)
-          @@pattern_space_1 = Regexp.new(SPACE)
-          @@pattern_br_1 = Regexp.new(BR_1)
-          @@pattern_lt_2 = Regexp.new(LT_2)
-          @@pattern_gt_2 = Regexp.new(GT_2)
-          @@pattern_dq_2 = Regexp.new(QO_2)
-          @@pattern_ap_2 = Regexp.new(AP_2)
-          @@pattern_space_2 = Regexp.new(NBSP_2)
-          @@pattern_and_2 = Regexp.new(AND_2)
-          @@pattern_br_2 = Regexp.new(BR_3)
-
-          def escape(content)
-            #特殊文字の置換
-            #「&」->「&amp;」
-            if content.include?(AND_1)
-              content.gsub!(@@pattern_and_1, AND_2)
-            end
-            #「<」->「&lt;」
-            if content.include?(LT_1)
-              content.gsub!(@@pattern_lt_1, LT_2)
-            end
-            #「>」->「&gt;」
-            if content.include?(GT_1)
-              content.gsub!(@@pattern_gt_1, GT_2)
-            end
-            #「"」->「&quotl」
-            if content.include?(DOUBLE_QUATATION)
-              content.gsub!(@@pattern_dq_1, QO_2)
-            end
-            #「'」->「&apos;」
-            if content.include?(AP_1)
-              content.gsub!(@@pattern_ap_1, AP_2)
-            end
-            #「 」->「&nbsp;」
-            if content.include?(SPACE)
-              content.gsub!(@@pattern_space_1, NBSP_2)
-            end
-
-            content
-          end
-
-          def escape_content(content, elm)
-            content = escape(content)
-
-            if elm.cx || !is_match(@@match_tag_2, elm.tag)
-              #「¥r?¥n」->「<br>」
-              content.gsub!(@@pattern_br_1, BR_2)
-            end
-
-            content
-          end
-
-        end
-      end
-=end
-
     end
 
     module Html5
@@ -5805,7 +5480,6 @@ module Meteor
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
-        #if RUBY_VERSION >= RUBY_VERSION_1_9_0
         TABLE_FOR_ESCAPE_ = {
             '&' => '&amp;',
             '"' => '&quot;',
@@ -5928,49 +5602,6 @@ module Meteor
         private :unescape_content
 
       end
-
-=begin
-      if RUBY_VERSION < RUBY_VERSION_1_9_0
-        class ParserImpl
-          @@pattern_and_1 = Regexp.new(AND_1)
-          @@pattern_lt_1 = Regexp.new(LT_1)
-          @@pattern_gt_1 = Regexp.new(GT_1)
-          @@pattern_dq_1 = Regexp.new(DOUBLE_QUATATION)
-          @@pattern_ap_1 = Regexp.new(AP_1)
-          @@pattern_lt_2 = Regexp.new(LT_2)
-          @@pattern_gt_2 = Regexp.new(GT_2)
-          @@pattern_dq_2 = Regexp.new(QO_2)
-          @@pattern_ap_2 = Regexp.new(AP_2)
-          @@pattern_and_2 = Regexp.new(AND_2)
-
-          def escape(content)
-            #特殊文字の置換
-            #「&」->「&amp;」
-            if content.include?(AND_1)
-              content.gsub!(@@pattern_and_1, AND_2)
-            end
-            #「<」->「&lt;」
-            if content.include?(LT_1)
-              content.gsub!(@@pattern_lt_1, LT_2)
-            end
-            #「>」->「&gt;」
-            if content.include?(GT_1)
-              content.gsub!(@@pattern_gt_1, GT_2)
-            end
-            #「"」->「&quot;」
-            if content.include?(DOUBLE_QUATATION)
-              content.gsub!(@@pattern_dq_1, QO_2)
-            end
-            #「'」->「&apos;」
-            if content.include?(AP_1)
-              content.gsub!(@@pattern_ap_1, AP_2)
-            end
-
-            content
-          end
-        end
-      end
-=end
 
     end
   end

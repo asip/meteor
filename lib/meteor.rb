@@ -603,7 +603,6 @@ module Meteor
       end
     end
 
-
     #
     # initializer (イニシャライザ)
     #
@@ -1329,71 +1328,6 @@ module Meteor
     end
 
   end
-
-=begin
-  module Hook
-
-    #
-    # Hook Class (フッククラス)
-    #
-    class Hooker
-
-      ##
-      ## initializer (イニシャライザ)
-      ##
-      #def initialize
-      #end
-
-      def do_action(elm)
-        #内容あり要素の場合
-        if elm.empty
-          elm2 = elm.child
-          execute(elm2)
-        end
-      end
-
-      #def execute(elm)
-      #end
-      #private :execute
-    end
-
-    #
-    # Lopp Hook Class (ループフッククラス)
-    #
-    class Looper
-
-      ##
-      ## initializer (イニシャライザ)
-      ##
-      #def initialize
-      #end
-
-      def do_action(elm, list)
-        #内容あり要素の場合
-        if elm.empty
-          elm2 = elm.child
-          init(elm2)
-          list.each do |item|
-            if  !elm2.mono
-              elm2.parser.root_element.document = elm.mixed_content
-            end
-            execute(elm2, item)
-            elm2.flush
-          end
-        end
-      end
-
-      #def init(elm)
-      #end
-      #private :init
-
-      #def execute(elm,item)
-      #end
-      #private :execute
-
-    end
-  end
-=end
 
   module Exception
 
@@ -2341,7 +2275,6 @@ module Meteor
 
       def element_pattern_2
 
-        #=begin
         ##@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4
         #@pattern_cc = '' << TAG_SEARCH_3_1 << @_attr_name << ATTR_EQ << @_attr_value << TAG_SEARCH_2_4_2_3
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\""
@@ -3831,42 +3764,6 @@ module Meteor
       end
 
       private :set_mono_info
-
-=begin
-      #
-      # @overload execute(elm,hook)
-      #  run action of Hooker (Hookerクラスの処理を実行する)
-      #  @param [Meteor::Element] elm element (要素)
-      #  @param [Meteor::Hook::Hooker] hook Hooker object (Hookerオブジェクト)
-      # @overload execute(elm,loop,list)
-      #  run action of Looper (Looperクラスの処理を実行する)
-      #  @param [Meteor::Element] elm element (要素)
-      #  @param [Meteor::Element::Looper] loop Looper object (Looperオブジェクト)
-      #  @param [Array] array(配列)
-      #
-      def execute(*args)
-        case args.length
-          when TWO
-            execute_2(args[0], args[1])
-          when THREE
-            execute_3(args[0], args[1], args[2])
-          else
-            raise ArgumentError
-        end
-      end
-
-      def execute_2(elm, hook)
-        hook.do_action(elm)
-      end
-
-      private :execute_2
-
-      def execute_3(elm, loop, list)
-        loop.do_action(elm, list)
-      end
-
-      private :execute_3
-=end
 
       def is_match(regex, str)
         if regex.kind_of?(Regexp)

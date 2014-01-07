@@ -274,20 +274,20 @@ module Meteor
     # get element (要素を取得する)
     # @overload element()
     #  get element (要素を取得する)
-    #  @return [Meteor::Element,NilClass] element (要素)
+    #  @return [Meteor::Element] element (要素)
     # @overload element(tag)
     #  get element using tag name (要素のタグ名で要素を取得する)
     #  @param [String] tag tag name (タグ名)
-    #  @return [Meteor::Element] 要素
+    #  @return [Meteor::Element] element (要素)
     # @overload element(tag,attrs)
     #  get element using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] tag tag name (タグ名)
-    #  @param [Hash] attrs attribute map (属性マップ)
+    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
     #  @return [Meteor::Element] element (要素)
     # @overload element(attrs)
     #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [Hash] attrs attribute map (属性マップ)
-    #  @return [Meteor::Element] 要素
+    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+    #  @return [Meteor::Element] element(要素)
     # @overload element(tag,attr_name,attr_value)
     #  get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
     #  @param [String] tag  tag name (タグ名)
@@ -298,7 +298,7 @@ module Meteor
     #  get element using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
     #  @param [String] attr_name 属性名
     #  @param [String] attr_value 属性値
-    #  @return [Meteor::Element] 要素
+    #  @return [Meteor::Element] element (要素)
     # @overload element(tag,attr_name1,attr_value1,attr_name2,attr_value2)
     #  get element using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] tag  tag name (タグ名)
@@ -313,7 +313,7 @@ module Meteor
     #  @param [String] attr_value1 属性値1
     #  @param [String] attr_name2 属性名2
     #  @param [String] attr_value2 属性値2
-    #  @return [Meteor::Element] 要素
+    #  @return [Meteor::Element] element(要素)
     # @overload element(elm)
     #  mirror element (要素を射影する)
     #  @param [Meteor::Element] elm element(要素)
@@ -340,11 +340,11 @@ module Meteor
     # @overload elements(tag,attrs)
     #  get elements using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
     #  @param [String] tag tag name (タグ名)
-    #  @param [Hash] attrs attribute map (属性マップ)
+    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(attrs)
     #  get elements using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [Hash] attrs attribute map (属性マップ)
+    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(tag,attr_name,attr_value)
     #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
@@ -392,14 +392,14 @@ module Meteor
     #
     # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
     # @overload cxtag(tag,id)
-    #  要素のタグ名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
-    #  @param [String] tag タグ名
-    #  @param [String] id ID属性値
-    #  @return [Meteor::Element] 要素
+    #  get cx(comment extension) tag using tag name and id attribute (タグ名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
+    #  @param [String] tag tag name (タグ名)
+    #  @param [String] id id attribute value (ID属性値)
+    #  @return [Meteor::Element] element(要素)
     # @overload cxtag(id)
-    #  ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する
-    #  @param [String] id ID属性値
-    #  @return [Meteor::Element] 要素
+    #  get cx(comment extension) tag using id attribute (ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
+    #  @param [String] id id attribute value (ID属性値)
+    #  @return [Meteor::Element] element (要素)
     #
     def cxtag(*args)
       @parser.cxtag(*args)
@@ -408,7 +408,7 @@ module Meteor
     #
     # @overload attr(attr)
     #  set attribute of element (要素の属性をセットする)
-    #  @param [Hash] attr attribute (属性)
+    #  @param [Hash<String,String>] attr attribute (属性)
     #  @return [Meteor::Element] element (要素)
     #  @deprecated
     # @overload attr(attr_name,attr_value)
@@ -436,7 +436,7 @@ module Meteor
 
     #
     # set attribute map (要素マップをセットする)
-    # @param [Hash] attrs attribute map (属性マップ)
+    # @param [Hash<String,String>] attrs attribute map (属性マップ)
     # @return [Meteor::Element] element (要素)
     def attrs=(attrs)
       @parser.attrs(self,attrs)
@@ -444,7 +444,7 @@ module Meteor
 
     #
     # get attribute map (属性マップを取得する)
-    # @return [Hash] attribute map (属性マップ)
+    # @return [Hash<String,String>] attribute map (属性マップ)
     #
     def attrs
       @parser.attrs(self)
@@ -990,23 +990,23 @@ module Meteor
 
       case type
         when Parser::HTML
-          html = Meteor::Ml::Html::ParserImpl.new()
+          html = Meteor::Ml::Html::ParserImpl.new
           html.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html
         when Parser::XHTML
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new()
+          xhtml = Meteor::Ml::Xhtml::ParserImpl.new
           xhtml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml
         when Parser::HTML5
-          html5 = Meteor::Ml::Html5::ParserImpl.new()
+          html5 = Meteor::Ml::Html5::ParserImpl.new
           html5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html5
         when Parser::XHTML5
-          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new()
+          xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new
           xhtml5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml5
         when Parser::XML
-          xml = Meteor::Ml::Xml::ParserImpl.new()
+          xml = Meteor::Ml::Xml::ParserImpl.new
           xml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xml
       end
@@ -1026,15 +1026,15 @@ module Meteor
 
       case type
         when Parser::HTML
-          ps = Meteor::Ml::Html::ParserImpl.new()
+          ps = Meteor::Ml::Html::ParserImpl.new
         when Parser::XHTML
-          ps = Meteor::Ml::Xhtml::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml::ParserImpl.new
         when Parser::HTML5
-          ps = Meteor::Ml::Html5::ParserImpl.new()
+          ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5
-          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new
         when Parser::XML
-          ps = Meteor::Ml::Xml::ParserImpl.new()
+          ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.read(File.expand_path(relative_path, @root), @enc)
@@ -1056,15 +1056,15 @@ module Meteor
 
       case @type
         when Parser::HTML
-          ps = Meteor::Ml::Html::ParserImpl.new()
+          ps = Meteor::Ml::Html::ParserImpl.new
         when Parser::XHTML
-          ps = Meteor::Ml::Xhtml::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml::ParserImpl.new
         when Parser::HTML5
-          ps = Meteor::Ml::Html5::ParserImpl.new()
+          ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5
-          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new
         when Parser::XML
-          ps = Meteor::Ml::Xml::ParserImpl.new()
+          ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.read(File.expand_path(relative_path, @root), enc)
@@ -1085,15 +1085,15 @@ module Meteor
 
       case @type
         when Parser::HTML
-          ps = Meteor::Ml::Html::ParserImpl.new()
+          ps = Meteor::Ml::Html::ParserImpl.new
         when Parser::XHTML
-          ps = Meteor::Ml::Xhtml::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml::ParserImpl.new
         when Parser::HTML5
-          ps = Meteor::Ml::Html5::ParserImpl.new()
+          ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5
-          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new
         when Parser::XML
-          ps = Meteor::Ml::Xml::ParserImpl.new()
+          ps = Meteor::Ml::Xml::ParserImpl.new
         else
           raise ArgumentError
       end
@@ -1199,15 +1199,15 @@ module Meteor
     def bind_str_3(type, relative_url, doc)
       case type
         when Parser::HTML
-          ps = Meteor::Ml::Html::ParserImpl.new()
+          ps = Meteor::Ml::Html::ParserImpl.new
         when Parser::XHTML
-          ps = Meteor::Ml::Xhtml::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml::ParserImpl.new
         when Parser::HTML5
-          ps = Meteor::Ml::Html5::ParserImpl.new()
+          ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5
-          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new
         when Parser::XML
-          ps = Meteor::Ml::Xml::ParserImpl.new()
+          ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.dcument = doc
@@ -1226,15 +1226,15 @@ module Meteor
     def bind_str_2(relative_url, doc)
       case @type
         when Parser::HTML
-          ps = Meteor::Ml::Html::ParserImpl.new()
+          ps = Meteor::Ml::Html::ParserImpl.new
         when Parser::XHTML
-          ps = Meteor::Ml::Xhtml::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml::ParserImpl.new
         when Parser::HTML5
-          ps = Meteor::Ml::Html5::ParserImpl.new()
+          ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5
-          ps = Meteor::Ml::Xhtml5::ParserImpl.new()
+          ps = Meteor::Ml::Xhtml5::ParserImpl.new
         when Parser::XML
-          ps = Meteor::Ml::Xml::ParserImpl.new()
+          ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.document = doc
@@ -1347,7 +1347,7 @@ module Meteor
       def do_action(elm)
         #内容あり要素の場合
         if elm.empty
-          elm2 = elm.child()
+          elm2 = elm.child
           execute(elm2)
         end
       end
@@ -1371,7 +1371,7 @@ module Meteor
       def do_action(elm, list)
         #内容あり要素の場合
         if elm.empty
-          elm2 = elm.child()
+          elm2 = elm.child
           init(elm2)
           list.each do |item|
             if  !elm2.mono
@@ -1796,7 +1796,7 @@ module Meteor
         @root = RootElement.new
         @root.parser = self
         #要素キャッシュ
-        @element_cache = Hash.new()
+        @element_cache = Hash.new
         #フックドキュメント
         @document_hook = ''
       end
@@ -1845,11 +1845,11 @@ module Meteor
       # @overload element(tag,attrs)
       #  get element using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
       #  @param [String] tag  tag name (タグ名)
-      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
       #  @return [Meteor::Element] element (要素)
       # @overload element(attrs)
       #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
       #  @return [Meteor::Element] element (要素)
       # @overload element(tag,attr_name,attr_value)
       #  get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
@@ -2350,7 +2350,7 @@ module Meteor
       private :element_pattern_2
 
 =begin
-     def element_with_2_1()
+     def element_with_2_1
         #puts @res.captures.length
         case @res.captures.length
           when FOUR
@@ -2981,11 +2981,11 @@ module Meteor
       # @overload elements(tag,attrs)
       #  get elements using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
       #  @param [String] tag tag name (タグ名)
-      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(attrs)
       #  get elements using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [Hash] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(tag,attr_name,attr_value)
       #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
@@ -3131,70 +3131,73 @@ module Meteor
       def find(selector)
         open_count = selector.count('[')
 
-        if open_count == 0
-          if selector.count('#.') == 0
-            if @res = @@pattern_find_1.match(selector)
-              elements_(@res[1])
-            else
-              nil
+        case open_count
+          when ZERO
+            if selector.count('#.') == 0
+              if @res = @@pattern_find_1.match(selector)
+                elements_(@res[1])
+              else
+                nil
+              end
+            elsif selector.count('#') == 1
+              if  selector[0] == '#'
+                if @res = @@pattern_find_2_1.match(selector)
+                  elements_(CSS_ID, @res[1])
+                else
+                  nil
+                end
+              else
+                if @res = @@pattern_find_3_2.match(selector)
+                  elements_(@res[1], CSS_ID, @res[2])
+                else
+                  nil
+                end
+              end
+            elsif selector.count('.') == 1
+              if  selector[0] == '.'
+                if @res = @@pattern_find_2_2.match(selector)
+                  elements_(CSS_CLASS, @res[1])
+                else
+                  nil
+                end
+              else
+                if @res = @@pattern_find_3_3.match(selector)
+                  elements_(@res[1], CSS_CLASS, @res[2])
+                else
+                  nil
+                end
+              end
             end
-          elsif selector.count('#') == 1
-            if  selector[0] == '#'
-              if @res = @@pattern_find_2_1.match(selector)
-                elements_(CSS_ID, @res[1])
+          when ONE
+            if selector[0] == '['
+              if @res = @@pattern_find_2_3.match(selector)
+                elements_(@res[1], @res[2])
               else
                 nil
               end
             else
-              if @res = @@pattern_find_3_2.match(selector)
-                elements_(@res[1], CSS_ID, @res[2])
+              if @res = @@pattern_find_3_1.match(selector)
+                elements_(@res[1], @res[2], @res[3])
               else
                 nil
               end
             end
-          elsif selector.count('.') == 1
-            if  selector[0] == '.'
-              if @res = @@pattern_find_2_2.match(selector)
-                elements_(CSS_CLASS, @res[1])
+          when 2
+            if selector[0] == '['
+              if @res = @@pattern_find_4.match(selector)
+                elements_(@res[1], @res[2], @res[3], @res[4])
               else
                 nil
               end
             else
-              if @res = @@pattern_find_3_3.match(selector)
-                elements_(@res[1], CSS_CLASS, @res[2])
+              if @res = @@pattern_find_5.match(selector)
+                elements_(@res[1], @res[2], @res[3], @res[4], @res[5])
               else
                 nil
               end
-            end
-          end
-        elsif open_count == 1
-          if selector[0] == '['
-            if @res = @@pattern_find_2_3.match(selector)
-              elements_(@res[1], @res[2])
-            else
-              nil
             end
           else
-            if @res = @@pattern_find_3_1.match(selector)
-              elements_(@res[1], @res[2], @res[3])
-            else
-              nil
-            end
-          end
-        elsif open_count == 2
-          if selector[0] == '['
-            if @res = @@pattern_find_4.match(selector)
-              elements_(@res[1], @res[2], @res[3], @res[4])
-            else
-              nil
-            end
-          else
-            if @res = @@pattern_find_5.match(selector)
-              elements_(@res[1], @res[2], @res[3], @res[4], @res[5])
-            else
-              nil
-            end
-          end
+            nil
         end
       end
 
@@ -3202,7 +3205,7 @@ module Meteor
       # @overload attr(elm,attr)
       #  set attribute of element (要素の属性をセットする)
       #  @param [Meteor::Element] elm element (要素)
-      #  @param [Hash] attr attribute (属性)
+      #  @param [Hash<String,String>] attr attribute (属性)
       #  @return [Meteor::Element] element (要素)
       # @overload attr(elm,attr_name,attr_value)
       #  set attribute of element (要素の属性をセットする)
@@ -3321,9 +3324,11 @@ module Meteor
 
       #
       # @overload attrs(elm,attrs)
-      #  @param
-      #
+      #  @param [Meteor::element] elm element (要素)
+      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
       # @overload attrs(elm)
+      #  @param [Meteor::element] elm element (要素)
+      #  @return [Hash<String,String>] attribute map (要素マップ)
       #
       def attrs(elm,*args)
         case args.length
@@ -3350,7 +3355,7 @@ module Meteor
       #
       # get attribute map (属性マップを取得する)
       # @param [Meteor::Element] elm element (要素)
-      # @return [Hash] attribute map (属性マップ)
+      # @return [Hash<String,String>] attribute map (属性マップ)
       #
       def get_attrs(elm)
         attrs = Hash.new
@@ -3367,7 +3372,7 @@ module Meteor
       #
       # set attribute map  (要素に属性マップをセットする)
       # @param [Meteor::Element] elm element (要素)
-      # @param [Hash] attr_map attribute map (属性マップ)
+      # @param [Hash<String,String>] attr_map attribute map (属性マップ)
       # @return [Meteor::Element] element (要素)
       #
       def set_attrs(elm, attr_map)
@@ -3578,11 +3583,11 @@ module Meteor
       # @overload cxtag(tag,id)
       #  get cx(comment extension) tag using tag name and id attribute (要素のタグ名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
       #  @param [String] tag tag name (タグ名)
-      #  @param [String] id value of id attribute (ID属性値)
+      #  @param [String] id id attribute value (ID属性値)
       #  @return [Meteor::Element] element (要素)
       # @overload cxtag(id)
       #  get cx(comment extension) tag using id attribute (ID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
-      #  @param [String] id value of id attribute (ID属性値)
+      #  @param [String] id id attribute value (ID属性値)
       #  @return [Meteor::Element] element (要素)
       #
       def cxtag(*args)
@@ -3605,7 +3610,7 @@ module Meteor
       #
       # get cx(comment extension) tag using tag name and id attribute (要素のタグ名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
       # @param [String] tag tag name (タグ名)
-      # @param [String] id value of id attribute (ID属性値)
+      # @param [String] id id attribute value (ID属性値)
       # @return [Meteor::Element] element (要素)
       #
       def cxtag_2(tag, id)
@@ -3651,7 +3656,7 @@ module Meteor
 
       #
       # get cx(comment extension) tag using id attribute (ID属性(id="ID属性値")で検索し、CX(コメント拡張)タグを取得する)
-      # @param [String] id value of id attribute (ID属性値)
+      # @param [String] id id attribute value (ID属性値)
       # @return [Meteor::Element] element (要素)
       #
       def cxtag_1(id)
@@ -3790,7 +3795,7 @@ module Meteor
       private :clean
 
       #
-      # mirror element 要素を射影する
+      # mirror element (要素を射影する)
       # 
       # @param [Meteor::Element] elm element (要素)
       # @return [Meteor::Element] element (要素)
@@ -3827,6 +3832,7 @@ module Meteor
 
       private :set_mono_info
 
+=begin
       #
       # @overload execute(elm,hook)
       #  run action of Hooker (Hookerクラスの処理を実行する)
@@ -3860,6 +3866,7 @@ module Meteor
       end
 
       private :execute_3
+=end
 
       def is_match(regex, str)
         if regex.kind_of?(Regexp)
@@ -4181,7 +4188,7 @@ module Meteor
           @doc_type = Parser::HTML
           case args.length
             when ZERO
-              initialize_0
+              #initialize_0
             when ONE
               initialize_1(args[0])
             else
@@ -4192,10 +4199,10 @@ module Meteor
         #
         # initializer (イニシャライザ)
         #
-        def initialize_0
-        end
-
-        private :initialize_0
+        #def initialize_0
+        #end
+        #
+        #private :initialize_0
 
         #
         # initializer (イニシャライザ)
@@ -4214,26 +4221,17 @@ module Meteor
         # parse document (ドキュメントを解析する)
         #
         def parse
-          analyze_ml()
+          analyze_ml
         end
-
-        #
-        # read file , set in parser (ファイルを読み込み、パーサにセットする)
-        # @param [String] filePath file path (ファイルパス)
-        # @param [String] enc character encoding (エンコーディング)
-        #
-        #def read(file_path, enc)
-        #  super(file_path, enc)
-        #end
 
         #
         # analyze document (ドキュメントをパースする)
         #
-        def analyze_ml()
+        def analyze_ml
           #content-typeの取得
-          analyze_content_type()
+          analyze_content_type
           #改行コードの取得
-          analyze_kaigyo_code()
+          analyze_kaigyo_code
 
           @res = nil
         end
@@ -4270,16 +4268,8 @@ module Meteor
         #
         # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
-        def analyze_kaigyo_code()
+        def analyze_kaigyo_code
           #改行コード取得
-          #@pattern = Regexp.new(KAIGYO_CODE)
-          #@res = @pattern.match(@root.document)
-
-          #if @res
-          #  @root.kaigyo_code = @res[0]
-          #  puts "test"
-          #  puts @res[0]
-          #end
 
           for a in KAIGYO_CODE
             if @root.document.include?(a)
@@ -4909,9 +4899,9 @@ module Meteor
           end
         end
 
-        ##
-        ## initializer (イニシャライザ)
-        ##
+        #
+        # initializer (イニシャライザ)
+        #
         #def initialize_0
         #end
         #
@@ -4934,22 +4924,13 @@ module Meteor
         # parse document (ドキュメントを解析する)
         #
         def parse
-          analyze_ml()
+          analyze_ml
         end
-
-        #
-        # read file , set in parser (ファイルを読み込み、パーサにセットする)
-        # @param file_path file path (ファイルパス)
-        # @param enc character encoding (エンコーディング)
-        #
-        #def read(file_path, enc)
-        #  super(file_path, enc)
-        #end
 
         #
         # analyze document (ドキュメントをパースする)
         #
-        def analyze_ml()
+        def analyze_ml
           #content-typeの取得
           analyze_content_type
           #改行コードの取得
@@ -4963,7 +4944,7 @@ module Meteor
         # get content type (コンテントタイプを取得する)
         # @return [String] content type (コンテントタイプ)
         #
-        def content_type()
+        def content_type
           @root.content_type
         end
 
@@ -4989,14 +4970,8 @@ module Meteor
         #
         # analyze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
-        def analyze_kaigyo_code()
+        def analyze_kaigyo_code
           #改行コード取得
-          #@pattern = Regexp.new(KAIGYO_CODE)
-          #@res = @pattern.match(@root.document)
-
-          #if @res
-          #  @root.kaigyo_code = @res[0]
-          #end
 
           for a in KAIGYO_CODE
             if @root.document.include?(a)
@@ -5259,6 +5234,14 @@ module Meteor
 
         #
         # initializer (イニシャライザ)
+        #
+        #def initialize_0
+        #end
+        #
+        #private :initialize_0
+
+        #
+        # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
         def initialize_1(ps)
@@ -5387,6 +5370,14 @@ module Meteor
 
         #
         # initializer (イニシャライザ)
+        #
+        #def initialize_0
+        #end
+        #
+        #private :initialize_0
+
+        #
+        # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
         def initialize_1(ps)
@@ -5512,10 +5503,12 @@ module Meteor
         #
         # initializer (イニシャライザ)
         #
-        def initialize_0
-        end
-
-        private :initialize_0
+        #def initialize_0
+        #end
+        #
+        #private :initialize_0
+        #
+        #private :initialize_0
 
         #
         # initializer (イニシャライザ)
@@ -5528,27 +5521,10 @@ module Meteor
 
         private :initialize_1
 
-        #
-        # set document in parser (ドキュメントをパーサにセットする)
-        # @param [String] document document (ドキュメント)
-        #
-        #def parse(document)
-        #  @root.document = document
-        #end
-
-        #
-        # read file , set in parser (ファイルを読み込み、パーサにセットする)
-        # @param file_path file path (ファイルパス)
-        # @param enc character encoding (エンコーディング)
-        #
-        #def read(file_path, enc)
-        #  super(file_path, enc)
-        #end
-
         # get content type (コンテントタイプを取得する)
         # @return [Streing] content type (コンテントタイプ)
         #
-        def content_type()
+        def content_type
           @root.content_type
         end
 

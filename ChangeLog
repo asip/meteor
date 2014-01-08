@@ -1,6 +1,9 @@
 == 0.9.8 / 2014-01-07 Yasumasa Ashida <ys.ashida@gmail.com>
 
-※ multi elements search support
+* multi elements search support (addition of Meteor::Element#elements)
+* purge of Ruby1.8 support codes
+* change of Meteor::Element#find
+* purge of Meteor::Hook module
 
 == 0.9.0.1 / 2008-10-03 Yasumasa Ashida <ys.ashida@gmail.com>
 

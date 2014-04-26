@@ -18,7 +18,8 @@ This can use as XML parser.
 This may be false parser.
 
 This doesn't support all of XML spec.
-This supports a range of xml spec thought to be the need routinely.
+This supports a range of xml spec
+thought to be the need routinely.
 
 軽量(簡易?)(X)HTML(5)パーサです。
 XMLパーサとしても使用可能です。

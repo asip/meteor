@@ -2,3 +2,6 @@
 #.gitignore
 .idea
 Gemfile.lock
+.bundle
+.yardoc
+doc

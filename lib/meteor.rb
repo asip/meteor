@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.8
+# @version 0.9.8.1
 #
 
 module Meteor
 
-  VERSION = '0.9.8'
+  VERSION = '0.9.8.1'.freeze
 
   #require 'fileutils'
 
@@ -706,7 +706,7 @@ module Meteor
 
     #
     # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
-    # 
+    #
     # @param [String] name attribute name (属性名)
     # @param [String] value attribute value (属性値)
     #
@@ -716,7 +716,7 @@ module Meteor
 
     #
     # get attribute value using attribute name (属性名で属性値を取得する)
-    # 
+    #
     # @param [String] name attribute name (属性名)
     # @return [String] attribute value (属性値)
     #
@@ -1429,115 +1429,115 @@ module Meteor
     #
     class Kernel < Meteor::Parser
 
-      EMPTY = ''
-      SPACE = ' '
-      DOUBLE_QUATATION = '"'
-      TAG_OPEN = '<'
-      TAG_OPEN3 = '</'
-      #TAG_OPEN4 = '<\\\\/'
-      TAG_CLOSE = '>'
-      #TAG_CLOSE2 = '\\/>'
-      TAG_CLOSE3 = '/>'
-      ATTR_EQ = '="'
+      EMPTY = ''.freeze
+      SPACE = ' '.freeze
+      DOUBLE_QUATATION = '"'.freeze
+      TAG_OPEN = '<'.freeze
+      TAG_OPEN3 = '</'.freeze
+      #TAG_OPEN4 = '<\\\\/'.freeze
+      TAG_CLOSE = '>'.freeze
+      #TAG_CLOSE2 = '\\/>'.freeze
+      TAG_CLOSE3 = '/>'.freeze
+      ATTR_EQ = '="'.freeze
       #element
-      TAG_SEARCH_1_1 = '(|\\s[^<>]*)>(((?!('
-      TAG_SEARCH_1_2 = '[^<>]*>)).)*)<\\/'
-      TAG_SEARCH_1_3 = '(|\\s[^<>]*)\\/>'
-      TAG_SEARCH_1_4 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_1_4_2 = '(|\\s[^<>]*)>'
+      TAG_SEARCH_1_1 = '(|\\s[^<>]*)>(((?!('.freeze
+      TAG_SEARCH_1_2 = '[^<>]*>)).)*)<\\/'.freeze
+      TAG_SEARCH_1_3 = '(|\\s[^<>]*)\\/>'.freeze
+      TAG_SEARCH_1_4 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_1_4_2 = '(|\\s[^<>]*)>'.freeze
 
-      TAG_SEARCH_NC_1_1 = '(?:|\\s[^<>]*)>((?!('
-      TAG_SEARCH_NC_1_2 = '[^<>]*>)).)*<\\/'
-      TAG_SEARCH_NC_1_3 = '(?:|\\s[^<>]*)\\/>'
-      TAG_SEARCH_NC_1_4 = '(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_NC_1_4_2 = '(?:|\\s[^<>]*)>'
+      TAG_SEARCH_NC_1_1 = '(?:|\\s[^<>]*)>((?!('.freeze
+      TAG_SEARCH_NC_1_2 = '[^<>]*>)).)*<\\/'.freeze
+      TAG_SEARCH_NC_1_3 = '(?:|\\s[^<>]*)\\/>'.freeze
+      TAG_SEARCH_NC_1_4 = '(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_NC_1_4_2 = '(?:|\\s[^<>]*)>'.freeze
 
-      TAG_SEARCH_2_1 = '(\\s[^<>]*'
-      TAG_SEARCH_2_1_2 = '(\\s[^<>]*(?:'
-      TAG_SEARCH_2_2 = '"[^<>]*)>(((?!('
-      TAG_SEARCH_2_2_2 = '")[^<>]*)>(((?!('
-      TAG_SEARCH_2_3 = '"[^<>]*)'
-      TAG_SEARCH_2_3_2 = '"[^<>]*)\\/>'
-      TAG_SEARCH_2_3_2_2 = '")[^<>]*)\\/>'
-      TAG_SEARCH_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_2_4_2 = '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
-      TAG_SEARCH_2_4_2_2 = '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'
-      TAG_SEARCH_2_4_2_3 = '"'
-      TAG_SEARCH_2_4_3 = '"[^<>]*)>'
-      TAG_SEARCH_2_4_3_2 = '")[^<>]*)>'
-      TAG_SEARCH_2_4_4 = '"[^<>]*>'
+      TAG_SEARCH_2_1 = '(\\s[^<>]*'.freeze
+      TAG_SEARCH_2_1_2 = '(\\s[^<>]*(?:'.freeze
+      TAG_SEARCH_2_2 = '"[^<>]*)>(((?!('.freeze
+      TAG_SEARCH_2_2_2 = '")[^<>]*)>(((?!('.freeze
+      TAG_SEARCH_2_3 = '"[^<>]*)'.freeze
+      TAG_SEARCH_2_3_2 = '"[^<>]*)\\/>'.freeze
+      TAG_SEARCH_2_3_2_2 = '")[^<>]*)\\/>'.freeze
+      TAG_SEARCH_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_2_4_2 = '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'.freeze
+      TAG_SEARCH_2_4_2_2 = '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'.freeze
+      TAG_SEARCH_2_4_2_3 = '"'.freeze
+      TAG_SEARCH_2_4_3 = '"[^<>]*)>'.freeze
+      TAG_SEARCH_2_4_3_2 = '")[^<>]*)>'.freeze
+      TAG_SEARCH_2_4_4 = '"[^<>]*>'.freeze
 
-      TAG_SEARCH_2_6 = '"[^<>]*'
-      TAG_SEARCH_2_7 = '"|'
+      TAG_SEARCH_2_6 = '"[^<>]*'.freeze
+      TAG_SEARCH_2_7 = '"|'.freeze
 
-      TAG_SEARCH_NC_2_1 = '\\s[^<>]*'
-      TAG_SEARCH_NC_2_1_2 = '\\s[^<>]*(?:'
-      TAG_SEARCH_NC_2_2 = '"[^<>]*>((?!('
-      TAG_SEARCH_NC_2_2_2 = '")[^<>]*>((?!('
-      TAG_SEARCH_NC_2_3 = '"[^<>]*)'
-      TAG_SEARCH_NC_2_3_2 = '"[^<>]*\\/>'
-      TAG_SEARCH_NC_2_3_2_2 = '")[^<>]*\\/>'
-      TAG_SEARCH_NC_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_NC_2_4_2 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_NC_2_4_2_2 = '")(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_NC_2_4_2_3 = '"'
-      TAG_SEARCH_NC_2_4_3 = '"[^<>]*>'
-      TAG_SEARCH_NC_2_4_3_2 = '")[^<>]*>'
-      TAG_SEARCH_NC_2_4_4 = '"[^<>]*>'
-      TAG_SEARCH_NC_2_6 = '"[^<>]*'
-      TAG_SEARCH_NC_2_7 = '"|'
+      TAG_SEARCH_NC_2_1 = '\\s[^<>]*'.freeze
+      TAG_SEARCH_NC_2_1_2 = '\\s[^<>]*(?:'.freeze
+      TAG_SEARCH_NC_2_2 = '"[^<>]*>((?!('.freeze
+      TAG_SEARCH_NC_2_2_2 = '")[^<>]*>((?!('.freeze
+      TAG_SEARCH_NC_2_3 = '"[^<>]*)'.freeze
+      TAG_SEARCH_NC_2_3_2 = '"[^<>]*\\/>'.freeze
+      TAG_SEARCH_NC_2_3_2_2 = '")[^<>]*\\/>'.freeze
+      TAG_SEARCH_NC_2_4 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_NC_2_4_2 = '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_NC_2_4_2_2 = '")(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_NC_2_4_2_3 = '"'.freeze
+      TAG_SEARCH_NC_2_4_3 = '"[^<>]*>'.freeze
+      TAG_SEARCH_NC_2_4_3_2 = '")[^<>]*>'.freeze
+      TAG_SEARCH_NC_2_4_4 = '"[^<>]*>'.freeze
+      TAG_SEARCH_NC_2_6 = '"[^<>]*'.freeze
+      TAG_SEARCH_NC_2_7 = '"|'.freeze
 
-      TAG_SEARCH_3_1 = '<([^<>"]*)\\s[^<>]*'
-      TAG_SEARCH_3_1_2 = '<([^<>"]*)\\s([^<>]*'
-      TAG_SEARCH_3_1_2_2 = '<([^<>"]*)\\s([^<>]*('
+      TAG_SEARCH_3_1 = '<([^<>"]*)\\s[^<>]*'.freeze
+      TAG_SEARCH_3_1_2 = '<([^<>"]*)\\s([^<>]*'.freeze
+      TAG_SEARCH_3_1_2_2 = '<([^<>"]*)\\s([^<>]*('.freeze
 
-      TAG_SEARCH_3_2 = '"[^<>]*\\/>'
-      TAG_SEARCH_3_2_2 = '"[^<>]*)\\/>'
-      TAG_SEARCH_3_2_2_2 = '")[^<>]*)\\/>'
+      TAG_SEARCH_3_2 = '"[^<>]*\\/>'.freeze
+      TAG_SEARCH_3_2_2 = '"[^<>]*)\\/>'.freeze
+      TAG_SEARCH_3_2_2_2 = '")[^<>]*)\\/>'.freeze
 
-      TAG_SEARCH_4_1 = '(\\s[^<>\\/]*)>('
-      TAG_SEARCH_4_2 = '.*?<'
-      TAG_SEARCH_4_3 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      TAG_SEARCH_4_4 = '<\\/'
-      TAG_SEARCH_4_5 = '.*?<\/'
-      TAG_SEARCH_4_6 = '.*?)<\/'
-      TAG_SEARCH_4_7 = '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
-      TAG_SEARCH_4_7_2 = '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
+      TAG_SEARCH_4_1 = '(\\s[^<>\\/]*)>('.freeze
+      TAG_SEARCH_4_2 = '.*?<'.freeze
+      TAG_SEARCH_4_3 = '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'.freeze
+      TAG_SEARCH_4_4 = '<\\/'.freeze
+      TAG_SEARCH_4_5 = '.*?<\/'.freeze
+      TAG_SEARCH_4_6 = '.*?)<\/'.freeze
+      TAG_SEARCH_4_7 = '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('.freeze
+      TAG_SEARCH_4_7_2 = '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('.freeze
 
-      TAG_SEARCH_NC_3_1 = '<[^<>"]*\\s[^<>]*'
-      TAG_SEARCH_NC_3_1_2 = '<([^<>"]*)\\s(?:[^<>]*'
-      TAG_SEARCH_NC_3_1_2_2 = '<([^<>"]*)\\s(?:[^<>]*('
-      TAG_SEARCH_NC_3_2 = '"[^<>]*\\/>'
-      TAG_SEARCH_NC_3_2_2 = '"[^<>]*)\\/>'
-      TAG_SEARCH_NC_3_2_2_2 = '")[^<>]*)\\/>'
-      #TAG_SEARCH_NC_4_1 = "(?:\\s[^<>\\/]*)>("
-      #TAG_SEARCH_NC_4_2 = ".*?<"
-      #TAG_SEARCH_NC_4_3 = "(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-      #TAG_SEARCH_NC_4_4 = "<\\/"
-      #TAG_SEARCH_NC_4_5 = ".*?<\/"
-      #TAG_SEARCH_NC_4_6 = ".*?<\/"
-      #TAG_SEARCH_NC_4_7 = "\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
-      #TAG_SEARCH_NC_4_7_2 = "\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+      TAG_SEARCH_NC_3_1 = '<[^<>"]*\\s[^<>]*'.freeze
+      TAG_SEARCH_NC_3_1_2 = '<([^<>"]*)\\s(?:[^<>]*'.freeze
+      TAG_SEARCH_NC_3_1_2_2 = '<([^<>"]*)\\s(?:[^<>]*('.freeze
+      TAG_SEARCH_NC_3_2 = '"[^<>]*\\/>'.freeze
+      TAG_SEARCH_NC_3_2_2 = '"[^<>]*)\\/>'.freeze
+      TAG_SEARCH_NC_3_2_2_2 = '")[^<>]*)\\/>'.freeze
+      #TAG_SEARCH_NC_4_1 = "(?:\\s[^<>\\/]*)>(".freeze
+      #TAG_SEARCH_NC_4_2 = ".*?<".freeze
+      #TAG_SEARCH_NC_4_3 = "(?:\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))".freeze
+      #TAG_SEARCH_NC_4_4 = "<\\/".freeze
+      #TAG_SEARCH_NC_4_5 = ".*?<\/".freeze
+      #TAG_SEARCH_NC_4_6 = ".*?<\/".freeze
+      #TAG_SEARCH_NC_4_7 = "\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))(".freeze
+      #TAG_SEARCH_NC_4_7_2 = "\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))(".freeze
 
       #find
       # E
-      PATTERN_FIND_1 = '^([^,\\[\\]#\\.]+)$'
+      PATTERN_FIND_1 = '^([^,\\[\\]#\\.]+)$'.freeze
       # #id_attribute_value
-      PATTERN_FIND_2_1 = '^#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_2_1 = '^#([^\\.,\\[\\]#][^,\\[\\]#]*)$'.freeze
       # .class_attribute_value
-      PATTERN_FIND_2_2 = '^\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_2_2 = '^\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'.freeze
       # [attribute_name=attribute_value]
-      PATTERN_FIND_2_3 = '^\\[([^\\[\\],]+)=([^\\[\\],]+)\\]$'
+      PATTERN_FIND_2_3 = '^\\[([^\\[\\],]+)=([^\\[\\],]+)\\]$'.freeze
       # E[attribute_name=attribute_value]
-      PATTERN_FIND_3_1 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,\\[\\]]+)=([^,\\[\\]]+)\\]$'
+      PATTERN_FIND_3_1 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,\\[\\]]+)=([^,\\[\\]]+)\\]$'.freeze
       # E#id_attribute_value
-      PATTERN_FIND_3_2 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_3_2 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)#([^\\.,\\[\\]#][^,\\[\\]#]*)$'.freeze
       # E.class_attribute_value
-      PATTERN_FIND_3_3 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_3_3 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'.freeze
       # [attribute_name1=attribute_value1][attribute_name2=attribute_value2]
       PATTERN_FIND_4 = '^\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
       # E[attribute_name1=attribute_value1][attribute_name2=attribute_value2]
-      PATTERN_FIND_5 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
+      PATTERN_FIND_5 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'.freeze
 
       @@pattern_find_1 = Regexp.new(PATTERN_FIND_1)
       @@pattern_find_2_1 = Regexp.new(PATTERN_FIND_2_1)
@@ -1550,98 +1550,98 @@ module Meteor
       @@pattern_find_5 = Regexp.new(PATTERN_FIND_5)
 
       #setAttribute
-      SET_ATTR_1 = '="[^"]*"'
+      SET_ATTR_1 = '="[^"]*"'.freeze
       #getAttributeValue
-      GET_ATTR_1 = '="([^"]*)"'
+      GET_ATTR_1 = '="([^"]*)"'.freeze
       #attributeMap
-      GET_ATTRS_MAP = '([^\\s]*)="([^\"]*)"'
+      GET_ATTRS_MAP = '([^\\s]*)="([^\"]*)"'.freeze
       #removeAttribute
-      ERASE_ATTR_1 = '="[^"]*"\\s?'
+      ERASE_ATTR_1 = '="[^"]*"\\s?'.freeze
 
       #cxtag
-      #SEARCH_CX_1 = '<!--\\s@'
-      #SEARCH_CX_2 = '\\s([^<>]*id="'
-      #SEARCH_CX_3 = '\"[^<>]*)-->(((?!(<!--\\s\\/@'
-      #SEARCH_CX_4 = ')).)*)<!--\\s\\/@'
-      #SEARCH_CX_5 = '\\s-->'
-      #SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
+      #SEARCH_CX_1 = '<!--\\s@'.freeze
+      #SEARCH_CX_2 = '\\s([^<>]*id="'.freeze
+      #SEARCH_CX_3 = '\"[^<>]*)-->(((?!(<!--\\s\\/@'.freeze
+      #SEARCH_CX_4 = ')).)*)<!--\\s\\/@'.freeze
+      #SEARCH_CX_5 = '\\s-->'.freeze
+      #SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'.freeze
 
-      SEARCH_CX_1 = '<!--\\s@'
+      SEARCH_CX_1 = '<!--\\s@'.freeze
       #SEARCH_CX_1 = "<!--\\s@"
-      SEARCH_CX_2 = '\\s([^<>]*id="'
-      #SEARCH_CX_2 = "\\s([^<>]*id=\""
-      SEARCH_CX_3 = '"[^<>]*)-->(((?!(<!--\\s/@'
-      #SEARCH_CX_3 = "\"[^<>]*)-->(((?!(<!--\\s/@"
-      SEARCH_CX_4 = ')).)*)<!--\\s/@'
-      #SEARCH_CX_4 = ")).)*)<!--\\s/@"
-      SEARCH_CX_5 = '\\s-->'
-      #SEARCH_CX_5 = "\\s-->"
-      SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'
-      #SEARCH_CX_6 = "<!--\\s@([^<>]*)\\s[^<>]*id=\""
+      SEARCH_CX_2 = '\\s([^<>]*id="'.freeze
+      #SEARCH_CX_2 = "\\s([^<>]*id=\"".freeze
+      SEARCH_CX_3 = '"[^<>]*)-->(((?!(<!--\\s/@'.freeze
+      #SEARCH_CX_3 = "\"[^<>]*)-->(((?!(<!--\\s/@".freeze
+      SEARCH_CX_4 = ')).)*)<!--\\s/@'.freeze
+      #SEARCH_CX_4 = ")).)*)<!--\\s/@".freeze
+      SEARCH_CX_5 = '\\s-->'.freeze
+      #SEARCH_CX_5 = "\\s-->".freeze
+      SEARCH_CX_6 = '<!--\\s@([^<>]*)\\s[^<>]*id="'.freeze
+      #SEARCH_CX_6 = "<!--\\s@([^<>]*)\\s[^<>]*id=\"".freeze
 
       #setElementToCXTag
-      SET_CX_1 = '<!-- @'
-      SET_CX_2 = '-->'
-      SET_CX_3 = '<!-- /@'
-      SET_CX_4 = ' -->'
+      SET_CX_1 = '<!-- @'.freeze
+      SET_CX_2 = '-->'.freeze
+      SET_CX_3 = '<!-- /@'.freeze
+      SET_CX_4 = ' -->'.freeze
 
       #setMonoInfo
-      SET_MONO_1 = '\\A[^<>]*\\Z'
+      SET_MONO_1 = '\\A[^<>]*\\Z'.freeze
 
       @@pattern_set_mono1 = Regexp.new(SET_MONO_1)
 
       #clean
-      CLEAN_1 = '<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->'
-      CLEAN_2 = '<!--\\s\\/@[^<>]*(\\s)*-->'
+      CLEAN_1 = '<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->'.freeze
+      CLEAN_2 = '<!--\\s\\/@[^<>]*(\\s)*-->'.freeze
       #escape
-      AND_1 = '&'
-      AND_2 = '&amp;'
-      AND_3 = 'amp'
-      LT_1 = '<'
-      LT_2 = '&lt;'
-      LT_3 = 'lt'
-      GT_1 = '>'
-      GT_2 = '&gt;'
-      GT_3 = 'gt'
-      QO_2 = '&quot;'
-      QO_3 = 'quot'
-      AP_1 = '\''
-      AP_2 = '&apos;'
-      AP_3 = 'apos'
-      #EN_1 = "\\\\"
-      EN_1 = "\\"
-      #EN_2 = "\\\\\\\\"
-      #DOL_1 = "\\\$"
-      #DOL_2 = "\\\\\\$"
-      #PLUS_1 = "\\\+"
-      #PLUS_2 = "\\\\\\+"
+      AND_1 = '&'.freeze
+      AND_2 = '&amp;'.freeze
+      AND_3 = 'amp'.freeze
+      LT_1 = '<'.freeze
+      LT_2 = '&lt;'.freeze
+      LT_3 = 'lt'.freeze
+      GT_1 = '>'.freeze
+      GT_2 = '&gt;'.freeze
+      GT_3 = 'gt'.freeze
+      QO_2 = '&quot;'.freeze
+      QO_3 = 'quot'.freeze
+      AP_1 = '\''.freeze
+      AP_2 = '&apos;'.freeze
+      AP_3 = 'apos'.freeze
+      #EN_1 = "\\\\".freeze
+      EN_1 = "\\".freeze
+      #EN_2 = "\\\\\\\\".freeze
+      #DOL_1 = "\\\$".freeze
+      #DOL_2 = "\\\\\\$".freeze
+      #PLUS_1 = "\\\+".freeze
+      #PLUS_2 = "\\\\\\+".freeze
 
-      ESCAPE_ENTITY_REF = ''
+      ESCAPE_ENTITY_REF = ''.freeze
 
-      #SUB_REGEX1 = (\\\\*)\\\\([0-9]+)'
-      #SUB_REGEX2 = '\\1\\1\\\\\\\\\\2'
-      #SUB_REGEX3 = '\\1\\1\\1\\1\\\\\\\\\\\\\\\\\\2'
+      #SUB_REGEX1 = (\\\\*)\\\\([0-9]+)'.freeze
+      #SUB_REGEX2 = '\\1\\1\\\\\\\\\\2'.freeze
+      #SUB_REGEX3 = '\\1\\1\\1\\1\\\\\\\\\\\\\\\\\\2'.freeze
 
-      #BRAC_OPEN_1 = "\\\("
-      #BRAC_OPEN_2 = "\\\\\\("
-      #BRAC_CLOSE_1 = "\\\)"
-      #BRAC_CLOSE_2 = "\\\\\\)"
-      #SBRAC_OPEN_1 = "\\\["
-      #SBRAC_OPEN_2 = "\\\\\\["
-      #SBRAC_CLOSE_1 = "\\\]"
-      #SBRAC_CLOSE_2 = "\\\\\\]"
-      #CBRAC_OPEN_1 = "\\\{"
-      #CBRAC_OPEN_2 = "\\\\\\{"
-      #CBRAC_CLOSE_1 = "\\\}"
-      #CBRAC_CLOSE_2 = "\\\\\\}"
-      #COMMA_1 = "\\\."
-      #COMMA_2 = "\\\\\\."
-      #VLINE_1 = "\\\|"
-      #VLINE_2 = "\\\\\\|"
-      #QMARK_1 = "\\\?"
-      #QMARK_2 = "\\\\\\?"
-      #ASTERISK_1 = "\\\*"
-      #ASTERISK_2 = "\\\\\\*"
+      #BRAC_OPEN_1 = "\\\(".freeze
+      #BRAC_OPEN_2 = "\\\\\\(".freeze
+      #BRAC_CLOSE_1 = "\\\)".freeze
+      #BRAC_CLOSE_2 = "\\\\\\)".freeze
+      #SBRAC_OPEN_1 = "\\\[".freeze
+      #SBRAC_OPEN_2 = "\\\\\\[".freeze
+      #SBRAC_CLOSE_1 = "\\\]".freeze
+      #SBRAC_CLOSE_2 = "\\\\\\]".freeze
+      #CBRAC_OPEN_1 = "\\\{".freeze
+      #CBRAC_OPEN_2 = "\\\\\\{".freeze
+      #CBRAC_CLOSE_1 = "\\\}".freeze
+      #CBRAC_CLOSE_2 = "\\\\\\}".freeze
+      #COMMA_1 = "\\\.".freeze
+      #COMMA_2 = "\\\\\\.".freeze
+      #VLINE_1 = "\\\|".freeze
+      #VLINE_2 = "\\\\\\|".freeze
+      #QMARK_1 = "\\\?".freeze
+      #QMARK_2 = "\\\\\\?".freeze
+      #ASTERISK_1 = "\\\*".freeze
+      #ASTERISK_2 = "\\\\\\*".freeze
 
       #@@pattern_en = Regexp.new(EN_1)
       #@@pattern_dol = Regexp.new(DOL_1)
@@ -1664,12 +1664,12 @@ module Meteor
       @@pattern_clean1 = Regexp.new(CLEAN_1)
       @@pattern_clean2 = Regexp.new(CLEAN_2)
 
-      MODE_UTF8 = 'r:UTF-8'
-      MODE_BF = 'r:'
-      MODE_AF = ':utf-8'
+      MODE_UTF8 = 'r:UTF-8'.freeze
+      MODE_BF = 'r:'.freeze
+      MODE_AF = ':utf-8'.freeze
 
-      CSS_ID = 'id'
-      CSS_CLASS = 'class'
+      CSS_ID = 'id'.freeze
+      CSS_CLASS = 'class'.freeze
 
       attr_accessor :element_cache
       attr_accessor :doc_type
@@ -3729,7 +3729,7 @@ module Meteor
 
       #
       # mirror element (要素を射影する)
-      # 
+      #
       # @param [Meteor::Element] elm element (要素)
       # @return [Meteor::Element] element (要素)
       #
@@ -3952,41 +3952,41 @@ module Meteor
 
         #KAIGYO_CODE = "\r?\n|\r"
         #KAIGYO_CODE = "\r\n|\n|\r"
-        KAIGYO_CODE = ["\r\n", "\n", "\r"]
-        NBSP_2 = '&nbsp;'
-        NBSP_3 = 'nbsp'
-        BR_1 = "\r?\n|\r"
-        BR_2 = '<br>'
+        KAIGYO_CODE = ["\r\n".freeze, "\n".freeze, "\r".freeze]
+        NBSP_2 = '&nbsp;'.freeze
+        NBSP_3 = 'nbsp'.freeze
+        BR_1 = "\r?\n|\r".freeze
+        BR_2 = '<br>'.freeze
 
-        META = 'META'
-        META_S = 'meta'
+        META = 'META'.freeze
+        META_S = 'meta'.freeze
 
         #MATCH_TAG = "br|hr|img|input|meta|base"
-        @@match_tag = ['br', 'hr', 'img', 'input', 'meta', 'base'] #[Array] 内容のない要素
+        @@match_tag = ['br'.freeze, 'hr'.freeze, 'img'.freeze, 'input'.freeze, 'meta'.freeze, 'base'.freeze] #[Array] 内容のない要素
         #@@match_tag_2 = "textarea|option|pre"
-        @@match_tag_2 =['textarea', 'option', 'pre'] #[Array] 改行を<br>に変換する必要のない要素
+        @@match_tag_2 =['textarea'.freeze, 'option'.freeze, 'pre'.freeze] #[Array] 改行を<br>に変換する必要のない要素
 
-        @@match_tag_sng = ['texarea', 'select', 'option', 'form', 'fieldset'] #[Array] 入れ子にできない要素
+        @@match_tag_sng = ['texarea'.freeze, 'select'.freeze, 'option'.freeze, 'form'.freeze, 'fieldset'.freeze] #[Array] 入れ子にできない要素
 
-        HTTP_EQUIV = 'http-equiv'
-        CONTENT_TYPE = 'Content-Type'
-        CONTENT = 'content'
+        HTTP_EQUIV = 'http-equiv'.freeze
+        CONTENT_TYPE = 'Content-Type'.freeze
+        CONTENT = 'content'.freeze
 
-        @@attr_logic = ['disabled', 'readonly', 'checked', 'selected', 'multiple'] #[Array] 論理値で指定する属性
-        OPTION = 'option'
-        SELECTED = 'selected'
-        INPUT = 'input'
-        CHECKED = 'checked'
-        RADIO = 'radio'
+        @@attr_logic = ['disabled'.freeze, 'readonly'.freeze, 'checked'.freeze, 'selected'.freeze, 'multiple'.freeze] #[Array] 論理値で指定する属性
+        OPTION = 'option'.freeze
+        SELECTED = 'selected'.freeze
+        INPUT = 'input'.freeze
+        CHECKED = 'checked'.freeze
+        RADIO = 'radio'.freeze
         #DISABLE_ELEMENT = "input|textarea|select|optgroup"
-        DISABLE_ELEMENT = ['input', 'textarea', 'select', 'optgroup'] #[Array] disabled属性のある要素
-        DISABLED = 'disabled'
+        DISABLE_ELEMENT = ['input'.freeze, 'textarea'.freeze, 'select'.freeze, 'optgroup'.freeze] #[Array] disabled属性のある要素
+        DISABLED = 'disabled'.freeze
         #READONLY_TYPE = "text|password"
-        READONLY_TYPE = ['text', 'password'] #[Array] readonly属性のあるinput要素のタイプ
-        TEXTAREA = 'textarea'
-        READONLY='readonly'
-        SELECT = 'select'
-        MULTIPLE = 'multiple'
+        READONLY_TYPE = ['text'.freeze, 'password'.freeze] #[Array] readonly属性のあるinput要素のタイプ
+        TEXTAREA = 'textarea'.freeze
+        READONLY='readonly'.freeze
+        SELECT = 'select'.freeze
+        MULTIPLE = 'multiple'.freeze
 
         #@@pattern_option = Regexp.new(OPTION)
         #@@pattern_selected = Regexp.new(SELECTED)
@@ -4001,33 +4001,33 @@ module Meteor
         #@@pattern_select = Regexp.new(SELECT)
         #@@pattern_multiple = Regexp.new(MULTIPLE)
 
-        SELECTED_M = '\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$'
+        SELECTED_M = '\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$'.freeze
         #SELECTED_M = [' selected ',' selected',' SELECTED ',' SELECTED']
-        SELECTED_R = 'selected\\s|selected$|SELECTED\\s|SELECTED$'
-        CHECKED_M = '\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$'
+        SELECTED_R = 'selected\\s|selected$|SELECTED\\s|SELECTED$'.freeze
+        CHECKED_M = '\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$'.freeze
         #CHECKED_M = [' checked ',' checked',' CHECKED ',' CHECKED']
-        CHECKED_R = 'checked\\s|checked$|CHECKED\\s|CHECKED$'
-        DISABLED_M = '\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$'
+        CHECKED_R = 'checked\\s|checked$|CHECKED\\s|CHECKED$'.freeze
+        DISABLED_M = '\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$'.freeze
         #DISABLED_M = [' disabled ',' disiabled',' DISABLED ',' DISABLED']
-        DISABLED_R = 'disabled\\s|disabled$|DISABLED\\s|DISABLED$'
-        READONLY_M = '\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$'
+        DISABLED_R = 'disabled\\s|disabled$|DISABLED\\s|DISABLED$'.freeze
+        READONLY_M = '\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$'.freeze
         #READONLY_M = [' readonly ',' readonly',' READONLY ',' READONLY']
-        READONLY_R = 'readonly\\s|readonly$|READONLY\\s|READONLY$'
-        MULTIPLE_M = '\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$'
+        READONLY_R = 'readonly\\s|readonly$|READONLY\\s|READONLY$'.freeze
+        MULTIPLE_M = '\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$'.freeze
         #MULTIPLE_M = [' multiple ',' multiple',' MULTIPLE ',' MULTIPLE']
-        MULTIPLE_R = 'multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$'
+        MULTIPLE_R = 'multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$'.freeze
 
-        TRUE = 'true'
-        FALSE = 'false'
+        TRUE = 'true'.freeze
+        FALSE = 'false'.freeze
 
         #@@pattern_true = Regexp.new(TRUE)
         #@@pattern_false = Regexp.new(FALSE)
 
-        TYPE_L = 'type'
-        TYPE_U = 'TYPE'
+        TYPE_L = 'type'.freeze
+        TYPE_U = 'TYPE'.freeze
 
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
-        GET_ATTRS_MAP2='\\s(disabled|readonly|checked|selected|multiple)'
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'.freeze
+        GET_ATTRS_MAP2='\\s(disabled|readonly|checked|selected|multiple)'.freeze
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)
         @@pattern_selected_r = Regexp.new(SELECTED_R)
@@ -4047,28 +4047,28 @@ module Meteor
         #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
         TABLE_FOR_ESCAPE_ = {
-            '&' => '&amp;',
-            '"' => '&quot;',
-            '\'' => '&apos;',
-            '<' => '&lt;',
-            '>' => '&gt;',
-            ' ' => '&nbsp;',
+            '&' => '&amp;'.freeze,
+            '"' => '&quot;'.freeze,
+            '\'' => '&apos;'.freeze,
+            '<' => '&lt;'.freeze,
+            '>' => '&gt;'.freeze,
+            ' ' => '&nbsp;'.freeze,
         }
 
         TABLE_FOR_ESCAPE_CONTENT_ = {
-            '&' => '&amp;',
-            '"' => '&quot;',
-            '\'' => '&apos;',
-            '<' => '&lt;',
-            '>' => '&gt;',
-            ' ' => '&nbsp;',
-            "\r\n" => '<br>',
-            "\r" => '<br>',
-            "\n" => '<br>',
+            '&' => '&amp;'.freeze,
+            '"' => '&quot;'.freeze,
+            '\'' => '&apos;'.freeze,
+            '<' => '&lt;'.freeze,
+            '>' => '&gt;'.freeze,
+            ' ' => '&nbsp;'.freeze,
+            "\r\n" => '<br>'.freeze,
+            "\r" => '<br>'.freeze,
+            "\n" => '<br>'.freeze,
         }
 
-        PATTERN_ESCAPE = "[&\"'<> ]"
-        PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+        PATTERN_ESCAPE = "[&\"'<> ]".freeze
+        PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]".freeze
 
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
@@ -4652,35 +4652,35 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
-        #KAIGYO_CODE = "\r?\n|\r"
-        KAIGYO_CODE = ["\r\n", "\n", "\r"]
-        NBSP_2 = '&nbsp;'
-        NBSP_3 = 'nbsp'
-        BR_1 = "\r?\n|\r"
-        BR_2 = '<br/>'
-        BR_3 = '<br\\/>'
+        #KAIGYO_CODE = "\r?\n|\r".freeze
+        KAIGYO_CODE = ["\r\n".freeze, "\n".freeze, "\r".freeze]
+        NBSP_2 = '&nbsp;'.freeze
+        NBSP_3 = 'nbsp'.freeze
+        BR_1 = "\r?\n|\r".freeze
+        BR_2 = '<br/>'.freeze
+        BR_3 = '<br\\/>'.freeze
 
-        META = 'META'
-        META_S = 'meta'
+        META = 'META'.freeze
+        META_S = 'meta'.freeze
 
         #@@match_tag_2 = "textarea|option|pre"
-        @@match_tag_2 = ['textarea', 'option', 'pre'] #[Array] 改行を<br/>に変換する必要のない要素
+        @@match_tag_2 = ['textarea'.freeze, 'option'.freeze, 'pre'.freeze] #[Array] 改行を<br/>に変換する必要のない要素
 
-        @@attr_logic = ['disabled', 'readonly', 'checked', 'selected', 'multiple'] #[Array] 論理値で指定する属性
-        OPTION = 'option'
-        SELECTED = 'selected'
-        INPUT = 'input'
-        CHECKED = 'checked'
-        RADIO = 'radio'
+        @@attr_logic = ['disabled'.freeze, 'readonly'.freeze, 'checked'.freeze, 'selected'.freeze, 'multiple'.freeze] #[Array] 論理値で指定する属性
+        OPTION = 'option'.freeze
+        SELECTED = 'selected'.freeze
+        INPUT = 'input'.freeze
+        CHECKED = 'checked'.freeze
+        RADIO = 'radio'.freeze
         #DISABLE_ELEMENT = "input|textarea|select|optgroup"
-        DISABLE_ELEMENT = ['input', 'textarea', 'select', 'optgroup'] #[Array] disabled属性のある要素
-        DISABLED = 'disabled'
+        DISABLE_ELEMENT = ['input'.freeze, 'textarea'.freeze, 'select'.freeze, 'optgroup'.freeze] #[Array] disabled属性のある要素
+        DISABLED = 'disabled'.freeze
         #READONLY_TYPE = "text|password"
-        READONLY_TYPE = ['text', 'password'] #[Array] readonly属性のあるinput要素のタイプ
-        TEXTAREA = 'textarea'
-        READONLY='readonly'
-        SELECT = 'select'
-        MULTIPLE = 'multiple'
+        READONLY_TYPE = ['text'.freeze, 'password'.freeze] #[Array] readonly属性のあるinput要素のタイプ
+        TEXTAREA = 'textarea'.freeze
+        READONLY='readonly'.freeze
+        SELECT = 'select'.freeze
+        MULTIPLE = 'multiple'.freeze
 
         #@@pattern_option = Regexp.new(OPTION)
         #@@pattern_selected = Regexp.new(SELECTED)
@@ -4695,38 +4695,38 @@ module Meteor
         #@@pattern_select = Regexp.new(SELECT)
         #@@pattern_multiple = Regexp.new(MULTIPLE)
 
-        SELECTED_M = '\\sselected="[^"]*"\\s|\\sselected="[^"]*"$'
-        SELECTED_M1 = '\\sselected="([^"]*)"\\s|\\sselected="([^"]*)"$'
-        SELECTED_R = 'selected="[^"]*"'
-        SELECTED_U = 'selected="selected"'
-        CHECKED_M = '\\schecked="[^"]*"\\s|\\schecked="[^"]*"$'
-        CHECKED_M1 = '\\schecked="([^"]*)"\\s|\\schecked="([^"]*)"$'
-        CHECKED_R = 'checked="[^"]*"'
-        CHECKED_U = 'checked="checked"'
-        DISABLED_M = '\\sdisabled="[^"]*"\\s|\\sdisabled="[^"]*"$'
-        DISABLED_M1 = '\\sdisabled="([^"]*)"\\s|\\sdisabled="([^"]*)"$'
-        DISABLED_R = 'disabled="[^"]*"'
-        DISABLED_U = 'disabled="disabled"'
-        READONLY_M = '\\sreadonly="[^"]*"\\s|\\sreadonly="[^"]*"$'
-        READONLY_M1 = '\\sreadonly="([^"]*)"\\s|\\sreadonly="([^"]*)"$'
-        READONLY_R = 'readonly="[^"]*"'
-        READONLY_U = 'readonly="readonly"'
-        MULTIPLE_M = '\\smultiple="[^"]*"\\s|\\smultiple="[^"]*"$'
-        MULTIPLE_M1 = '\\smultiple="([^"]*)"\\s|\\smultiple="([^"]*)"$'
-        MULTIPLE_R = 'multiple="[^"]*"'
-        MULTIPLE_U = 'multiple="multiple"'
+        SELECTED_M = '\\sselected="[^"]*"\\s|\\sselected="[^"]*"$'.freeze
+        SELECTED_M1 = '\\sselected="([^"]*)"\\s|\\sselected="([^"]*)"$'.freeze
+        SELECTED_R = 'selected="[^"]*"'.freeze
+        SELECTED_U = 'selected="selected"'.freeze
+        CHECKED_M = '\\schecked="[^"]*"\\s|\\schecked="[^"]*"$'.freeze
+        CHECKED_M1 = '\\schecked="([^"]*)"\\s|\\schecked="([^"]*)"$'.freeze
+        CHECKED_R = 'checked="[^"]*"'.freeze
+        CHECKED_U = 'checked="checked"'.freeze
+        DISABLED_M = '\\sdisabled="[^"]*"\\s|\\sdisabled="[^"]*"$'.freeze
+        DISABLED_M1 = '\\sdisabled="([^"]*)"\\s|\\sdisabled="([^"]*)"$'.freeze
+        DISABLED_R = 'disabled="[^"]*"'.freeze
+        DISABLED_U = 'disabled="disabled"'.freeze
+        READONLY_M = '\\sreadonly="[^"]*"\\s|\\sreadonly="[^"]*"$'.freeze
+        READONLY_M1 = '\\sreadonly="([^"]*)"\\s|\\sreadonly="([^"]*)"$'.freeze
+        READONLY_R = 'readonly="[^"]*"'.freeze
+        READONLY_U = 'readonly="readonly"'.freeze
+        MULTIPLE_M = '\\smultiple="[^"]*"\\s|\\smultiple="[^"]*"$'.freeze
+        MULTIPLE_M1 = '\\smultiple="([^"]*)"\\s|\\smultiple="([^"]*)"$'.freeze
+        MULTIPLE_R = 'multiple="[^"]*"'.freeze
+        MULTIPLE_U = 'multiple="multiple"'.freeze
 
-        HTTP_EQUIV = 'http-equiv'
-        CONTENT_TYPE = 'Content-Type'
-        CONTENT = 'content'
+        HTTP_EQUIV = 'http-equiv'.freeze
+        CONTENT_TYPE = 'Content-Type'.freeze
+        CONTENT = 'content'.freeze
 
-        TRUE = 'true'
-        FALSE = 'false'
+        TRUE = 'true'.freeze
+        FALSE = 'false'.freeze
 
-        TYPE_L = 'type'
-        TYPE_U = 'TYPE'
+        TYPE_L = 'type'.freeze
+        TYPE_U = 'TYPE'.freeze
 
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'.freeze
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)
         @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
@@ -4752,28 +4752,28 @@ module Meteor
         #@@pattern_@@match_tag2 = Regexp.new(@@match_tag_2)
 
         TABLE_FOR_ESCAPE_ = {
-            '&' => '&amp;',
-            '"' => '&quot;',
-            '\'' => '&apos;',
-            '<' => '&lt;',
-            '>' => '&gt;',
-            ' ' => '&nbsp;',
+            '&' => '&amp;'.freeze,
+            '"' => '&quot;'.freeze,
+            '\'' => '&apos;'.freeze,
+            '<' => '&lt;'.freeze,
+            '>' => '&gt;'.freeze,
+            ' ' => '&nbsp;'.freeze,
         }
 
         TABLE_FOR_ESCAPE_CONTENT_ = {
-            '&' => '&amp;',
-            '"' => '&quot;',
-            '\'' => '&apos;',
-            '<' => '&lt;',
-            '>' => '&gt;',
-            ' ' => '&nbsp;',
-            "\r\n" => '<br/>',
-            "\r" => '<br/>',
-            "\n" => '<br/>',
+            '&' => '&amp;'.freeze,
+            '"' => '&quot;'.freeze,
+            '\'' => '&apos;'.freeze,
+            '<' => '&lt;'.freeze,
+            '>' => '&gt;'.freeze,
+            ' ' => '&nbsp;'.freeze,
+            "\r\n" => '<br/>'.freeze,
+            "\r" => '<br/>'.freeze,
+            "\n" => '<br/>'.freeze,
         }
 
-        PATTERN_ESCAPE = '[&"\'<> ]'
-        PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'
+        PATTERN_ESCAPE = '[&"\'<> ]'.freeze
+        PATTERN_ESCAPE_CONTENT = '[&"\'<> \\n]'.freeze
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
 
@@ -5086,23 +5086,23 @@ module Meteor
       #
       class ParserImpl < Meteor::Ml::Html::ParserImpl
 
-        CHARSET = 'charset'
-        UTF8 = 'utf-8'
+        CHARSET = 'charset'.freeze
+        UTF8 = 'utf-8'.freeze
 
-        MATCH_TAG = ['br', 'hr', 'img', 'input', 'meta', 'base', 'embed', 'command', 'keygen'] #[Array] 内容のない要素
+        MATCH_TAG = ['br'.freeze, 'hr'.freeze, 'img'.freeze, 'input'.freeze, 'meta'.freeze, 'base'.freeze, 'embed'.freeze, 'command'.freeze, 'keygen'.freeze] #[Array] 内容のない要素
 
-        MATCH_TAG_SNG = ['texarea', 'select', 'option', 'form', 'fieldset', 'figure', 'figcaption', 'video', 'audio', 'progress', 'meter', 'time', 'ruby', 'rt', 'rp', 'datalist', 'output'] #[Array] 入れ子にできない要素
+        MATCH_TAG_SNG = ['texarea'.freeze, 'select'.freeze, 'option'.freeze, 'form'.freeze, 'fieldset'.freeze, 'figure'.freeze, 'figcaption'.freeze, 'video'.freeze, 'audio'.freeze, 'progress'.freeze, 'meter'.freeze, 'time'.freeze, 'ruby'.freeze, 'rt'.freeze, 'rp'.freeze, 'datalist'.freeze, 'output'.freeze] #[Array] 入れ子にできない要素
 
-        ATTR_LOGIC = ['disabled', 'readonly', 'checked', 'selected', 'multiple', 'required'] #[Array] 論理値で指定する属性
+        ATTR_LOGIC = ['disabled'.freeze, 'readonly'.freeze, 'checked'.freeze, 'selected'.freeze, 'multiple'.freeze, 'required'.freeze] #[Array] 論理値で指定する属性
 
-        DISABLE_ELEMENT = ['input', 'textarea', 'select', 'optgroup', 'fieldset'] #[Array] disabled属性のある要素
+        DISABLE_ELEMENT = ['input'.freeze, 'textarea'.freeze, 'select'.freeze, 'optgroup'.freeze, 'fieldset'.freeze] #[Array] disabled属性のある要素
 
         REQUIRE_ELEMENT = ['input', 'textarea'] #[Array] required属性のある要素
         REQUIRED = 'required'
 
-        REQUIRED_M = '\\srequired\\s|\\srequired$|\\sREQUIRED\\s|\\sREQUIRED$'
+        REQUIRED_M = '\\srequired\\s|\\srequired$|\\sREQUIRED\\s|\\sREQUIRED$'.freeze
         #REQUIRED_M = [' required ',' required',' REQUIRED ',' REQUIRED']
-        REQUIRED_R = 'required\\s|required$|REQUIRED\\s|REQUIRED$'
+        REQUIRED_R = 'required\\s|required$|REQUIRED\\s|REQUIRED$'.freeze
 
         @@pattern_required_m = Regexp.new(REQUIRED_M)
         @@pattern_required_r = Regexp.new(REQUIRED_R)
@@ -5226,20 +5226,20 @@ module Meteor
       #
       class ParserImpl < Meteor::Ml::Xhtml::ParserImpl
 
-        CHARSET = 'charset'
-        UTF8 = 'utf-8'
+        CHARSET = 'charset'.freeze
+        UTF8 = 'utf-8'.freeze
 
-        ATTR_LOGIC = ['disabled', 'readonly', 'checked', 'selected', 'multiple', 'required'] #[Array] 論理値で指定する属性
+        ATTR_LOGIC = ['disabled'.freeze, 'readonly'.freeze, 'checked'.freeze, 'selected'.freeze, 'multiple'.freeze, 'required'.freeze] #[Array] 論理値で指定する属性
 
-        DISABLE_ELEMENT = ['input', 'textarea', 'select', 'optgroup', 'fieldset'] #[Array] disabled属性のある要素
+        DISABLE_ELEMENT = ['input'.freeze, 'textarea'.freeze, 'select'.freeze, 'optgroup'.freeze, 'fieldset'.freeze] #[Array] disabled属性のある要素
 
-        REQUIRE_ELEMENT = ['input', 'textarea'] #[Array] required属性のある要素
-        REQUIRED = 'required'
+        REQUIRE_ELEMENT = ['input'.freeze, 'textarea'.freeze] #[Array] required属性のある要素
+        REQUIRED = 'required'.freeze
 
-        REQUIRED_M = '\\srequired="[^"]*"\\s|\\srequired="[^"]*"$'
-        REQUIRED_M1 = '\\srequired="([^"]*)"\\s|\\srequired="([^"]*)"$'
-        REQUIRED_R = 'required="[^"]*"'
-        REQUIRED_U = 'required="required"'
+        REQUIRED_M = '\\srequired="[^"]*"\\s|\\srequired="[^"]*"$'.freeze
+        REQUIRED_M1 = '\\srequired="([^"]*)"\\s|\\srequired="([^"]*)"$'.freeze
+        REQUIRED_R = 'required="[^"]*"'.freeze
+        REQUIRED_U = 'required="required"'.freeze
 
         @@pattern_required_m = Regexp.new(REQUIRED_M)
         @@pattern_required_m1 = Regexp.new(REQUIRED_M1)
@@ -5364,18 +5364,18 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'.freeze
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
         TABLE_FOR_ESCAPE_ = {
-            '&' => '&amp;',
-            '"' => '&quot;',
-            '\'' => '&apos;',
-            '<' => '&lt;',
-            '>' => '&gt;',
+            '&' => '&amp;'.freeze,
+            '"' => '&quot;'.freeze,
+            '\'' => '&apos;'.freeze,
+            '<' => '&lt;'.freeze,
+            '>' => '&gt;'.freeze,
         }
-        PATTERN_ESCAPE = '[&\"\'<>]'
+        PATTERN_ESCAPE = '[&\"\'<>]'.freeze
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
 
         #

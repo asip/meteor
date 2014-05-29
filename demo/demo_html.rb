@@ -5,12 +5,12 @@ require 'rubygems'
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new
-#pf.bind(Meteor::HTML,'sample.html', 'UTF-8')
+#pf.bind(:html,'sample.html', 'UTF-8')
 
 #root = pf.element('sample')
 
-Meteor::ElementFactory.options= {:type => Meteor::HTML}
-#Meteor::ElementFactory.bind(Meteor::HTML,'sample.html', 'UTF-8')
+Meteor::ElementFactory.options= {:type => :html}
+#Meteor::ElementFactory.bind(:html,'sample.html', 'UTF-8')
 Meteor::ElementFactory.bind('sample.html')
 
 root = Meteor::ElementFactory.element('sample')

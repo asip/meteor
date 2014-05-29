@@ -771,7 +771,7 @@ module Meteor
   # Parser Factory Class (パーサファクトリクラス)
   #
   # @!attribute [rw] type
-  #  @return [FixNum] default type of parser (デフォルトのパーサ・タイプ)
+  #  @return [FixNum,Symbol] default type of parser (デフォルトのパーサ・タイプ)
   # @!attribute [rw] root
   #  @return [String] root root directory (基準ディレクトリ)
   # @!attribute [rw] enc
@@ -809,7 +809,7 @@ module Meteor
     #  @param [String] root root directory (基準ディレクトリ)
     #  @param [String] enc default character encoding (デフォルトエンコーディング)
     # @overload initialize(type, root, enc)
-    #  @param [FixNum] type default type of parser (デフォルトのパーサ・タイプ)
+    #  @param [FixNum,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
     #  @param [String] root root directory (基準ディレクトリ)
     #  @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
@@ -866,7 +866,7 @@ module Meteor
 
     #
     # イニシャライザ
-    # @param [FixNum] type default type of parser (デフォルトのパーサ・タイプ)
+    # @param [FixNum,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
@@ -886,8 +886,8 @@ module Meteor
     # @option @deprecated opts [String] :base_dir root directory (基準ディレクトリ)
     # @option opts [String] :enc default character encoding (デフォルト文字エンコーディング)
     # @option @deprecated opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
-    # @option opts [FixNum] :type default type of parser (デフォルトのパーサ・タイプ)
-    # @option @deprecated opts [FixNum] :base_type default type of parser (デフォルトのパーサ・タイプ)
+    # @option opts [FixNum,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
+    # @option @deprecated opts [FixNum | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
     def options=(opts)
       if opts.kind_of?(Hash)
@@ -923,13 +923,13 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #@overload bind(type,relative_path,enc)
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [Fixnum,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload bind(type,relative_path)
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [Fixnum,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
@@ -938,7 +938,7 @@ module Meteor
         when 1
           bind_1(args[0])
         when 2
-          if args[0].kind_of?(Fixnum)
+          if args[0].kind_of?(Fixnum) || args[0].kind_of?(Symbol)
             bind_2_n(args[0], args[1])
           elsif args[0].kind_of?(String)
             bind_2_s(args[0], args[1])
@@ -978,7 +978,7 @@ module Meteor
 
     #
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [Fixnum,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser(パーサ)
@@ -988,7 +988,7 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
-        when Parser::HTML
+        when Parser::HTML, :html
           html = Meteor::Ml::Html::ParserImpl.new
           html.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html
@@ -996,15 +996,15 @@ module Meteor
           xhtml = Meteor::Ml::Xhtml::ParserImpl.new
           xhtml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml
-        when Parser::HTML5
+        when Parser::HTML5, :html5
           html5 = Meteor::Ml::Html5::ParserImpl.new
           html5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html5
-        when Parser::XHTML5
+        when Parser::XHTML5, :xhtml5
           xhtml5 = Meteor::Ml::Xhtml5::ParserImpl.new
           xhtml5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml5
-        when Parser::XML
+        when Parser::XML, :xml
           xml = Meteor::Ml::Xml::ParserImpl.new
           xml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xml
@@ -1015,7 +1015,7 @@ module Meteor
 
     #
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser(パーサ・タイプ)
+    # @param [Fixnum,Symbol] type type of parser(パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
@@ -1024,15 +1024,15 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
-        when Parser::HTML
+        when Parser::HTML, :html
           ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML
+        when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::HTML5
+        when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
-        when Parser::XHTML5
+        when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
-        when Parser::XML
+        when Parser::XML, :xml
           ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
@@ -1054,15 +1054,15 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
-        when Parser::HTML
+        when Parser::HTML, :html
           ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML
+        when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::HTML5
+        when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
-        when Parser::XHTML5
+        when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
-        when Parser::XML
+        when Parser::XML, :xml
           ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
@@ -1083,15 +1083,15 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
-        when Parser::HTML
+        when Parser::HTML, :html
           ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML
+        when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::HTML5
+        when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
-        when Parser::XHTML5
+        when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
-        when Parser::XML
+        when Parser::XML, :xml
           ps = Meteor::Ml::Xml::ParserImpl.new
         else
           raise ArgumentError
@@ -1139,17 +1139,17 @@ module Meteor
     #
     def parser_1(key)
       @pif = @cache[key]
-
-      if Meteor::Parser::HTML == @pif.doc_type
-        Meteor::Ml::Html::ParserImpl.new(@pif)
-      elsif Meteor::Parser::XHTML == @pif.doc_type
-        Meteor::Ml::Xhtml::ParserImpl.new(@pif)
-      elsif Meteor::Parser::HTML5 == @pif.doc_type
-        Meteor::Ml::Html5::ParserImpl.new(@pif)
-      elsif Meteor::Parser::XHTML5 == @pif.doc_type
-        Meteor::Ml::Xhtml5::ParserImpl.new(@pif)
-      elsif Meteor::Parser::XML == @pif.doc_type
-        Meteor::Ml::Xml::ParserImpl.new(@pif)
+      case @pif.doc_type
+        when Meteor::Parser::HTML
+          Meteor::Ml::Html::ParserImpl.new(@pif)
+        when Meteor::Parser::XHTML
+          Meteor::Ml::Xhtml::ParserImpl.new(@pif)
+        when Meteor::Parser::HTML5
+          Meteor::Ml::Html5::ParserImpl.new(@pif)
+        when Meteor::Parser::XHTML5
+          Meteor::Ml::Xhtml5::ParserImpl.new(@pif)
+        when Meteor::Parser::XML
+          Meteor::Ml::Xml::ParserImpl.new(@pif)
       end
     end
 
@@ -1190,22 +1190,22 @@ module Meteor
 
     #
     # generate parser (パーサを作成する)
-    # @param [Fixnum] type type of parser (パーサ・タイプ)
+    # @param [Fixnum,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_url relative URL (相対URL)
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
     def bind_str_3(type, relative_url, doc)
       case type
-        when Parser::HTML
+        when Parser::HTML, :html
           ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML
+        when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::HTML5
+        when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
-        when Parser::XHTML5
+        when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
-        when Parser::XML
+        when Parser::XML, :xml
           ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
@@ -1224,15 +1224,15 @@ module Meteor
     #
     def bind_str_2(relative_url, doc)
       case @type
-        when Parser::HTML
+        when Parser::HTML, :html
           ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML
+        when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::HTML5
+        when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
-        when Parser::XHTML5
+        when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
-        when Parser::XML
+        when Parser::XML, :xml
           ps = Meteor::Ml::Xml::ParserImpl.new
       end
 

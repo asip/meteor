@@ -5,11 +5,11 @@ require 'rubygems'
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new
-#pf.bind(Meteor::Parser::XHTML,"sample_x.html", "UTF-8")
+#pf.bind(:html,"sample_x.html", "UTF-8")
 
 #root = pf.element('sample_x')
 
-Meteor::ElementFactory.bind(Meteor::Parser::XHTML,'sample_x.html', 'UTF-8')
+Meteor::ElementFactory.bind(:html,'sample_x.html', 'UTF-8')
 root = Meteor::ElementFactory.element('sample_x')
 
 startTime = Time.new.to_f

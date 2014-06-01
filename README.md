@@ -12,7 +12,7 @@ Meteor
   gem install meteor-*.gem
 ```
 
-##Explanation
+## Explanation
 This libarary is lightweight (X)HTML(5) parser.
 This can use as XML parser.
 This may be false parser.
@@ -38,12 +38,17 @@ DOMのように全体をオブジェクトのツリー構造に変換するの�
 (内部では正規表現を使っていますが、ユーザがそれを意識する
 必要は全くありません。)
 
+## API
+http://rubydoc.info/github/asip/meteor/master/frames
+
+## Sample
+https://github.com/asip/meteor/tree/master/demo
 
 ## License
 Licensed under the LGPL V2.1.
 
-##Author
+## Author
  Yasumasa Ashida (ys.ashida@gmail.com)
 
-##Copyright
+## Copyright
 (c) 2008-2014 Yasumasa Ashida

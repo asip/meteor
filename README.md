@@ -41,7 +41,7 @@ DOMのように全体をオブジェクトのツリー構造に変換するの�
 ## API
 http://rubydoc.info/github/asip/meteor/master/frames
 
-## Sample
+## Samples
 https://github.com/asip/meteor/tree/master/demo
 
 ## License

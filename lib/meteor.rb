@@ -51,6 +51,8 @@ module Meteor
   #  @return [String] attributes (属性群)
   # @!attribute [rw] mixed_content
   #  @return [String] content (内容)
+  # @!attribute [rw] raw_content
+  #  @return [false,true] entity ref flag of content (内容のエンティティ参照フラグ)
   # @!attribute [rw] pattern
   #  @return [String] pattern (パターン)
   # @!attribute [rw] document_sync
@@ -79,6 +81,7 @@ module Meteor
     attr_accessor :tag
     attr_accessor :attributes
     attr_accessor :mixed_content
+    attr_accessor :raw_content
     attr_accessor :pattern
     attr_accessor :document_sync
     attr_accessor :empty
@@ -479,10 +482,12 @@ module Meteor
     #  @param [String] content content of element (要素の内容)
     #  @param [true,false] entity_ref entity reference flag (エンティティ参照フラグ)
     #  @return [Meteor::Element] element (要素)
+    #  @deprecated
     # @overload content(content)
     #  set content of element (要素の内容をセットする)
     #  @param [String] content content of element (要素の内容)
     #  @return [Meteor::Element] element (要素)
+    #  @deprecated
     # @overload content()
     #  get content of element (要素の内容を取得する)
     #  @return [String] content (内容)
@@ -3391,6 +3396,7 @@ module Meteor
       #  @param [String] content content of element (要素の内容)
       #  @param [true,false] entity_ref entity reference flag (エンティティ参照フラグ)
       #  @return [Meteor::Element] element (要素)
+      #  @deprecated
       # @overload content(elm,content)
       #  set content of element (要素の内容をセットする)
       #  @param [Meteor::Element] elm element (要素)
@@ -3433,7 +3439,7 @@ module Meteor
       #
       def set_content_3(elm, content, entity_ref=true)
 
-        if entity_ref
+        if entity_ref || !elm.raw_content
           escape_content(content, elm)
         end
         elm.mixed_content = content
@@ -3450,7 +3456,10 @@ module Meteor
       #
       def set_content_2(elm, content)
         #set_content_3(elm, content)
-        elm.mixed_content = escape_content(content, elm)
+        unless elm.raw_content
+          escape_content(content, elm)
+        end
+        elm.mixed_content = content
         elm
       end
 

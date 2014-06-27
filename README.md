@@ -44,7 +44,7 @@ http://rubydoc.info/github/asip/meteor/master/frames
 ## Gem
 https://rubygems.org/gems/meteor
 
-## Samples
+## Examples
 https://github.com/asip/meteor/tree/master/demo
 
 ## License

@@ -23,7 +23,7 @@
 
 module Meteor
 
-  VERSION = '0.9.8.2'.freeze
+  VERSION = '0.9.8.1'.freeze
 
   #require 'fileutils'
 

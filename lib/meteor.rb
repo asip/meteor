@@ -23,7 +23,7 @@
 
 module Meteor
 
-  VERSION = '0.9.8.1'.freeze
+  VERSION = '0.9.8.2'.freeze
 
   #require 'fileutils'
 
@@ -3158,18 +3158,18 @@ module Meteor
       #  @return [String] attribute value (属性値)
       #
       def attr(elm, attr,*args)
-        if attr.kind_of?(String)
+        if attr.kind_of?(String) || attr.kind_of?(Symbol)
           case args.length
             when ZERO
-              get_attr_value(elm, attr)
+              get_attr_value(elm, attr.to_s)
             when ONE
               elm.document_sync = true
-              set_attribute_3(elm, attr,args[0])
+              set_attribute_3(elm, attr.to_s,args[0])
           end
 
         elsif attr.kind_of?(Hash) && attr.size == 1
           elm.document_sync = true
-          set_attribute_3(elm, attr.keys[0], attr.values[0])
+          set_attribute_3(elm, attr.keys[0].to_s, attr.values[0])
         #elsif attrs.kind_of?(Hash) && attrs.size >= 1
         #  elm.document_sync = true
         #  attrs.each{|name,value|
@@ -3276,7 +3276,7 @@ module Meteor
             if args[0].kind_of?(Hash)
               if args[0].size == 1
                 elm.document_sync = true
-                set_attribute_3(elm, args[0].keys[0], args[0].values[0])
+                set_attribute_3(elm, args[0].keys[0].to_s, args[0].values[0])
               elsif args[0].size >= 1
                 set_attrs(elm, args[0])
               else
@@ -3317,7 +3317,7 @@ module Meteor
         if !elm.cx
           elm.document_sync = true
           attr_map.each do |name, value|
-            set_attribute_3(elm, name, value)
+            set_attribute_3(elm, name.to_s, value)
           end
         end
         elm
@@ -3378,9 +3378,9 @@ module Meteor
         if !elm.cx
           attr_map.map.each do |name, attr|
             if attr_map.changed(name)
-              edit_attrs_(elm, name, attr.value)
+              edit_attrs_(elm, name.to_s, attr.value)
             elsif attr_map.removed(name)
-              remove_attrs_(elm, name)
+              remove_attrs_(elm, name.to_s)
             end
           end
         end
@@ -3493,7 +3493,7 @@ module Meteor
       def remove_attr(elm, attr_name)
         if !elm.cx
           elm.document_sync = true
-          remove_attrs_(elm, attr_name)
+          remove_attrs_(elm, attr_name.to_s)
         end
 
         elm
@@ -3535,12 +3535,12 @@ module Meteor
       def cxtag(*args)
         case args.length
           when ONE
-            cxtag_1(args[0])
+            cxtag_1(args[0].to_s)
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end
           when TWO
-            cxtag_2(args[0], args[1])
+            cxtag_2(args[0].to_s, args[1].to_s)
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end

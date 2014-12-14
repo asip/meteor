@@ -43,7 +43,7 @@ elm_text1 = root.element('input','id'=>'text1')
 #elm_text1.attr = {'value' => 'メモ'}
 #elm_text1.attr('disabled'=>true)
 #elm_text1['disabled'] = true
-elm_text1.attrs = {'value' => 'メモ','disabled' => true, 'readonly' => true}
+elm_text1.attrs = {value: 'メモ','disabled' => true, 'readonly' => true}
 #puts elm_text1.attrs
 #elm_text1.remove_attr('disabled')
 #map = elm_text1.attr_map
@@ -79,6 +79,7 @@ elm_text1.attrs = {'value' => 'メモ','disabled' => true, 'readonly' => true}
 ##puts elm_option1.attr('selected')
 #puts elm_option1['selected']
 #puts elm_text1.attr('readonly')
+#puts elm_text1['readonly']
 
 #elm_select2 = ps.element('select','id'=>'select2')
 #elm_select2['multiple'] = 'true'
@@ -97,10 +98,10 @@ elm_text1.attrs = {'value' => 'メモ','disabled' => true, 'readonly' => true}
 #  co_ps.flush
 #}
 
-elm_tr1 = root.element('tr','id'=>'loop')
+elm_tr1 = root.element('tr',id: 'loop')
 #elm_tr1 = ps.find('tr[id=loop]')
 elm_ = root.element(elm_tr1)
-elm_dt1_ = elm_.element('id'=>'aa')
+elm_dt1_ = elm_.element(id: 'aa')
 elm_dt2_ = elm_.element('id'=>'bb')
 elm_dt3_ = elm_.element('id'=>'cc')
 10.times do |i|

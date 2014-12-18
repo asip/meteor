@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.8.1
+# @version 0.9.8.2
 #
 
 module Meteor
 
-  VERSION = '0.9.8.1'.freeze
+  VERSION = '0.9.8.2'.freeze
 
   #require 'fileutils'
 
@@ -100,7 +100,7 @@ module Meteor
     #
     # initializer (イニシャライザ)
     # @overload initialize(tag)
-    #  @param [String] tag tag name (タグ名)
+    #  @param [String,Symbol] tag tag name (タグ名)
     # @overload initialize(elm)
     #  @param [Meteor::Element] elm element (要素)
     # @overload initialize(elm,ps)
@@ -280,41 +280,41 @@ module Meteor
     #  @return [Meteor::Element] element (要素)
     # @overload element(tag)
     #  get element using tag name (要素のタグ名で要素を取得する)
-    #  @param [String] tag tag name (タグ名)
+    #  @param [String,Symbol] tag tag name (タグ名)
     #  @return [Meteor::Element] element (要素)
     # @overload element(tag,attrs)
     #  get element using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [String] tag tag name (タグ名)
-    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+    #  @param [String,Symbol] tag tag name (タグ名)
+    #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
     #  @return [Meteor::Element] element (要素)
     # @overload element(attrs)
     #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+    #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
     #  @return [Meteor::Element] element(要素)
     # @overload element(tag,attr_name,attr_value)
     #  get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
-    #  @param [String] tag  tag name (タグ名)
-    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String,symbol] tag  tag name (タグ名)
+    #  @param [String,symbol] attr_name attribute name (属性名)
     #  @param [String] attr_value attribute value (属性値)
     #  @return [Meteor::Element] element (要素)
     # @overload element(attr_name,attr_value)
     #  get element using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
-    #  @param [String] attr_name 属性名
+    #  @param [String,Symbol] attr_name 属性名
     #  @param [String] attr_value 属性値
     #  @return [Meteor::Element] element (要素)
     # @overload element(tag,attr_name1,attr_value1,attr_name2,attr_value2)
     #  get element using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [String] tag  tag name (タグ名)
-    #  @param [String] attr_name1 attribute name1 (属性名1)
+    #  @param [String,Symbol] tag  tag name (タグ名)
+    #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
     #  @param [String] attr_value1 attribute value1 (属性値1)
-    #  @param [String] attr_name2 attribute name2 (属性名2)
+    #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
     #  @param [String] attr_value2 attribute value2 (属性値2)
     #  @return [Meteor::Element] element (要素)
     # @overload element(attr_name1,attr_value1,attr_name2,attr_value2)
     #  get element using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [String] attr_name1 属性名1
+    #  @param [String,Symbol] attr_name1 属性名1
     #  @param [String] attr_value1 属性値1
-    #  @param [String] attr_name2 属性名2
+    #  @param [String,Symbol] attr_name2 属性名2
     #  @param [String] attr_value2 属性値2
     #  @return [Meteor::Element] element(要素)
     # @overload element(elm)
@@ -338,41 +338,41 @@ module Meteor
     # get elements (要素を取得する)
     # @overload elements(tag)
     #  get elements using tag name (要素のタグ名で要素を取得する)
-    #  @param [String] tag tag name (タグ名)
+    #  @param [String,Symbol] tag tag name (タグ名)
     #  @return [Array<Meteor::Element>] element array(要素配列)
     # @overload elements(tag,attrs)
     #  get elements using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [String] tag tag name (タグ名)
-    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+    #  @param [String,Symbol] tag tag name (タグ名)
+    #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(attrs)
     #  get elements using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+    #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(tag,attr_name,attr_value)
     #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
-    #  @param [String] tag  tag name (タグ名)
-    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String,Symbol] tag  tag name (タグ名)
+    #  @param [String,symbol] attr_name attribute name (属性名)
     #  @param [String] attr_value attribute value (属性値)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(attr_name,attr_value)
     #  get elements using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
-    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String,Symbol] attr_name attribute name (属性名)
     #  @param [String] attr_value attribute value (属性値)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(tag,attr_name1,attr_value1,attr_name2,attr_value2)
     #  get elements using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [String] tag tag name (タグ名)
-    #  @param [String] attr_name1 attribute name1 (属性名1)
+    #  @param [String,Symbol] tag tag name (タグ名)
+    #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
     #  @param [String] attr_value1 attribute value1 (属性値1)
-    #  @param [String] attr_name2 attribute name2 (属性名2)
+    #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
     #  @param [String] attr_value2 attribute value2 (属性値2)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(attr_name1,attr_value1,attr_name2,attr_value2)
     #  get elements using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
-    #  @param [String] attr_name1 attribute name1 (属性名1)
+    #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
     #  @param [String] attr_value1 attribute value1 (属性値1)
-    #  @param [String] attr_name2 attribute name2 (属性名2)
+    #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
     #  @param [String] attr_value2 attribute value2 (属性値2)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     #
@@ -396,7 +396,7 @@ module Meteor
     # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
     # @overload cxtag(tag,id)
     #  get cx(comment extension) tag using tag name and id attribute (タグ名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
-    #  @param [String] tag tag name (タグ名)
+    #  @param [String,Symbol] tag tag name (タグ名)
     #  @param [String] id id attribute value (ID属性値)
     #  @return [Meteor::Element] element(要素)
     # @overload cxtag(id)
@@ -411,17 +411,17 @@ module Meteor
     #
     # @overload attr(attr)
     #  set attribute of element (要素の属性をセットする)
-    #  @param [Hash<String,String>] attr attribute (属性)
+    #  @param [Hash<String,String>,Hash<Symbol,String>] attr attribute (属性)
     #  @return [Meteor::Element] element (要素)
     #  @deprecated
     # @overload attr(attr_name,attr_value)
     #  set attribute of element (要素の属性をセットする)
-    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String,Symbol] attr_name attribute name (属性名)
     #  @param [String,true,false] attr_value attribute value (属性値)
     #  @return [Meteor::Element] element (要素)
     # @overload attr(attr_name)
     #  get attribute value of element (要素の属性値を取得する)
-    #  @param [String] attr_name attribute name (属性名)
+    #  @param [String,Symbol] attr_name attribute name (属性名)
     #  @return [String] attribute value (属性値)
     #
     def attr(attrs,*args)
@@ -430,7 +430,7 @@ module Meteor
 
     #
     # set attribute of element (要素の属性をセットする)
-    # @param [Hash] attr attribute (属性)
+    # @param [Hash<String,String>,Hash<Symbol,String>] attr attribute (属性)
     # @return [Meteor::Element] element (要素)
     #
     def attr=(attr)
@@ -439,7 +439,7 @@ module Meteor
 
     #
     # set attribute map (要素マップをセットする)
-    # @param [Hash<String,String>] attrs attribute map (属性マップ)
+    # @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
     # @return [Meteor::Element] element (要素)
     def attrs=(attrs)
       @parser.attrs(self,attrs)
@@ -447,7 +447,7 @@ module Meteor
 
     #
     # get attribute map (属性マップを取得する)
-    # @return [Hash<String,String>] attribute map (属性マップ)
+    # @return [Hash<String,String>,Hash<Symbol,String>] attribute map (属性マップ)
     #
     def attrs
       @parser.attrs(self)
@@ -507,7 +507,7 @@ module Meteor
 
     #
     # set attribute (属性をセットする)
-    # @param [String] name attribute name (属性の名前)
+    # @param [String,Symbol] name attribute name (属性の名前)
     # @param [String] value attribute value (属性の値)
     # @return [Meteor::Element] element (要素)
     #
@@ -517,7 +517,7 @@ module Meteor
 
     #
     # get attribute value (属性の値を取得する)
-    # @param [String] name attribute name (属性の名前)
+    # @param [String,Symbol] name attribute name (属性の名前)
     # @return [String] attribute value (属性の値)
     #
     def [](name)
@@ -526,7 +526,7 @@ module Meteor
 
     #
     # remove attribute of element (要素の属性を消す)
-    # @param [String] attr_name attribute name (属性名)
+    # @param [String,Symbol] attr_name attribute name (属性名)
     # @return [Meteor::Element] element (要素)
     #
     def remove_attr(attr_name)
@@ -632,7 +632,7 @@ module Meteor
 
     #
     # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
-    # @param [String] name attribute name (属性名)
+    # @param [String,Symbol] name attribute name (属性名)
     # @param [String] value attribute value (属性値)
     #
     def store(name, value)
@@ -666,7 +666,7 @@ module Meteor
 
     #
     # get attribute value using attribute name (属性名で属性値を取得する)
-    # @param [String] name attribute name (属性名)
+    # @param [String,Symbol] name attribute name (属性名)
     # @return [String] attribute value (属性値)
     #
     def fetch(name)
@@ -712,7 +712,7 @@ module Meteor
     #
     # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)
     #
-    # @param [String] name attribute name (属性名)
+    # @param [String,Symbol] name attribute name (属性名)
     # @param [String] value attribute value (属性値)
     #
     def []=(name, value)
@@ -722,7 +722,7 @@ module Meteor
     #
     # get attribute value using attribute name (属性名で属性値を取得する)
     #
-    # @param [String] name attribute name (属性名)
+    # @param [String,Symbol] name attribute name (属性名)
     # @return [String] attribute value (属性値)
     #
     def [](name)
@@ -734,7 +734,7 @@ module Meteor
   # Attribute class (属性クラス)
   #
   # @!attribute [rw] name
-  #  @return [String] attribute name (名前)
+  #  @return [String,symbol] attribute name (名前)
   # @!attribute [rw] value
   #  @return [String] attribute value (値)
   # @!attribute [rw] changed
@@ -1112,7 +1112,7 @@ module Meteor
     #
     #@overload parser(key)
     # get parser (パーサを取得する)
-    # @param [String] key identifier (キー)
+    # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload parser(type,relative_path,enc)
     # generate parser (パーサを作成する)
@@ -1143,7 +1143,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def parser_1(key)
-      @pif = @cache[key]
+      @pif = @cache[key.to_s]
       case @pif.doc_type
         when Meteor::Parser::HTML
           Meteor::Ml::Html::ParserImpl.new(@pif)
@@ -1162,7 +1162,7 @@ module Meteor
 
     #
     # get root element (ルート要素を取得する)
-    # @param [String] key identifier (キー)
+    # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::RootElement] root element (ルート要素)
     #
     def element(key)
@@ -1253,7 +1253,7 @@ module Meteor
 
     #
     # set parser (パーサをセットする)
-    # @param [String] key identifier (キー)
+    # @param [String,Symbol] key identifier (キー)
     # @param [Meteor::Parser] ps parser (パーサ)
     #
     def []=(key, ps)
@@ -1262,7 +1262,7 @@ module Meteor
 
     #
     # get parser (パーサを取得する)
-    # @param [String] key identifier (キー)
+    # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::Parser] parser (パーサ)
     #
     def [](key)
@@ -1325,7 +1325,7 @@ module Meteor
 
     #
     # get root element (ルート要素を取得する)
-    # @param [String] key identifier (キー)
+    # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::RootElement] root element (ルート要素)
     #
     def self.element(key)
@@ -1349,24 +1349,24 @@ module Meteor
       #
       # initializer (イニシャライザ)
       # @overload initialize(tag)
-      #  @param [String] tag tag name (タグ名)
+      #  @param [String,Symbol] tag tag name (タグ名)
       # @overload initialize(attr_name,attr_value)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @param [String] attr_value attribute value (属性値)
       # @overload initialize(tag,attr_name,attr_value)
-      #  @param [String] tag tag name (タグ名)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] tag tag name (タグ名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @param [String] attr_value attribute value (属性値)
       # @overload initialize(attr_name1,attr_value1,attr_name2,attr_value2)
-      #  @param [String] attr_name1 attribute name1 (属性名１)
+      #  @param [String,Symbol] attr_name1 attribute name1 (属性名１)
       #  @param [String] attr_value1 attribute value1 (属性値１)
-      #  @param [String] attr_name2 attribute name2 (属性名２)
+      #  @param [String,Symbol] attr_name2 attribute name2 (属性名２)
       #  @param [String] attr_value2 attribute value2 (属性値２)
       # @overload initialize(tag,attr_name1,attr_value1,attr_name2,attr_value2)
-      #  @param [String] tag tag name (タグ名)
-      #  @param [String] attr_name1 attribute name1 (属性名１)
+      #  @param [String,Symbol] tag tag name (タグ名)
+      #  @param [String,Symbol] attr_name1 attribute name1 (属性名１)
       #  @param [String] attr_value1 attribute value1 (属性値１)
-      #  @param [String] attr_name2 attribute name2 (属性名２)
+      #  @param [String,Symbol] attr_name2 attribute name2 (属性名２)
       #  @param [String] attr_value2 attribute value2 (属性値２)
       #
       def initialize(*args)
@@ -1779,41 +1779,41 @@ module Meteor
       # get element (要素を取得する)
       # @overload element(tag)
       #  get element using tag name (要素のタグ名で要素を取得する)
-      #  @param [String] tag tag name (タグ名)
+      #  @param [String,Symbol] tag tag name (タグ名)
       #  @return [Meteor::Element] element(要素)
       # @overload element(tag,attrs)
       #  get element using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] tag  tag name (タグ名)
-      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+      #  @param [String,Symbol] tag  tag name (タグ名)
+      #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
       #  @return [Meteor::Element] element (要素)
       # @overload element(attrs)
       #  get element using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
       #  @return [Meteor::Element] element (要素)
       # @overload element(tag,attr_name,attr_value)
       #  get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
-      #  @param [String] tag  tag name (タグ名)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] tag  tag name (タグ名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @param [String] attr_value attribute value (属性値)
       #  @return [Meteor::Element] element (要素)
       # @overload element(attr_name,attr_value)
       #  get element using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @param [String] attr_value attribute value (属性値)
       #  @return [Meteor::Element] element (要素)
       # @overload element(tag,attr_name1,attr_value1,attr_name2,attr_value2)
       #  get element using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] tag tag name (タグ名)
-      #  @param [String] attr_name1 attribute name1 (属性名1)
+      #  @param [String,Symbol] tag tag name (タグ名)
+      #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
       #  @param [String] attr_value1 attribute value1 (属性値1)
-      #  @param [String] attr_name2 attribute name2 (属性名2)
+      #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
       #  @param [String] attr_value2 attribute value2 (属性値2)
       #  @return [Meteor::Element] element (要素)
       # @overload element(attr_name1,attr_value1,attr_name2,attr_value2)
       #  get element using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] attr_name1 attribute name1 (属性名1)
+      #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
       #  @param [String] attr_value1 attribute value1 (属性値1)
-      #  @param [String] attr_name2 attribute name2 (属性名2)
+      #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
       #  @param [String] attr_value2 attribute value2 (属性値2)
       #  @return [Meteor::Element] element (要素)
       # @overload element(elm)
@@ -1823,8 +1823,8 @@ module Meteor
       #
       def element(elm, attrs = nil,*args)
         if !attrs
-          if elm.kind_of?(String)
-            element_1(elm)
+          if elm.kind_of?(String) || elm.kind_of?(Symbol)
+            element_1(elm.to_s)
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end
@@ -1832,12 +1832,12 @@ module Meteor
             shadow(elm)
           elsif elm.kind_of?(Hash)
             if elm.size == ONE
-              element_2(elm.keys[0], elm.values[0])
+              element_2(elm.keys[0].to_s, elm.values[0])
               if @elm_
                 @element_cache.store(@elm_.object_id, @elm_)
               end
             elsif elm.size == TWO
-              element_4(elm.keys[0], elm.values[0], elm.keys[1], elm.values[1])
+              element_4(elm.keys[0].to_s, elm.values[0], elm.keys[1].to_s, elm.values[1])
               if @elm_
                 @element_cache.store(@elm_.object_id, @elm_)
               end
@@ -1849,12 +1849,12 @@ module Meteor
           end
         elsif attrs.kind_of?(Hash)
           if attrs.size == ONE
-            element_3(elm, attrs.keys[0], attrs.values[0])
+            element_3(elm.to_s, attrs.keys[0].to_s, attrs.values[0])
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end
           elsif attrs.size == TWO
-            element_5(elm, attrs.keys[0], attrs.values[0], attrs.keys[1], attrs.values[1])
+            element_5(elm.to_s, attrs.keys[0].to_s, attrs.values[0], attrs.keys[1].to_s, attrs.values[1])
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end
@@ -1862,25 +1862,25 @@ module Meteor
             @elm_ = nil
             raise ArgumentError
           end
-        elsif attrs.kind_of?(String)
+        elsif attrs.kind_of?(String) || attrs.kind_of?(Symbol)
           case args.length
             when ZERO
-              element_2(elm,attrs)
+              element_2(elm.to_s,attrs.to_s)
               if @elm_
                 @element_cache.store(@elm_.object_id, @elm_)
               end
             when ONE
-              element_3(elm, attrs, args[0])
+              element_3(elm.to_s, attrs.to_s, args[0])
               if @elm_
                 @element_cache.store(@elm_.object_id, @elm_)
               end
             when TWO
-              element_4(elm, attrs, args[0],args[1])
+              element_4(elm.to_s, attrs.to_s, args[0].to_s,args[1])
               if @elm_
                 @element_cache.store(@elm_.object_id, @elm_)
               end
             when THREE
-              element_5(elm, attrs, args[0],args[1],args[2])
+              element_5(elm.to_s, attrs.to_s, args[0],args[1].to_s,args[2])
               if @elm_
                 @element_cache.store(@elm_.object_id, @elm_)
               end
@@ -1896,7 +1896,7 @@ module Meteor
 
       #
       # get element using tag name (タグ名で検索し、要素を取得する)
-      # @param [String] tag tag name (タグ名)
+      # @param [String,Symbol] tag tag name (タグ名)
       # @return [Meteor::Element] element(要素)
       #
       def element_1(tag)
@@ -2914,41 +2914,41 @@ module Meteor
       # get elements (要素を取得する)
       # @overload elements(tag)
       #  get elements using tag name (要素のタグ名で要素を取得する)
-      #  @param [String] tag tag name (タグ名)
+      #  @param [String,Symbol] tag tag name (タグ名)
       #  @return [Array<Meteor::Element>] element array(要素配列)
       # @overload elements(tag,attrs)
       #  get elements using tag name and attribute map (要素のタグ名と属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] tag tag name (タグ名)
-      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+      #  @param [String,Symbol] tag tag name (タグ名)
+      #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(attrs)
       #  get elements using attribute map (属性(属性名="属性値")あるいは属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(tag,attr_name,attr_value)
       #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
-      #  @param [String] tag  tag name (タグ名)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] tag  tag name (タグ名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @param [String] attr_value attribute value (属性値)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(attr_name,attr_value)
       #  get elements using attribute(name="value") (属性(属性名="属性値")で要素を取得する)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @param [String] attr_value attribute value (属性値)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(tag,attr_name1,attr_value1,attr_name2,attr_value2)
       #  get elements using tag name and attribute1,2(name="value") (要素のタグ名と属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] tag tag name (タグ名)
-      #  @param [String] attr_name1 attribute name1 (属性名1)
+      #  @param [String,Symbol] tag tag name (タグ名)
+      #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
       #  @param [String] attr_value1 attribute value1 (属性値1)
-      #  @param [String] attr_name2 attribute name2 (属性名2)
+      #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
       #  @param [String] attr_value2 attribute value2 (属性値2)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       # @overload elements(attr_name1,attr_value1,attr_name2,attr_value2)
       #  get elements using attribute1,2(name="value") (属性１・属性２(属性名="属性値")で要素を取得する)
-      #  @param [String] attr_name1 attribute name1 (属性名1)
+      #  @param [String,Symbol] attr_name1 attribute name1 (属性名1)
       #  @param [String] attr_value1 attribute value1 (属性値1)
-      #  @param [String] attr_name2 attribute name2 (属性名2)
+      #  @param [String,Symbol] attr_name2 attribute name2 (属性名2)
       #  @param [String] attr_value2 attribute value2 (属性値2)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       #
@@ -3143,18 +3143,18 @@ module Meteor
       # @overload attr(elm,attr)
       #  set attribute of element (要素の属性をセットする)
       #  @param [Meteor::Element] elm element (要素)
-      #  @param [Hash<String,String>] attr attribute (属性)
+      #  @param [Hash<String,String>,Hash<Symbol,String>] attr attribute (属性)
       #  @return [Meteor::Element] element (要素)
       # @overload attr(elm,attr_name,attr_value)
       #  set attribute of element (要素の属性をセットする)
       #  @param [Meteor::Element] elm element (要素)
-      #  @param [String] attr_name  attribute name (属性名)
+      #  @param [String,Symbol] attr_name  attribute name (属性名)
       #  @param [String,true,false] attr_value attribute value (属性値)
       #  @return [Meteor::Element] element (要素)
       # @overload attr(elm,attr_name)
       #  get attribute value of element (要素の属性値を取得する)
       #  @param [Meteor::Element] elm element (要素)
-      #  @param [String] attr_name attribute name (属性名)
+      #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @return [String] attribute value (属性値)
       #
       def attr(elm, attr,*args)
@@ -3263,7 +3263,7 @@ module Meteor
       #
       # @overload attrs(elm,attrs)
       #  @param [Meteor::element] elm element (要素)
-      #  @param [Hash<String,String>] attrs attribute map (属性マップ)
+      #  @param [Hash<String,String>,Hash<Symbol,String>] attrs attribute map (属性マップ)
       # @overload attrs(elm)
       #  @param [Meteor::element] elm element (要素)
       #  @return [Hash<String,String>] attribute map (要素マップ)
@@ -3524,7 +3524,7 @@ module Meteor
       # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
       # @overload cxtag(tag,id)
       #  get cx(comment extension) tag using tag name and id attribute (要素のタグ名とID属性(id="ID属性値")でCX(コメント拡張)タグを取得する)
-      #  @param [String] tag tag name (タグ名)
+      #  @param [String,Symbol] tag tag name (タグ名)
       #  @param [String] id id attribute value (ID属性値)
       #  @return [Meteor::Element] element (要素)
       # @overload cxtag(id)

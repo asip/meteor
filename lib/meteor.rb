@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.8.2
+# @version 0.9.8.3
 #
 
 module Meteor
 
-  VERSION = '0.9.8.2'.freeze
+  VERSION = '0.9.8.3'.freeze
 
   #require 'fileutils'
 
@@ -293,8 +293,8 @@ module Meteor
     #  @return [Meteor::Element] element(要素)
     # @overload element(tag,attr_name,attr_value)
     #  get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
-    #  @param [String,symbol] tag  tag name (タグ名)
-    #  @param [String,symbol] attr_name attribute name (属性名)
+    #  @param [String,Symbol] tag  tag name (タグ名)
+    #  @param [String,Symbol] attr_name attribute name (属性名)
     #  @param [String] attr_value attribute value (属性値)
     #  @return [Meteor::Element] element (要素)
     # @overload element(attr_name,attr_value)
@@ -352,7 +352,7 @@ module Meteor
     # @overload elements(tag,attr_name,attr_value)
     #  get elements using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で要素を取得する)
     #  @param [String,Symbol] tag  tag name (タグ名)
-    #  @param [String,symbol] attr_name attribute name (属性名)
+    #  @param [String,Symbol] attr_name attribute name (属性名)
     #  @param [String] attr_value attribute value (属性値)
     #  @return [Array<Meteor::Element>] element array (要素配列)
     # @overload elements(attr_name,attr_value)
@@ -734,7 +734,7 @@ module Meteor
   # Attribute class (属性クラス)
   #
   # @!attribute [rw] name
-  #  @return [String,symbol] attribute name (名前)
+  #  @return [String,Symbol] attribute name (名前)
   # @!attribute [rw] value
   #  @return [String] attribute value (値)
   # @!attribute [rw] changed

@@ -108,6 +108,16 @@ end_time = Time.new.to_f
 
 puts root.document
 
+#elms = root.elements("potato2")
+##elms = root.elements("kobe")
+#elms = root.elements("potato")
+elms = root.elements("test")
+elms.each{|elm|
+  puts elm.document
+  puts elm.attributes
+  puts elm.mixed_content
+}
+
 puts '' + (end_time - start_time).to_s + ' sec'
 
 #start_time = Time.new.to_f

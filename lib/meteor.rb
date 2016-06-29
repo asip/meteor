@@ -23,7 +23,7 @@
 
 module Meteor
 
-  VERSION = '0.9.8.3'.freeze
+  VERSION = '0.9.8.4'.freeze
 
   #require 'fileutils'
 
@@ -1927,18 +1927,27 @@ module Meteor
       def element_with_1(tag)
 
         @elm_ = Meteor::Element.new(tag)
-        #属性
-        @elm_.attributes = @res[2]
-        #内容
-        @elm_.mixed_content = @res[3]
-        #全体
-        @elm_.document = @res[0]
 
+        unless @on_search
+          #属性
+          @elm_.attributes = @res[2]
+          #内容
+          @elm_.mixed_content = @res[3]
+          #全体
+          @elm_.document = @res[0]
+        else
+          #属性
+          @elm_.attributes = @res[1]
+          #内容
+          @elm_.mixed_content = @res[2]
+          #全体
+          @elm_.document = @res[0]
+        end
+        #内容あり要素検索用パターン
         #@pattern_cc = '' << TAG_OPEN << @_tag << TAG_SEARCH_NC_1_1 << @_tag
         #@pattern_cc << TAG_SEARCH_NC_1_2 << @_tag << TAG_CLOSE
-        @pattern_cc = "<#{@_tag}(?:|\\s[^<>]*)>((?!(#{@_tag}[^<>]*>)).)*<\\/#{@_tag}>"
+        @pattern_cc = "<#{@_tag}(|\\s[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
 
-        #内容あり要素検索用パターン
         @elm_.pattern = @pattern_cc
 
         @elm_.empty = true
@@ -1958,8 +1967,8 @@ module Meteor
         #全体
         @elm_.document = @res[0]
         #空要素検索用パターン
-        @pattern_cc = '' << TAG_OPEN << @_tag << TAG_SEARCH_NC_1_3
-        #@pattern_cc = "<#{@_tag}(?:|\\s[^<>]*)\\/>"
+        @pattern_cc = '' << TAG_OPEN << @_tag << TAG_SEARCH_1_3
+        #@pattern_cc = "<#{@_tag}(|\\s[^<>]*)\\/>"
         @elm_.pattern = @pattern_cc
 
         @elm_.empty = false
@@ -2046,6 +2055,7 @@ module Meteor
       private :element_quote_3
 
       def element_with_3_1(tag)
+        #puts  @res.captures.length
         case @res.captures.length
         when FOUR
           #要素
@@ -2060,7 +2070,7 @@ module Meteor
           #@pattern_cc = ''<< TAG_OPEN << @_tag << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ
           #@pattern_cc << @_attr_value << TAG_SEARCH_NC_2_2 << @_tag
           #@pattern_cc << TAG_SEARCH_NC_1_2 << @_tag << TAG_CLOSE
-          @pattern_cc = "<#{@_tag}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_tag}[^<>]*>)).)*<\\/#{@_tag}>"
+          @pattern_cc = "<#{@_tag}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
 
           @elm_.pattern = @pattern_cc
 
@@ -2081,7 +2091,7 @@ module Meteor
           #@pattern_cc = ''<< TAG_OPEN << @_tag << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ
           #@pattern_cc << @_attr_value << TAG_SEARCH_NC_2_2 << @_tag
           #@pattern_cc << TAG_SEARCH_NC_1_2 << @_tag << TAG_CLOSE
-          @pattern_cc = "<#{@_tag}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_tag}[^<>]*>)).)*<\\/#{@_tag}>"
+          @pattern_cc = "<#{@_tag}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>((?!(#{@_tag}[^<>]*>)).)*<\\/#{@_tag}>"
 
           @elm_.pattern = @pattern_cc
 
@@ -2092,10 +2102,17 @@ module Meteor
         when THREE,SIX
           #内容
           @elm_ = Meteor::Element.new(tag)
+          unless @on_search
           #属性
           @elm_.attributes = @res[1].chop
           #内容
           @elm_.mixed_content = @res[3]
+          else
+            #属性
+                      @elm_.attributes = @res[1].chop
+                      #内容
+                      @elm_.mixed_content = @res[2]
+          end
           #全体
           @elm_.document = @res[0]
           #内容あり要素検索用パターン
@@ -2171,7 +2188,7 @@ module Meteor
       private :element_pattern_with_3_2
 
       def element_without_3(tag)
-        element_without_3_1(tag, TAG_SEARCH_NC_2_3_2)
+        element_without_3_1(tag, TAG_SEARCH_2_3_2)
       end
 
       private :element_without_3
@@ -2185,7 +2202,7 @@ module Meteor
         #全体
         @elm_.document = @res[0]
         #空要素検索用パターン
-        @pattern_cc = '' << TAG_OPEN << @_tag << TAG_SEARCH_NC_2_1 << @_attr_name << ATTR_EQ << @_attr_value << closer
+        @pattern_cc = '' << TAG_OPEN << @_tag << TAG_SEARCH_2_1 << @_attr_name << ATTR_EQ << @_attr_value << closer
         #@pattern_cc = "<#{@_tag}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}#{closer}"
         @elm_.pattern = @pattern_cc
 
@@ -2529,7 +2546,7 @@ module Meteor
           #@pattern_cc << @_attr_value2 << TAG_SEARCH_NC_2_6 << @_attr_name1 << ATTR_EQ
           #@pattern_cc << @_attr_value1 << TAG_SEARCH_NC_2_2_2 << @_tag
           #@pattern_cc << TAG_SEARCH_NC_1_2 << @_tag << TAG_CLOSE
-          @pattern_cc = "<#{@_tag}\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*>((?!(#{@_tag}[^<>]*>)).)*<\\/#{@_tag}>"
+          @pattern_cc = "<#{@_tag}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
 
           @elm_.pattern = @pattern_cc
           #
@@ -2552,7 +2569,7 @@ module Meteor
           #@pattern_cc << @_attr_value2 << TAG_SEARCH_NC_2_6 << @_attr_name1 << ATTR_EQ
           #@pattern_cc << @_attr_value1 << TAG_SEARCH_NC_2_2_2 << @_tag
           #@pattern_cc << TAG_SEARCH_NC_1_2 << @_tag << TAG_CLOSE
-          @pattern_cc = "<#{@_tag}\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*>((?!(#{@_tag}[^<>]*>)).)*<\\/#{@_tag}>"
+          @pattern_cc = "<#{@_tag}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_tag}[^<>]*>)).)*)<\\/#{@_tag}>"
 
           @elm_.pattern = @pattern_cc
           #
@@ -2651,7 +2668,7 @@ module Meteor
       private :element_pattern_with_5_2
 
       def element_without_5(tag)
-        element_without_5_1(tag, TAG_SEARCH_NC_2_3_2_2)
+        element_without_5_1(tag, TAG_SEARCH_2_3_2_2)
       end
 
       private :element_without_5
@@ -2670,7 +2687,7 @@ module Meteor
         #@pattern_cc << @_attr_value2 << TAG_SEARCH_NC_2_7 << @_attr_name2 << ATTR_EQ
         #@pattern_cc << @_attr_value2 << TAG_SEARCH_NC_2_6 << @_attr_name1 << ATTR_EQ
         #@pattern_cc << @_attr_value1 << closer
-        @pattern_cc = "<#{@_tag}\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}#{closer}"
+        @pattern_cc = "<#{@_tag}(\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}#{closer}"
 
         @elm_.pattern = @pattern_cc
 
@@ -2999,6 +3016,8 @@ module Meteor
       def elements_(*args)
         elm_arr = Array.new
 
+        @on_search = true
+
         case args.size
           when ONE
             @elm_ = element_1(*args)
@@ -3016,15 +3035,18 @@ module Meteor
           return elm_arr
         end
 
-        @patten_cc = @elm_.pattern
+        @pattern_cc = @elm_.pattern
 
-        @patten = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+        #puts @pattern_cc
+
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 
         @position = 0
 
         while (@res = @pattern.match(@root.document,@position))
-
-          if @res
+          @position = @res.end(0)
+          #puts @res[0]
+          #if @res
             case args.size
               when ONE
                 if @elm_.empty
@@ -3050,11 +3072,9 @@ module Meteor
             elm_arr << @elm_
 
             @element_cache.store(@elm_.object_id, @elm_)
-
-            @position = @res.end(0)
-          else
-            break
-          end
+          #else
+          #  break
+          #end
         end
 
         elm_arr
@@ -4301,7 +4321,7 @@ module Meteor
         private :element_3
 
         def element_without_3(tag)
-          element_without_3_1(tag, TAG_SEARCH_NC_2_4_3)
+          element_without_3_1(tag, TAG_SEARCH_2_4_3)
         end
 
         private :element_without_3
@@ -4400,7 +4420,7 @@ module Meteor
         private :element_5
 
         def element_without_5(tag)
-          element_without_5_1(tag, TAG_SEARCH_NC_2_4_3_2)
+          element_without_5_1(tag, TAG_SEARCH_2_4_3_2)
         end
 
         private :element_without_5

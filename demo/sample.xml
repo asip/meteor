@@ -29,7 +29,7 @@
 <mink>komaneti</mink>
 
 <potato id="aa" lc="/cc">
-    <potato id="/bb"><test></test></potato>
+    <potato id="/bb"></potato>
 </potato>
 
 <potato id="aa" id2="bb" lc="/cc">

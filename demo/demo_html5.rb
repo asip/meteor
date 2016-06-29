@@ -99,4 +99,12 @@ end_time = Time.new.to_f
 
 puts root.document
 
+elms = root.elements("tr",'id'=>'loop')
+#elms = root.elements("input",'id'=>'radio1',type: 'radio')
+elms.each{|elm|
+  puts elm.document
+  puts elm.attributes
+  puts elm.mixed_content
+}
+
 puts '' + (end_time - start_time).to_s + ' sec'

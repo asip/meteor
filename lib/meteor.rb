@@ -3711,11 +3711,15 @@ module Meteor
               #@root.hookDocument << @root.element.mixed_content << SET_CX_3
               #@root.hookDocument << @root.element.tag << SET_CX_4
               self.document_hook << "<!-- @#{self.element_hook.tag} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.tag} -->"
+
+              #self.document_hook << @root.kaigyo_code << "<!-- @#{self.element_hook.tag} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.tag} -->"
             else
               #@root.hookDocument << TAG_OPEN << @root.element.tag
               #@root.hookDocument << @root.element.attributes << TAG_CLOSE << @root.element.mixed_content
               #@root.hookDocument << TAG_OPEN3 << @root.element.tag << TAG_CLOSE
               self.document_hook << "<#{self.element_hook.tag}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.tag}>"
+
+              #self.document_hook << @root.kaigyo_code << "<#{self.element_hook.tag}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.tag}>"
             end
             self.element_hook = Element.new!(self.element_hook.origin, self)
           else
@@ -3728,11 +3732,15 @@ module Meteor
               #@root.hookDocument << @root.document << SET_CX_3
               #@root.hookDocument << @root.element.tag << SET_CX_4
               self.document_hook << "<!-- @#{self.element_hook.tag} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.tag} -->"
+
+              #self.document_hook << @root.kaigyo_code << "<!-- @#{self.element_hook.tag} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.tag} -->"
             else
               #@root.hookDocument << TAG_OPEN << @root.element.tag
               #@root.hookDocument << @_attributes << TAG_CLOSE << @root.document
               #@root.hookDocument << TAG_OPEN3 << @root.element.tag << TAG_CLOSE
               self.document_hook << "<#{self.element_hook.tag}#{@_attributes}>#{@root.document}</#{self.element_hook.tag}>"
+
+              #self.document_hook << @root.kaigyo_code << "<#{self.element_hook.tag}#{@_attributes}>#{@root.document}</#{self.element_hook.tag}>"
             end
             self.element_hook = Element.new!(self.element_hook.origin, self)
           end
@@ -3776,6 +3784,7 @@ module Meteor
           else
             pif2.root_element.document = String.new(elm.document)
           end
+          pif2.root_element.kaigyo_code = elm.parser.root_element.kaigyo_code
 
           @elm_
         end
@@ -4200,6 +4209,7 @@ module Meteor
           for a in KAIGYO_CODE
             if @root.document.include?(a)
               @root.kaigyo_code = a
+              #puts "kaigyo:" << @root.kaigyo_code
             end
           end
 
@@ -5393,6 +5403,9 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
 
+        #KAIGYO_CODE = "\r?\n|\r".freeze
+        KAIGYO_CODE = ["\r\n".freeze, "\n".freeze, "\r".freeze]
+
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'.freeze
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
@@ -5447,13 +5460,50 @@ module Meteor
 
         private :initialize_1
 
+
+        #
+        # parse document (ドキュメントを解析する)
+        #
+        def parse
+          analyze_ml
+        end
+
+        #
+        # analyze document (ドキュメントをパースする)
+        #
+        def analyze_ml
+          #改行コードの取得
+          analyze_kaigyo_code
+
+          @res = nil
+        end
+
+        private :analyze_ml
+
+        #
         # get content type (コンテントタイプを取得する)
-        # @return [Streing] content type (コンテントタイプ)
+        # @return [String] conent type (コンテントタイプ)
         #
         def content_type
           @root.content_type
         end
 
+        #
+        # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
+        #
+        def analyze_kaigyo_code
+          #改行コード取得
+
+          for a in KAIGYO_CODE
+            if @root.document.include?(a)
+              @root.kaigyo_code = a
+              #puts "kaigyo:" << @root.kaigyo_code
+            end
+          end
+
+        end
+
+        private :analyze_kaigyo_code
 
         def escape(content)
           #特殊文字の置換

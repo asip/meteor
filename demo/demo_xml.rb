@@ -5,13 +5,13 @@ require 'rubygems'
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new
-#pf.parser(Meteor::Parser::XML,'sample.xml', 'UTF-8')
-#pf.bind(Meteor::Parser::XML,'sample.xml')
+#pf.parser(Meteor::Parser::XML,'ml/sample.xml', 'UTF-8')
+#pf.bind(Meteor::Parser::XML,'ml/sample.xml')
 
 #root = pf.element('sample')
 
-Meteor::ElementFactory.bind(Meteor::XML,'sample.xml', 'UTF-8')
-root = Meteor::ElementFactory.element('sample')
+Meteor::ElementFactory.bind(Meteor::XML,'ml/sample.xml', 'UTF-8')
+root = Meteor::ElementFactory.element('ml/sample')
 
 start_time = Time.new.to_f
 
@@ -25,39 +25,39 @@ start_time = Time.new.to_f
 #puts elm_.attributes
 #puts elm_.mixed_content
 
-elm1 = root.element('test','manbo'=>'manbo')
-#elm1 = root.element("manbo"=>"manbo")
-#elm2 = root.element("id"=>"aa","id2"=>"bb")
+elm1 = root.element('test', manbo: 'manbo')
+#elm1 = root.element(manbo: "manbo")
+#elm2 = root.element(id: "aa", id2: "bb")
 #elm2 = root.element("id"=>"aa")
-#elm3 = root.element("potato","id"=>"aa")
-#elm4 = root.element("potato","id"=>"aa","id2"=>"bb")
-#elm4 = root.element("potato","id2"=>"bb")
+#elm3 = root.element("potato", id: "aa")
+#elm4 = root.element("potato", id: "aa", id2: "bb")
+#elm4 = root.element("potato", id2: "bb")
 elm7 = root.element("kobe")
-#elm7 = root.element("momo"=>"mono")
-#elm8 = root.element("manbo"=>"mango")
-#elm8 = root.element("momo"=>"momo")
+#elm7 = root.element(momo: "mono")
+#elm8 = root.element(manbo: "mango")
+#elm8 = root.element(momo: "momo")
 
-#elm9 = root.element("hamachi","id"=>"aa",'id2'=>'bb')
+#elm9 = root.element("hamachi",id: "aa",id2: 'bb')
 #elm_c1 = root.cxtag("cs")
 
-#elm8.attr("manbo"=>"mangoo")
+#elm8.attr(manbo: "mangoo")
 
 #puts elm8.name
 #puts elm8.attributes
 #puts elm8.mixed_content
 
-#elm1.attr("id2"=>"cc")
-#elm1["id2"]="cc"
+#elm1.attr(id2: "cc")
+#elm1["id2"] = "cc"
 
-#elm8.attr("manbo"=>"mangoo")
+#elm8.attr(manbo: "mangoo")
 ##elm9.content("\\1")
 #elm9.content = "\\1"
 
-#elm2.attr('id3'=>'cc')
-#elm3.attr('id3'=>'cc')
+#elm2.attr(id3: 'cc')
+#elm3.attr(id3: 'cc')
 #elm3['id3'] = 'cc'
-#elm4.attr('id3'=>'cc')
-#elm9.attr('id3'=>'cc')
+#elm4.attr(id3: 'cc')
+#elm9.attr(id3: 'cc')
 
 #co_ps = elm1.element()
 #map = co_ps.attr_map
@@ -102,7 +102,7 @@ elm_ = root.element(elm7)
 
 root.flush
 
-#elm3.attr('id3'=>'dd')
+#elm3.attr(id3: 'dd')
 
 end_time = Time.new.to_f
 

@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.8.3
+# @version 0.9.8.4
 #
 
 module Meteor
@@ -512,7 +512,11 @@ module Meteor
     # @return [Meteor::Element] element (要素)
     #
     def []=(name, value)
-      @parser.attr(self, name, value)
+      if value != nil
+        @parser.attr(self, name, value)
+      else
+        @parser.remove_attr(self, name)
+      end
     end
 
     #
@@ -3183,13 +3187,21 @@ module Meteor
             when ZERO
               get_attr_value(elm, attr.to_s)
             when ONE
-              elm.document_sync = true
-              set_attribute_3(elm, attr.to_s,args[0])
+              if args[0] != nil
+                elm.document_sync = true
+                set_attribute_3(elm, attr.to_s,args[0])
+              else
+                remove_attr(elm, attr.to_s)
+              end
           end
 
         elsif attr.kind_of?(Hash) && attr.size == 1
-          elm.document_sync = true
-          set_attribute_3(elm, attr.keys[0].to_s, attr.values[0])
+          if attr.values[0] != nil
+            elm.document_sync = true
+            set_attribute_3(elm, attr.keys[0].to_s, attr.values[0])
+          else
+            remove_attr(elm, attr.keys[0].to_s)
+          end
         #elsif attrs.kind_of?(Hash) && attrs.size >= 1
         #  elm.document_sync = true
         #  attrs.each{|name,value|
@@ -3518,8 +3530,6 @@ module Meteor
 
         elm
       end
-
-      private :remove_attr
 
       def remove_attrs_(elm, attr_name)
         #属性検索用パターン

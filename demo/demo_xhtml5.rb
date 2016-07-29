@@ -1,7 +1,7 @@
 #!bin ruby
 # -* coding: UTF-8 -*-
 
-require 'rubygems'
+#require 'rubygems'
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new

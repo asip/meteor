@@ -496,6 +496,8 @@ module Meteor
       @parser.content(self, *args)
     end
 
+    alias :text :content
+
     #
     # set content of element (要素の内容をセットする)
     # @param [String] value content (要素の内容)
@@ -504,6 +506,8 @@ module Meteor
     def content=(value)
       @parser.content(self, value)
     end
+
+    alias :text= :content=
 
     #
     # set attribute (属性をセットする)

@@ -15,10 +15,11 @@ root = Meteor::ElementFactory.element('ml/sample')
 
 start_time = Time.new.to_f
 
-#elm_ =  root.element('test1')
+#elm_ =  root.element('kobe')
 #puts elm_.name
 #puts elm_.attributes
 #puts elm_.mixed_content
+#puts elm_.text
 
 #elm_ =  root.element('test')
 #puts elm_.name

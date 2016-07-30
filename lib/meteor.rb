@@ -1289,9 +1289,12 @@ module Meteor
     #
     # set options (オプションをセットする)
     # @param [Hash] opts option (オプション)
-    # @option opts [String] :base_dir base directory (基準ディレクトリ)
+    # @option opts [String] :root root directory (基準ディレクトリ)
+    # @option @deprecated opts [String] :base_dir root directory (基準ディレクトリ)
     # @option opts [String] :enc default character encoding (デフォルト文字エンコーディング)
-    # @option opts [FixNum] :type default type of parser (デフォルトのパーサ・タイプ)
+    # @option @deprecated opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
+    # @option opts [FixNum,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
+    # @option @deprecated opts [FixNum | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
     def self.options=(opts)
       @@pf.options = opts

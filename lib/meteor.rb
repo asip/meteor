@@ -36,7 +36,7 @@ module Meteor
   SIX = 6
   SEVEN = 7
 
-  HTML = ZERO
+  HTML4 = ZERO
   XHTML4 = ONE
   HTML5 = TWO
   XHTML5 = THREE
@@ -1002,13 +1002,13 @@ module Meteor
 
       case type
         when Parser::HTML4, :html4
-          html = Meteor::Ml::Html4::ParserImpl.new
+          html4 = Meteor::Ml::Html4::ParserImpl.new
           html.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = html
+          @cache[relative_url] = html4
         when Parser::XHTML4, :xhtml4
-          xhtml = Meteor::Ml::Xhtml4::ParserImpl.new
-          xhtml.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xhtml
+          xhtml4 = Meteor::Ml::Xhtml4::ParserImpl.new
+          xhtml4.read(File.expand_path(relative_path, @root), enc)
+          @cache[relative_url] = xhtml4
         when Parser::HTML5, :html5
           html5 = Meteor::Ml::Html5::ParserImpl.new
           html5.read(File.expand_path(relative_path, @root), enc)
@@ -4003,7 +4003,7 @@ module Meteor
     module Html4
 
       #
-      # HTML parser (HTMLパーサ)
+      # HTML4 parser (HTMLパーサ)
       #
       class ParserImpl < Meteor::Core::Kernel
 
@@ -4706,7 +4706,7 @@ module Meteor
     module Xhtml4
 
       #
-      # XHTML parser (XHTMLパーサ)
+      # XHTML4 parser (XHTML4パーサ)
       #
       class ParserImpl < Meteor::Core::Kernel
 

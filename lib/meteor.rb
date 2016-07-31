@@ -2114,15 +2114,15 @@ module Meteor
           #内容
           @elm_ = Meteor::Element.new(tag)
           unless @on_search
-          #属性
-          @elm_.attributes = @res[1].chop
-          #内容
-          @elm_.mixed_content = @res[3]
+            #属性
+            @elm_.attributes = @res[1].chop
+            #内容
+            @elm_.mixed_content = @res[3]
           else
             #属性
-                      @elm_.attributes = @res[1].chop
-                      #内容
-                      @elm_.mixed_content = @res[2]
+            @elm_.attributes = @res[1].chop
+            #内容
+            @elm_.mixed_content = @res[3]
           end
           #全体
           @elm_.document = @res[0]
@@ -3083,6 +3083,8 @@ module Meteor
             elm_arr << @elm_
 
             @element_cache.store(@elm_.object_id, @elm_)
+
+            @on_search = false
           #else
           #  break
           #end

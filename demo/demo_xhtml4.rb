@@ -9,7 +9,7 @@ require 'meteor'
 
 #root = pf.element('ml/sample_x')
 
-Meteor::ElementFactory.bind(:html,'ml/sample_x.html', 'UTF-8')
+Meteor::ElementFactory.bind(:xhtml4,'ml/sample_x.html', 'UTF-8')
 root = Meteor::ElementFactory.element('ml/sample_x')
 
 startTime = Time.new.to_f

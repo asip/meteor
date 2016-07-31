@@ -9,7 +9,7 @@ require 'meteor'
 
 #root = pf.element('ml/sample')
 
-Meteor::ElementFactory.options= {type: :html}
+Meteor::ElementFactory.options= {type: :html4}
 #Meteor::ElementFactory.bind(:html,'ml/sample.html', 'UTF-8')
 Meteor::ElementFactory.bind('ml/sample.html')
 

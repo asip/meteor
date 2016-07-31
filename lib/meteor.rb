@@ -37,7 +37,7 @@ module Meteor
   SEVEN = 7
 
   HTML = ZERO
-  XHTML = ONE
+  XHTML4 = ONE
   HTML5 = TWO
   XHTML5 = THREE
   XML = FOUR
@@ -241,7 +241,7 @@ module Meteor
       if @document_sync
         @document_sync = false
         case @parser.doc_type
-          when Parser::HTML, Parser::HTML5
+          when Parser::HTML4, Parser::HTML5
             if @cx
               #@pattern_cc = '' << SET_CX_1 << elm.tag << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.tag << SET_CX_4
               @document = "<!-- @#{@tag} #{@attributes} -->#{@mixed_content}<!-- /@#{@tag} -->"
@@ -254,7 +254,7 @@ module Meteor
                 #@document = "<#{@name}#{@attributes}>"
               end
             end
-          when Parser::XHTML, Parser::XHTML5, Parser::XML
+          when Parser::XHTML4, Parser::XHTML5, Parser::XML
             if @cx
               #@pattern_cc = '' << SET_CX_1 << elm.tag << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.tag << SET_CX_4
               @document = "<!-- @#{@tag} #{@attributes} -->#{@mixed_content}<!-- /@#{@tag} -->"
@@ -773,8 +773,8 @@ module Meteor
   # Parser Class (パーサ共通クラス)
   #
   class Parser
-    HTML = ZERO
-    XHTML = ONE
+    HTML4 = ZERO
+    XHTML4 = ONE
     HTML5 = TWO
     XHTML5 = THREE
     XML = FOUR
@@ -1001,12 +1001,12 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
-        when Parser::HTML, :html
-          html = Meteor::Ml::Html::ParserImpl.new
+        when Parser::HTML4, :html4
+          html = Meteor::Ml::Html4::ParserImpl.new
           html.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html
-        when Parser::XHTML
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new
+        when Parser::XHTML4, :xhtml4
+          xhtml = Meteor::Ml::Xhtml4::ParserImpl.new
           xhtml.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml
         when Parser::HTML5, :html5
@@ -1037,10 +1037,10 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
+        when Parser::HTML4, :html4
+          ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
+          ps = Meteor::Ml::Xhtml4::ParserImpl.new
         when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
@@ -1067,10 +1067,10 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
+        when Parser::HTML4, :html4
+          ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
+          ps = Meteor::Ml::Xhtml4::ParserImpl.new
         when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
@@ -1096,10 +1096,10 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
+        when Parser::HTML4, :html4
+          ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
+          ps = Meteor::Ml::Xhtml4::ParserImpl.new
         when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
@@ -1153,10 +1153,10 @@ module Meteor
     def parser_1(key)
       @pif = @cache[key.to_s]
       case @pif.doc_type
-        when Meteor::Parser::HTML
-          Meteor::Ml::Html::ParserImpl.new(@pif)
-        when Meteor::Parser::XHTML
-          Meteor::Ml::Xhtml::ParserImpl.new(@pif)
+        when Meteor::Parser::HTML4
+          Meteor::Ml::Html4::ParserImpl.new(@pif)
+        when Meteor::Parser::XHTML4
+          Meteor::Ml::Xhtml4::ParserImpl.new(@pif)
         when Meteor::Parser::HTML5
           Meteor::Ml::Html5::ParserImpl.new(@pif)
         when Meteor::Parser::XHTML5
@@ -1210,10 +1210,10 @@ module Meteor
     #
     def bind_str_3(type, relative_url, doc)
       case type
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
+        when Parser::HTML4, :html
+          ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
+          ps = Meteor::Ml::Xhtml4::ParserImpl.new
         when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
@@ -1237,10 +1237,10 @@ module Meteor
     #
     def bind_str_2(relative_url, doc)
       case @type
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
+        when Parser::HTML4, :html4
+          ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
+          ps = Meteor::Ml::Xhtml4::ParserImpl.new
         when Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
@@ -3874,10 +3874,10 @@ module Meteor
 
       def create(pif)
         case pif.doc_type
-          when Parser::HTML
-            Meteor::Ml::Html::ParserImpl.new
-          when Parser::XHTML
-            Meteor::Ml::Xhtml::ParserImpl.new
+          when Parser::HTML4
+            Meteor::Ml::Html4::ParserImpl.new
+          when Parser::XHTML4
+            Meteor::Ml::Xhtml4::ParserImpl.new
           when Parser::HTML5
             Meteor::Ml::Html5::ParserImpl.new
           when Parser::XHTML5
@@ -4000,7 +4000,7 @@ module Meteor
   end
 
   module Ml
-    module Html
+    module Html4
 
       #
       # HTML parser (HTMLパーサ)
@@ -4139,7 +4139,7 @@ module Meteor
         #
         def initialize(*args)
           super()
-          @doc_type = Parser::HTML
+          @doc_type = Parser::HTML4
           case args.length
             when ZERO
               #initialize_0
@@ -4703,7 +4703,7 @@ module Meteor
 
     end
 
-    module Xhtml
+    module Xhtml4
 
       #
       # XHTML parser (XHTMLパーサ)
@@ -4843,7 +4843,7 @@ module Meteor
         #
         def initialize(*args)
           super()
-          @doc_type = Parser::XHTML
+          @doc_type = Parser::XHTML4
           case args.length
             when ZERO
               #initialize_0
@@ -5142,7 +5142,7 @@ module Meteor
       #
       # HTML5 parser (HTML5パーサ)
       #
-      class ParserImpl < Meteor::Ml::Html::ParserImpl
+      class ParserImpl < Meteor::Ml::Html4::ParserImpl
 
         CHARSET = 'charset'.freeze
         UTF8 = 'utf-8'.freeze
@@ -5282,7 +5282,7 @@ module Meteor
       #
       # XHTML5 parser (XHTML5パーサ)
       #
-      class ParserImpl < Meteor::Ml::Xhtml::ParserImpl
+      class ParserImpl < Meteor::Ml::Xhtml4::ParserImpl
 
         CHARSET = 'charset'.freeze
         UTF8 = 'utf-8'.freeze

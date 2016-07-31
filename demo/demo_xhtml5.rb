@@ -19,7 +19,7 @@ elm_hello = root.element(id: 'hello')
 elm_hello['color'] = 'red'
 #elm_hello.remove_attr('color')
 #elm_hello['color'] = nil
-elm_hello.attr(color: nil)
+#elm_hello.attr(color: nil)
 
 elm_hello2 = root.element(id: 'hello2')
 #elm_hello2.content("Hello,Tester")

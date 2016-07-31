@@ -10,10 +10,10 @@ require 'meteor'
 #root = pf.element('ml/sample')
 
 Meteor::ElementFactory.options= {type: :html4}
-#Meteor::ElementFactory.bind(:html,'ml/sample.html', 'UTF-8')
-Meteor::ElementFactory.bind('ml/sample.html')
+#Meteor::ElementFactory.bind(:html,'ml/sample_4.html', 'UTF-8')
+Meteor::ElementFactory.bind('ml/sample_4.html')
 
-root = Meteor::ElementFactory.element('ml/sample')
+root = Meteor::ElementFactory.element('ml/sample_4')
 
 start_time = Time.new.to_f
 

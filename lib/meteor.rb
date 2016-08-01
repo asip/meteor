@@ -36,11 +36,12 @@ module Meteor
   SIX = 6
   SEVEN = 7
 
-  HTML4 = ZERO
-  XHTML4 = ONE
-  HTML5 = TWO
-  XHTML5 = THREE
-  XML = FOUR
+  HTML = ZERO
+  HTML5 = ONE
+  XHTML5 = TWO
+  HTML4 = THREE
+  XHTML4 = FOUR
+  XML = FIVE
 
   #
   # Element Class (要素クラス)
@@ -241,7 +242,7 @@ module Meteor
       if @document_sync
         @document_sync = false
         case @parser.doc_type
-          when Parser::HTML4, Parser::HTML5
+          when Parser::HTML, Parser::HTML5, Parser::HTML4
             if @cx
               #@pattern_cc = '' << SET_CX_1 << elm.tag << SPACE << elm.attributes << SET_CX_2 << elm.mixed_content << SET_CX_3 << elm.tag << SET_CX_4
               @document = "<!-- @#{@tag} #{@attributes} -->#{@mixed_content}<!-- /@#{@tag} -->"
@@ -773,11 +774,12 @@ module Meteor
   # Parser Class (パーサ共通クラス)
   #
   class Parser
-    HTML4 = ZERO
-    XHTML4 = ONE
-    HTML5 = TWO
-    XHTML5 = THREE
-    XML = FOUR
+    HTML = ZERO
+    HTML5 = ONE
+    XHTML5 = TWO
+    HTML4 = THREE
+    XHTML4 = FOUR
+    XML = FIVE
   end
 
   #
@@ -1009,7 +1011,7 @@ module Meteor
           xhtml4 = Meteor::Ml::Xhtml4::ParserImpl.new
           xhtml4.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = xhtml4
-        when Parser::HTML5, :html5
+        when Parser::HTML, :html, Parser::HTML5, :html5
           html5 = Meteor::Ml::Html5::ParserImpl.new
           html5.read(File.expand_path(relative_path, @root), enc)
           @cache[relative_url] = html5
@@ -1041,7 +1043,7 @@ module Meteor
           ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML5, :html5
+        when Parser::HTML, :html, Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
@@ -1071,7 +1073,7 @@ module Meteor
           ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML5, :html5
+        when Parser::HTML, :html, Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
@@ -1100,7 +1102,7 @@ module Meteor
           ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML5, :html5
+        when Parser::HTML, :html, Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
@@ -1157,7 +1159,7 @@ module Meteor
           Meteor::Ml::Html4::ParserImpl.new(@pif)
         when Meteor::Parser::XHTML4
           Meteor::Ml::Xhtml4::ParserImpl.new(@pif)
-        when Meteor::Parser::HTML5
+        when Meteor::Parser::HTML, Meteor::Parser::HTML5
           Meteor::Ml::Html5::ParserImpl.new(@pif)
         when Meteor::Parser::XHTML5
           Meteor::Ml::Xhtml5::ParserImpl.new(@pif)
@@ -1214,7 +1216,7 @@ module Meteor
           ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML5, :html5
+        when Parser::HTML, :html, Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
@@ -1241,7 +1243,7 @@ module Meteor
           ps = Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML, :xhtml
           ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML5, :html5
+        when Parser::HTML, :html, Parser::HTML5, :html5
           ps = Meteor::Ml::Html5::ParserImpl.new
         when Parser::XHTML5, :xhtml5
           ps = Meteor::Ml::Xhtml5::ParserImpl.new
@@ -3878,7 +3880,7 @@ module Meteor
             Meteor::Ml::Html4::ParserImpl.new
           when Parser::XHTML4
             Meteor::Ml::Xhtml4::ParserImpl.new
-          when Parser::HTML5
+          when Parser::HTML, Parser::HTML5
             Meteor::Ml::Html5::ParserImpl.new
           when Parser::XHTML5
             Meteor::Ml::Xhtml5::ParserImpl.new

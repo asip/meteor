@@ -60,8 +60,8 @@ elm7 = root.element("kobe")
 #elm4.attr(id3: 'cc')
 #elm9.attr(id3: 'cc')
 
-#co_ps = elm1.element()
-#map = co_ps.attr_map
+#co_elm = elm1.element()
+#map = co_elm.attr_map
 #map.names.each { |item|
 #  puts item
 #  puts map.fetch(item)
@@ -86,19 +86,19 @@ end
 elm_ = root.element(elm7)
 
 10.times { |i|
-  elm_["momo"]= i.to_s
+  elm_["momo"]= i
   elm_["eco"] = "えま"
-  elm_.content = i.to_s
+  elm_.content = i
   #elm_["content"] = i.to_s
   elm_.flush
 }
 
-#co_ps = root.element(elm_c1)
+#co_elm = root.element(elm_c1)
 #
 #10.times { |i|
-#  #co_ps.content(i.to_s)
-#  co_ps[":content"]=i.to_s
-#  co_ps.flush
+#  #co_elm.content(i)
+#  co_elm.content =i
+#  co_elm.flush
 #}
 
 root.flush

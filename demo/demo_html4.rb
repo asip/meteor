@@ -82,21 +82,26 @@ elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
 #puts elm_text1.attr('readonly')
 #puts elm_text1['readonly']
 
-#elm_select2 = ps.element('select', id: 'select2')
+#elm_select2 = root.element('select', id: 'select2')
 #elm_select2['multiple'] = 'true'
-#elm_option2 = ps.element('option',id: 'option2')
-#co_ps = elm_option2.child()
+#elm_option2 = root.element('option',id: 'option2')
+#co_elm = elm_option2.element()
 #10.times { |i|
-#  co_ps.attr(value: i.to_s)
+#  #co_elm.attr(value: i)
+#  co_elm['value'] = i
 #  #'<' +
 #  if i == 1 then
-#    co_ps.attr(selected: 'true')
+#    #co_elm.attr(selected: 'true')
+#    co_elm['selected'] = true
 #  else
-#    #co_ps.attr(selected: 'false')
+#    #co_elm.attr(selected: 'false')
+#    co_elm['selected'] = false
 #  end
-#  co_ps.content(i.to_s)
-#  co_ps.remove_attr('id')
-#  co_ps.flush
+#  #co_elm.content(i)
+#  co_elm.content = i
+#  #co_elm.remove_attr('id')
+#  co_elm['id'] = nil
+#  co_elm.flush
 #}
 
 elm_tr1 = root.element('tr',id: 'loop')
@@ -106,13 +111,13 @@ elm_dt1_ = elm_.element(id: 'aa')
 elm_dt2_ = elm_.element(id: 'bb')
 elm_dt3_ = elm_.element(id: 'cc')
 10.times do |i|
-  elm_['loop'] = i.to_s
+  elm_['loop'] = i
   elm_dt1 = elm_dt1_.clone
   elm_dt2 = elm_dt2_.clone
   elm_dt3 = elm_dt3_.clone
-  elm_dt1.content=i.to_s
-  elm_dt2.content=i.to_s
-  elm_dt3.content=i.to_s
+  elm_dt1.content=i
+  elm_dt2.content=i
+  elm_dt3.content=i
   #"< \n" +
   elm_.flush
 end

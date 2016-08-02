@@ -1,7 +1,7 @@
 # -* coding: UTF-8 -*-
 # Meteor -  A lightweight (X)HTML(5) & XML parser
 #
-# Copyright (C) 2008-2014 Yasumasa Ashida.
+# Copyright (C) 2008-2016 Yasumasa Ashida.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -3461,13 +3461,13 @@ module Meteor
           when TWO
             #if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String)
             args[0].document_sync = true
-            set_content_2(args[0], args[1])
+            set_content_2(args[0], args[1].to_s)
             #else
             #  raise ArgumentError
             #end
           when THREE
             args[0].document_sync = true
-            set_content_3(args[0], args[1], args[2])
+            set_content_3(args[0], args[1].to_s, args[2])
           else
             raise ArgumentError
         end

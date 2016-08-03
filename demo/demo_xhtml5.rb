@@ -6,7 +6,6 @@ require 'meteor'
 
 #pf = Meteor::ParserFactory.new
 #pf.link(:xhtml5,"ml/sample_x5.html", "UTF-8")
-
 #root = pf.element('ml/sample_x5')
 
 Meteor::ElementFactory.link(:xhtml5,'ml/sample_x5.html', 'UTF-8')

@@ -5,9 +5,7 @@
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new
-#pf.parser(Meteor::Parser::XML,'ml/sample.xml', 'UTF-8')
 #pf.link(Meteor::Parser::XML,'ml/sample.xml')
-
 #root = pf.element('sample')
 
 Meteor::ElementFactory.link(Meteor::XML,'ml/sample.xml', 'UTF-8')

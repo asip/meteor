@@ -82,27 +82,27 @@ elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
 #puts elm_text1.attr('readonly')
 #puts elm_text1['readonly']
 
-#elm_select2 = root.element('select', id: 'select2')
-#elm_select2['multiple'] = 'true'
-#elm_option2 = root.element('option',id: 'option2')
-#co_elm = elm_option2.element()
-#10.times { |i|
-#  #co_elm.attr(value: i)
-#  co_elm['value'] = i
-#  #'<' +
-#  if i == 1 then
-#    #co_elm.attr(selected: 'true')
-#    co_elm['selected'] = true
-#  else
-#    #co_elm.attr(selected: 'false')
-#    co_elm['selected'] = false
-#  end
-#  #co_elm.content(i)
-#  co_elm.content = i
-#  #co_elm.remove_attr('id')
-#  co_elm['id'] = nil
-#  co_elm.flush
-#}
+elm_select2 = root.element('select', id: 'select2')
+elm_select2['multiple'] = 'true'
+elm_option2 = elm_select2.element('option',id: 'option2')
+co_elm = elm_option2.element()
+10.times { |i|
+  #co_elm.attr(value: i)
+  co_elm['value'] = i
+  #'<' +
+  if i == 1 then
+    #co_elm.attr(selected: 'true')
+    co_elm['selected'] = true
+  else
+    #co_elm.attr(selected: 'false')
+    co_elm['selected'] = false
+  end
+  #co_elm.content(i)
+  co_elm.content = i
+  #co_elm.remove_attr('id')
+  co_elm['id'] = nil
+  co_elm.flush
+}
 
 elm_tr1 = root.element('tr',id: 'loop')
 #elm_tr1 = ps.find('tr[id=loop]')

@@ -56,25 +56,25 @@ elm_radio1['checked'] = true
 #puts elm_option1.attr("selected")
 #puts elm_text1.attr("readonly")
 
-#elm_select2 = root.element("select",id: "select2")
-##elm_select2["multiple"] = "true"
-#elm_option2 = root.element("option",id: "option2")
-#co_elm = elm_option2.element()
-#10.times { |i|
-#  if i == 1 then
-#    #co_elm.attr(selected: true)
-#    co_elm['selected'] = true
-#  else
-#    #co_elm.attr(selected: false)
-#    co_elm['selected'] = false
-#  end
-#  #co_elm.attr(value: i)
-#  co_elm['value'] = i
-#  co_elm.remove_attr("id")
-#  #co_elm.content(i)
-#  co_elm.content = i
-#  co_elm.flush
-#}
+elm_select2 = root.element("select",id: "select2")
+elm_select2["multiple"] = "true"
+elm_option2 = elm_select2.element("option",id: "option2")
+co_elm = elm_option2.element()
+10.times { |i|
+  if i == 1 then
+    #co_elm.attr(selected: true)
+    co_elm['selected'] = true
+  else
+    #co_elm.attr(selected: false)
+    co_elm['selected'] = false
+  end
+  #co_elm.attr(value: i)
+  co_elm['value'] = i
+  co_elm.remove_attr("id")
+  #co_elm.content(i)
+  co_elm.content = i
+  co_elm.flush
+}
 
 elm_tr1 = root.element('tr',id: 'loop')
 elm_ = elm_tr1.element

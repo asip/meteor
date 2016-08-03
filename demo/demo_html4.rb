@@ -29,7 +29,7 @@ elm_hello2 = root.element(id: 'hello2')
 #elm_hello2.content('Hello,Tester')
 elm_hello2.content = 'Hello,Tester'
 
-#elm_hello3 = ps.cxtag('hello3')
+#elm_hello3 = root.cxtag('hello3')
 #elm_hello3.content = "Hello,Hello\ntt"
 #elm_hello3.content = "Hello,Hello"
 #puts elm_hello3.pattern

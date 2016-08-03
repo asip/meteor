@@ -16,7 +16,7 @@ start_time = Time.new.to_f
 elm_hello = root.element(id: 'hello')
 #elm_hello.attr(color: 'red')
 elm_hello['color'] = 'red'
-#elm_hello.remove_attribute('color')
+#elm_hello.remove_attr('color')
 #elm_hello['color'] = nil
 
 elm_hello2 = root.element(id: 'hello2')

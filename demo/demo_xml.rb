@@ -6,11 +6,11 @@ require 'meteor'
 
 #pf = Meteor::ParserFactory.new
 #pf.parser(Meteor::Parser::XML,'ml/sample.xml', 'UTF-8')
-#pf.bind(Meteor::Parser::XML,'ml/sample.xml')
+#pf.link(Meteor::Parser::XML,'ml/sample.xml')
 
 #root = pf.element('sample')
 
-Meteor::ElementFactory.bind(Meteor::XML,'ml/sample.xml', 'UTF-8')
+Meteor::ElementFactory.link(Meteor::XML,'ml/sample.xml', 'UTF-8')
 root = Meteor::ElementFactory.element('ml/sample')
 
 start_time = Time.new.to_f

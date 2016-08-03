@@ -5,13 +5,13 @@
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new
-#pf.bind(:html,'ml/sample.html', 'UTF-8')
+#pf.link(:html,'ml/sample.html', 'UTF-8')
 
 #root = pf.element('ml/sample')
 
 Meteor::ElementFactory.options= {type: :html4}
 #Meteor::ElementFactory.bind(:html,'ml/sample_4.html', 'UTF-8')
-Meteor::ElementFactory.bind('ml/sample_4.html')
+Meteor::ElementFactory.link('ml/sample_4.html')
 
 root = Meteor::ElementFactory.element('ml/sample_4')
 

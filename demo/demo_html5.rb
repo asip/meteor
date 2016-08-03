@@ -5,11 +5,11 @@
 require 'meteor'
 
 #pf = Meteor::ParserFactory.new
-#pf.bind(:html5,'ml/sample_5.html', 'UTF-8')
+#pf.link(:html5,'ml/sample_5.html', 'UTF-8')
 
 #root = pf.element('ml/sample_5')
 
-Meteor::ElementFactory.bind(:html5,"ml/sample_5.html", 'UTF-8')
+Meteor::ElementFactory.link(:html5,"ml/sample_5.html", 'UTF-8')
 root = Meteor::ElementFactory.element('ml/sample_5')
 
 start_time = Time.new.to_f

@@ -70,7 +70,8 @@ co_elm = elm_option2.element()
   end
   #co_elm.attr(value: i)
   co_elm['value'] = i
-  co_elm.remove_attr("id")
+  #co_elm.remove_attr("id")
+  co_elm['id'] = nil
   #co_elm.content(i)
   co_elm.content = i
   co_elm.flush

@@ -4,10 +4,6 @@
 #require 'rubygems'
 require 'meteor'
 
-#pf = Meteor::ParserFactory.new
-#pf.link(Meteor::Parser::XML,'ml/sample.xml')
-#root = pf.element('sample')
-
 Meteor::ElementFactory.link(Meteor::XML,'ml/sample.xml', 'UTF-8')
 root = Meteor::ElementFactory.element('ml/sample')
 

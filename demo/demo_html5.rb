@@ -4,10 +4,6 @@
 #require 'rubygems'
 require 'meteor'
 
-#pf = Meteor::ParserFactory.new
-#pf.link(:html5,'ml/sample_5.html', 'UTF-8')
-#root = pf.element('ml/sample_5')
-
 Meteor::ElementFactory.link(:html5,"ml/sample_5.html", 'UTF-8')
 root = Meteor::ElementFactory.element('ml/sample_5')
 

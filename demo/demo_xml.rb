@@ -21,7 +21,7 @@ start_time = Time.new.to_f
 #puts elm_.mixed_content
 
 elm1 = root.element('test', manbo: 'manbo')  #elm1 = root.element(manbo: "manbo")
-#elm2 = root.element(id: "aa", id2: "bb")    #elm2 = root.element("id"=>"aa")
+#elm2 = root.element(id: "aa", id2: "bb")    #elm2 = root.element(id: "aa")
 #elm3 = root.element("potato", id: "aa")
 #elm4 = root.element("potato", id: "aa", id2: "bb")  #elm4 = root.element("potato", id2: "bb")
 

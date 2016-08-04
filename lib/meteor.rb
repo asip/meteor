@@ -1751,6 +1751,8 @@ module Meteor
         @element_cache = Hash.new
         #フックドキュメント
         @document_hook = ''
+
+        @error_check = true
       end
 
       #
@@ -2043,7 +2045,9 @@ module Meteor
           #@pattern_cc = @pattern_cc_2
           element_with_3_1(tag)
         else
-          puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+          if @error_check
+            puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+          end
           @elm_ = nil
         end
 
@@ -2244,7 +2248,9 @@ module Meteor
         if @res
           element_3(@res[1], attr_name, attr_value)
         else
-          puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+          if @error_check
+            puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+          end
           @elm_ = nil
         end
 #=end
@@ -2291,7 +2297,9 @@ module Meteor
           #@pattern_cc = @pattern_cc_2
           element_with_2_1
         else
-          puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+          if @error_check
+            puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+          end
           @elm_ = nil
         end
 =end
@@ -2520,7 +2528,9 @@ module Meteor
           #@pattern_cc = @pattern_cc_2
           element_with_5_1(tag)
         else
-          puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+          if @error_check
+            puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+          end
           @elm_ = nil
         end
 
@@ -2732,7 +2742,9 @@ module Meteor
           #@elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2)
           element_5(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
         else
-          puts Meteor::Exception::NoSuchElementException.new(attr_name1, attr_value1, attr_name2, attr_value2).message
+          if @error_check
+            puts Meteor::Exception::NoSuchElementException.new(attr_name1, attr_value1, attr_name2, attr_value2).message
+          end
           @elm_ = nil
         end
 
@@ -4206,11 +4218,15 @@ module Meteor
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
         def analyze_content_type
+          @error_check = false
+
           element_3(META_S, HTTP_EQUIV, CONTENT_TYPE)
 
           if !@elm_
             element_3(META, HTTP_EQUIV, CONTENT_TYPE)
           end
+
+          @error_check = true
 
           if @elm_
             @root.content_type = @elm_.attr(CONTENT)
@@ -4256,7 +4272,9 @@ module Meteor
             if @res
               element_without_1(tag)
             else
-              puts Meteor::Exception::NoSuchElementException.new(tag).message
+              if @error_check
+                puts Meteor::Exception::NoSuchElementException.new(tag).message
+              end
               @elm_ = nil
             end
           else
@@ -4272,7 +4290,9 @@ module Meteor
             if @res
               element_with_1(tag)
             else
-              puts Meteor::Exception::NoSuchElementException.new(tag).message
+              if @error_check
+                puts Meteor::Exception::NoSuchElementException.new(tag).message
+              end
               @elm_ = nil
             end
           end
@@ -4320,7 +4340,9 @@ module Meteor
             if @res
               element_without_3(tag)
             else
-              puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+              if @error_check
+                puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+              end
               @elm_ = nil
             end
           else
@@ -4341,7 +4363,9 @@ module Meteor
             if @res
               element_with_3_1(tag)
             else
-              puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+              if @error_check
+                puts Meteor::Exception::NoSuchElementException.new(tag, attr_name, attr_value).message
+              end
               @elm_ = nil
             end
           end
@@ -4377,7 +4401,9 @@ module Meteor
           if @res
             element_3(@res[1], attr_name, attr_value)
           else
-            puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+            if @error_check
+              puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
+            end
             @elm_ = nil
           end
 
@@ -4416,7 +4442,9 @@ module Meteor
             if @res
               element_without_5(tag)
             else
-              puts Meteor::Exception::NoSuchElementException.new(tag, attr_name1, attr_value1, attr_name2, attr_value2).message
+              if @error_check
+                puts Meteor::Exception::NoSuchElementException.new(tag, attr_name1, attr_value1, attr_name2, attr_value2).message
+              end
               @elm_ = nil
             end
           else
@@ -4440,7 +4468,9 @@ module Meteor
             if @res
               element_with_5_1(tag)
             else
-              puts Meteor::Exception::NoSuchElementException.new(tag, attr_name1, attr_value1, attr_name2, attr_value2).message
+              if @error_check
+                puts Meteor::Exception::NoSuchElementException.new(tag, attr_name1, attr_value1, attr_name2, attr_value2).message
+              end
               @elm_ = nil
             end
           end
@@ -4483,7 +4513,9 @@ module Meteor
           if @res
             element_5(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
           else
-            puts Meteor::Exception::NoSuchElementException.new(attr_name1, attr_value1, attr_name2, attr_value2).message
+            if @error_check
+              puts Meteor::Exception::NoSuchElementException.new(attr_name1, attr_value1, attr_name2, attr_value2).message
+            end
             @elm_ = nil
           end
 
@@ -4909,11 +4941,15 @@ module Meteor
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
         def analyze_content_type
+          @error_check = false
+
           element_3(META_S, HTTP_EQUIV, CONTENT_TYPE)
 
           if !@elm_
             element_3(META, HTTP_EQUIV, CONTENT_TYPE)
           end
+
+          @error_check = true
 
           if @elm_
             @root.content_type = @elm_.attr(CONTENT)
@@ -5215,11 +5251,15 @@ module Meteor
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
         def analyze_content_type
+          @error_check = false
+
           element_3(META_S, HTTP_EQUIV, CONTENT_TYPE)
 
           if !@elm_
             element_3(META, HTTP_EQUIV, CONTENT_TYPE)
           end
+
+          @error_check = true
 
           if @elm_
             @root.content_type = @elm_.attr(CONTENT)
@@ -5351,11 +5391,15 @@ module Meteor
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
         def analyze_content_type
+          @error_check = false
+
           element_3(META_S, HTTP_EQUIV, CONTENT_TYPE)
 
           if !@elm_
             element_3(META, HTTP_EQUIV, CONTENT_TYPE)
           end
+
+          @error_check = true
 
           if @elm_
             @root.content_type = @elm_.attr(CONTENT)

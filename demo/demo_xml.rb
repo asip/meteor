@@ -101,7 +101,7 @@ puts root.document
 ##elms = root.elements("kobe")
 #elms = root.elements("potato")
 
-elms = root.elements("test")
+elms = root.elements("test")  #elms = root.css('test')
 elms.each{|elm|
   puts elm.document
   puts elm.attributes

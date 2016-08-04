@@ -86,6 +86,7 @@ puts root.document
 
 elms = root.elements('tr', id: 'loop')
 #elms = root.elements('input', id: 'radio1', type: 'radio')
+#elms = root.css('input[id=radio1][type=radio]')
 elms.each{|elm|
   puts elm.document
   puts elm.attributes

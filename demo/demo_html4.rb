@@ -43,9 +43,9 @@ elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
 
 #elm_radio1 = root.element('input', id: 'radio1', type: 'radio')
 ##elm_radio1 = root.css('input[id=radio1][type=radio]')
-##elm_radio1 = root.find('#radio1')  #elm_radio1 = root.find('input#radio1')
-##elm_radio1 = root.find('.test')    #elm_radio1 = root.find('input.test')
-##elm_radio1 = root.find('[id=radio1][type=radio]')
+##elm_radio1 = root.css('#radio1')  #elm_radio1 = root.css('input#radio1')
+##elm_radio1 = root.css('.test')    #elm_radio1 = root.css('input.test')
+##elm_radio1 = root.css('[id=radio1][type=radio]')
 #elm_radio1['checked'] = 'true'     #elm_radio1.attr(checked: 'true')
 #puts elm_radio1.document
 
@@ -99,7 +99,7 @@ elm_dt3_ = elm_.element(id: 'cc')
 end
 
 elms = root.elements(id: 'sample')
-#elms = root.find('div')  #elms = root.find('div[class=test]')
+#elms = root.css('div')  #elms = root.css('div[class=test]')
 
 elms.each_with_index{ |elm_,i|
   elm_['style'] = i.to_s

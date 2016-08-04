@@ -84,8 +84,7 @@ elm_ = root.element(elm7)
 #co_elm = root.element(elm_c1)
 #
 #10.times { |i|
-#  #co_elm.content(i)
-#  co_elm.content =i
+#  co_elm.content = i  #co_elm.content(i)
 #  co_elm.flush
 #}
 

@@ -48,8 +48,7 @@ elm_select2['multiple'] = true
 elm_option2 = elm_select2.element('option',id: 'option2')
 co_elm = elm_option2.element()
 10.times { |i|
-  #co_elm.attr('value',i)
-  co_elm['value'] = i
+  co_elm['value'] = i  #co_elm.attr(value: i)
   #'<' +
   if i == 1 then
     co_elm['selected'] = true   #co_elm.attr(selected: true)

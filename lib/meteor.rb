@@ -552,9 +552,11 @@ module Meteor
     #
     # reflect (反映する)
     #
-    def flush
-      @parser.flush
+    def flash
+      @parser.flash
     end
+
+    alias :flush :flash
 
     #
     # @overload execute(hook)
@@ -3734,7 +3736,7 @@ module Meteor
       #
       # reflect (反映する)
       #
-      def flush
+      def flash
 
         if self.element_hook
           if self.element_hook.origin.mono

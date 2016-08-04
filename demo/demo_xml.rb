@@ -20,13 +20,11 @@ start_time = Time.new.to_f
 #puts elm_.attributes
 #puts elm_.mixed_content
 
-elm1 = root.element('test', manbo: 'manbo')
-#elm1 = root.element(manbo: "manbo")
-#elm2 = root.element(id: "aa", id2: "bb")
-#elm2 = root.element("id"=>"aa")
+elm1 = root.element('test', manbo: 'manbo')  #elm1 = root.element(manbo: "manbo")
+#elm2 = root.element(id: "aa", id2: "bb")    #elm2 = root.element("id"=>"aa")
 #elm3 = root.element("potato", id: "aa")
-#elm4 = root.element("potato", id: "aa", id2: "bb")
-#elm4 = root.element("potato", id2: "bb")
+#elm4 = root.element("potato", id: "aa", id2: "bb")  #elm4 = root.element("potato", id2: "bb")
+
 elm7 = root.element("kobe")
 #elm7 = root.element(momo: "mono")
 #elm8 = root.element(manbo: "mango")
@@ -35,8 +33,6 @@ elm7 = root.element("kobe")
 #elm9 = root.element("hamachi",id: "aa",id2: 'bb')
 #elm_c1 = root.cxtag("cs")
 
-#elm8.attr(manbo: "mangoo")
-
 #puts elm8.name
 #puts elm8.attributes
 #puts elm8.mixed_content
@@ -44,15 +40,14 @@ elm7 = root.element("kobe")
 #elm1.attr(id2: "cc")
 #elm1["id2"] = "cc"
 
-#elm8.attr(manbo: "mangoo")
-##elm9.content("\\1")
-#elm9.content = "\\1"
+#elm8['mango'] = "mangoo"  #elm8.attr(manbo: "mangoo")
+#elm9.content = "\\1"      #elm9.content("\\1")
 
 #elm2.attr(id3: 'cc')
-#elm3.attr(id3: 'cc')
-#elm3['id3'] = 'cc'
-#elm4.attr(id3: 'cc')
-#elm9.attr(id3: 'cc')
+
+#elm3['id3'] = 'cc'  #elm3.attr(id3: 'cc')
+#elm3['id3'] = 'cc'  #elm4.attr(id3: 'cc')
+#elm9['id3'] = 'cc'  #elm9.attr(id3: 'cc')
 
 #co_elm = elm1.element()
 #map = co_elm.attr_map
@@ -82,8 +77,7 @@ elm_ = root.element(elm7)
 10.times { |i|
   elm_["momo"]= i
   elm_["eco"] = "えま"
-  elm_.content = i
-  #elm_["content"] = i.to_s
+  elm_.content = i  #elm_["content"] = i.to_s
   elm_.flush
 }
 
@@ -106,6 +100,7 @@ puts root.document
 #elms = root.elements("potato2")
 ##elms = root.elements("kobe")
 #elms = root.elements("potato")
+
 elms = root.elements("test")
 elms.each{|elm|
   puts elm.document

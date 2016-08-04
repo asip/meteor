@@ -58,7 +58,7 @@ co_elm = elm_option2.element()
   co_elm['value'] = i  #co_elm.attr(value: i)
   co_elm['id'] = nil   #co_elm.remove_attr("id")
   co_elm.content = i   #co_elm.content(i)
-  co_elm.flush
+  co_elm.flash
 }
 
 elm_tr1 = root.element('tr',id: 'loop')
@@ -74,10 +74,10 @@ elm_dt3_ = elm_.element(id: 'cc')
   elm_dt1.content = i  #elm_dt1.content("<>\"' \n" << i.to_s)
   elm_dt2.content = i
   elm_dt3.content = i
-  elm_.flush
+  elm_.flash
 }
 
-root.flush
+root.flash
 
 endTime = Time.new.to_f
 

@@ -63,7 +63,7 @@ elm5_ = elm_.element('tech')
   elm5 = elm5_.clone
   elm5['mono'] = i.to_s
   elm5.content = i.to_s
-  elm_.flush
+  elm_.flash
 end
 
 #am3 = elm3.attr_map
@@ -78,19 +78,19 @@ elm_ = root.element(elm7)
   elm_["momo"]= i
   elm_["eco"] = "えま"
   elm_.content = i  #elm_["content"] = i.to_s
-  elm_.flush
+  elm_.flash
 }
 
 #co_elm = root.element(elm_c1)
 #
 #10.times { |i|
 #  co_elm.content = i  #co_elm.content(i)
-#  co_elm.flush
+#  co_elm.flash
 #}
 
 #elm3['id3'] = 'dd'  #elm3.attr(id3: 'dd')
 
-root.flush
+root.flash
 
 end_time = Time.new.to_f
 

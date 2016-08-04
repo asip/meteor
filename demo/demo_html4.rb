@@ -77,7 +77,7 @@ co_elm = elm_option2.element()
   end
   co_elm.content = i  #co_elm.content(i)
   co_elm['id'] = nil  #co_elm.remove_attr('id')
-  co_elm.flush
+  co_elm.flash
 }
 
 elm_tr1 = root.element('tr',id: 'loop')  #elm_tr1 = root.css('tr[id=loop]')
@@ -94,7 +94,7 @@ elm_dt3_ = elm_.element(id: 'cc')
   elm_dt2.content = i
   elm_dt3.content = i
   #"< \n" +
-  elm_.flush
+  elm_.flash
 end
 
 elms = root.elements(id: 'sample')
@@ -104,7 +104,7 @@ elms.each_with_index{ |elm_,i|
   elm_['style'] = i.to_s
 }
 
-root.flush
+root.flash
 
 end_time = Time.new.to_f
 

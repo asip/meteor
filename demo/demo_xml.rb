@@ -89,9 +89,9 @@ elm_ = root.element(elm7)
 #  co_elm.flush
 #}
 
-root.flush
+#elm3['id3'] = 'dd'  #elm3.attr(id3: 'dd')
 
-#elm3.attr(id3: 'dd')
+root.flush
 
 end_time = Time.new.to_f
 

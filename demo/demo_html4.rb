@@ -8,7 +8,7 @@ require 'meteor'
 Meteor::ElementFactory.options= {type: :html4}
 Meteor::ElementFactory.link('ml/sample_4.html')
 
-root = Meteor::ElementFactory.element('ml/sample_4')
+root = Meteor::ElementFactory.element('/ml/sample_4')
 
 start_time = Time.new.to_f
 

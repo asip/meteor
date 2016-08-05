@@ -5,7 +5,7 @@
 require 'meteor'
 
 Meteor::ElementFactory.link(:xhtml5,'ml/sample_x5.html', 'UTF-8')
-root = Meteor::ElementFactory.element('ml/sample_x5')
+root = Meteor::ElementFactory.element('/ml/sample_x5')
 
 startTime = Time.new.to_f
 

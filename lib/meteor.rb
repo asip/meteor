@@ -983,10 +983,10 @@ module Meteor
         if CURRENT_DIR.eql?(paths[0])
           paths.delete_at 0
           paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          return paths.join(SLASH)
+          return '' << SLASH << paths.join(SLASH)
         else
           paths[paths.length - 1] = File.basename(paths[paths.length - 1], ABST_EXT_NAME)
-          return paths.join(SLASH)
+          return '' << SLASH << paths.join(SLASH)
         end
       end
     end

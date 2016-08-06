@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description = %q{A lightweight (X)HTML(5) & XML parser}
   spec.summary = %q{A lightweight (X)HTML(5) & XML parser}
   spec.homepage = %q{https://github.com/asip/meteor}
-  spec.license = 'LGPLv2.1'
+  spec.license = 'LGPL-2.1'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }

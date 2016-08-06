@@ -39,7 +39,7 @@ DOMのように全体をオブジェクトのツリー構造に変換するの�
 必要は全くありません。)
 
 ## API
-http://rubydoc.info/github/asip/meteor/master/frames
+http://rubydoc.info/github/asip/meteor/frames
 
 ## Gem
 https://rubygems.org/gems/meteor

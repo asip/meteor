@@ -4,7 +4,7 @@
 #require 'rubygems'
 require 'meteor'
 
-#Meteor::ElementFactory.bind(:html,'ml/sample_4.html', 'UTF-8')
+#Meteor::ElementFactory.link(:html,'ml/sample_4.html', 'UTF-8')
 Meteor::ElementFactory.options= {type: :html4}
 Meteor::ElementFactory.link('ml/sample_4.html')
 
@@ -33,7 +33,7 @@ elm_text1 = root.element('input', id: 'text1')
 #elm_text1['disabled'] = true     #elm_text1.attr(disabled: true)
 elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
 #puts elm_text1.attrs
-#elm_text1['disabled'] = nil  #elm_text1.remove_attr('disabled')
+#elm_text1['disabled'] = nil      #elm_text1.remove_attr('disabled')
 #map = elm_text1.attr_map
 #map.names.each { |item|
 #  puts item
@@ -45,18 +45,16 @@ elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
 ##elm_radio1 = root.css('#radio1')  #elm_radio1 = root.css('input#radio1')
 ##elm_radio1 = root.css('.test')    #elm_radio1 = root.css('input.test')
 ##elm_radio1 = root.css('[id=radio1][type=radio]')
-#elm_radio1['checked'] = 'true'     #elm_radio1.attr(checked: 'true')
+#elm_radio1['checked'] = true       #elm_radio1.attr(checked: true)
 #puts elm_radio1.document
 
 #elm_select1 = root.element('select', id: 'select1')
 #elm_select1 = root.element('select')
-#elm_select1.attr('multiple','true')
-#elm_select1['multiple'] = true
-##puts elm_select1.attr('multiple')
-#puts elm_select1['multiple']
+#elm_select1['multiple'] = true  #elm_select1.attr('multiple',true)
+#puts elm_select1['multiple']    #puts elm_select1.attr('multiple')
 
 #elm_option1 = root.element('option', id: 'option1')
-#elm_option1['selected'] = true  #elm_option1.attr(selected: 'true')
+#elm_option1['selected'] = true  #elm_option1.attr(selected: true)
 #elm_option1['selected'] = nil   #elm_option1.remove_attr('selected')
 #puts elm_option1['selected']    #puts elm_option1.attr('selected')
 #puts elm_text1['readonly']      #puts elm_text1.attr('readonly')

@@ -29,16 +29,16 @@ elm_text1['required'] = true  #elm_text1.attr(required: true)
 #}
 
 #elm_radio1 = root.element('input', id: 'radio1', type: 'radio')
-#elm_radio1['checked'] = true  #elm_radio1.attr(checked: 'true')
+#elm_radio1['checked'] = true  #elm_radio1.attr(checked: true)
 #puts elm_radio1.document
 
 #elm_select1 = root.element('select', id: 'select1')
 #elm_select1 = root.element('select')
-#elm_select1['multiple'] = true  #elm_select1.attr(multiple: 'true')
-#puts elm_select1['multiple']  #puts elm_select1.attr('multiple')
+#elm_select1['multiple'] = true  #elm_select1.attr(multiple: true)
+#puts elm_select1['multiple']    #puts elm_select1.attr('multiple')
 
 #elm_option1 = root.element('option', id: 'option1')
-#elm_option1['selected'] = true  #elm_option1.attr(selected: 'true')
+#elm_option1['selected'] = true  #elm_option1.attr(selected: true)
 #elm_option1['selected'] = nil   #elm_option1.remove_attr('selected')
 #puts elm_option1['selected']    #puts elm_option1.attr('selected')
 #puts elm_text1['readonly']      #puts elm_text1.attr('readonly')

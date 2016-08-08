@@ -32,7 +32,7 @@ elm_hello2.content = "Hello,Tester"  #elm_hello2.content("Hello,Tester")
 #}
 
 elm_radio1 = root.element("input", id: "radio1", type: "radio")
-elm_radio1['checked'] = true  #elm_radio1.attribute(checked: "true")
+elm_radio1['checked'] = true  #elm_radio1.attribute(checked: true)
 
 #elm_select1 = root.element("select",id: "select1")
 #elm_select1 = root.element("select")
@@ -40,9 +40,9 @@ elm_radio1['checked'] = true  #elm_radio1.attribute(checked: "true")
 #puts elm_select1['multiple']    #puts elm_select1.attr("multiple")
 
 #elm_option1 = root.element("option",id: "option1")
-#elm_option1['selected'] = true  #elm_option1.attr(selected: "true")
-#puts elm_option1['selected']  #puts elm_option1.attr("selected")
-#puts elm_option1['readonly']  #puts elm_text1.attr("readonly")
+#elm_option1['selected'] = true  #elm_option1.attr(selected: true)
+#puts elm_option1['selected']    #puts elm_option1.attr("selected")
+#puts elm_option1['readonly']    #puts elm_text1.attr("readonly")
 
 elm_select2 = root.element("select",id: "select2")
 elm_select2["multiple"] = true

@@ -1,7 +1,7 @@
 # -* coding: UTF-8 -*-
 # Meteor -  A lightweight (X)HTML(5) & XML parser
 #
-# Copyright (C) 2008-2017 Yasumasa Ashida.
+# Copyright (C) 2008-2021 Yasumasa Ashida.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.8.5
+# @version 0.9.9.0
 #
 
 module Meteor
 
-  VERSION = '0.9.8.5'.freeze
+  VERSION = '0.9.9.0'.freeze
 
   #require 'fileutils'
 
@@ -1931,6 +1931,7 @@ module Meteor
           if @res[1]
             element_without_1(name)
           else
+            #puts '---element_with_1'
             element_with_1(name)
           end
         #else
@@ -1946,6 +1947,8 @@ module Meteor
         @elm_ = Meteor::Element.new(name)
 
         unless @on_search
+          #puts '--on_search=false'
+          #puts @res.to_a
           #属性
           @elm_.attributes = @res[2]
           #内容
@@ -1953,6 +1956,7 @@ module Meteor
           #全体
           @elm_.document = @res[0]
         else
+          #puts '--on_search=true'
           #属性
           @elm_.attributes = @res[1]
           #内容
@@ -3099,12 +3103,13 @@ module Meteor
 
             @element_cache.store(@elm_.object_id, @elm_)
 
-            @on_search = false
           #else
           #  break
           #end
         end
-
+        
+        @on_search = false
+        
         elm_arr
       end
 
@@ -4676,7 +4681,7 @@ module Meteor
 
         def escape(content)
           #特殊文字の置換
-          content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
+          content = content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
 
           content
         end
@@ -5116,7 +5121,7 @@ module Meteor
 
         def escape(content)
           #特殊文字の置換
-          content.gsub!(@@pattern_escape, TABLE_FOR_ESCAPE_)
+          content = content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
 
           content
         end

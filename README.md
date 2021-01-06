@@ -1,7 +1,7 @@
 
 Meteor
 ==================
- A lightweight (X)HTML(5) & XML Parser
+ A lightweight HTML & XML Parser
 
 ```shell
   gem install meteor #gem installation
@@ -13,19 +13,19 @@ Meteor
 ```
 
 ## Explanation
-This libarary is lightweight (X)HTML(5) parser.
+This libarary is lightweight HTML parser.
 This can use as XML parser.
 This may be false parser.
 
-This libarary doesn't support all of XML spec.
-This supports a range of xml spec
+This libarary doesn't support all of HTML & XML spec.
+This supports a range of HTML & XML spec
 thought to be the need routinely.
 
-軽量(簡易?)(X)HTML(5)パーサです。
+軽量(簡易?)HTMLパーサです。
 XMLパーサとしても使用可能です。
 パーサもどきかもしれません。
 
-(X)HTML(5)、XMLの仕様の全てをサポートしてはいません、
+HTML、XMLの仕様の全てをサポートしてはいません、
 日常的に必要と思われる範囲をサポートしています。
 
 This doesn't convert the whole into objects but
@@ -54,4 +54,4 @@ Licensed under the LGPL V2.1.
  Yasumasa Ashida (ys.ashida@gmail.com)
 
 ## Copyright
-(c) 2008-2017 Yasumasa Ashida
+(c) 2008-2021 Yasumasa Ashida

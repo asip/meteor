@@ -87,8 +87,12 @@ elms = root.elements('tr', id: 'loop')
 #elms = root.elements('input', id: 'radio1', type: 'radio')
 #elms = root.css('input[id=radio1][type=radio]')
 elms.each{|elm|
+  puts '-------'
+  puts 'doc----'
   puts elm.document
+  puts 'attrs--'
   puts elm.attributes
+  puts 'mixed--'
   puts elm.mixed_content
 }
 

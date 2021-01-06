@@ -4,7 +4,7 @@
 #require 'rubygems'
 require 'meteor'
 
-#Meteor::ElementFactory.link(:html,'ml/sample_4.html', 'UTF-8')
+#Meteor::ElementFactory.link(:html4,'ml/sample_4.html', 'UTF-8')
 Meteor::ElementFactory.options= {type: :html4}
 Meteor::ElementFactory.link('ml/sample_4.html')
 

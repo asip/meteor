@@ -101,9 +101,13 @@ puts root.document
 #elms = root.elements("potato")
 
 elms = root.elements("test")  #elms = root.css('test')
-elms.each{|elm|
+elms.each{|elm, i|
+  puts '-------'
+  puts 'doc----'
   puts elm.document
+  puts 'attrs--'
   puts elm.attributes
+  puts 'mixed--'
   puts elm.mixed_content
 }
 

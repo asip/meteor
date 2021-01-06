@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    meteor (0.9.9.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 2.2)
+  meteor!
+
+BUNDLED WITH
+   2.2.3

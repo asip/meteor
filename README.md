@@ -7,7 +7,7 @@ Meteor
   gem install meteor #gem installation
 ```
 ```shell
-  #archive installation
+  # archive installation
   gem build meteor.gemspec
   gem install meteor-*.gem
 ```
@@ -54,4 +54,4 @@ Licensed under the LGPL V2.1.
  Yasumasa Ashida (ys.ashida@gmail.com)
 
 ## Copyright
-(c) 2008-2021 Yasumasa Ashida
+(c) 2008-2023 Yasumasa Ashida

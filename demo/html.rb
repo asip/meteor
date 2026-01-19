@@ -4,14 +4,14 @@
 #require 'rubygems'
 require 'meteor'
 
-Meteor::ElementFactory.link(:html5,"ml/sample_5.html", 'UTF-8')
-root = Meteor::ElementFactory.element('/ml/sample_5')
+Meteor::ElementFactory.link(:html,"ml/sample_html.html", 'UTF-8')
+root = Meteor::ElementFactory.element('/ml/sample_html')
 
 start_time = Time.new.to_f
 
 elm_hello = root.element(id: 'hello')
-elm_hello['color'] = 'red'  #elm_hello.attr(color: 'red')
-#elm_hello['color'] = nil   #elm_hello.remove_attr('color')
+elm_hello['class'] = 'red'  #elm_hello.attr(class: 'red')
+#elm_hello['class'] = nil   #elm_hello.remove_attr('class')
 
 elm_hello2 = root.element(id: 'hello2')
 elm_hello2.content = 'Hello,Tester'  #elm_hello2.content('Hello,Tester')

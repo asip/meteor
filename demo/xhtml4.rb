@@ -4,17 +4,16 @@
 #require 'rubygems'
 require 'meteor'
 
-Meteor::ElementFactory.link(:xhtml5,'ml/sample_x5.html', 'UTF-8')
-root = Meteor::ElementFactory.element('/ml/sample_x5')
+Meteor::ElementFactory.link(:xhtml4,'ml/sample_xhtml4.html', 'UTF-8')
+root = Meteor::ElementFactory.element('/ml/sample_xhtml4')
 
 startTime = Time.new.to_f
 
-elm_hello = root.element(id: 'hello')
-elm_hello['color'] = 'red'  #elm_hello.attr(color: "red")
-#elm_hello['color'] = nil   #elm_hello.remove_attr('color')
-#elm_hello.attr(color: nil)
+elm_hello = root.element("id","hello")
+elm_hello['class'] = 'red'  #elm_hello.attr(class: "red")
+#elm_hello['class'] = nil   #elm_hello.remove_attr('class')
 
-elm_hello2 = root.element(id: 'hello2')
+elm_hello2 = root.element(id: "hello2")
 elm_hello2.content = "Hello,Tester"  #elm_hello2.content("Hello,Tester")
 #elm_hello2.remove
 
@@ -23,27 +22,27 @@ elm_hello2.content = "Hello,Tester"  #elm_hello2.content("Hello,Tester")
 #puts elm_hello3.content
 #puts elm_hello3.mixed_content
 
-elm_text1 = root.element(id: 'text1')
-elm_text1['value'] = 'めも'    #elm_text1.attr(value: 'めも')
-elm_text1['disabled'] = true  #elm_text1.attr(disabled: true)
-elm_text1['required'] = true  #elm_text1.attr(required: true)
+#elm_text1 = root.element(id: "text1")
+#elm_text1['value'] = 'めも'    #elm_text1.attr(value: 'めも')
+#elm_text1['disabled'] = true  #elm_text1.attr(disabled: true)
 #map = elm_text1.attr_map
 #map.names.each { |item| 
 #  puts item
 #  puts map.fetch(item)
 #}
 
-#elm_radio1 = root.element("input",id: "radio1", type: "radio")
-#elm_radio1['checked'] = true  #elm_radio1.attr(checked: true)
+elm_radio1 = root.element("input", id: "radio1", type: "radio")
+elm_radio1['checked'] = true  #elm_radio1.attribute(checked: true)
 
 #elm_select1 = root.element("select",id: "select1")
 #elm_select1 = root.element("select")
-#elm_select1['multiple'] = true  #elm_select1.attr(multiple: true)
+#elm_select1('multiple') = true  #elm_select1.attr(multiple: true)
 #puts elm_select1['multiple']    #puts elm_select1.attr("multiple")
+
 #elm_option1 = root.element("option",id: "option1")
 #elm_option1['selected'] = true  #elm_option1.attr(selected: true)
 #puts elm_option1['selected']    #puts elm_option1.attr("selected")
-#puts elm_text1['readonly']      #puts elm_text1.attr("readonly")
+#puts elm_option1['readonly']    #puts elm_text1.attr("readonly")
 
 elm_select2 = root.element("select",id: "select2")
 elm_select2["multiple"] = true
@@ -51,9 +50,9 @@ elm_option2 = elm_select2.element("option",id: "option2")
 co_elm = elm_option2.element()
 10.times { |i|
   if i == 1 then
-    co_elm['selected'] = true    #co_elm.attr(selected: true)
+    co_elm['selected'] = true   #co_elm.attr(selected: true)
   else
-    co_elm['selected'] = false   #co_elm.attr(selected: false)
+    co_elm['selected'] = false  #co_elm.attr(selected: false)
   end
   co_elm['value'] = i  #co_elm.attr(value: i)
   co_elm['id'] = nil   #co_elm.remove_attr("id")

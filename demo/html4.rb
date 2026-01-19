@@ -6,15 +6,15 @@ require 'meteor'
 
 #Meteor::ElementFactory.link(:html4,'ml/sample_4.html', 'UTF-8')
 Meteor::ElementFactory.options= {type: :html4}
-Meteor::ElementFactory.link('ml/sample_4.html')
+Meteor::ElementFactory.link('ml/sample_html4.html')
 
-root = Meteor::ElementFactory.element('/ml/sample_4')
+root = Meteor::ElementFactory.element('/ml/sample_html4')
 
 start_time = Time.new.to_f
 
 elm_hello = root.element(id: 'hello')
-elm_hello['color'] = 'red'  #elm_hello.attr(color: 'red')
-#elm_hello['color'] = nil  #elm_hello.remove_attr('color')
+elm_hello['class'] = 'red'  #elm_hello.attr(class: 'red')
+#elm_hello['class'] = nil  #elm_hello.remove_attr('class')
 
 elm_hello2 = root.element(id: 'hello2')
 elm_hello2.content = 'Hello,Tester'  #elm_hello2.content('Hello,Tester')

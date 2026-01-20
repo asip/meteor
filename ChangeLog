@@ -1,3 +1,7 @@
+== 0.9.12 / 2026-01-20 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* enable frozen_string_literal
+
 == 0.9.8 / 2014-01-07 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * multi elements search support (addition of Meteor::Element#elements)

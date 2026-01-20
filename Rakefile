@@ -60,7 +60,7 @@ spec = Gem::Specification.new do |s|
 	s.test_files        = Dir["test/*_test.rb"]
 
 	#s.add_dependency('activesupport', '>=1.3.1')
-	#s.required_ruby_version = '>= 1.8.2'
+	#s.required_ruby_version = '>= 3.0.0'
 
 	s.files = %w(README.md ChangeLog Rakefile) +
 		Dir.glob("{bin,doc,test,lib,templates,generator,extras,website,script}/**/*") + 

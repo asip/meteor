@@ -58,7 +58,9 @@ https://github.com/asip/meteor/tree/master/demo
 Licensed under the LGPL V2.1.
 
 ## Author
- Yasumasa Ashida (ys.ashida@gmail.com)
+
+ Yasumasa Ashida (<ys.ashida@gmail.com>)
 
 ## Copyright
-(c) 2008-2023 Yasumasa Ashida
+
+(c) 2008-present, Yasumasa Ashida

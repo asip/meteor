@@ -3815,7 +3815,7 @@ module Meteor
         # KAIGYO_CODE = "\r?\n|\r"
         # KAIGYO_CODE = "\r\n|\n|\r"
         KAIGYO_CODE = ["\r\n", "\n", "\r"]
-        BR_2 = '<br>'
+        BR = '<br>'
 
         # MATCH_TAG = "br|hr|img|input|meta|base"
         @@match_tag = ['br', 'hr', 'img', 'input', 'meta', 'base'] #[Array] 内容のない要素
@@ -3896,7 +3896,7 @@ module Meteor
 
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
-        @@pattern_br_2 = Regexp.new(BR_2)
+        @@pattern_br_2 = Regexp.new(BR)
 
         #
         # initializer (イニシャライザ)
@@ -4477,7 +4477,7 @@ module Meteor
           content_ = unescape(content)
 
           if elm.cx || !is_match(@@match_tag_2, elm.name)
-            if content.include?(BR_2)
+            if content.include?(BR)
               # 「<br>」->「¥r?¥n」
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
             end
@@ -4501,7 +4501,7 @@ module Meteor
 
         # KAIGYO_CODE = "\r?\n|\r"
         KAIGYO_CODE = ["\r\n", "\n", "\r"]
-        BR_2 = '<br/>'
+        BR = '<br/>'
 
         # @@match_tag_2 = "textarea|option|pre"
         @@match_tag_2 = ['textarea', 'option', 'pre'] #[Array] 改行を<br/>に変換する必要のない要素
@@ -4878,7 +4878,7 @@ module Meteor
         def unescape_content(content, elm)
           content_ = unescape(content)
 
-          if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR_2)
+          if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
               # 「<br>」->「¥r?¥n」
               content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
           end

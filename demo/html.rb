@@ -97,4 +97,7 @@ elms.each{|elm|
   puts elm.mixed_content
 }
 
+puts "charset:#{root.charset}"
+puts "content-type:#{root.content_type}"
+
 puts '' + (end_time - start_time).to_s + ' sec'

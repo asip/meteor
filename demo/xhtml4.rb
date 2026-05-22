@@ -83,4 +83,7 @@ endTime = Time.new.to_f
 
 puts root.document
 
+puts "charset:#{root.charset}"
+puts "content-type:#{root.content_type}"
+
 puts '' + (endTime - startTime).to_s + ' sec'

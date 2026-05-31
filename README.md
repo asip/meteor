@@ -2,7 +2,7 @@
 # Meteor
 
 ==================
- A lightweight HTML & XML Parser
+ A lightweight (X)HTML & XML Parser
 
 ```shell
   gem install meteor #gem installation

@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version = Meteor::VERSION
   spec.authors = ["Yasumasa Ashida"]
   spec.email = %q{ys.ashida@gmail.com}
-  spec.description = %q{A lightweight (X)HTML(5) & XML parser}
-  spec.summary = %q{A lightweight (X)HTML(5) & XML parser}
+  spec.description = %q{A lightweight (X)HTML & XML parser}
+  spec.summary = %q{A lightweight (X)HTML & XML parser}
   spec.homepage = %q{https://github.com/asip/meteor}
   spec.license = 'LGPL-2.1-only'
 

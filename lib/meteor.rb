@@ -19,7 +19,7 @@ require "meteor/ml/xml/parser_impl"
 
 # Meteor -  A lightweight (X)HTML(5) & XML parser
 #
-# Copyright (C) 2008-2026 Yasumasa Ashida.
+# Copyright (C) 2008-present Yasumasa Ashida.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -36,11 +36,11 @@ require "meteor/ml/xml/parser_impl"
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.12
+# @version 0.9.13
 #
 
 module Meteor
-  VERSION = '0.9.12'
+  VERSION = '0.9.13'
 
   # require 'fileutils'
 

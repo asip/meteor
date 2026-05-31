@@ -2,29 +2,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html lang="ja">
   <head>
-    <title>HTMLテスト</title>
+    <title>XHTMLテスト</title>
     <meta charset="UTF-8"/>
   </head>
 
   <body>
+    <h1>XHTMLテスト</h1>
     <div id="hello" class="black">Hello,World</div>
     <div id="hello2">Hello,World</div>
     <!-- @quark id="hello3" -->Hello,World<!-- /@quark -->
     <form>
+      <label for="text1">text1</label>
       <input id="text1" name="text1" type="text" />
 
+      <label for="radio1">radio1</label>
       <input id="radio1" name="radio1" type="radio" />
 
+      <label for="select1">select1</label>
       <select id="select1" name="select1">
         <option id="option1">オプション</option>
       </select>
 
+      <label for="select2">select2</label>
       <select id="select2" name="select2">
         <option id="option2">オプション</option>
       </select>
     </form>
 
     <table>
+      <caption>table</caption>
       <tr id="loop">
         <td id="aa"></td><td id="bb"></td><td id="cc"></td>
       </tr>

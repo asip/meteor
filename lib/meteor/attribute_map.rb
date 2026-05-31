@@ -3,7 +3,7 @@
 
 module Meteor
   #
-  # Attribute Map Class (属性マップクラス)
+  # Attribute Map Class (属性マップ クラス)
   #
   class AttributeMap
     #

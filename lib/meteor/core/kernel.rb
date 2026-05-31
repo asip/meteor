@@ -3,7 +3,7 @@
 
 module Meteor
   module Core
-    # Parser Core Class (パーサコアクラス)
+    # Parser Core Class (パーサ・コア クラス)
     #
     # @!attribute [rw] element_cache
     #  @return [Hash] element cache (要素キャッシュ)

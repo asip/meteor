@@ -3,7 +3,7 @@
 
 module Meteor
   #
-  # Parser Factory Class (パーサファクトリクラス)
+  # Parser Factory Class (パーサ・ファクトリ クラス)
   #
   # @!attribute [rw] type
   #  @return [FixNum,Symbol] default type of parser (デフォルトのパーサ・タイプ)

@@ -5,7 +5,7 @@ module Meteor
   module Core
     module Util
       #
-      # Pattern Cache Class (パターンキャッシュクラス)
+      # Pattern Cache Class (パターン・キャッシュ クラス)
       #
       class PatternCache
         @@regex_cache = Hash.new

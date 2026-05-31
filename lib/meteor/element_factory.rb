@@ -3,7 +3,7 @@
 
 module Meteor
   #
-  # Element Factory Class (要素ファクトリクラス)
+  # Element Factory Class (要素ファクトリ クラス)
   #
   class ElementFactory
     @@pf = Meteor::ParserFactory.new

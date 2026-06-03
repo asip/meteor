@@ -28,22 +28,23 @@ module Meteor
         #
         def self.get(*args)
           case args.length
-            when ONE
-              # get_1(args[0])
-              if @@regex_cache[args[0].to_sym]
-                @@regex_cache[args[0].to_sym]
-              else
-                @@regex_cache[args[0].to_sym] = Regexp.new(args[0], Regexp::MULTILINE)
-              end
-            when TWO
-              # get_2(args[0], args[1])
-              if @@regex_cache[args[0].to_sym]
-                @@regex_cache[args[0].to_sym]
-              else
-                @@regex_cache[args[0].to_sym] = Regexp.new(args[0], args[1])
-              end
+          when ONE
+            # get_1(args[0])
+            if @@regex_cache[args[0].to_sym]
+              @@regex_cache[args[0].to_sym]
             else
-              raise ArgumentError
+              @@regex_cache[args[0].to_sym] = Regexp.new(args[0], Regexp::MULTILINE)
+            end
+
+          when TWO
+            # get_2(args[0], args[1])
+            if @@regex_cache[args[0].to_sym]
+              @@regex_cache[args[0].to_sym]
+            else
+              @@regex_cache[args[0].to_sym] = Regexp.new(args[0], args[1])
+            end
+          else
+            raise ArgumentError
           end
         end
 

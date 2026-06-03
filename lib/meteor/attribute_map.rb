@@ -14,12 +14,12 @@ module Meteor
     #
     def initialize(*args)
       case args.length
-        when ZERO
-          initialize_0
-        when ONE
-          initialize_1(args[0])
-        else
-          raise ArgumentError
+      when ZERO
+        initialize_0
+      when ONE
+        initialize_1(args[0])
+      else
+        raise ArgumentError
       end
     end
 
@@ -59,6 +59,7 @@ module Meteor
           attr.changed = true
           attr.removed = false
         end
+
         @map[name] = attr
       else
         attr = @map[name]
@@ -66,6 +67,7 @@ module Meteor
           attr.changed = true
           attr.removed = false
         end
+
         attr.value = value
       end
     end

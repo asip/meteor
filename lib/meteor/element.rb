@@ -68,31 +68,32 @@ module Meteor
     #
     def initialize(*args)
       case args.length
-        when Meteor::ONE
-          if args[0].kind_of?(String)
-            initialize_s(args[0])
-          elsif args[0].kind_of?(Meteor::Element)
-            initialize_e(args[0])
-          else
-            raise ArgumentError
-          end
-        when Meteor::TWO
-          @name = args[0].name
-          @attributes = String.new(args[0].attributes)
-          @mixed_content = String.new(args[0].mixed_content)
-          # @pattern = String.new(args[0].pattern)
-          @pattern = args[0].pattern
-          @document = String.new(args[0].document)
-          @empty = args[0].empty
-          @cx = args[0].cx
-          @mono = args[0].mono
-          @parser = args[1]
-          # @usable = false
-          @origin = args[0]
-          args[0].copy = self
-        when Meteor::ZERO
+      when Meteor::ONE
+        if args[0].kind_of?(String)
+          initialize_s(args[0])
+        elsif args[0].kind_of?(Meteor::Element)
+          initialize_e(args[0])
         else
           raise ArgumentError
+        end
+
+      when Meteor::TWO
+        @name = args[0].name
+        @attributes = String.new(args[0].attributes)
+        @mixed_content = String.new(args[0].mixed_content)
+        # @pattern = String.new(args[0].pattern)
+        @pattern = args[0].pattern
+        @document = String.new(args[0].document)
+        @empty = args[0].empty
+        @cx = args[0].cx
+        @mono = args[0].mono
+        @parser = args[1]
+        # @usable = false
+        @origin = args[0]
+        args[0].copy = self
+      when Meteor::ZERO
+      else
+        raise ArgumentError
       end
     end
 
@@ -145,21 +146,21 @@ module Meteor
     #
     def self.new!(*args)
       case args.length
-        when Meteor::TWO
-          @obj = args[1].element_hook
-          if @obj
-            @obj.attributes = String.new(args[0].attributes)
-            @obj.mixed_content = String.new(args[0].mixed_content)
-            # @obj.pattern = String.new(args[0].pattern)
-            @obj.document = String.new(args[0].document)
-            @obj
-          else
-            @obj = self.new(args[0], args[1])
-            args[1].element_hook = @obj
-            @obj
-          end
+      when Meteor::TWO
+        @obj = args[1].element_hook
+        if @obj
+          @obj.attributes = String.new(args[0].attributes)
+          @obj.mixed_content = String.new(args[0].mixed_content)
+          # @obj.pattern = String.new(args[0].pattern)
+          @obj.document = String.new(args[0].document)
+          @obj
         else
-          raise ArgumentError
+          @obj = self.new(args[0], args[1])
+          args[1].element_hook = @obj
+          @obj
+        end
+      else
+        raise ArgumentError
       end
     end
 
@@ -200,32 +201,33 @@ module Meteor
       if @document_sync
         @document_sync = false
         case @parser.doc_type
-          when Parser::HTML, Parser::HTML4
-            if @cx
-              # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
-              @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+        when Parser::HTML, Parser::HTML4
+          if @cx
+            # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
+            @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+          else
+            if @empty
+              # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
+              @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
             else
-              if @empty
-                # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
-                @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
-              else
-                @document = String.new('') << "<" << @name << @attributes << '>'
-                # @document = "<#{@name}#{@attributes}>"
-              end
+              @document = String.new("") << "<" << @name << @attributes << ">"
+              # @document = "<#{@name}#{@attributes}>"
             end
-          when Parser::XHTML, Parser::XHTML4, Parser::XML
-            if @cx
-              # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
-              @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+          end
+
+        when Parser::XHTML, Parser::XHTML4, Parser::XML
+          if @cx
+            # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
+            @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+          else
+            if @empty
+              # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
+              @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
             else
-              if @empty
-                # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
-                @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
-              else
-                @document = String.new('') << "<" << @name << @attributes << '/>'
-                # @document = "<#{@name}#{@attributes}/>"
-              end
+              @document = String.new("") << "<" << @name << @attributes << "/>"
+              # @document = "<#{@name}#{@attributes}/>"
             end
+          end
         end
       else
         @document
@@ -281,7 +283,7 @@ module Meteor
     #  @param [Meteor::Element] elm element(要素)
     #  @return [Meteor::Element] element(要素)
     #
-    def element(elm = nil, attrs = nil,*args)
+    def element(elm = nil, attrs = nil, *args)
       # case args.length
       # when ZERO
       if !elm && !attrs
@@ -383,8 +385,8 @@ module Meteor
     #  @param [String,Symbol] attr_name attribute name (属性名)
     #  @return [String] attribute value (属性値)
     #
-    def attr(attrs,*args)
-      @parser.attr(self, attrs,*args)
+    def attr(attrs, *args)
+      @parser.attr(self, attrs, *args)
     end
 
     #
@@ -393,7 +395,7 @@ module Meteor
     # @return [Meteor::Element] element (要素)
     #
     def attr=(attr)
-      @parser.attr(self,attr)
+      @parser.attr(self, attr)
     end
 
     #

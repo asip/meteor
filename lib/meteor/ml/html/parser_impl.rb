@@ -8,19 +8,42 @@ module Meteor
       # HTML parser (HTMLパーサ)
       #
       class ParserImpl < Meteor::Ml::Html4::ParserImpl
-        MATCH_TAG = ['br', 'hr', 'img', 'input', 'meta', 'base', 'embed', 'command', 'keygen'] #[Array] void elements (空要素)
+        #[Array] void elements (空要素)
+        MATCH_TAG = ["br", "hr", "img", "input", "meta", "base", "embed", "command", "keygen"]
 
-        MATCH_TAG_SNG = ['texarea', 'select', 'option', 'form', 'fieldset', 'figure', 'figcaption', 'video', 'audio', 'progress', 'meter', 'time', 'ruby', 'rt', 'rp', 'datalist', 'output'] #[Array] non-nestable elements (入れ子にできない要素)
+        #[Array] non-nestable elements (入れ子にできない要素)
+        MATCH_TAG_SNG = [
+          "texarea",
+          "select",
+          "option",
+          "form",
+          "fieldset",
+          "figure",
+          "figcaption",
+          "video",
+          "audio",
+          "progress",
+          "meter",
+          "time",
+          "ruby",
+          "rt",
+          "rp",
+          "datalist",
+          "output"
+        ]
 
-        ATTR_LOGIC = ['disabled', 'readonly', 'checked', 'selected', 'multiple', 'required'] #[Array] boolean attributes (論理値で指定する属性)
+        #[Array] boolean attributes (論理値で指定する属性)
+        ATTR_LOGIC = ["disabled", "readonly", "checked", "selected", "multiple", "required"]
 
-        DISABLE_ELEMENT = ['input', 'textarea', 'select', 'optgroup', 'fieldset'] #[Array] elements with the disabled attribute (disabled属性のある要素)
+        #[Array] elements with the disabled attribute (disabled属性のある要素)
+        DISABLE_ELEMENT = ["input", "textarea", "select", "optgroup", "fieldset"]
 
-        REQUIRE_ELEMENT = ['input', 'textarea'] #[Array] elements with the required attribute (required属性のある要素)
+        #[Array] elements with the required attribute (required属性のある要素)
+        REQUIRE_ELEMENT = ["input", "textarea"]
 
-        REQUIRED_M = '\\srequired\\s|\\srequired$|\\sREQUIRED\\s|\\sREQUIRED$'
+        REQUIRED_M = "\\srequired\\s|\\srequired$|\\sREQUIRED\\s|\\sREQUIRED$"
         # REQUIRED_M = [' required ',' required',' REQUIRED ',' REQUIRED']
-        REQUIRED_R = 'required\\s|required$|REQUIRED\\s|REQUIRED$'
+        REQUIRED_R = "required\\s|required$|REQUIRED\\s|REQUIRED$"
 
         @@pattern_required_m = Regexp.new(REQUIRED_M)
         @@pattern_required_r = Regexp.new(REQUIRED_R)
@@ -38,12 +61,12 @@ module Meteor
           @@attr_logic = ATTR_LOGIC
           @doc_type = Parser::HTML
           case args.length
-            when ZERO
-              # initialize_0
-            when ONE
-              initialize_1(args[0])
-            else
-              raise ArgumentError
+          when ZERO
+            # initialize_0
+          when ONE
+            initialize_1(args[0])
+          else
+            raise ArgumentError
           end
         end
 
@@ -75,10 +98,10 @@ module Meteor
         def analyze_content_type
           @error_check = false
 
-          element_3('meta', 'charset', '[a-zA-Z-]+', false)
+          element_3("meta", "charset", "[a-zA-Z-]+", false)
 
           if !@elm_
-            element_3('meta', 'charset', '[a-zA-Z-]+', false)
+            element_3("meta", "charset", "[a-zA-Z-]+", false)
           end
 
           @error_check = true
@@ -92,23 +115,24 @@ module Meteor
             @root.charset = "utf-8"
           end
 
-          @root.content_type = 'text/html'
+          @root.content_type = "text/html"
         end
 
         private :analyze_content_type
 
         def edit_attrs_(elm, attr_name, attr_value)
-          if is_match('selected', attr_name) && is_match('option', elm.name)
+          if is_match("selected", attr_name) && is_match("option", elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_selected_m, @@pattern_selected_r)
-          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
+          elsif is_match("multiple", attr_name) && is_match("select", elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_multiple_m, @@pattern_multiple_r)
-          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
+          elsif is_match("disabled", attr_name) && is_match(DISABLE_ELEMENT, elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_disabled_m, @@pattern_disabled_r)
-          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
+          elsif is_match("checked", attr_name) && is_match("input", elm.name) && is_match("radio", get_type(elm))
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_checked_m, @@pattern_checked_r)
-          elsif is_match('readonly', attr_name) && (is_match('textarea', elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
+          elsif is_match("readonly", attr_name) &&
+              (is_match("textarea", elm.name) || (is_match("input", elm.name) && is_match(READONLY_TYPE, get_type(elm))))
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_readonly_m, @@pattern_readonly_r)
-          elsif is_match('required', attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
+          elsif is_match("required", attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_required_m, @@pattern_required_r)
           else
             super(elm, attr_name, attr_value)
@@ -118,17 +142,18 @@ module Meteor
         private :edit_attrs_
 
         def get_attr_value_(elm, attr_name)
-          if is_match('selected', attr_name) && is_match('option', elm.name)
+          if is_match("selected", attr_name) && is_match("option", elm.name)
             get_attr_value_r(elm, @@pattern_selected_m)
-          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
+          elsif is_match("multiple", attr_name) && is_match("select", elm.name)
             get_attr_value_r(elm, @@pattern_multiple_m)
-          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
+          elsif is_match("disabled", attr_name) && is_match(DISABLE_ELEMENT, elm.name)
             get_attr_value_r(elm, @@pattern_disabled_m)
-          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
+          elsif is_match("checked", attr_name) && is_match("input", elm.name) && is_match("radio", get_type(elm))
             get_attr_value_r(elm, @@pattern_checked_m)
-          elsif is_match('readonly', attr_name) && (is_match('textarea', elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
+          elsif is_match("readonly", attr_name) &&
+              (is_match("textarea", elm.name) || (is_match("input", elm.name) && is_match(READONLY_TYPE, get_type(elm))))
             get_attr_value_r(elm, @@pattern_readonly_m)
-          elsif is_match('required', attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
+          elsif is_match("required", attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
             get_attr_value_r(elm, @@pattern_required_m)
           else
             super(elm, attr_name)

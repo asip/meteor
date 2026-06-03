@@ -42,16 +42,16 @@ module Meteor
     #
     def initialize(*args)
       case args.length
-        when 0
-          initialize_0
-        when 1
-          initialize_1(args[0])
-        when 2
-          initialize_2(args[0], args[1])
-        when 3
-          initialize_3(args[0],args[1],args[2])
-        else
-          raise ArgumentError
+      when 0
+        initialize_0
+      when 1
+        initialize_1(args[0])
+      when 2
+        initialize_2(args[0], args[1])
+      when 3
+        initialize_3(args[0], args[1], args[2])
+      else
+        raise ArgumentError
       end
     end
 
@@ -97,7 +97,7 @@ module Meteor
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_3(type , root, enc)
+    def initialize_3(type, root, enc)
       @cache = Hash.new
       @type = type
       @root = root
@@ -123,11 +123,13 @@ module Meteor
         elsif opts.include?(:base_dir)
           @root = opts[:base_dir]
         end
+
         if opts.include?(:enc)
           @enc = opts[:enc]
         elsif opts.include?(:base_enc)
           @enc = opts[:base_enc]
         end
+
         if opts.include?(:type)
           @type = opts[:type]
         elsif opts.include?(:base_type)
@@ -162,20 +164,21 @@ module Meteor
     #
     def link(*args)
       case args.length
-        when 1
-          link_1(args[0])
-        when 2
-          if args[0].kind_of?(Fixnum) || args[0].kind_of?(Symbol)
-            link_2_n(args[0], args[1])
-          elsif args[0].kind_of?(String)
-            link_2_s(args[0], args[1])
-          else
-            raise ArgumentError
-          end
-        when 3
-          link_3(args[0], args[1], args[2])
+      when 1
+        link_1(args[0])
+      when 2
+        if args[0].kind_of?(Fixnum) || args[0].kind_of?(Symbol)
+          link_2_n(args[0], args[1])
+        elsif args[0].kind_of?(String)
+          link_2_s(args[0], args[1])
         else
           raise ArgumentError
+        end
+
+      when 3
+        link_3(args[0], args[1], args[2])
+      else
+        raise ArgumentError
       end
     end
 
@@ -188,15 +191,15 @@ module Meteor
       paths = File.split(path)
 
       if paths.length == 1
-        return File.basename(paths[0], '.*')
+        return File.basename(paths[0], ".*")
       else
         if ".".eql?(paths[0])
-          paths.delete_at 0
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], '.*')
-          return String.new('') << "/" << paths.join("/")
+          paths.delete_at(0)
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ".*")
+          return String.new("") << "/" << paths.join("/")
         else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], '.*')
-          return String.new('') << "/" << paths.join("/")
+          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ".*")
+          return String.new("") << "/" << paths.join("/")
         end
       end
     end
@@ -215,26 +218,26 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
-        when Parser::HTML4, :html4
-          html4 = Meteor::Ml::Html4::ParserImpl.new
-          html.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = html4
-        when Parser::XHTML4, :xhtml4
-          xhtml4 = Meteor::Ml::Xhtml4::ParserImpl.new
-          xhtml4.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xhtml4
-        when Parser::HTML, :html, :html5
-          html = Meteor::Ml::Html::ParserImpl.new
-          html.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = html
-        when Parser::XHTML, :xhtml, :xhtml5
-          xhtml = Meteor::Ml::Xhtml::ParserImpl.new
-          xhtml.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xhtml
-        when Parser::XML, :xml
-          xml = Meteor::Ml::Xml::ParserImpl.new
-          xml.read(File.expand_path(relative_path, @root), enc)
-          @cache[relative_url] = xml
+      when Parser::HTML4, :html4
+        html4 = Meteor::Ml::Html4::ParserImpl.new
+        html.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = html4
+      when Parser::XHTML4, :xhtml4
+        xhtml4 = Meteor::Ml::Xhtml4::ParserImpl.new
+        xhtml4.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = xhtml4
+      when Parser::HTML, :html, :html5
+        html = Meteor::Ml::Html::ParserImpl.new
+        html.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = html
+      when Parser::XHTML, :xhtml, :xhtml5
+        xhtml = Meteor::Ml::Xhtml::ParserImpl.new
+        xhtml.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = xhtml
+      when Parser::XML, :xml
+        xml = Meteor::Ml::Xml::ParserImpl.new
+        xml.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = xml
       end
     end
 
@@ -251,21 +254,20 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
-        when Parser::HTML4, :html4
-          ps = Meteor::Ml::Html4::ParserImpl.new
-        when Parser::XHTML4, :xhtml4
-          ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML, :html, :html5
-          ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML, :xhtml, :xhtml5
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::XML, :xml
-          ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::HTML4, :html4
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML4, :xhtml4
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
+      when Parser::HTML, :html, :html5
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XHTML, :xhtml, :xhtml5
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.read(File.expand_path(relative_path, @root), @enc)
       @cache[relative_url] = ps
-
     end
 
     private :link_2_n
@@ -276,26 +278,25 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link_2_s(relative_path,enc)
+    def link_2_s(relative_path, enc)
 
       relative_url = path_to_url(relative_path)
 
       case @type
-        when Parser::HTML4, :html4
-          ps = Meteor::Ml::Html4::ParserImpl.new
-        when Parser::XHTML4, :xhtml4
-          ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::XML, :xml
-          ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::HTML4, :html4
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML4, :xhtml4
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
+      when Parser::HTML, :html
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.read(File.expand_path(relative_path, @root), enc)
       @cache[relative_url] = ps
-
     end
 
     private :link_2_s
@@ -310,23 +311,22 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
-        when Parser::HTML4, :html4
-          ps = Meteor::Ml::Html4::ParserImpl.new
-        when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::XML, :xml
-          ps = Meteor::Ml::Xml::ParserImpl.new
-        else
-          raise ArgumentError
+      when Parser::HTML4, :html4
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
+      when Parser::HTML, :html
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
+      else
+        raise ArgumentError
       end
 
       ps.read(File.expand_path(relative_path, @root), @enc)
       @cache[relative_url] = ps
-
     end
 
     private :link_1
@@ -351,10 +351,10 @@ module Meteor
     # @deprecated
     def parser(*args)
       case args.length
-        when 1
-          parser_1(args[0])
-        when 2,3
-          link(args)
+      when 1
+        parser_1(args[0])
+      when 2, 3
+        link(args)
       end
       # parser_1(key)
     end
@@ -367,16 +367,16 @@ module Meteor
     def parser_1(key)
       @pif = @cache[key.to_s]
       case @pif.doc_type
-        when Meteor::Parser::HTML4
-          Meteor::Ml::Html4::ParserImpl.new(@pif)
-        when Meteor::Parser::XHTML4
-          Meteor::Ml::Xhtml4::ParserImpl.new(@pif)
-        when Meteor::Parser::HTML
-          Meteor::Ml::Html::ParserImpl.new(@pif)
-        when Meteor::Parser::XHTML
-          Meteor::Ml::Xhtml::ParserImpl.new(@pif)
-        when Meteor::Parser::XML
-          Meteor::Ml::Xml::ParserImpl.new(@pif)
+      when Meteor::Parser::HTML4
+        Meteor::Ml::Html4::ParserImpl.new(@pif)
+      when Meteor::Parser::XHTML4
+        Meteor::Ml::Xhtml4::ParserImpl.new(@pif)
+      when Meteor::Parser::HTML
+        Meteor::Ml::Html::ParserImpl.new(@pif)
+      when Meteor::Parser::XHTML
+        Meteor::Ml::Xhtml::ParserImpl.new(@pif)
+      when Meteor::Parser::XML
+        Meteor::Ml::Xml::ParserImpl.new(@pif)
       end
     end
 
@@ -406,12 +406,12 @@ module Meteor
     #
     def link_str(*args)
       case args.length
-        when 2
-          link_str_2(args[0],args[1])
-        when 3
-          link_str_3(args[0],args[1],args[2])
-        else
-          raise ArgumentError
+      when 2
+        link_str_2(args[0], args[1])
+      when 3
+        link_str_3(args[0], args[1], args[2])
+      else
+        raise ArgumentError
       end
     end
 
@@ -424,16 +424,16 @@ module Meteor
     #
     def link_str_3(type, relative_url, doc)
       case type
-        when Parser::HTML4, :html
-          ps = Meteor::Ml::Html4::ParserImpl.new
-        when Parser::XHTML4, :xhtml4
-          ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::XML, :xml
-          ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::HTML4, :html
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML4, :xhtml4
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
+      when Parser::HTML, :html
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.dcument = doc
@@ -451,16 +451,16 @@ module Meteor
     #
     def link_str_2(relative_url, doc)
       case @type
-        when Parser::HTML4, :html4
-          ps = Meteor::Ml::Html4::ParserImpl.new
-        when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML, :html
-          ps = Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML, :xhtml
-          ps = Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::XML, :xml
-          ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::HTML4, :html4
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
+      when Parser::HTML, :html
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.document = doc

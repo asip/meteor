@@ -11,18 +11,18 @@ module Meteor
         # KAIGYO_CODE = "\r?\n|\r"
         KAIGYO_CODE = ["\r\n", "\n", "\r"]
 
-        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
+        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt);"
 
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
         TABLE_FOR_ESCAPE_ = {
-            '&' => '&amp;',
-            '"' => '&quot;',
-            '\'' => '&apos;',
-            '<' => '&lt;',
-            '>' => '&gt;',
+          "&" => "&amp;",
+          "\"" => "&quot;",
+          "'" => "&apos;",
+          "<" => "&lt;",
+          ">" => "&gt;"
         }
-        PATTERN_ESCAPE = '[&\"\'<>]'
+        PATTERN_ESCAPE = "[&\\\"'<>]"
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
 
         #
@@ -35,12 +35,12 @@ module Meteor
           super()
           @doc_type = Parser::XML
           case args.length
-            when ZERO
-              # initialize_0
-            when ONE
-              initialize_1(args[0])
-            else
-              raise ArgumentError
+          when ZERO
+            # initialize_0
+          when ONE
+            initialize_1(args[0])
+          else
+            raise ArgumentError
           end
         end
 
@@ -64,7 +64,6 @@ module Meteor
         end
 
         private :initialize_1
-
 
         #
         # parse document (ドキュメントを解析する)
@@ -102,7 +101,6 @@ module Meteor
               # puts "kaigyo:" << @root.kaigyo_code
             end
           end
-
         end
 
         private :analyze_kaigyo_code
@@ -131,16 +129,16 @@ module Meteor
           # 「&」<-「&amp;」
           content.gsub(@@pattern_unescape) do
             case $1
-              when 'amp'
-                '&'
-              when 'quot'
-                '"'
-              when 'apos'
-                "'"
-              when 'gt'
-                '>'
-              when 'lt'
-                '<'
+            when "amp"
+              "&"
+            when "quot"
+              "\""
+            when "apos"
+              "'"
+            when "gt"
+              ">"
+            when "lt"
+              "<"
             end
           end
 

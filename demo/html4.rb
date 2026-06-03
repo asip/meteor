@@ -3,22 +3,24 @@
 # frozen_string_literal: true
 
 # require 'rubygems'
-require 'meteor'
+require "meteor"
 
 # Meteor::ElementFactory.link(:html4,'ml/sample_4.html', 'UTF-8')
-Meteor::ElementFactory.options= {type: :html4}
-Meteor::ElementFactory.link('ml/sample_html4.html')
+Meteor::ElementFactory.options = {type: :html4}
+Meteor::ElementFactory.link("ml/sample_html4.html")
 
-root = Meteor::ElementFactory.element('/ml/sample_html4')
+root = Meteor::ElementFactory.element("/ml/sample_html4")
 
 start_time = Time.new.to_f
 
-elm_hello = root.element(id: 'hello')
-elm_hello['class'] = 'red'  # elm_hello.attr(class: 'red')
+elm_hello = root.element(id: "hello")
+# elm_hello.attr(class: 'red')
+elm_hello["class"] = "red"
 # elm_hello['class'] = nil  # elm_hello.remove_attr('class')
 
-elm_hello2 = root.element(id: 'hello2')
-elm_hello2.content = 'Hello,Tester'  # elm_hello2.content('Hello,Tester')
+elm_hello2 = root.element(id: "hello2")
+# elm_hello2.content('Hello,Tester')
+elm_hello2.content = "Hello,Tester"
 
 # elm_hello3 = root.cxtag('hello3')
 # elm_hello3.content = "Hello,Hello\ntt"  # elm_hello3.content = "Hello,Hello"
@@ -28,11 +30,11 @@ elm_hello2.content = 'Hello,Tester'  # elm_hello2.content('Hello,Tester')
 # puts elm_hello3.content
 # puts elm_hello3.mixed_content
 
-elm_text1 = root.element('input', id: 'text1')
+elm_text1 = root.element("input", id: "text1")
 # elm_text1['value'] = 'めも'       # elm_text1.attr(value: 'めも')
 # elm_text1.attr = {value: 'メモ'}
 # elm_text1['disabled'] = true     # elm_text1.attr(disabled: true)
-elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
+elm_text1.attrs = {value: "メモ", disabled: true, readonly: true}
 # puts elm_text1.attrs
 # elm_text1['disabled'] = nil      # elm_text1.remove_attr('disabled')
 # map = elm_text1.attr_map
@@ -60,31 +62,36 @@ elm_text1.attrs = {value: 'メモ', disabled: true, readonly: true}
 # puts elm_option1['selected']    # puts elm_option1.attr('selected')
 # puts elm_text1['readonly']      # puts elm_text1.attr('readonly')
 
-
-elm_select2 = root.element('select', id: 'select2')
-elm_select2['multiple'] = true
-elm_option2 = elm_select2.element('option',id: 'option2')
-co_elm = elm_option2.element()
+elm_select2 = root.element("select", id: "select2")
+elm_select2["multiple"] = true
+elm_option2 = elm_select2.element("option", id: "option2")
+co_elm = elm_option2.element
 10.times { |i|
-  co_elm['value'] = i  # co_elm.attr(value: i)
+  # co_elm.attr(value: i)
+  co_elm["value"] = i
   # '<' +
-  if i == 1 then
-    co_elm['selected'] = true   # co_elm.attr(selected: 'true')
+  if i == 1
+    # co_elm.attr(selected: 'true')
+    co_elm["selected"] = true
   else
-    co_elm['selected'] = false  # co_elm.attr(selected: 'false')
+    # co_elm.attr(selected: 'false')
+    co_elm["selected"] = false
   end
-  co_elm.content = i  # co_elm.content(i)
-  co_elm['id'] = nil  # co_elm.remove_attr('id')
+  # co_elm.content(i)
+  co_elm.content = i
+  # co_elm.remove_attr('id')
+  co_elm["id"] = nil
   co_elm.flash
 }
 
-elm_tr1 = root.element('tr',id: 'loop')  # elm_tr1 = root.css('tr[id=loop]')
+# elm_tr1 = root.css('tr[id=loop]')
+elm_tr1 = root.element("tr", id: "loop")
 elm_ = root.element(elm_tr1)
-elm_dt1_ = elm_.element(id: 'aa')
-elm_dt2_ = elm_.element(id: 'bb')
-elm_dt3_ = elm_.element(id: 'cc')
+elm_dt1_ = elm_.element(id: "aa")
+elm_dt2_ = elm_.element(id: "bb")
+elm_dt3_ = elm_.element(id: "cc")
 10.times do |i|
-  elm_['loop'] = i
+  elm_["loop"] = i
   elm_dt1 = elm_dt1_.clone
   elm_dt2 = elm_dt2_.clone
   elm_dt3 = elm_dt3_.clone
@@ -95,20 +102,20 @@ elm_dt3_ = elm_.element(id: 'cc')
   elm_.flash
 end
 
-elms = root.elements(id: 'sample')
+elms = root.elements(id: "sample")
 # elms = root.css('div')  # elms = root.css('div[class=test]')
 
-elms.each_with_index{ |elm_,i|
-  elm_['style'] = i.to_s
+elms.each_with_index { |elm_, i|
+  elm_["style"] = i.to_s
 }
 
 root.flash
 
 end_time = Time.new.to_f
 
-puts root.document
+puts(root.document)
 
-puts "charset:#{root.charset}"
-puts "content-type:#{root.content_type}"
+puts("charset:#{root.charset}")
+puts("content-type:#{root.content_type}")
 
-puts '' + (end_time - start_time).to_s + ' sec'
+puts("" + (end_time - start_time).to_s + " sec")

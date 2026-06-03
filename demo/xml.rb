@@ -3,10 +3,10 @@
 # frozen_string_literal: true
 
 # require 'rubygems'
-require 'meteor'
+require "meteor"
 
-Meteor::ElementFactory.link(Meteor::XML,'ml/sample.xml', 'UTF-8')
-root = Meteor::ElementFactory.element('/ml/sample')
+Meteor::ElementFactory.link(Meteor::XML, "ml/sample.xml", "UTF-8")
+root = Meteor::ElementFactory.element("/ml/sample")
 
 start_time = Time.new.to_f
 
@@ -21,7 +21,8 @@ start_time = Time.new.to_f
 # puts elm_.attributes
 # puts elm_.mixed_content
 
-elm1 = root.element('test', manbo: 'manbo')  # elm1 = root.element(manbo: "manbo")
+# elm1 = root.element(manbo: "manbo")
+elm1 = root.element("test", manbo: "manbo")
 # elm2 = root.element(id: "aa", id2: "bb")    # elm2 = root.element(id: "aa")
 # elm3 = root.element("potato", id: "aa")
 # elm4 = root.element("potato", id: "aa", id2: "bb")  # elm4 = root.element("potato", id2: "bb")
@@ -58,11 +59,11 @@ elm7 = root.element("kobe")
 # }
 
 elm_ = root.element(elm1)
-elm5_ = elm_.element('tech')
+elm5_ = elm_.element("tech")
 10.times do |i|
-  elm_['manbo'] = i.to_s
+  elm_["manbo"] = i.to_s
   elm5 = elm5_.clone
-  elm5['mono'] = i.to_s
+  elm5["mono"] = i.to_s
   elm5.content = i.to_s
   elm_.flash
 end
@@ -76,9 +77,10 @@ end
 elm_ = root.element(elm7)
 
 10.times { |i|
-  elm_["momo"]= i
+  elm_["momo"] = i
   elm_["eco"] = "えま"
-  elm_.content = i  # elm_["content"] = i.to_s
+  # elm_["content"] = i.to_s
+  elm_.content = i
   elm_.flash
 }
 
@@ -95,24 +97,25 @@ root.flash
 
 end_time = Time.new.to_f
 
-puts root.document
+puts(root.document)
 
 # elms = root.elements("potato2")
 ## elms = root.elements("kobe")
 # elms = root.elements("potato")
 
-elms = root.elements("test")  # elms = root.css('test')
-elms.each{|elm, i|
-  puts '-------'
-  puts 'doc----'
-  puts elm.document
-  puts 'attrs--'
-  puts elm.attributes
-  puts 'mixed--'
-  puts elm.mixed_content
+# elms = root.css('test')
+elms = root.elements("test")
+elms.each { |elm, i|
+  puts("-------")
+  puts("doc----")
+  puts(elm.document)
+  puts("attrs--")
+  puts(elm.attributes)
+  puts("mixed--")
+  puts(elm.mixed_content)
 }
 
-puts '' + (end_time - start_time).to_s + ' sec'
+puts("" + (end_time - start_time).to_s + " sec")
 
 # start_time = Time.new.to_f
 # obj = eval("\"#{elm3.name}\"")

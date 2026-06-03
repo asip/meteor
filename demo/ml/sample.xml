@@ -9,42 +9,40 @@
 -->
 
 <root>
+  <test1 manbo="mango" />
 
-<test1 manbo="mango" />
+  <test manbo="manbo">
+    <tech mono="mono">こまねち</tech>
+  </test>
+  <test manbo="mbo">
+    <tech mono="mono">komaneti</tech>
+  </test>
+  <test manbo="mbo">
+    <tech mono="mono2">komaneti</tech>
+  </test>
+  <!-- @quark id="mono" --><!-- /@quark -->
+  <!-- @quark id="moti" --><!-- /@quark -->
+  <momo>komaneti</momo>
+  <kobe momo="mono">komaneti</kobe>
+  <teo a="aa" b="bb"/>
+  <mink>komaneti</mink>
 
-<test manbo="manbo">
-  <tech mono="mono">こまねち</tech>
-</test>
-<test manbo="mbo">
-  <tech mono="mono">komaneti</tech>
-</test>
-<test manbo="mbo">
-  <tech mono="mono2">komaneti</tech>
-</test>
-<!-- @quark id="mono" --><!-- /@quark -->
-<!-- @quark id="moti" --><!-- /@quark -->
-<momo>komaneti</momo>
-<kobe momo="mono">komaneti</kobe>
-<teo a="aa" b="bb"/>
-<mink>komaneti</mink>
+  <potato id="aa" lc="/cc">
+    <potato id="/bb"></potato>
+  </potato>
 
-<potato id="aa" lc="/cc">
-  <potato id="/bb"></potato>
-</potato>
+  <potato id="aa" id2="bb" lc="/cc">
+    <potato id="/bb"><test></test></potato>
+  </potato>
 
-<potato id="aa" id2="bb" lc="/cc">
-  <potato id="/bb"><test></test></potato>
-</potato>
+  <potato2 id="aa" id2="bb" lc="/cc"/>
 
-<potato2 id="aa" id2="bb" lc="/cc"/>
+  <hamachi id="aa" id2="bb" lc="/cc">
+    test
+  </hamachi>
 
-<hamachi id="aa" id2="bb" lc="/cc">
-  test
-</hamachi>
+  <hamachi id="aa" id2="bb" />
 
-<hamachi id="aa" id2="bb" />
-
-<kobe momo="momo" value="komaneti" />
-<!-- @pp id="cs" -->テスト<!-- /@pp -->
-
+  <kobe momo="momo" value="komaneti" />
+  <!-- @pp id="cs" -->テスト<!-- /@pp -->
 </root>

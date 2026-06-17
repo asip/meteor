@@ -61,6 +61,8 @@ module Meteor
         def initialize_1(ps)
           @root.document = String.new(ps.document)
           ps.document_hook = String.new(ps.document_hook)
+          @root.content_type = String.new(ps.root_element.content_type)
+          @root.kaigyo_code = ps.root_element.kaigyo_code
         end
 
         private :initialize_1
@@ -77,6 +79,7 @@ module Meteor
         #
         def analyze_ml
           analyze_kaigyo_code
+          analyze_content_type
 
           @res = nil
         end
@@ -104,6 +107,15 @@ module Meteor
         end
 
         private :analyze_kaigyo_code
+
+         #
+        # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
+        #
+        def analyze_content_type
+          @root.content_type = "text/xml"
+        end
+
+        private :analyze_content_type
 
         def escape(content)
           # replace special character (特殊文字の置換)

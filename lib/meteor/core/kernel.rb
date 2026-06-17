@@ -2189,16 +2189,16 @@ module Meteor
 
       def create(pif)
         case pif.doc_type
+        when Parser::HTML
+          Meteor::Ml::Html::ParserImpl.new
+        when Parser::XML
+          Meteor::Ml::Xml::ParserImpl.new
+        when Parser::XHTML
+          Meteor::Ml::Xhtml::ParserImpl.new
         when Parser::HTML4
           Meteor::Ml::Html4::ParserImpl.new
         when Parser::XHTML4
           Meteor::Ml::Xhtml4::ParserImpl.new
-        when Parser::HTML
-          Meteor::Ml::Html::ParserImpl.new
-        when Parser::XHTML
-          Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::XML
-          Meteor::Ml::Xml::ParserImpl.new
         else
           nil
         end

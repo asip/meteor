@@ -91,7 +91,7 @@ module Meteor
             @root.charset = "utf-8"
           end
 
-          @root.content_type = ""
+          @root.content_type = "text/html"
         end
 
         private :analyze_content_type

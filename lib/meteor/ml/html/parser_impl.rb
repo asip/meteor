@@ -12,7 +12,7 @@ module Meteor
         MATCH_TAG = ["br", "hr", "img", "input", "meta", "base", "embed", "command", "keygen"]
 
         #[Array] non-nestable elements (入れ子にできない要素)
-        MATCH_TAG_SNG = [
+        MATCH_TAG_NNE = [
           "texarea",
           "select",
           "option",
@@ -57,7 +57,7 @@ module Meteor
         def initialize(*args)
           super()
           @@match_tag = MATCH_TAG
-          @@match_tag_sng = MATCH_TAG_SNG
+          @@MATCH_TAG_NNE = MATCH_TAG_NNE
           @@attr_logic = ATTR_LOGIC
           @doc_type = Parser::HTML
           case args.length

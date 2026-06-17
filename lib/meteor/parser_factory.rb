@@ -218,6 +218,18 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
+      when Parser::HTML, :html, :html5
+        html = Meteor::Ml::Html::ParserImpl.new
+        html.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = html
+      when Parser::XML, :xml
+        xml = Meteor::Ml::Xml::ParserImpl.new
+        xml.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = xml
+      when Parser::XHTML, :xhtml, :xhtml5
+        xhtml = Meteor::Ml::Xhtml::ParserImpl.new
+        xhtml.read(File.expand_path(relative_path, @root), enc)
+        @cache[relative_url] = xhtml
       when Parser::HTML4, :html4
         html4 = Meteor::Ml::Html4::ParserImpl.new
         html.read(File.expand_path(relative_path, @root), enc)
@@ -226,18 +238,6 @@ module Meteor
         xhtml4 = Meteor::Ml::Xhtml4::ParserImpl.new
         xhtml4.read(File.expand_path(relative_path, @root), enc)
         @cache[relative_url] = xhtml4
-      when Parser::HTML, :html, :html5
-        html = Meteor::Ml::Html::ParserImpl.new
-        html.read(File.expand_path(relative_path, @root), enc)
-        @cache[relative_url] = html
-      when Parser::XHTML, :xhtml, :xhtml5
-        xhtml = Meteor::Ml::Xhtml::ParserImpl.new
-        xhtml.read(File.expand_path(relative_path, @root), enc)
-        @cache[relative_url] = xhtml
-      when Parser::XML, :xml
-        xml = Meteor::Ml::Xml::ParserImpl.new
-        xml.read(File.expand_path(relative_path, @root), enc)
-        @cache[relative_url] = xml
       end
     end
 
@@ -254,16 +254,16 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case type
+      when Parser::HTML, :html, :html5
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::XHTML, :xhtml, :xhtml5
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
       when Parser::HTML4, :html4
         ps = Meteor::Ml::Html4::ParserImpl.new
       when Parser::XHTML4, :xhtml4
         ps = Meteor::Ml::Xhtml4::ParserImpl.new
-      when Parser::HTML, :html, :html5
-        ps = Meteor::Ml::Html::ParserImpl.new
-      when Parser::XHTML, :xhtml, :xhtml5
-        ps = Meteor::Ml::Xhtml::ParserImpl.new
-      when Parser::XML, :xml
-        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.read(File.expand_path(relative_path, @root), @enc)
@@ -283,16 +283,16 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
+      when Parser::HTML, :html
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
       when Parser::HTML4, :html4
         ps = Meteor::Ml::Html4::ParserImpl.new
       when Parser::XHTML4, :xhtml4
         ps = Meteor::Ml::Xhtml4::ParserImpl.new
-      when Parser::HTML, :html
-        ps = Meteor::Ml::Html::ParserImpl.new
-      when Parser::XHTML, :xhtml
-        ps = Meteor::Ml::Xhtml::ParserImpl.new
-      when Parser::XML, :xml
-        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.read(File.expand_path(relative_path, @root), enc)
@@ -311,16 +311,16 @@ module Meteor
       relative_url = path_to_url(relative_path)
 
       case @type
-      when Parser::HTML4, :html4
-        ps = Meteor::Ml::Html4::ParserImpl.new
-      when Parser::XHTML, :xhtml
-        ps = Meteor::Ml::Xhtml4::ParserImpl.new
       when Parser::HTML, :html
         ps = Meteor::Ml::Html::ParserImpl.new
-      when Parser::XHTML, :xhtml
-        ps = Meteor::Ml::Xhtml::ParserImpl.new
       when Parser::XML, :xml
         ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::HTML4, :html4
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML4, :xhtml4
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
       else
         raise ArgumentError
       end
@@ -367,16 +367,16 @@ module Meteor
     def parser_1(key)
       @pif = @cache[key.to_s]
       case @pif.doc_type
+      when Meteor::Parser::HTML
+        Meteor::Ml::Html::ParserImpl.new(@pif)
+      when Meteor::Parser::XML
+        Meteor::Ml::Xml::ParserImpl.new(@pif)
+      when Meteor::Parser::XHTML
+        Meteor::Ml::Xhtml::ParserImpl.new(@pif)
       when Meteor::Parser::HTML4
         Meteor::Ml::Html4::ParserImpl.new(@pif)
       when Meteor::Parser::XHTML4
         Meteor::Ml::Xhtml4::ParserImpl.new(@pif)
-      when Meteor::Parser::HTML
-        Meteor::Ml::Html::ParserImpl.new(@pif)
-      when Meteor::Parser::XHTML
-        Meteor::Ml::Xhtml::ParserImpl.new(@pif)
-      when Meteor::Parser::XML
-        Meteor::Ml::Xml::ParserImpl.new(@pif)
       end
     end
 
@@ -424,16 +424,16 @@ module Meteor
     #
     def link_str_3(type, relative_url, doc)
       case type
-      when Parser::HTML4, :html
+      when Parser::HTML, :html
+        ps = Meteor::Ml::Html::ParserImpl.new
+      when Parser::XML, :xml
+        ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::HTML4, :html4
         ps = Meteor::Ml::Html4::ParserImpl.new
       when Parser::XHTML4, :xhtml4
         ps = Meteor::Ml::Xhtml4::ParserImpl.new
-      when Parser::HTML, :html
-        ps = Meteor::Ml::Html::ParserImpl.new
-      when Parser::XHTML, :xhtml
-        ps = Meteor::Ml::Xhtml::ParserImpl.new
-      when Parser::XML, :xml
-        ps = Meteor::Ml::Xml::ParserImpl.new
       end
 
       ps.dcument = doc
@@ -451,16 +451,16 @@ module Meteor
     #
     def link_str_2(relative_url, doc)
       case @type
-      when Parser::HTML4, :html4
-        ps = Meteor::Ml::Html4::ParserImpl.new
-      when Parser::XHTML, :xhtml
-        ps = Meteor::Ml::Xhtml4::ParserImpl.new
       when Parser::HTML, :html
         ps = Meteor::Ml::Html::ParserImpl.new
-      when Parser::XHTML, :xhtml
-        ps = Meteor::Ml::Xhtml::ParserImpl.new
       when Parser::XML, :xml
         ps = Meteor::Ml::Xml::ParserImpl.new
+      when Parser::XHTML, :xhtml
+        ps = Meteor::Ml::Xhtml::ParserImpl.new
+      when Parser::HTML4, :html4
+        ps = Meteor::Ml::Html4::ParserImpl.new
+      when Parser::XHTML4, :xhtml4
+        ps = Meteor::Ml::Xhtml4::ParserImpl.new
       end
 
       ps.document = doc

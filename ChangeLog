@@ -1,3 +1,7 @@
+== 0.9.14 / 2026-06-17 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Fix the content-type handling in the parsers
+
 == 0.9.13 / 2026-05-31 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Refactoring

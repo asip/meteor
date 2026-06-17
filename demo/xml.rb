@@ -115,6 +115,8 @@ elms.each { |elm, i|
   puts(elm.mixed_content)
 }
 
+puts("content-type:#{root.content_type}")
+
 puts("" + (end_time - start_time).to_s + " sec")
 
 # start_time = Time.new.to_f

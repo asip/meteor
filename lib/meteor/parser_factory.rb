@@ -210,10 +210,10 @@ module Meteor
     # @return [Meteor::Parser] parser(パーサ)
     #
     def link_3(type, relative_path, enc)
-      relative_url = path_to_url(relative_path)
-
       ps = new_parser(type)
       ps.read(File.expand_path(relative_path, @root), enc)
+
+      relative_url = path_to_url(relative_path)
       @cache[relative_url] = ps
     end
 
@@ -226,10 +226,10 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def link_2_n(type, relative_path)
-      relative_url = path_to_url(relative_path)
-
       ps = new_parser(type)
       ps.read(File.expand_path(relative_path, @root), @enc)
+
+      relative_url = path_to_url(relative_path)
       @cache[relative_url] = ps
     end
 
@@ -242,10 +242,10 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def link_2_s(relative_path, enc)
-      relative_url = path_to_url(relative_path)
-
       ps = new_parser(@type)
       ps.read(File.expand_path(relative_path, @root), enc)
+
+      relative_url = path_to_url(relative_path)
       @cache[relative_url] = ps
     end
 
@@ -257,10 +257,10 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def link_1(relative_path)
-      relative_url = path_to_url(relative_path)
-
       ps = new_parser(@type)
       ps.read(File.expand_path(relative_path, @root), @enc)
+
+      relative_url = path_to_url(relative_path)
       @cache[relative_url] = ps
     end
 
@@ -359,9 +359,9 @@ module Meteor
     #
     def link_str_3(type, relative_url, doc)
       ps = new_parser(@type)
-
       ps.dcument = doc
       ps.parse
+
       @cache[relative_url] = ps
     end
 
@@ -375,9 +375,9 @@ module Meteor
     #
     def link_str_2(relative_url, doc)
       ps = new_parser(@type)
-
       ps.document = doc
       ps.parse
+
       @cache[relative_url] = ps
     end
 

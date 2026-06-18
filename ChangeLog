@@ -1,3 +1,7 @@
+== 0.9.16 / 2026-06-18 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Refactoring
+
 == 0.9.15 / 2026-06-18 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Fix ParserImpl#element

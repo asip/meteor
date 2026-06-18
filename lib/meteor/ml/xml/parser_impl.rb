@@ -51,8 +51,6 @@ module Meteor
         # end
         #
         # private :initialize_0
-        #
-        # private :initialize_0
 
         #
         # initializer (イニシャライザ)

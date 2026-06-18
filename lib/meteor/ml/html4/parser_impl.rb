@@ -351,7 +351,6 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_2(attr_name, attr_value)
-
           quote_attribute(attr_name, attr_value)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value
@@ -386,7 +385,6 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
-
           quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
           # 空要素の場合(<->内容あり要素の場合)
@@ -579,7 +577,6 @@ module Meteor
         private :get_type
 
         def get_attr_value_r(elm, match_p)
-
           @res = match_p.match(elm.attributes)
 
           if @res

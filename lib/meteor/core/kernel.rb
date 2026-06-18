@@ -463,7 +463,6 @@ module Meteor
           @elm_.empty = true
 
           @elm_.parser = self
-
         when FIVE
           # element (要素)
           @elm_ = Meteor::Element.new(name)
@@ -596,7 +595,6 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def element_2(attr_name, attr_value)
-
         quote_attribute(attr_name, attr_value)
 
         element_pattern_2
@@ -613,7 +611,6 @@ module Meteor
 
           @elm_ = nil
         end
-        #=end
 
 =begin
         @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(\\3[^<>]*>)).)*)<\\/\\3>"
@@ -1056,7 +1053,6 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
-
         quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
         element_pattern_4

@@ -650,14 +650,14 @@ module Meteor
         private :remove_attrs_
 
         def escape(content)
-          # 特殊文字の置換
+          # replace special character (特殊文字の置換)
           content = content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
 
           content
         end
 
         def escape_content(content, elm)
-          # 特殊文字の置換
+          # replace special character (特殊文字の置換)
           content = content.gsub(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
 
           content

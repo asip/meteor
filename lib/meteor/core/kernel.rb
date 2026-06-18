@@ -369,7 +369,11 @@ module Meteor
       # @param [true,false] quote flag (クオート・フラグ)
       # @return [Meteor::Element] element (要素)
       def element_3(name, attr_name, attr_value, quote = true)
-        element_quote_3(name, attr_name, attr_value)
+        if quote
+          quote_element_3(name, attr_name, attr_value)
+        else
+          quote_name(name)
+        end
 
         @pattern_cc_1 = element_pattern_3
 
@@ -429,13 +433,12 @@ module Meteor
 
       private :element_pattern_3
 
-      def element_quote_3(name, attr_name, attr_value)
-        @_name = Regexp.quote(name)
-        @_attr_name = Regexp.quote(attr_name)
-        @_attr_value = Regexp.quote(attr_value)
+      def quote_element_3(name, attr_name, attr_value)
+        quote_name(name)
+        quote_attribute(attr_name, attr_value)
       end
 
-      private :element_quote_3
+      private :quote_element_3
 
       def element_with_3_1(name)
         # puts  @res.captures.length
@@ -594,7 +597,7 @@ module Meteor
       #
       def element_2(attr_name, attr_value)
 
-        element_quote_2(attr_name, attr_value)
+        quote_attribute(attr_name, attr_value)
 
         element_pattern_2
 
@@ -665,12 +668,18 @@ module Meteor
 
       private :element_2
 
-      def element_quote_2(attr_name, attr_value)
+      def quote_name(name)
+        @_name = Regexp.quote(name)
+      end
+
+      private :quote_name
+
+      def quote_attribute(attr_name, attr_value)
         @_attr_name = Regexp.quote(attr_name)
         @_attr_value = Regexp.quote(attr_value)
       end
 
-      private :element_quote_2
+      private :quote_attribute
 
       def element_pattern_2
         # # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value << '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
@@ -681,7 +690,7 @@ module Meteor
       private :element_pattern_2
 
 =begin
-     def element_with_2_1
+      def element_with_2_1
         # puts @res.captures.length
         case @res.captures.length
           when FOUR
@@ -820,7 +829,7 @@ module Meteor
       #
       def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
-        element_quote_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
         @pattern_cc_1 = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
@@ -874,7 +883,7 @@ module Meteor
 
       private :element_5
 
-      def element_quote_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+      def quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
         @_name = Regexp.quote(name)
         @_attr_name1 = Regexp.quote(attr_name1)
         @_attr_name2 = Regexp.quote(attr_name2)
@@ -882,7 +891,7 @@ module Meteor
         @_attr_value2 = Regexp.quote(attr_value2)
       end
 
-      private :element_quote_5
+      private :quote_element_5
 
       def element_with_5_1(name)
 
@@ -1048,7 +1057,7 @@ module Meteor
       #
       def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
-        element_quote_4(attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
         element_pattern_4
 
@@ -1073,14 +1082,14 @@ module Meteor
 
       private :element_4
 
-      def element_quote_4(attr_name1, attr_value1, attr_name2, attr_value2)
+      def quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
         @_attr_name1 = Regexp.quote(attr_name1)
         @_attr_name2 = Regexp.quote(attr_name2)
         @_attr_value1 = Regexp.quote(attr_value1)
         @_attr_value2 = Regexp.quote(attr_value2)
       end
 
-      private :element_quote_4
+      private :quote_element_4
 
       def element_pattern_4
 

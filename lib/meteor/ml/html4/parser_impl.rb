@@ -214,7 +214,7 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_1(name)
-          @_name = Regexp.quote(name)
+          quote_name(name)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if is_match(@@match_tag, name)
@@ -281,8 +281,11 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_3(name, attr_name, attr_value, quote = true)
-
-          element_quote_3(name, attr_name, attr_value) if quote
+          if quote
+            quote_element_3(name, attr_name, attr_value)
+          else
+            quote_name(name)
+          end
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if is_match(@@match_tag, name)
@@ -348,7 +351,7 @@ module Meteor
         #
         def element_2(attr_name, attr_value)
 
-          element_quote_2(attr_name, attr_value)
+          quote_attribute(attr_name, attr_value)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value
           # @pattern_cc << '"[^<>]*>'
@@ -383,7 +386,7 @@ module Meteor
         #
         def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
-          element_quote_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+          quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
           # 空要素の場合(<->内容あり要素の場合)
           if is_match(@@match_tag, name)
@@ -466,7 +469,7 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
-          element_quote_4(attr_name1, attr_value1, attr_name2, attr_value2)
+          quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="' << @_attr_value1
           # @pattern_cc << '"[^<>]*' << @_attr_name2 << '="' << @_attr_value2

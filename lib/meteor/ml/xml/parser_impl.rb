@@ -108,7 +108,7 @@ module Meteor
 
         private :analyze_kaigyo_code
 
-         #
+        #
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
         def analyze_content_type

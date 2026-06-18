@@ -52,7 +52,7 @@ module Meteor
         # @@pattern_true = Regexp.new("true")
         # @@pattern_false = Regexp.new("false")
 
-        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt|nbsp);"
+        
         GET_ATTRS_MAP2 = "\\s(disabled|readonly|checked|selected|multiple)"
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)
@@ -66,7 +66,6 @@ module Meteor
         @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
         @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
         @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
 
         # @@pattern_match_tag = Regexp.new(@@match_tag)
@@ -95,9 +94,11 @@ module Meteor
 
         PATTERN_ESCAPE = "[&\"'<> ]"
         PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
-
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+
+        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt|nbsp);"
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
         @@pattern_br_2 = Regexp.new(BR)
 
         #

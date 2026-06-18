@@ -48,8 +48,6 @@ module Meteor
         MULTIPLE_R = "multiple=\"[^\"]*\""
         MULTIPLE_U = "multiple=\"multiple\""
 
-        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt|nbsp);"
-
         @@pattern_selected_m = Regexp.new(SELECTED_M)
         @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
         @@pattern_selected_r = Regexp.new(SELECTED_R)
@@ -65,10 +63,6 @@ module Meteor
         @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
         @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
         @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
-
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-
-        @@pattern_br_2 = Regexp.new("<br\\/>")
 
         # @@pattern_match_tag = Regexp.new(@@match_tag)
         # @@pattern_match_tag2 = Regexp.new(@@match_tag_2)
@@ -98,6 +92,10 @@ module Meteor
         PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
         @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+
+        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt|nbsp);"
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+        @@pattern_br_2 = Regexp.new("<br\\/>")
 
         #
         # initializer (イニシャライザ)

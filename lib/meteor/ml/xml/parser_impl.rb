@@ -11,10 +11,6 @@ module Meteor
         # KAIGYO_CODE = "\r?\n|\r"
         KAIGYO_CODE = ["\r\n", "\n", "\r"]
 
-        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt);"
-
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-
         TABLE_FOR_ESCAPE_ = {
           "&" => "&amp;",
           "\"" => "&quot;",
@@ -22,8 +18,12 @@ module Meteor
           "<" => "&lt;",
           ">" => "&gt;"
         }
+
         PATTERN_ESCAPE = "[&\\\"'<>]"
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+
+        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt);"
+        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
         #
         # initializer (イニシャライザ)

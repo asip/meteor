@@ -210,7 +210,7 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser(パーサ)
     #
-    def add_3(type, relative_path, enc)
+    def add_3(type, relative_path, enc = "UTF-8")
       ps = new_parser(type)
       ps.read(File.expand_path(relative_path, @root), enc)
 
@@ -227,11 +227,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def add_2_n(type, relative_path)
-      ps = new_parser(type)
-      ps.read(File.expand_path(relative_path, @root), @enc)
-
-      relative_url = path_to_url(relative_path)
-      @cache[relative_url] = ps
+      add_3(type, relative_path, @enc)
     end
 
     private :add_2_n
@@ -243,11 +239,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def add_2_s(relative_path, enc)
-      ps = new_parser(@type)
-      ps.read(File.expand_path(relative_path, @root), enc)
-
-      relative_url = path_to_url(relative_path)
-      @cache[relative_url] = ps
+      add_3(@type, relative_path, enc)
     end
 
     private :add_2_s
@@ -258,11 +250,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def add_1(relative_path)
-      ps = new_parser(@type)
-      ps.read(File.expand_path(relative_path, @root), @enc)
-
-      relative_url = path_to_url(relative_path)
-      @cache[relative_url] = ps
+      add_3(@type, relative_path, @enc)
     end
 
     private :add_1
@@ -359,8 +347,8 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def add_str_3(type, relative_url, doc)
-      ps = new_parser(@type)
-      ps.dcument = doc
+      ps = new_parser(type)
+      ps.document = doc
       ps.parse
 
       @cache[relative_url] = ps
@@ -375,11 +363,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def add_str_2(relative_url, doc)
-      ps = new_parser(@type)
-      ps.document = doc
-      ps.parse
-
-      @cache[relative_url] = ps
+      add_str_3(@type, relative_url, doc)
     end
 
     private :add_str_2

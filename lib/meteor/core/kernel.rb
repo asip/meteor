@@ -1788,7 +1788,6 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def set_content_3(elm, content, entity_ref = true)
-
         if entity_ref || !elm.raw_content
           escape_content(content, elm)
         end

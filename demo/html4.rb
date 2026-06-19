@@ -5,9 +5,9 @@
 # require 'rubygems'
 require "meteor"
 
-# Meteor::Elements.link(:html4,'ml/sample_4.html', 'UTF-8')
+# Meteor::Elements.add(:html4,'ml/sample_4.html', 'UTF-8')
 Meteor::Elements.options = {type: :html4}
-Meteor::Elements.link("ml/sample_html4.html")
+Meteor::Elements.add("ml/sample_html4.html")
 
 root = Meteor::Elements.element("/ml/sample_html4")
 

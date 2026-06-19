@@ -23,37 +23,42 @@ module Meteor
     end
 
     #
-    #@overload link(type,relative_path,enc)
+    #@overload add(type,relative_path,enc)
     # generate parser (パーサを作成する)
     # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload link(type,relative_path)
+    #@overload add(type,relative_path)
     # generate parser (パーサを作成する)
     # @param [Fixnum] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def self.link(*args)
-      @@pf.link(*args)
+    def self.add(*args)
+      @@pf.add(*args)
     end
 
     #
-    # @overload link_str(type, relative_url, doc)
+    # @overload add_str(type, relative_url, doc)
     #  generate parser (パーサを作成する)
     #  @param [Fixnum] type type of parser (パーサ・タイプ)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
-    # @overload link_str(relative_url, doc)
+    # @overload add_str(relative_url, doc)
     #  generate parser (パーサを作成する)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
     #
-    def self.link_str(*args)
-      @@pf.link_str(args)
+    def self.add_str(*args)
+      @@pf.add_str(args)
+    end
+
+    class << self
+      alias_method :link, :add
+      alias_method :link_str, :add_str
     end
 
     #

@@ -137,46 +137,47 @@ module Meteor
     end
 
     #
-    #@overload link(relative_path,enc)
+    #@overload add(relative_path,enc)
     # generate parser (パーサを作成する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload link(relative_path)
+    #@overload add(relative_path)
     # generate parser (パーサを作成する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload link(type,relative_path,enc)
+    #@overload add(type,relative_path,enc)
     # generate parser (パーサを作成する)
     # @param [Fixnum,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload link(type,relative_path)
+    #@overload add(type,relative_path)
     # generate parser (パーサを作成する)
     # @param [Fixnum,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link(*args)
+    def add(*args)
       case args.length
       when 1
-        link_1(args[0])
+        add_1(args[0])
       when 2
         if args[0].kind_of?(Fixnum) || args[0].kind_of?(Symbol)
-          link_2_n(args[0], args[1])
+          add_2_n(args[0], args[1])
         elsif args[0].kind_of?(String)
-          link_2_s(args[0], args[1])
+          add_2_s(args[0], args[1])
         else
           raise ArgumentError
         end
-
       when 3
-        link_3(args[0], args[1], args[2])
+        add_3(args[0], args[1], args[2])
       else
         raise ArgumentError
       end
     end
+
+    alias_method :link, :add
 
     #
     # change relative path to relative url (相対パスを相対URLにする)
@@ -209,7 +210,7 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser(パーサ)
     #
-    def link_3(type, relative_path, enc)
+    def add_3(type, relative_path, enc)
       ps = new_parser(type)
       ps.read(File.expand_path(relative_path, @root), enc)
 
@@ -217,7 +218,7 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :link_3
+    private :add_3
 
     #
     # generate parser (パーサを作成する)
@@ -225,7 +226,7 @@ module Meteor
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link_2_n(type, relative_path)
+    def add_2_n(type, relative_path)
       ps = new_parser(type)
       ps.read(File.expand_path(relative_path, @root), @enc)
 
@@ -233,7 +234,7 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :link_2_n
+    private :add_2_n
 
     #
     # generate parser (パーサを作成する)
@@ -241,7 +242,7 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link_2_s(relative_path, enc)
+    def add_2_s(relative_path, enc)
       ps = new_parser(@type)
       ps.read(File.expand_path(relative_path, @root), enc)
 
@@ -249,14 +250,14 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :link_2_s
+    private :add_2_s
 
     #
     # generate parser (パーサを作成する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link_1(relative_path)
+    def add_1(relative_path)
       ps = new_parser(@type)
       ps.read(File.expand_path(relative_path, @root), @enc)
 
@@ -264,7 +265,7 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :link_1
+    private :add_1
 
     #
     #@overload parser(key)
@@ -289,7 +290,7 @@ module Meteor
       when 1
         parser_1(args[0])
       when 2, 3
-        link(args)
+        add(args)
       end
       # parser_1(key)
     end
@@ -327,24 +328,24 @@ module Meteor
     end
 
     #
-    # @overload link_str(type, relative_url, doc)
+    # @overload add_str(type, relative_url, doc)
     #  generate parser (パーサを作成する)
     #  @param [Fixnum] type type of parser (パーサ・タイプ)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
-    # @overload link_str(relative_url, doc)
+    # @overload add_str(relative_url, doc)
     #  generate parser (パーサを作成する)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
     #
-    def link_str(*args)
+    def add_str(*args)
       case args.length
       when 2
-        link_str_2(args[0], args[1])
+        add_str_2(args[0], args[1])
       when 3
-        link_str_3(args[0], args[1], args[2])
+        add_str_3(args[0], args[1], args[2])
       else
         raise ArgumentError
       end
@@ -357,7 +358,7 @@ module Meteor
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link_str_3(type, relative_url, doc)
+    def add_str_3(type, relative_url, doc)
       ps = new_parser(@type)
       ps.dcument = doc
       ps.parse
@@ -365,7 +366,7 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :link_str_3
+    private :add_str_3
 
     #
     # generate parser (パーサを作成する)
@@ -373,7 +374,7 @@ module Meteor
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def link_str_2(relative_url, doc)
+    def add_str_2(relative_url, doc)
       ps = new_parser(@type)
       ps.document = doc
       ps.parse
@@ -381,9 +382,10 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :link_str_2
+    private :add_str_2
 
-    alias :paraser_str :link_str
+    alias_method :link_str, :add_str
+    alias_method :parser_str, :add_str
 
     def new_parser(type)
       case type

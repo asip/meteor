@@ -124,7 +124,6 @@ module Meteor
       # @param [String] enc character encoding of input file (入力ファイルの文字コード)
       #
       def read(file_path, enc)
-
         # try {
         @character_encoding = enc
         # open file (ファイルのオープン)
@@ -253,13 +252,11 @@ module Meteor
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end
-
           when TWO
             element_4(elm.to_s, attrs.to_s, args[0].to_s, args[1])
             if @elm_
               @element_cache.store(@elm_.object_id, @elm_)
             end
-
           when THREE
             element_5(elm.to_s, attrs.to_s, args[0], args[1].to_s, args[2])
             if @elm_
@@ -825,7 +822,6 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
-
         quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
         @pattern_cc_1 = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
@@ -959,7 +955,6 @@ module Meteor
       private :element_with_5_1
 
       def element_with_5_2
-
         element_pattern_with_5_2
 
         if @sbuf.length == ZERO || @cnt != ZERO
@@ -1088,7 +1083,6 @@ module Meteor
       private :quote_element_4
 
       def element_pattern_4
-
         # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="'
         # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
         # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
@@ -1458,7 +1452,6 @@ module Meteor
               nil
             end
           end
-
         when 2
           if selector[0] == "["
             if @res = @@pattern_find_4.match(selector)
@@ -1509,7 +1502,6 @@ module Meteor
               remove_attr(elm, attr.to_s)
             end
           end
-
         elsif attr.kind_of?(Hash) && attr.size == 1
           if attr.values[0] != nil
             elm.document_sync = true
@@ -1547,7 +1539,6 @@ module Meteor
       private :set_attribute_3
 
       def edit_attrs_(elm, attr_name, attr_value)
-
         # attribute search (属性検索)
         # @res = @pattern.match(elm.attributes)
 
@@ -1591,7 +1582,6 @@ module Meteor
       private :get_attr_value
 
       def get_attr_value_(elm, attr_name)
-
         # attribute search pattern (属性検索用パターン)
         @pattern = Meteor::Core::Util::PatternCache.get(String.new("") << attr_name << "=\"([^\"]*)\"")
         # @pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"([^\"]*)\"")
@@ -1888,7 +1878,6 @@ module Meteor
           if @elm_
             @element_cache.store(@elm_.object_id, @elm_)
           end
-
         when TWO
           cxtag_2(args[0].to_s, args[1].to_s)
           if @elm_
@@ -1951,7 +1940,6 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def cxtag_1(id)
-
         @_id = Regexp.quote(id)
 
         @pattern_cc = String.new("") << "<!--\\s@([^<>]*)\\s[^<>]*id=\"" << @_id << "\""
@@ -2020,7 +2008,6 @@ module Meteor
       private :edit_document_1
 
       def edit_document_2(elm, closer)
-
         # replace tag (タグ置換)
         @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
         @root.document.sub!(@pattern, elm.document)
@@ -2032,7 +2019,6 @@ module Meteor
       # reflect (反映する)
       #
       def flash
-
         if self.element_hook
           if self.element_hook.origin.mono
             if self.element_hook.origin.cx

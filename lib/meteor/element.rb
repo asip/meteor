@@ -76,7 +76,6 @@ module Meteor
         else
           raise ArgumentError
         end
-
       when Meteor::TWO
         @name = args[0].name
         @attributes = String.new(args[0].attributes)
@@ -214,7 +213,6 @@ module Meteor
               # @document = "<#{@name}#{@attributes}>"
             end
           end
-
         when Parser::XHTML, Parser::XHTML4, Parser::XML
           if @cx
             # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'

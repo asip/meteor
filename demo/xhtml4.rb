@@ -13,7 +13,7 @@ startTime = Time.new.to_f
 elm_hello = root.element("id", "hello")
 # elm_hello.attr(class: "red")
 elm_hello["class"] = "red"
-# elm_hello['class'] = nil   # elm_hello.remove_attr('class')
+# elm_hello['class'] = nil  # elm_hello.remove_attr('class')
 
 elm_hello2 = root.element(id: "hello2")
 # elm_hello2.content("Hello,Tester")

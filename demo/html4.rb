@@ -6,7 +6,7 @@
 require "meteor"
 
 # Meteor::Elements.add(:html4,'ml/sample_4.html', 'UTF-8')
-Meteor::Elements.options = {type: :html4}
+Meteor::Elements.options = { type: :html4 }
 Meteor::Elements.add("ml/sample_html4.html")
 
 root = Meteor::Elements.get("/ml/sample_html4")
@@ -31,12 +31,12 @@ elm_hello2.content = "Hello,Tester"
 # puts elm_hello3.mixed_content
 
 elm_text1 = root.element("input", id: "text1")
-# elm_text1['value'] = 'めも'       # elm_text1.attr(value: 'めも')
-# elm_text1.attr = {value: 'メモ'}
-# elm_text1['disabled'] = true     # elm_text1.attr(disabled: true)
-elm_text1.attrs = {value: "メモ", disabled: true, readonly: true}
+# elm_text1['value'] = 'めも'    # elm_text1.attr(value: 'めも')
+# elm_text1.attr = { value: 'メモ' }
+# elm_text1['disabled'] = true. # elm_text1.attr(disabled: true)
+elm_text1.attrs = { value: "メモ", disabled: true, readonly: true }
 # puts elm_text1.attrs
-# elm_text1['disabled'] = nil      # elm_text1.remove_attr('disabled')
+# elm_text1['disabled'] = nil   # elm_text1.remove_attr('disabled')
 # map = elm_text1.attr_map
 # map.names.each { |item|
 #   puts item
@@ -46,9 +46,9 @@ elm_text1.attrs = {value: "メモ", disabled: true, readonly: true}
 # elm_radio1 = root.element('input', id: 'radio1', type: 'radio')
 ## elm_radio1 = root.css('input[id=radio1][type=radio]')
 ## elm_radio1 = root.css('# radio1')  # elm_radio1 = root.css('input# radio1')
-## elm_radio1 = root.css('.test')    # elm_radio1 = root.css('input.test')
+## elm_radio1 = root.css('.test')     # elm_radio1 = root.css('input.test')
 ## elm_radio1 = root.css('[id=radio1][type=radio]')
-# elm_radio1['checked'] = true       # elm_radio1.attr(checked: true)
+# elm_radio1['checked'] = true        # elm_radio1.attr(checked: true)
 # puts elm_radio1.document
 
 # elm_select1 = root.element('select', id: 'select1')

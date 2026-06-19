@@ -13,7 +13,7 @@ startTime = Time.new.to_f
 elm_hello = root.element(id: "hello")
 # elm_hello.attr(class: "red")
 elm_hello["class"] = "red"
-# elm_hello['class'] = nil   # elm_hello.remove_attr('class')
+# elm_hello['class'] = nil  # elm_hello.remove_attr('class')
 # elm_hello.attr(class: nil)
 
 elm_hello2 = root.element(id: "hello2")
@@ -40,7 +40,7 @@ elm_text1["required"] = true
 # }
 
 # elm_radio1 = root.element("input",id: "radio1", type: "radio")
-# elm_radio1['checked'] = true  # elm_radio1.attr(checked: true)
+# elm_radio1['checked'] = true    # elm_radio1.attr(checked: true)
 
 # elm_select1 = root.element("select",id: "select1")
 # elm_select1 = root.element("select")

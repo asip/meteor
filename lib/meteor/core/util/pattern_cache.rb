@@ -23,7 +23,7 @@ module Meteor
         #  @return [Regexp] pattern (パターン)
         # @overload get(regex,option)
         #  @param [String] regex regular expression (正規表現)
-        #  @param [Fixnum] option option of Regex (オプション)
+        #  @param [Integer] option option of Regex (オプション)
         #  @return [Regexp] pattern (パターン)
         #
         def self.get(*args)
@@ -78,7 +78,7 @@ module Meteor
         ##
         ## パターンを取得する
         ## @param [String] regex 正規表現
-        ## @param [Fixnum] option オプション
+        ## @param [Integer] option オプション
         ## @return [Regexp] パターン
         ##
         # def self.get_2(regex, option)

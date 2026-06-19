@@ -8,7 +8,7 @@ module Meteor
     # @!attribute [rw] element_cache
     #  @return [Hash] element cache (要素キャッシュ)
     # @!attribute [rw] doc_type
-    #  @return [Fixnum] document type (ドキュメントタイプ)
+    #  @return [Integer] document type (ドキュメントタイプ)
     # @!attribute [rw] document_hook
     #  @return [String] hook document (フック・ドキュメント)
     # @!attribute [rw] element_hook

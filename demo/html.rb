@@ -5,7 +5,7 @@
 # require 'rubygems'
 require "meteor"
 
-Meteor::Elements.add(:html, "ml/sample_html.html", "UTF-8")
+Meteor::Elements.add(:html, "ml/sample_html.html")
 root = Meteor::Elements.get("/ml/sample_html")
 
 start_time = Time.new.to_f

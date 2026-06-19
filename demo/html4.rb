@@ -9,7 +9,7 @@ require "meteor"
 Meteor::Elements.options = {type: :html4}
 Meteor::Elements.add("ml/sample_html4.html")
 
-root = Meteor::Elements.element("/ml/sample_html4")
+root = Meteor::Elements.get("/ml/sample_html4")
 
 start_time = Time.new.to_f
 

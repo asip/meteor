@@ -6,7 +6,7 @@
 require "meteor"
 
 Meteor::Elements.add(Meteor::XML, "ml/sample.xml", "UTF-8")
-root = Meteor::Elements.element("/ml/sample")
+root = Meteor::Elements.get("/ml/sample")
 
 start_time = Time.new.to_f
 

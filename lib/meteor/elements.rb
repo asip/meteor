@@ -66,8 +66,12 @@ module Meteor
     # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::RootElement] root element (ルート要素)
     #
-    def self.element(key)
+    def self.get(key)
       @@pf.element(key)
+    end
+
+    class << self
+      alias_method :element, :get
     end
   end
 

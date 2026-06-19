@@ -6,7 +6,7 @@
 require "meteor"
 
 Meteor::Elements.add(:xhtml4, "ml/sample_xhtml4.html", "UTF-8")
-root = Meteor::Elements.element("/ml/sample_xhtml4")
+root = Meteor::Elements.get("/ml/sample_xhtml4")
 
 startTime = Time.new.to_f
 

@@ -12,7 +12,7 @@ module Meteor
   # @!attribute [rw] enc
   #  @return [String] default character encoding (デフォルトエンコーディング)
   #
-  class ParserFactory
+  class Parsers
     attr_accessor :type
     attr_accessor :root
     attr_accessor :enc
@@ -422,4 +422,9 @@ module Meteor
       self.parser(key)
     end
   end
+
+  #
+  # Parser Factory Class (パーサ・ファクトリ クラス)
+  #
+  ParserFactory = Parsers
 end

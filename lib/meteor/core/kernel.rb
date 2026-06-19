@@ -575,8 +575,8 @@ module Meteor
         # document (全体)
         @elm_.document = @res[0]
         # pattern (空要素検索用パターン)
-        @pattern_cc = String.new("") << "<" << @_name << "(\\s[^<>]*" << @_attr_name << "=\"" << @_attr_value << closer
-        # @pattern_cc = "<#{@_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}#{closer}"
+        # @pattern_cc = String.new("") << "<" << @_name << "(\\s[^<>]*" << @_attr_name << "=\"" << @_attr_value << closer
+        @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}#{closer}"
         @elm_.pattern = @pattern_cc
         @elm_.parser = self
 

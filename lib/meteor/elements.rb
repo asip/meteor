@@ -3,10 +3,10 @@
 
 module Meteor
   #
-  # Element Factory Class (要素ファクトリ クラス)
+  # Elements Class (要素ファクトリ クラス)
   #
-  class ElementFactory
-    @@pf = Meteor::ParserFactory.new
+  class Elements
+    @@pf = Meteor::Parsers.new
 
     #
     # set options (オプションをセットする)
@@ -65,4 +65,9 @@ module Meteor
       @@pf.element(key)
     end
   end
+
+  #
+  # Elements Class (要素ファクトリ クラス)
+  #
+  Elements = Elements
 end

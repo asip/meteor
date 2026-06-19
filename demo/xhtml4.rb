@@ -5,8 +5,8 @@
 # require 'rubygems'
 require "meteor"
 
-Meteor::ElementFactory.link(:xhtml4, "ml/sample_xhtml4.html", "UTF-8")
-root = Meteor::ElementFactory.element("/ml/sample_xhtml4")
+Meteor::Elements.link(:xhtml4, "ml/sample_xhtml4.html", "UTF-8")
+root = Meteor::Elements.element("/ml/sample_xhtml4")
 
 startTime = Time.new.to_f
 

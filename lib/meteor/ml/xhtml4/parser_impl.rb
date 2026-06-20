@@ -386,13 +386,17 @@ module Meteor
 
         private :unescape
 
+        def br_to_kaigyo(content)
+          if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
+            # 「<br>」->「¥r?¥n」
+            content.gsub!(@@pattern_br_2, @root.kaigyo_code)
+          end
+        end
+
         def unescape_content(content, elm)
           content_ = unescape(content)
 
-          if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
-            # 「<br>」->「¥r?¥n」
-            content_.gsub!(@@pattern_br_2, @root.kaigyo_code)
-          end
+          br_to_kaigyo(content_)
 
           content_
         end

@@ -24,13 +24,13 @@ module Meteor
 
     #
     #@overload add(type,relative_path,enc)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload add(type,relative_path)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
@@ -41,13 +41,13 @@ module Meteor
 
     #
     # @overload add_str(type, relative_url, doc)
-    #  generate parser (パーサを作成する)
+    #  add parser (パーサを追加する)
     #  @param [Integer] type type of parser (パーサ・タイプ)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
     # @overload add_str(relative_url, doc)
-    #  generate parser (パーサを作成する)
+    #  add parser (パーサを追加する)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)

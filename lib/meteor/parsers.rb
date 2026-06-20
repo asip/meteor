@@ -138,22 +138,22 @@ module Meteor
 
     #
     #@overload add(relative_path,enc)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload add(relative_path)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload add(type,relative_path,enc)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload add(type,relative_path)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
@@ -204,7 +204,7 @@ module Meteor
     private :path_to_url
 
     #
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
@@ -221,7 +221,7 @@ module Meteor
     private :add_3
 
     #
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser(パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
@@ -233,7 +233,7 @@ module Meteor
     private :add_2_n
 
     #
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
@@ -245,7 +245,7 @@ module Meteor
     private :add_2_s
 
     #
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
@@ -261,14 +261,14 @@ module Meteor
     # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::Parser] parser (パーサ)
     #@overload parser(type,relative_path,enc)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     # @deprecated
     #@overload parser(type,relative_path)
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
@@ -317,13 +317,13 @@ module Meteor
 
     #
     # @overload add_str(type, relative_url, doc)
-    #  generate parser (パーサを作成する)
+    #  add parser (パーサを追加する)
     #  @param [Integer] type type of parser (パーサ・タイプ)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
     # @overload add_str(relative_url, doc)
-    #  generate parser (パーサを作成する)
+    #  add parser (パーサを追加する)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
@@ -340,7 +340,7 @@ module Meteor
     end
 
     #
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_url relative URL (相対URL)
     # @param [String] doc document (ドキュメント)
@@ -357,7 +357,7 @@ module Meteor
     private :add_str_3
 
     #
-    # generate parser (パーサを作成する)
+    # add parser (パーサを追加する)
     # @param [String] relative_url relative URL (相対URL)
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)

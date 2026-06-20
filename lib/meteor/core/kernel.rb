@@ -52,6 +52,39 @@ module Meteor
       @@pattern_clean1 = Regexp.new("<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->")
       @@pattern_clean2 = Regexp.new("<!--\\s\\/@[^<>]*(\\s)*-->")
 
+      BR = "<br>"
+      BR_RE = BR
+
+      TABLE_FOR_ESCAPE_ = {
+        "&" => "&amp;",
+        "\"" => "&quot;",
+        "'" => "&apos;",
+        "<" => "&lt;",
+        ">" => "&gt;",
+        " " => "&nbsp;"
+      }
+
+      TABLE_FOR_ESCAPE_CONTENT_ = {
+        "&" => "&amp;",
+        "\"" => "&quot;",
+        "'" => "&apos;",
+        "<" => "&lt;",
+        ">" => "&gt;",
+        " " => "&nbsp;",
+        "\r\n" => BR,
+        "\r" => BR,
+        "\n" => BR
+      }
+
+      PATTERN_ESCAPE = "[&\"'<> ]"
+      PATTERN_ESCAPE_CONTENT = "[&\"'<> \\n]"
+      @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
+      @@pattern_escape_content = Regexp.new(PATTERN_ESCAPE_CONTENT)
+
+      PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt|nbsp);"
+      @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+      @@pattern_br_2 = Regexp.new(BR_RE)
+
       attr_accessor :element_cache
       attr_accessor :doc_type
       attr_accessor :document_hook
@@ -2194,6 +2227,71 @@ module Meteor
       end
 
       private :create
+
+      def escape(content)
+        # replace special character (特殊文字の置換)
+        content = content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
+
+        content
+      end
+
+      def escape_content(content, elm)
+        # replace special character (特殊文字の置換)
+        content = content.gsub(@@pattern_escape_content, TABLE_FOR_ESCAPE_CONTENT_)
+
+        content
+      end
+
+      private :escape
+      private :escape_content
+
+      def unescape(content)
+        # replace special character (特殊文字の置換)
+        # 「<」<-「&lt;」
+        # 「>」<-「&gt;」
+        # 「"」<-「&quotl」
+        # 「 」<-「&nbsp;」
+        # 「&」<-「&amp;」
+        content.gsub(@@pattern_unescape) do
+          case $1
+          when "amp"
+            "&"
+          when "quot"
+            "\""
+          when "apos"
+            "'"
+          when "gt"
+            ">"
+          when "lt"
+            "<"
+          when "nbsp"
+            " "
+          end
+        end
+
+        content
+      end
+
+      private :unescape
+
+      def br_to_newline(content)
+        if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
+          # 「<br>」->「¥r?¥n」
+          content.gsub!(@@pattern_br_2, @root.kaigyo_code)
+        end
+      end
+
+      private :br_to_newline
+
+      def unescape_content(content, elm)
+        content_ = unescape(content)
+
+        br_to_newline(content_)
+
+        content_
+      end
+
+      private :unescape_content
     end
   end
 end

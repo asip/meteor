@@ -124,7 +124,7 @@ module Meteor
         #
         def analyze_ml
           analyze_content_type
-          analyze_kaigyo_code
+          analyze_newline
 
           @res = nil
         end
@@ -168,7 +168,7 @@ module Meteor
         #
         # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
-        def analyze_kaigyo_code
+        def analyze_newline
           for a in KAIGYO_CODE
             if @root.document.include?(a)
               @root.kaigyo_code = a
@@ -177,7 +177,7 @@ module Meteor
           end
         end
 
-        protected :analyze_kaigyo_code
+        protected :analyze_newline
 
         #
         # get element using tag name (要素のタグ名で検索し、要素を取得する)

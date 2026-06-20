@@ -120,7 +120,7 @@ module Meteor
         #
         def analyze_ml
           analyze_content_type
-          analyze_kaigyo_code
+          analyze_newline
           @res = nil
         end
 
@@ -163,7 +163,7 @@ module Meteor
         #
         # analyze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
-        def analyze_kaigyo_code
+        def analyze_newline
           for a in KAIGYO_CODE
             if @root.document.include?(a)
               @root.kaigyo_code = a
@@ -171,7 +171,7 @@ module Meteor
           end
         end
 
-        private :analyze_kaigyo_code
+        private :analyze_newline
 
         def edit_attrs_(elm, attr_name, attr_value)
           if is_match("selected", attr_name) && is_match("option", elm.name)

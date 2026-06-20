@@ -233,7 +233,7 @@ module Meteor
               @elm_ = nil
             end
           else
-            # search pattern of content-rich element (内容あり要素検索用パターン()
+            # content-rich element search pattern (内容あり要素検索用パターン()
             # @pattern_cc = String.new('') << "<" << @_name << '(|\\s[^<>]*)>(((?!(' << @_name
             # @pattern_cc << '[^<>]*>)).)*)<\\/' << @_name << '>'
             @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{tag}[^<>]*>)).)*)<\\/#{@_name}>"
@@ -307,7 +307,7 @@ module Meteor
               @elm_ = nil
             end
           else
-            # search pattern of content-rich element (内容あり要素検索パターン)
+            # content-rich element search pattern (内容あり要素検索パターン)
             # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
             # @pattern_cc << @_attr_value << '"[^<>]*)>(((?!(' << @_name
             # @pattern_cc << '[^<>]*>)).)*)<\\/' << @_name << '>'
@@ -386,7 +386,7 @@ module Meteor
         def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
           quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
-          # 空要素の場合(<->内容あり要素の場合)
+          # case of void element (空要素の場合(<->内容あり要素の場合))
           if is_match(@@match_tag, name)
             # void element search pattern (空要素検索パターン)
             # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
@@ -414,7 +414,7 @@ module Meteor
               @elm_ = nil
             end
           else
-            # search pattern of content-rich element (内容あり要素検索パターン)
+            # content-rich element search pattern (内容あり要素検索パターン)
             # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
             # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
             # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
@@ -692,19 +692,19 @@ module Meteor
 
         private :unescape
 
-        def br_to_kaigyo(content)
+        def br_to_newline(content)
           if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
             # 「<br>」->「¥r?¥n」
             content.gsub!(@@pattern_br_2, @root.kaigyo_code)
           end
         end
 
-        private :br_to_kaigyo
+        private :br_to_newline
 
         def unescape_content(content, elm)
           content_ = unescape(content)
 
-          br_to_kaigyo(content_)
+          br_to_newline(content_)
 
           content_
         end

@@ -17,14 +17,14 @@ module Meteor
         #[Array] 改行を<br/>に変換する必要のない要素
         @@match_tag_2 = ["textarea", "option", "pre"]
 
-        #[Array] 論理値で指定する属性
+        #[Array] boolean attributes (論理値で指定する属性)
         @@attr_logic = ["disabled", "readonly", "checked", "selected", "multiple"]
 
         # DISABLE_ELEMENT = "input|textarea|select|optgroup"
         #[Array] element with disablled attribute (disabled属性のある要素)
         DISABLE_ELEMENT = ["input", "textarea", "select", "optgroup"]
         # READONLY_TYPE = "text|password"
-        #[Array] readonly属性のあるinput要素のタイプ
+        #[Array] the type of an input element with a readonly attribute (readonly属性のあるinput要素のタイプ)
         READONLY_TYPE = ["text", "password"]
 
         SELECTED_M = "\\sselected=\"[^\"]*\"\\s|\\sselected=\"[^\"]*\"$"

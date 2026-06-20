@@ -8,13 +8,13 @@ module Meteor
       # XHTML parser (XHTMLパーサ)
       #
       class ParserImpl < Meteor::Ml::Xhtml4::ParserImpl
-        #[Array] 論理値で指定する属性
+        #[Array] boolean attributes (論理値で指定する属性)
         ATTR_LOGIC = ["disabled", "readonly", "checked", "selected", "multiple", "required"]
 
-        #[Array] disabled属性のある要素
+        #[Array] elements with the disabled attribute (disabled属性のある要素)
         DISABLE_ELEMENT = ["input", "textarea", "select", "optgroup", "fieldset"]
 
-        #[Array] required属性のある要素
+        #[Array] elements with a readonly attribute (required属性のある要素)
         REQUIRE_ELEMENT = ["input", "textarea"]
 
         REQUIRED_M = "\\srequired=\"[^\"]*\"\\s|\\srequired=\"[^\"]*\"$"

@@ -15,8 +15,8 @@ module Meteor
     # @option @deprecated opts [String] :base_dir root directory (基準ディレクトリ)
     # @option opts [String] :enc default character encoding (デフォルト文字エンコーディング)
     # @option @deprecated opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
-    # @option opts [FixNum,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
-    # @option @deprecated opts [FixNum | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
+    # @option opts [Integer,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
+    # @option @deprecated opts [Integer | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
     def self.options=(opts)
       @@pf.options = opts

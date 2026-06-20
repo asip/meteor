@@ -6,7 +6,7 @@ module Meteor
   # Parser Factory Class (パーサ・ファクトリ クラス)
   #
   # @!attribute [rw] type
-  #  @return [FixNum,Symbol] default type of parser (デフォルトのパーサ・タイプ)
+  #  @return [Integer,Symbol] default type of parser (デフォルトのパーサ・タイプ)
   # @!attribute [rw] root
   #  @return [String] root root directory (基準ディレクトリ)
   # @!attribute [rw] enc
@@ -36,7 +36,7 @@ module Meteor
     #  @param [String] root root directory (基準ディレクトリ)
     #  @param [String] enc default character encoding (デフォルトエンコーディング)
     # @overload initialize(type, root, enc)
-    #  @param [FixNum,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
+    #  @param [Integer,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
     #  @param [String] root root directory (基準ディレクトリ)
     #  @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
@@ -89,7 +89,7 @@ module Meteor
 
     #
     # イニシャライザ
-    # @param [FixNum,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
+    # @param [Integer,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
@@ -109,8 +109,8 @@ module Meteor
     # @option @deprecated opts [String] :base_dir root directory (基準ディレクトリ)
     # @option opts [String] :enc default character encoding (デフォルト文字エンコーディング)
     # @option @deprecated opts [String] :base_enc default character encoding (デフォルト文字エンコーディング)
-    # @option opts [FixNum,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
-    # @option @deprecated opts [FixNum | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
+    # @option opts [Integer,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
+    # @option @deprecated opts [Integer | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
     def options=(opts)
       if opts.kind_of?(Hash)

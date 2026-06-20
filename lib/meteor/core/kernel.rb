@@ -284,7 +284,7 @@ module Meteor
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)\\/>|<#{@_name}((?:|\\s[^<>]*))>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        # search of element with content (内容あり要素検索)
+        # search of content-rich element (内容あり要素検索)
         @res = @pattern.match(@root.document)
 
         if @res
@@ -323,7 +323,7 @@ module Meteor
           # document (全体)
           @elm_.document = @res[0]
         end
-        # search pattern of element with content (内容あり要素検索用パターン)
+        # search pattern of content-rich element (内容あり要素検索用パターン)
         # @pattern_cc = String.new('') << "<" << @_name << '(?:|\\s[^<>]*)>((?!(' << @_name
         # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
@@ -469,7 +469,7 @@ module Meteor
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
-          # search pattern of element with content (内容あり要素検索用パターン)
+          # search pattern of content-rich element (内容あり要素検索用パターン)
           # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
           # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
           # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
@@ -497,7 +497,7 @@ module Meteor
           end
           # document (全体)
           @elm_.document = @res[0]
-          # search pattern of element with content (内容あり要素検索用パターン)
+          # search pattern of content-rich element (内容あり要素検索用パターン)
           @elm_.pattern = @pattern_cc
 
           @elm_.empty = true
@@ -544,7 +544,7 @@ module Meteor
         @pattern_cc_2_2 = String.new("") << ".*?)<\\/" << @_name << ">"
         # @pattern_cc_2_2 = ".*?)<\\/#{@_name}>"
 
-        # search of element with content (内容あり要素検索)
+        # search of content-rich element (内容あり要素検索)
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
 
         @sbuf = String.new("")
@@ -753,7 +753,7 @@ module Meteor
         # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
 
-        # search of element with content (内容あり要素検索)
+        # search of content-rich element (内容あり要素検索)
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         @sbuf = String.new('')
 
@@ -942,7 +942,7 @@ module Meteor
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
-          # search pattern of element with content (要素ありタグ検索用パターン)
+          # search pattern of content-rich element (要素ありタグ検索用パターン)
           @elm_.pattern = @pattern_cc
 
           @elm_.empty = true
@@ -996,7 +996,7 @@ module Meteor
         # @pattern_cc_2_1 = ".*?<\\/#{@_name}>"
         # @pattern_cc_2_2 = ".*?)<\\/#{@_name}>"
 
-        # search of element with content (内容あり要素検索)
+        # search of content-rich element (内容あり要素検索)
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
 
         @sbuf = String.new("")
@@ -2094,7 +2094,7 @@ module Meteor
       #
       def shadow(elm)
         if elm.empty
-          # case of element with content (内容あり要素の場合)
+          # case of content-rich element (内容あり要素の場合)
           set_mono_info(elm)
 
           pif2 = create(self)

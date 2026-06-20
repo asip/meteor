@@ -228,7 +228,7 @@ module Meteor
             @res = match_p.match(elm.attributes)
 
             if !@res
-              # add and attribute to attributes (属性文字列の最後に新規の属性を追加する)
+              # add an attribute to attributes (属性文字列の最後に新規の属性を追加する)
               if elm.attributes != ""
                 elm.attributes = String.new("") << " " << elm.attributes.strip
                 # else
@@ -236,12 +236,12 @@ module Meteor
 
               elm.attributes << " " << replace_update
             else
-              # reolace attribute (属性の置換)
+              # replace attribute (属性の置換)
               elm.attributes.gsub!(replace_regex, replace_update)
             end
           elsif false.equal?(attr_value) || is_match("false", attr_value)
             # delete if attribute_name attrubute exeists (attr_name属性が存在するなら削除)
-            # reolace attribute (属性の置換)
+            # replace attribute (属性の置換)
             elm.attributes.gsub!(replace_regex, "")
           end
         end

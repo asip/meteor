@@ -1,4 +1,8 @@
-0.9.18 / 2026-06-20 Yasumasa Ashida <ys.ashida@gmail.com>
+== 0.9.19 / 2026-06-20 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Refactoring
+
+== 0.9.18 / 2026-06-20 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Fixnum → Integer
 * Refactoring

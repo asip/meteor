@@ -1898,7 +1898,7 @@ module Meteor
         @_name = Regexp.quote(name)
         @_id = Regexp.quote(id)
 
-        # CX tag search pattern  (CXタグ検索用パターン)
+        # CX tag search pattern (CXタグ検索用パターン)
         # @pattern_cc = String.new('') << "<!--\\s@" << @_name << '\\s([^<>]*id="'
         # @pattern_cc << id << '"[^<>]*)-->(((?!(<!--\\s/@' << @_name << ")).)*)<!--\\s/@" << @_name << "\\s-->"
         # @pattern_cc = "<!--\\s@#{tag}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{tag})).)*)<!--\\s\\/@#{tag}\\s-->"

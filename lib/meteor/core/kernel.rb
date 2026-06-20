@@ -278,7 +278,7 @@ module Meteor
       # @return [Meteor::Element] element(要素)
       #
       def element_1(name)
-        @_name = Regexp.quote(name)
+        quote_name(name)
 
         # element search pattern (要素検索用パターン)
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)\\/>|<#{@_name}((?:|\\s[^<>]*))>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
@@ -877,7 +877,7 @@ module Meteor
       private :element_5
 
       def quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
-        @_name = Regexp.quote(name)
+        quote_name(name)
         @_attr_name1 = Regexp.quote(attr_name1)
         @_attr_name2 = Regexp.quote(attr_name2)
         @_attr_value1 = Regexp.quote(attr_value1)
@@ -1895,7 +1895,7 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def cxtag_2(name, id)
-        @_name = Regexp.quote(name)
+        quote_name(name)
         @_id = Regexp.quote(id)
 
         # CX tag search pattern (CXタグ検索用パターン)

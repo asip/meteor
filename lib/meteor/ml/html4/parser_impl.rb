@@ -23,7 +23,7 @@ module Meteor
         #[Array] non-nestable elements (入れ子にできない要素)
         @@match_tag_sng = ["texarea", "select", "option", "form", "fieldset"]
 
-        #[Array] boolean elements (論理値で指定する属性)
+        #[Array] boolean attributes (論理値で指定する属性)
         @@attr_logic = ["disabled", "readonly", "checked", "selected", "multiple"]
 
         # DISABLE_ELEMENT = "input|textarea|select|optgroup"

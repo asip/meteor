@@ -21,10 +21,10 @@ module Meteor
         @@match_tag_2 = ["textarea", "option", "pre"]
 
         #[Array] non-nestable elements (入れ子にできない要素)
-        @@match_tag_sng = ["texarea", "select", "option", "form", "fieldset"]
+        @@match_tag_nne = ["texarea", "select", "option", "form", "fieldset"]
 
         #[Array] boolean attributes (論理値で指定する属性)
-        @@attr_logic = ["disabled", "readonly", "checked", "selected", "multiple"]
+        @@attr_bool = ["disabled", "readonly", "checked", "selected", "multiple"]
 
         # DISABLE_ELEMENT = "input|textarea|select|optgroup"
         #[Array] elements with the disabled attribute (disabled属性のある要素)
@@ -318,7 +318,7 @@ module Meteor
             # search of element with content (内容あり要素検索)
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(@@match_tag_sng, name)
+            if !@res && !is_match(@@match_tag_nne, name)
               @res = element_with_3_2
             end
 
@@ -428,7 +428,7 @@ module Meteor
             # search of element with content (内容あり要素検索)
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(@@match_tag_sng, tag)
+            if !@res && !is_match(@@match_tag_nne, tag)
               @res = element_with_5_2
             end
 
@@ -633,7 +633,7 @@ module Meteor
         private :get_attr_map
 
         def remove_attrs_(elm, attr_name)
-          if !is_match(@@attr_logic, attr_name)
+          if !is_match(@@attr_bool, attr_name)
             # attribute search pattern (属性検索用パターン)
             @pattern = Meteor::Core::Util::PatternCache.get(String.new("") << attr_name << "=\"[^\"]*\"\\s?")
             # @pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"\\s?")

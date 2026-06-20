@@ -9,7 +9,7 @@ module Meteor
       #
       class ParserImpl < Meteor::Ml::Xhtml4::ParserImpl
         #[Array] boolean attributes (論理値で指定する属性)
-        ATTR_LOGIC = ["disabled", "readonly", "checked", "selected", "multiple", "required"]
+        ATTR_BOOL = ["disabled", "readonly", "checked", "selected", "multiple", "required"]
 
         #[Array] elements with the disabled attribute (disabled属性のある要素)
         DISABLE_ELEMENT = ["input", "textarea", "select", "optgroup", "fieldset"]
@@ -34,7 +34,7 @@ module Meteor
         #
         def initialize(*args)
           super()
-          @@attr_logic = ATTR_LOGIC
+          @@attr_bool = ATTR_BOOL
           @doc_type = Parser::XHTML
           case args.length
           when ZERO

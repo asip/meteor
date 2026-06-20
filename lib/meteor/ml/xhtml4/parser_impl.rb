@@ -18,7 +18,7 @@ module Meteor
         @@match_tag_2 = ["textarea", "option", "pre"]
 
         #[Array] boolean attributes (論理値で指定する属性)
-        @@attr_logic = ["disabled", "readonly", "checked", "selected", "multiple"]
+        @@attr_bool = ["disabled", "readonly", "checked", "selected", "multiple"]
 
         # DISABLE_ELEMENT = "input|textarea|select|optgroup"
         #[Array] element with disablled attribute (disabled属性のある要素)
@@ -326,7 +326,7 @@ module Meteor
           attrs = Meteor::AttributeMap.new
 
           elm.attributes.scan(@@pattern_get_attrs_map) do |a, b|
-            if is_match(@@attr_logic, a) && a == b
+            if is_match(@@attr_bool, a) && a == b
               attrs.store(a, "true")
             else
               attrs.store(a, unescape(b))

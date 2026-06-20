@@ -323,7 +323,7 @@ module Meteor
           # document (全体)
           @elm_.document = @res[0]
         end
-        # search pattern of content-rich element (内容あり要素検索用パターン)
+        # content-rich element search pattern (内容あり要素検索用パターン)
         # @pattern_cc = String.new('') << "<" << @_name << '(?:|\\s[^<>]*)>((?!(' << @_name
         # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
@@ -441,15 +441,15 @@ module Meteor
         # puts  @res.captures.length
         case @res.captures.length
         when FOUR
-          # 要素
+          # element (要素)
           @elm_ = Meteor::Element.new(name)
-          # 属性
+          # attribute (属性)
           @elm_.attributes = @res[1]
-          # 内容
+          # content (内容)
           @elm_.mixed_content = @res[2]
-          # 全体
+          # document (全体)
           @elm_.document = @res[0]
-          # 内容あり要素検索用パターン
+          # content-rich element search pattern (内容あり要素検索用パターン)
           # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
           # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
           # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
@@ -469,7 +469,7 @@ module Meteor
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
-          # search pattern of content-rich element (内容あり要素検索用パターン)
+          # content-rich element search pattern (内容あり要素検索用パターン)
           # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
           # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
           # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
@@ -497,7 +497,7 @@ module Meteor
           end
           # document (全体)
           @elm_.document = @res[0]
-          # search pattern of content-rich element (内容あり要素検索用パターン)
+          #  content-rich element search pattern (内容あり要素検索用パターン)
           @elm_.pattern = @pattern_cc
 
           @elm_.empty = true
@@ -942,7 +942,7 @@ module Meteor
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
-          # search pattern of content-rich element (要素ありタグ検索用パターン)
+          # content-rich element search pattern (要素ありタグ検索用パターン)
           @elm_.pattern = @pattern_cc
 
           @elm_.empty = true
@@ -2069,7 +2069,6 @@ module Meteor
         else
           reflect
           @element_cache.clear
-          # フック判定が"false"の場合
           clean
         end
       end

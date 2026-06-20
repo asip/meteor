@@ -52,7 +52,6 @@ module Meteor
         # @@pattern_true = Regexp.new("true")
         # @@pattern_false = Regexp.new("false")
 
-        
         GET_ATTRS_MAP2 = "\\s(disabled|readonly|checked|selected|multiple)"
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)

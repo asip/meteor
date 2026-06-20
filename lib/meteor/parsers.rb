@@ -65,7 +65,7 @@ module Meteor
     private :initialize_0
 
     #
-    # イニシャライザ
+    # initializer (イニシャライザ)
     # @param [String] root root directory (基準ディレクトリ)
     #
     def initialize_1(root)
@@ -75,7 +75,7 @@ module Meteor
     private :initialize_1
 
     #
-    # イニシャライザ
+    # initializer (イニシャライザ)
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
@@ -88,7 +88,7 @@ module Meteor
     private :initialize_2
 
     #
-    # イニシャライザ
+    # initializer (イニシャライザ)
     # @param [Integer,Symbol] type default type of parser (デフォルトのパーサ・タイプ)
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)

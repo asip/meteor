@@ -8,13 +8,12 @@ module Meteor
       # XHTML4 parser (XHTML4パーサ)
       #
       class ParserImpl < Meteor::Core::Kernel
-
         # KAIGYO_CODE = "\r?\n|\r"
         KAIGYO_CODE = ["\r\n", "\n", "\r"]
         BR = "<br/>"
 
         # @@match_tag_2 = "textarea|option|pre"
-        #[Array] 改行を<br/>に変換する必要のない要素
+        #[Array] elements where line breaks do not need to be converted to <br> (改行を<br/>に変換する必要のない要素)
         @@match_tag_2 = ["textarea", "option", "pre"]
 
         #[Array] boolean attributes (論理値で指定する属性)

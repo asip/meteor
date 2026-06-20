@@ -76,10 +76,10 @@ module Meteor
         # end
 
         ##
-        ## パターンを取得する
-        ## @param [String] regex 正規表現
-        ## @param [Integer] option オプション
-        ## @return [Regexp] パターン
+        ## get pattern (パターンを取得する)
+        ## @param [String] regex (正規表現)
+        ## @param [Integer] option (オプション)
+        ## @return [Regexp] psttern (パターン)
         ##
         # def self.get_2(regex, option)
         #  ## pattern = @@regex_cache[regex]

@@ -207,13 +207,14 @@ module Meteor
             # content-rich element search pattern (内容あり要素検索用パターン()
             # @pattern_cc = String.new('') << "<" << @_name << '(|\\s[^<>]*)>(((?!(' << @_name
             # @pattern_cc << '[^<>]*>)).)*)<\\/' << @_name << '>'
-            @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{tag}[^<>]*>)).)*)<\\/#{@_name}>"
+            @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             # search of content-rich element (内容あり要素検索)
             @res = @pattern.match(@root.document)
             # case of content-rich element (内容あり要素の場合)
             if @res
+              @on_search = true
               element_with_1(name)
             else
               if @error_check

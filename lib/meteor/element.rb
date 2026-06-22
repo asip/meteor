@@ -53,8 +53,8 @@ module Meteor
     attr_accessor :copy
     attr_accessor :removed
 
-    alias :tag :name
-    alias :tag= :name=
+    alias_method :tag, :name
+    alias_method :tag=, :name=
 
     #
     # initializer (イニシャライザ)
@@ -291,7 +291,7 @@ module Meteor
       end
     end
 
-    alias :child :element
+    alias_method :child, :element
 
     #
     # get elements (要素を取得する)
@@ -349,7 +349,7 @@ module Meteor
       @parser.find(selector)
     end
 
-    alias :css :find
+    alias_method :css, :find
 
     #
     # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
@@ -455,7 +455,7 @@ module Meteor
       @parser.content(self, *args)
     end
 
-    alias :text :content
+    alias_method :text, :content
 
     #
     # set content of element (要素の内容をセットする)
@@ -466,7 +466,7 @@ module Meteor
       @parser.content(self, value)
     end
 
-    alias :text= :content=
+    alias_method :text=, :content=
 
     #
     # set content of element (要素の内容をセットする)
@@ -477,7 +477,7 @@ module Meteor
       @parser.content(self, value, false)
     end
 
-    alias :unsafe_text= :unsafe_content=
+    alias_method :unsafe_text=, :unsafe_content=
 
     #
     # set attribute (属性をセットする)
@@ -525,7 +525,7 @@ module Meteor
       @parser.flash
     end
 
-    alias :flush :flash
+    alias_method :flush, :flash
 
     #
     # @overload execute(hook)

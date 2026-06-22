@@ -1934,7 +1934,7 @@ module Meteor
         # CX tag search pattern (CXタグ検索用パターン)
         # @pattern_cc = String.new('') << "<!--\\s@" << @_name << '\\s([^<>]*id="'
         # @pattern_cc << id << '"[^<>]*)-->(((?!(<!--\\s/@' << @_name << ")).)*)<!--\\s/@" << @_name << "\\s-->"
-        # @pattern_cc = "<!--\\s@#{tag}\\s([^<>]*id=\"#{id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{tag})).)*)<!--\\s\\/@#{tag}\\s-->"
+        # @pattern_cc = "<!--\\s@#{@_name}\\s([^<>]*id=\"#{@_id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{@_name})).)*)<!--\\s\\/@#{@_name}\\s-->"
         @pattern_cc = "<!--\\s@#{@_name}\\s([^<>]*id=\"#{@_id}\"[^<>]*)-->(((?!(<!--\\s/@#{@_name})).)*)<!--\\s/@#{@_name}\\s-->"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)

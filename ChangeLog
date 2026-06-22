@@ -1,3 +1,9 @@
+== 0.9.24 / 2026-06-22 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Refactoring
+* Add Meteor::Element#unsafe_content=
+* Fix Meteor::Ml::Html4::ParserImpl
+
 == 0.9.23 / 2026-06-21 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Refactoring

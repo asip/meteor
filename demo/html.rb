@@ -43,6 +43,8 @@ elm_text1["required"] = true
 # elm_select1['multiple'] = true  # elm_select1.attr(multiple: true)
 # puts elm_select1['multiple']    # puts elm_select1.attr('multiple')
 
+# elm_select1.unsafe_content = "<option id=\"option12\">オプション12</option>"
+
 # elm_option1 = root.element('option', id: 'option1')
 # elm_option1['selected'] = true  # elm_option1.attr(selected: true)
 # elm_option1['selected'] = nil   # elm_option1.remove_attr('selected')
@@ -95,6 +97,7 @@ end_time = Time.new.to_f
 puts(root.document)
 
 elms = root.elements("tr", id: "loop")
+# elms = root.elements("tr")
 # elms = root.elements('input', id: 'radio1', type: 'radio')
 # elms = root.css('input[id=radio1][type=radio]')
 elms.each { |elm|

@@ -469,6 +469,17 @@ module Meteor
     alias :text= :content=
 
     #
+    # set content of element (要素の内容をセットする)
+    # @param [String] value content (要素の内容)
+    # @return [Meteor::Element] element (要素)
+    #
+    def unsafe_content=(value)
+      @parser.content(self, value, false)
+    end
+
+    alias :unsafe_text= :unsafe_content=
+
+    #
     # set attribute (属性をセットする)
     # @param [String,Symbol] name attribute name (属性の名前)
     # @param [String] value attribute value (属性の値)

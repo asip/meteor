@@ -43,7 +43,7 @@ elm_text1["required"] = true
 # elm_select1['multiple'] = true  # elm_select1.attr(multiple: true)
 # puts elm_select1['multiple']    # puts elm_select1.attr('multiple')
 
-# elm_select1.unsafe_content = "<option id=\"option12\">オプション12</option>"
+# elm_select1.unsafe_content = "<option id=\"option1-2\">オプション1-2</option>"
 
 # elm_option1 = root.element('option', id: 'option1')
 # elm_option1['selected'] = true  # elm_option1.attr(selected: true)

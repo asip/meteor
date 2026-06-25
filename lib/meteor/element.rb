@@ -17,8 +17,8 @@ module Meteor
   #  @return [String] pattern (パターン)
   # @!attribute [rw] document_sync
   #  @return [true,false] document update flag (ドキュメント更新フラグ)
-  # @!attribute [rw] empty
-  #  @return [true,false] content empty flag (内容存在フラグ)
+  # @!attribute [rw] normal
+  #  @return [true,false] content normal flag (内容存在フラグ)
   # @!attribute [rw] cx
   #  @return [true,false] comment extension tag flag (コメント拡張タグフラグ)
   # @!attribute [rw] mono
@@ -43,7 +43,7 @@ module Meteor
     attr_accessor :raw_content
     attr_accessor :pattern
     attr_accessor :document_sync
-    attr_accessor :empty
+    attr_accessor :normal
     attr_accessor :cx
     attr_accessor :mono
     attr_accessor :parser
@@ -55,6 +55,9 @@ module Meteor
 
     alias_method :tag, :name
     alias_method :tag=, :name=
+
+    alias_method :empty, :normal
+    alias_method :empty=, :normal=
 
     #
     # initializer (イニシャライザ)
@@ -77,19 +80,7 @@ module Meteor
           raise ArgumentError
         end
       when Meteor::TWO
-        @name = args[0].name
-        @attributes = String.new(args[0].attributes)
-        @mixed_content = String.new(args[0].mixed_content)
-        # @pattern = String.new(args[0].pattern)
-        @pattern = args[0].pattern
-        @document = String.new(args[0].document)
-        @empty = args[0].empty
-        @cx = args[0].cx
-        @mono = args[0].mono
-        @parser = args[1]
-        # @usable = false
-        @origin = args[0]
-        args[0].copy = self
+        initialize_2(args[0], args[1])
       when Meteor::ZERO
       else
         raise ArgumentError
@@ -107,7 +98,7 @@ module Meteor
       # @pattern = nil
       # @document = nil
       # @parser=nil
-      # @empty = false
+      # @normal = false
       # @cx = false
       # @mono = false
       # @parent = false
@@ -121,45 +112,57 @@ module Meteor
     # @param [Meteor::Element] elm element (要素)
     #
     def initialize_e(elm)
-      @name = elm.name
-      @attributes = String.new(elm.attributes)
-      # @pattern = String.new(elm.pattern)
-      @pattern = elm.pattern
-      @document = String.new(elm.document)
-      @empty = elm.empty
-      @cx = elm.cx
-      @mono = elm.mono
-      @origin = elm
-      @parser = elm.parser
-      @usable = true
+      if self.normal
+        self.parser.element(elm)
+      else
+        @name = elm.name
+        @attributes = String.new(elm.attributes)
+        # @pattern = String.new(elm.pattern)
+        @pattern = elm.pattern
+        @document = String.new(elm.document)
+        @normal = elm.normal
+        @cx = elm.cx
+        @mono = elm.mono
+        @origin = elm
+        @parser = elm.parser
+        @usable = true
+      end
     end
 
     private :initialize_e
 
+    def initialize_2(elm, ps)
+      @name = elm.name
+      @attributes = String.new(elm.attributes)
+      @mixed_content = String.new(elm.mixed_content)
+      # @pattern = String.new(elm.pattern)
+      @pattern = elm.pattern
+      @document = String.new(elm.document)
+      @normal = elm.normal
+      @cx = elm.cx
+      @mono = elm.mono
+      @parser = ps
+      # @usable = false
+      @origin = elm
+      elm.copy = self
+    end
+
+    private :initialize_2
+
     #
-    # make copy (コピーを作成する)
-    # @overload new!(elm,ps)
-    #  @param [Meteor::Element] elm element (要素)
+    # clone (複製する)
+    # @overload clone()
+    #  @return [Meteor::Element] element (要素)
+    # @overload clone(ps)
     #  @param [Meteor::Parser] ps parser (パーサ)
     #  @return [Meteor::Element] element (要素)
     #
-    def self.new!(*args)
+    def clone(*args)
       case args.length
-      when Meteor::TWO
-        @obj = args[1].element_hook
-        if @obj
-          @obj.attributes = String.new(args[0].attributes)
-          @obj.mixed_content = String.new(args[0].mixed_content)
-          # @obj.pattern = String.new(args[0].pattern)
-          @obj.document = String.new(args[0].document)
-          @obj
-        else
-          @obj = self.new(args[0], args[1])
-          args[1].element_hook = @obj
-          @obj
-        end
-      else
-        raise ArgumentError
+      when Meteor::ZERO
+        clone_0
+      when Meteor::ONE
+        clone_1(args[0])
       end
     end
 
@@ -167,7 +170,7 @@ module Meteor
     # clone (複製する)
     # @return [Meteor::Element] element (要素)
     #
-    def clone
+    def clone_0
       obj = self.parser.element_cache[self.object_id]
       if obj
         obj.attributes = String.new(self.attributes)
@@ -177,11 +180,35 @@ module Meteor
         obj.usable = true
         obj
       else
-        obj = self.new(self)
+        obj = self.class.new(self)
         self.parser.element_cache[self.object_id] = obj
         obj
       end
     end
+
+    private :clone_0
+
+    #
+    # clone (複製する)
+    # @param [Meteor::Parser] ps parser (パーサ)
+    # @return [Meteor::Element] element (要素)
+    #
+    def clone_1(ps)
+      obj = ps.element_hook
+      if obj
+        obj.attributes = String.new(self.attributes)
+        obj.mixed_content = String.new(self.mixed_content)
+        # obj.pattern = String.new(self.pattern)
+        obj.document = String.new(self.document)
+        obj
+      else
+        obj = self.class.new(self, ps)
+        ps.element_hook = obj
+        obj
+      end
+    end
+
+    private :clone_1
 
     #
     # set document (ドキュメントをセットする)
@@ -205,7 +232,7 @@ module Meteor
             # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
             @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
           else
-            if @empty
+            if @normal
               # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
               @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
             else
@@ -218,7 +245,7 @@ module Meteor
             # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
             @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
           else
-            if @empty
+            if @normal
               # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
               @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
             else

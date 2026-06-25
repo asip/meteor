@@ -317,15 +317,15 @@ module Meteor
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)\\/>|<#{@_name}((?:|\\s[^<>]*))>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-        # search of content-rich element (内容あり要素検索)
+        # search of normal element (内容あり要素検索)
         @res = @pattern.match(@root.document)
 
         if @res
           if @res[1]
-            element_without_1(name)
+            element_void_1(name)
           else
-            # puts '---element_with_1'
-            element_with_1(name)
+            # puts '---element_normal_1'
+            element_normal_1(name)
           end
           # else
         end
@@ -335,7 +335,7 @@ module Meteor
 
       private :element_1
 
-      def element_with_1(name)
+      def element_normal_1(name)
         @elm_ = Meteor::Element.new(name)
 
         unless @on_search
@@ -356,21 +356,21 @@ module Meteor
           # document (全体)
           @elm_.document = @res[0]
         end
-        # content-rich element search pattern (内容あり要素検索用パターン)
+        # normal element search pattern (内容あり要素検索用パターン)
         # @pattern_cc = String.new('') << "<" << @_name << '(?:|\\s[^<>]*)>((?!(' << @_name
         # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
         @elm_.pattern = @pattern_cc
-        @elm_.empty = true
+        @elm_.normal = true
         @elm_.parser = self
 
         @elm_
       end
 
-      private :element_with_1
+      private :element_normal_1
 
-      def element_without_1(name)
+      def element_void_1(name)
         # element (要素)
         @elm_ = Meteor::Element.new(name)
         # attribute (属性)
@@ -382,14 +382,14 @@ module Meteor
         # @pattern_cc = "<#{@_name}(|\\s[^<>]*)\\/>"
         @elm_.pattern = @pattern_cc
 
-        @elm_.empty = false
+        @elm_.normal = false
 
         @elm_.parser = self
 
         @elm_
       end
 
-      private :element_without_1
+      private :element_void_1
 
       #
       # get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で検索し、要素を取得する)
@@ -411,7 +411,7 @@ module Meteor
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
-          @res2 = element_with_3_2
+          @res2 = element_normal_3_2
           @pattern_cc_2 = @pattern_cc
 
           # puts @res2.captures.length
@@ -423,27 +423,27 @@ module Meteor
             @res = @res1
             # @pattern_cc = @pattern_cc_1
             if @res[1]
-              element_without_3(name)
+              element_void_3(name)
             else
-              element_with_3_1(name)
+              element_normal_3_1(name)
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             # @pattern_cc = @pattern_cc_2
-            element_with_3_1(name)
+            element_normal_3_1(name)
           end
         elsif @res1 && !@res2
           @res = @res1
           # @pattern_cc = @pattern_cc_1
           if @res[1]
-            element_without_3(name)
+            element_void_3(name)
           else
-            element_with_3_1(name)
+            element_normal_3_1(name)
           end
         elsif @res2 && !@res1
           @res = @res2
           # @pattern_cc = @pattern_cc_2
-          element_with_3_1(name)
+          element_normal_3_1(name)
         else
           if @error_check
             puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message)
@@ -470,7 +470,7 @@ module Meteor
 
       private :quote_element_3
 
-      def element_with_3_1(name)
+      def element_normal_3_1(name)
         # puts  @res.captures.length
         case @res.captures.length
         when FOUR
@@ -482,7 +482,7 @@ module Meteor
           @elm_.mixed_content = @res[2]
           # document (全体)
           @elm_.document = @res[0]
-          # content-rich element search pattern (内容あり要素検索用パターン)
+          # normal element search pattern (内容あり要素検索用パターン)
           # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
           # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
           # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
@@ -490,7 +490,7 @@ module Meteor
 
           @elm_.pattern = @pattern_cc
 
-          @elm_.empty = true
+          @elm_.normal = true
 
           @elm_.parser = self
         when FIVE
@@ -502,7 +502,7 @@ module Meteor
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
-          # content-rich element search pattern (内容あり要素検索用パターン)
+          # normal element search pattern (内容あり要素検索用パターン)
           # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
           # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
           # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
@@ -510,7 +510,7 @@ module Meteor
 
           @elm_.pattern = @pattern_cc
 
-          @elm_.empty = true
+          @elm_.normal = true
 
           @elm_.parser = self
 
@@ -530,10 +530,10 @@ module Meteor
           end
           # document (全体)
           @elm_.document = @res[0]
-          #  content-rich element search pattern (内容あり要素検索用パターン)
+          #  normal element search pattern (内容あり要素検索用パターン)
           @elm_.pattern = @pattern_cc
 
-          @elm_.empty = true
+          @elm_.normal = true
 
           @elm_.parser = self
         end
@@ -541,10 +541,10 @@ module Meteor
         @elm_
       end
 
-      private :element_with_3_1
+      private :element_normal_3_1
 
-      def element_with_3_2
-        element_pattern_with_3_2
+      def element_normal_3_2
+        element_pattern_normal_3_2
 
         if @sbuf.length == ZERO || @cnt != ZERO
           return nil
@@ -556,9 +556,9 @@ module Meteor
         @res
       end
 
-      private :element_with_3_2
+      private :element_normal_3_2
 
-      def element_pattern_with_3_2
+      def element_pattern_normal_3_2
         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
         # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_1 = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
@@ -577,7 +577,7 @@ module Meteor
         @pattern_cc_2_2 = String.new("") << ".*?)<\\/" << @_name << ">"
         # @pattern_cc_2_2 = ".*?)<\\/#{@_name}>"
 
-        # search of content-rich element (内容あり要素検索)
+        # search of normal element (内容あり要素検索)
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
 
         @sbuf = String.new("")
@@ -592,15 +592,15 @@ module Meteor
         @pattern_cc = @sbuf
       end
 
-      private :element_pattern_with_3_2
+      private :element_pattern_normal_3_2
 
-      def element_without_3(name)
-        element_without_3_1(name, "\"[^<>]*)\\/>")
+      def element_void_3(name)
+        element_void_3_1(name, "\"[^<>]*)\\/>")
       end
 
-      private :element_without_3
+      private :element_void_3
 
-      def element_without_3_1(name, closer)
+      def element_void_3_1(name, closer)
         # element (要素)
         @elm_ = Meteor::Element.new(name)
         # attribute (属性)
@@ -616,7 +616,7 @@ module Meteor
         @elm_
       end
 
-      private :element_without_3_1
+      private :element_void_3_1
 
       #
       # get element using attribute(name="value") (属性(属性名="属性値")で検索し、要素を取得する)
@@ -649,7 +649,7 @@ module Meteor
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
-          @res2 = element_with_2_2
+          @res2 = element_normal_2_2
           @pattern_cc_2 = @pattern_cc
 
           # puts @res2.captures.length
@@ -661,27 +661,27 @@ module Meteor
             @res = @res1
             # @pattern_cc = @pattern_cc_1
             if @res[1]
-              element_without_2
+              element_void_2
             else
-              element_with_2_1
+              element_normal_2_1
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             # @pattern_cc = @pattern_cc_2
-            element_with_2_1
+            element_normal_2_1
           end
         elsif @res1 && !@res2
           @res = @res1
           # @pattern_cc = @pattern_cc_1
           if @res[1]
-            element_without_2
+            element_void_2
           else
-            element_with_2_1
+            element_normal_2_1
           end
         elsif @res2 && !@res1
           @res = @res2
           # @pattern_cc = @pattern_cc_2
-          element_with_2_1
+          element_normal_2_1
         else
           if @error_check
             puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
@@ -717,7 +717,7 @@ module Meteor
       private :element_pattern_2
 
 =begin
-      def element_with_2_1
+      def element_normal_2_1
         # puts @res.captures.length
         case @res.captures.length
           when FOUR
@@ -737,7 +737,7 @@ module Meteor
             @ pattern_cc = "<#{@_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_name}[^<>]*>)).)*<\\/#{@_name}>"
 
             @elm_.pattern = @pattern_cc
-            @elm_.empty = true
+            @elm_.normal = true
             @elm_.parser = self
           when FIVE,SEVEN
             @_name = @res[3]
@@ -756,7 +756,7 @@ module Meteor
             @pattern_cc = "<#{@_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_name}[^<>]*>)).)*<\\/#{@_name}>"
 
             @elm_.pattern = @pattern_cc
-            @elm_.empty = true
+            @elm_.normal = true
             @elm_.parser = self
           when THREE,SIX
             # puts @res[1]
@@ -773,20 +773,20 @@ module Meteor
             # pattern (内容あり要素検索用パターン)
             @elm_.pattern = @pattern_cc
 
-            @elm_.empty = true
+            @elm_.normal = true
             @elm_.parser = self
         end
         @elm_
       end
 
-      private :element_with_2_1
+      private :element_normal_2_1
 
-      def element_with_2_2
+      def element_normal_2_2
         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
         # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
 
-        # search of content-rich element (内容あり要素検索)
+        # search of normal element (内容あり要素検索)
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         @sbuf = String.new('')
 
@@ -804,7 +804,7 @@ module Meteor
         @res = @pattern.match(@root.document)
       end
 
-      private :element_with_2_2
+      private :element_normal_2_2
 
       def create_pattern_2(args_cnt)
         @pattern_cc_1b = String.new('') << "<" << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
@@ -821,13 +821,13 @@ module Meteor
         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
       end
 
-      def element_without_2
-        element_without_2_1('"[^<>]*\\/>')
+      def element_void_2
+        element_void_2_1('"[^<>]*\\/>')
       end
 
-      private :element_without_2
+      private :element_void_2
 
-      def element_without_2_1(closer)
+      def element_void_2_1(closer)
         # element (要素)
         @elm_ = Element.new(@res[1])
         # attribute (属性)
@@ -842,7 +842,7 @@ module Meteor
         @elm_
       end
 
-      private :element_without_2_1
+      private :element_void_2_1
 =end
 
       #
@@ -863,7 +863,7 @@ module Meteor
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
-          @res2 = element_with_5_2
+          @res2 = element_normal_5_2
           @pattern_cc_2 = @pattern_cc
 
           # puts @res2.captures.length
@@ -875,27 +875,27 @@ module Meteor
             @res = @res1
             # @pattern_cc = @pattern_cc_1
             if @res[1]
-              element_without_5(name)
+              element_void_5(name)
             else
-              element_with_5_1(name)
+              element_normal_5_1(name)
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             # @pattern_cc = @pattern_cc_2
-            element_with_5_1(name)
+            element_normal_5_1(name)
           end
         elsif @res1 && !@res2
           @res = @res1
           # @pattern_cc = @pattern_cc_1
           if @res[1]
-            element_without_5(name)
+            element_void_5(name)
           else
-            element_with_5_1(name)
+            element_normal_5_1(name)
           end
         elsif @res2 && !@res1
           @res = @res2
           # @pattern_cc = @pattern_cc_2
-          element_with_5_1(name)
+          element_normal_5_1(name)
         else
           if @error_check
             puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message)
@@ -919,7 +919,7 @@ module Meteor
 
       private :quote_element_5
 
-      def element_with_5_1(name)
+      def element_normal_5_1(name)
 
         # puts @res.captures.length
         case @res.captures.length
@@ -942,7 +942,7 @@ module Meteor
           @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
           @elm_.pattern = @pattern_cc
-          @elm_.empty = true
+          @elm_.normal = true
           @elm_.parser = self
         when FIVE
           # element (要素)
@@ -963,7 +963,7 @@ module Meteor
           @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
           @elm_.pattern = @pattern_cc
-          @elm_.empty = true
+          @elm_.normal = true
           @elm_.parser = self
 
         when THREE, SIX
@@ -975,20 +975,20 @@ module Meteor
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
-          # content-rich element search pattern (要素ありタグ検索用パターン)
+          # normal element search pattern (要素ありタグ検索用パターン)
           @elm_.pattern = @pattern_cc
 
-          @elm_.empty = true
+          @elm_.normal = true
           @elm_.parser = self
         end
 
         @elm_
       end
 
-      private :element_with_5_1
+      private :element_normal_5_1
 
-      def element_with_5_2
-        element_pattern_with_5_2
+      def element_normal_5_2
+        element_pattern_normal_5_2
 
         if @sbuf.length == ZERO || @cnt != ZERO
           return nil
@@ -1000,9 +1000,9 @@ module Meteor
         @res
       end
 
-      private :element_with_5_2
+      private :element_normal_5_2
 
-      def element_pattern_with_5_2
+      def element_pattern_normal_5_2
 
         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
         # @pattern_cc_1 << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
@@ -1029,7 +1029,7 @@ module Meteor
         # @pattern_cc_2_1 = ".*?<\\/#{@_name}>"
         # @pattern_cc_2_2 = ".*?)<\\/#{@_name}>"
 
-        # search of content-rich element (内容あり要素検索)
+        # search of normal element (内容あり要素検索)
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
 
         @sbuf = String.new("")
@@ -1042,15 +1042,15 @@ module Meteor
         @pattern_cc = @sbuf
       end
 
-      private :element_pattern_with_5_2
+      private :element_pattern_normal_5_2
 
-      def element_without_5(name)
-        element_without_5_1(name, "\")[^<>]*)\\/>")
+      def element_void_5(name)
+        element_void_5_1(name, "\")[^<>]*)\\/>")
       end
 
-      private :element_without_5
+      private :element_void_5
 
-      def element_without_5_1(name, closer)
+      def element_void_5_1(name, closer)
         # element (要素)
         @elm_ = Meteor::Element.new(name)
         # attribute (属性)
@@ -1070,7 +1070,7 @@ module Meteor
         @elm_
       end
 
-      private :element_without_5_1
+      private :element_void_5_1
 
       #
       # get element using attribute1,2(name="value") (属性1・属性2(属性名="属性値")で検索し、要素を取得する)
@@ -1388,24 +1388,24 @@ module Meteor
           # if @res
           case args.size
           when ONE
-            if @elm_.empty
-              element_with_1(@elm_.name)
+            if @elm_.normal
+              element_normal_1(@elm_.name)
             else
-              element_without_1(@elm_.name)
+              element_void_1(@elm_.name)
             end
 
           when TWO, THREE
-            if @elm_.empty
-              element_with_3_1(@elm_.name)
+            if @elm_.normal
+              element_normal_3_1(@elm_.name)
             else
-              element_without_3(@elm_.name)
+              element_void_3(@elm_.name)
             end
 
           when FOUR, FIVE
-            if @elm_.empty
-              element_with_5_1(@elm_.name)
+            if @elm_.normal
+              element_normal_5_1(@elm_.name)
             else
-              element_without_5(@elm_.name)
+              element_void_5(@elm_.name)
             end
           end
 
@@ -1846,7 +1846,7 @@ module Meteor
       #
       def get_content_1(elm)
         if !elm.cx
-          if elm.empty
+          if elm.normal
             unescape_content(elm.mixed_content, elm)
           else
             nil
@@ -1955,7 +1955,7 @@ module Meteor
           # pattren (要素検索パターン)
           @elm_.pattern = @pattern_cc
 
-          @elm_.empty = true
+          @elm_.normal = true
 
           @elm_.parser = self
         else
@@ -2073,7 +2073,7 @@ module Meteor
               # self.document_hook << @root.kaigyo_code << "<#{self.element_hook.name}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.name}>"
             end
 
-            self.element_hook = Element.new!(self.element_hook.origin, self)
+            self.element_hook = self.element_hook.origin.clone(self)
           else
             reflect
             @_attributes = self.element_hook.attributes
@@ -2097,7 +2097,7 @@ module Meteor
               # self.document_hook << @root.kaigyo_code << "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>"
             end
 
-            self.element_hook = Element.new!(self.element_hook.origin, self)
+            self.element_hook = self.element_hook.origin.clone(self)
           end
         else
           reflect
@@ -2125,13 +2125,13 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def shadow(elm)
-        if elm.empty
-          # case of content-rich element (内容あり要素の場合)
+        if elm.normal
+          # case of normal element (内容あり要素の場合)
           set_mono_info(elm)
 
-          pif2 = create(self)
+          pif2 = self.class.new(self)
 
-          @elm_ = Element.new!(elm, pif2)
+          @elm_ = elm.clone(pif2)
 
           if !elm.mono
             pif2.root_element.document = String.new(elm.mixed_content)
@@ -2208,25 +2208,6 @@ module Meteor
       end
 
       private :is_match_s
-
-      def create(pif)
-        case pif.doc_type
-        when Parser::HTML
-          Meteor::Ml::Html::ParserImpl.new
-        when Parser::XML
-          Meteor::Ml::Xml::ParserImpl.new
-        when Parser::XHTML
-          Meteor::Ml::Xhtml::ParserImpl.new
-        when Parser::HTML4
-          Meteor::Ml::Html4::ParserImpl.new
-        when Parser::XHTML4
-          Meteor::Ml::Xhtml4::ParserImpl.new
-        else
-          nil
-        end
-      end
-
-      private :create
 
       def escape(content)
         # replace special character (特殊文字の置換)

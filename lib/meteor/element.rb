@@ -112,11 +112,20 @@ module Meteor
     # @param [Meteor::Element] elm element (要素)
     #
     def initialize_e(elm)
+      initialize_2(elm, elm.parser)
+      @usable = true
+    end
+
+    private :initialize_e
+
+    def initialize_2(elm, ps)
+      @parser = ps
       if self.normal
-        self.parser.element(elm)
+        ps.element(elm)
       else
         @name = elm.name
         @attributes = String.new(elm.attributes)
+        @mixed_content = String.new(elm.mixed_content)
         # @pattern = String.new(elm.pattern)
         @pattern = elm.pattern
         @document = String.new(elm.document)
@@ -124,27 +133,9 @@ module Meteor
         @cx = elm.cx
         @mono = elm.mono
         @origin = elm
-        @parser = elm.parser
-        @usable = true
+        # @usable = false
+        elm.copy = self
       end
-    end
-
-    private :initialize_e
-
-    def initialize_2(elm, ps)
-      @name = elm.name
-      @attributes = String.new(elm.attributes)
-      @mixed_content = String.new(elm.mixed_content)
-      # @pattern = String.new(elm.pattern)
-      @pattern = elm.pattern
-      @document = String.new(elm.document)
-      @normal = elm.normal
-      @cx = elm.cx
-      @mono = elm.mono
-      @parser = ps
-      # @usable = false
-      @origin = elm
-      elm.copy = self
     end
 
     private :initialize_2

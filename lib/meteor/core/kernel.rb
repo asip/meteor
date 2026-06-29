@@ -111,17 +111,21 @@ module Meteor
       # set character encoding (文字エンコーディングをセットする)
       # @param [String] enc character encoding (文字エンコーディング)
       #
-      def character_encoding=(enc)
-        @root.character_encoding = enc
+      def enc=(enc)
+        @root.enc = enc
       end
+
+      alias_method :character_encoding=, :enc=
 
       #
       # get character encoding (文字エンコーディングを取得する)
       # @return [String] character encoding (文字エンコーディング)
       #
-      def character_encoding
-        @root.character_encoding
+      def enc
+        @root.enc
       end
+
+      alias_method :character_encoding, :enc
 
       #
       # get root element (ルート要素を取得する)
@@ -158,7 +162,7 @@ module Meteor
       #
       def read(file_path, enc)
         # try {
-        @character_encoding = enc
+        self.enc = enc
         # open file (ファイルのオープン)
         if "UTF-8".eql?(enc)
           # io = File.open(file_path,"r:" << enc)

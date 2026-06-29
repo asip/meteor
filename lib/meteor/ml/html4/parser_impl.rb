@@ -493,7 +493,7 @@ module Meteor
             @res = match_p.match(elm.attributes)
 
             if !@res
-              if !"".eql?(elm.attributes) && !"".eql?(elm.attributes.strip)
+              if elm.attributes != "" && elm.attributes.strip != ""
                 elm.attributes = String.new("") << " " << elm.attributes.strip
               else
                 elm.attributes = String.new("")

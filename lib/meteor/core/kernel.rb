@@ -2154,7 +2154,6 @@ module Meteor
       # private :shadow
 
       def set_mono_info(elm)
-
         @res = @@pattern_set_mono1.match(elm.mixed_content)
 
         if @res
@@ -2195,9 +2194,7 @@ module Meteor
       def is_match_a(regex, str)
         str = str.downcase
         regex.each do |item|
-          if item == str
-            return true
-          end
+          return true if item == str
         end
 
         false

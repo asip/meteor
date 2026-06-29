@@ -190,7 +190,7 @@ module Meteor
       if paths.length == 1
         return File.basename(paths[0], ".*")
       else
-        if ".".eql?(paths[0])
+        if paths[0] == "."
           paths.delete_at(0)
           paths[paths.length - 1] = File.basename(paths[paths.length - 1], ".*")
           return String.new("") << "/" << paths.join("/")

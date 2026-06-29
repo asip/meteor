@@ -163,21 +163,23 @@ module Meteor
       def read(file_path, enc)
         # try {
         self.enc = enc
-        # open file (ファイルのオープン)
-        if "UTF-8".eql?(enc)
-          # io = File.open(file_path,"r:" << enc)
-          io = File.open(file_path, "r:UTF-8")
+        mode = if enc == "UTF-8"
+          # String.new("") << "r:" << enc
+          "r:UTF-8"
         else
-          io = File.open(file_path, String.new("") << "r:" << enc << ":utf-8")
+          String.new("") << "r:" << enc << ":utf-8"
         end
+
+        # open file (ファイルのオープン)
+        io = File.open(file_path, mode)
 
         # load and save (読込及び格納)
         @root.document = io.read
 
-        parse
-
         # close file (ファイルのクローズ)
         io.close
+
+        parse
 
         return @root.document
       end
@@ -2168,7 +2170,7 @@ module Meteor
         elsif regex.kind_of?(Array)
           is_match_a(regex, str)
         elsif regex.kind_of?(String)
-          if regex.eql?(str.downcase)
+          if regex == str.downcase
             true
           else
             false
@@ -2193,7 +2195,7 @@ module Meteor
       def is_match_a(regex, str)
         str = str.downcase
         regex.each do |item|
-          if item.eql?(str)
+          if item == str
             return true
           end
         end

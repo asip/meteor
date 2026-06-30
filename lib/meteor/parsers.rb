@@ -256,24 +256,24 @@ module Meteor
     private :add_file_1
 
     #
-    # @overload add_str(type, relative_url, doc)
+    # @overload add_template(type, relative_url, doc)
     #  add parser (パーサを追加する)
     #  @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
-    # @overload add_str(relative_url, doc)
+    # @overload add_template(relative_url, doc)
     #  add parser (パーサを追加する)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
     #
-    def add_str(*args)
+    def add_template(*args)
       case args.length
       when 2
-        add_str_2(args[0], args[1])
+        add_template_2(args[0], args[1])
       when 3
-        add_str_3(args[0], args[1], args[2])
+        add_template_3(args[0], args[1], args[2])
       else
         raise ArgumentError
       end
@@ -286,7 +286,7 @@ module Meteor
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_str_3(type, relative_url, doc)
+    def add_template_3(type, relative_url, doc)
       ps = new_parser(type)
       ps.document = doc
       ps.parse
@@ -294,7 +294,7 @@ module Meteor
       @cache[relative_url] = ps
     end
 
-    private :add_str_3
+    private :add_template_3
 
     #
     # add parser (パーサを追加する)
@@ -302,14 +302,15 @@ module Meteor
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_str_2(relative_url, doc)
-      add_str_3(@type, relative_url, doc)
+    def add_template_2(relative_url, doc)
+      add_template_3(@type, relative_url, doc)
     end
 
-    private :add_str_2
+    private :add_template_2
 
-    alias_method :link_str, :add_str
-    alias_method :parser_str, :add_str
+    alias_method :link_str, :add_template
+    alias_method :add_str, :add_template
+    alias_method :parser_str, :add_template
 
     #
     #@overload parser(key)

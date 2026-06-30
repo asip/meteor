@@ -40,25 +40,26 @@ module Meteor
     end
 
     #
-    # @overload add_str(type, relative_url, doc)
+    # @overload add_template(type, relative_url, doc)
     #  add parser (パーサを追加する)
     #  @param [Integer] type type of parser (パーサ・タイプ)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
-    # @overload add_str(relative_url, doc)
+    # @overload add_template(relative_url, doc)
     #  add parser (パーサを追加する)
     #  @param [String] relative_url relative URL (相対URL)
     #  @param [String] doc document (ドキュメント)
     #  @return [Meteor::Parser] parser (パーサ)
     #
-    def self.add_str(*args)
-      @@pf.add_str(args)
+    def self.add_template(*args)
+      @@pf.add_template(args)
     end
 
     class << self
       alias_method :link, :add
-      alias_method :link_str, :add_str
+      alias_method :add_str, :add_template
+      alias_method :link_str, :add_template
     end
 
     #

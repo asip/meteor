@@ -79,5 +79,5 @@ module Meteor
   #
   # Elements Class (要素ファクトリ クラス)
   #
-  Elements = Elements
+  ElementFactory = Elements
 end

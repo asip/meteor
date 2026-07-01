@@ -2068,7 +2068,7 @@ module Meteor
               self.document_hook <<
                 "<!-- @#{self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
 
-              # self.document_hook << @root.kaigyo_code << "<!-- @#{self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
+              # self.document_hook << @root.newline << "<!-- @#{self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->"
             else
               # @root.hookDocument << "<" << @root.element.name
               # @root.hookDocument << @root.element.attributes << '>' << @root.element.mixed_content
@@ -2076,7 +2076,7 @@ module Meteor
               self.document_hook <<
                 "<#{self.element_hook.name}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.name}>"
 
-              # self.document_hook << @root.kaigyo_code << "<#{self.element_hook.name}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.name}>"
+              # self.document_hook << @root.newline << "<#{self.element_hook.name}#{self.element_hook.attributes}>#{self.element_hook.mixed_content}</#{self.element_hook.name}>"
             end
 
             self.element_hook = self.element_hook.origin.clone(self)
@@ -2092,7 +2092,7 @@ module Meteor
               self.document_hook <<
                 "<!-- @#{self.element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.name} -->"
 
-              # self.document_hook << @root.kaigyo_code << "<!-- @#{self.element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.name} -->"
+              # self.document_hook << @root.newline << "<!-- @#{self.element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.name} -->"
             else
               # @root.hookDocument << "<" << @root.element.name
               # @root.hookDocument << @_attributes << '>' << @root.document
@@ -2100,7 +2100,7 @@ module Meteor
               self.document_hook <<
                 "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>"
 
-              # self.document_hook << @root.kaigyo_code << "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>"
+              # self.document_hook << @root.newline << "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>"
             end
 
             self.element_hook = self.element_hook.origin.clone(self)
@@ -2145,7 +2145,7 @@ module Meteor
             pif2.root_element.document = String.new(elm.document)
           end
 
-          pif2.root_element.kaigyo_code = elm.parser.root_element.kaigyo_code
+          pif2.root_element.newline = elm.parser.root_element.newline
 
           @elm_
         end
@@ -2261,7 +2261,7 @@ module Meteor
       def br_to_newline(content)
         if (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
           # 「<br>」->「¥r?¥n」
-          content.gsub!(@@pattern_br_2, @root.kaigyo_code)
+          content.gsub!(@@pattern_br_2, @root.newline)
         end
       end
 

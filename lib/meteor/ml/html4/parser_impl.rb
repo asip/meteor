@@ -107,7 +107,7 @@ module Meteor
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.charset = ps.root_element.charset
-          @root.kaigyo_code = ps.root_element.kaigyo_code
+          @root.newline = ps.root_element.newline
         end
 
         private :initialize_1
@@ -171,8 +171,8 @@ module Meteor
         def analyze_newline
           for a in KAIGYO_CODE
             if @root.document.include?(a)
-              @root.kaigyo_code = a
-              # puts "kaigyo:" << @root.kaigyo_code
+              @root.newline = a
+              # puts "kaigyo:" << @root.newline
             end
           end
         end

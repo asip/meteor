@@ -7,7 +7,7 @@ module Meteor
   #
   # @!attribute [rw] content_type
   #  @return [String] content type (コンテントタイプ)
-  # @!attribute [rw] kaigyo_code
+  # @!attribute [rw] newline
   #  @return [String] newline (改行コード)
   # @!attribute [rw] charset
   #  @return [String] charset (文字コード)
@@ -16,12 +16,15 @@ module Meteor
   #
   class RootElement < Element
     attr_accessor :content_type
-    attr_accessor :kaigyo_code
+    attr_accessor :newline
     attr_accessor :charset
     attr_accessor :enc
     # attr_accessor :document #[String] document (ドキュメント)
 
     alias_method :character_encoding, :enc
     alias_method :character_encoding=, :enc=
+
+    alias_method :kaigyo_code, :newline
+    alias_method :kaigyo_code=, :newline=
   end
 end

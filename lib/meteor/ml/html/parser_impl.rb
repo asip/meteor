@@ -87,7 +87,7 @@ module Meteor
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.charset = ps.root_element.charset
-          @root.kaigyo_code = ps.root_element.kaigyo_code
+          @root.newline = ps.root_element.newline
         end
 
         private :initialize_1

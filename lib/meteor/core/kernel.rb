@@ -1581,7 +1581,7 @@ module Meteor
         # attribute search (属性検索)
         # @res = @pattern.match(elm.attributes)
 
-        #  (検索対象属性の存在判定)
+        # Attribute existence check (属性の存在判定)
         if elm.attributes.include?(String.new(" ") << attr_name << "=\"")
           @_attr_value = attr_value
 

@@ -1,3 +1,7 @@
+== 0.9.30 / 2026-07-02 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Refactor Meteor::Core::Util::PatternCache
+
 == 0.9.29 / 2026-07-02 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Refactor Meteor::RootElement

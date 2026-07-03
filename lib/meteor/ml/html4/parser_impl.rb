@@ -17,9 +17,9 @@ module Meteor
         # @@match_tag = "br|hr|img|input|meta|base"
         # [Array] void elemets (空要素)
         @@match_tag = %w[br hr img input meta base]
-        # @@match_tag_2 = "textarea|option|pre"
+        # @@match_tag_two = "textarea|option|pre"
         # [Array] elements where line breaks do not need to be converted to <br> (改行を<br>に変換する必要のない要素)
-        @@match_tag_2 = %w[textarea option pre]
+        @@match_tag_two = %w[textarea option pre]
 
         # [Array] non-nestable elements (入れ子にできない要素)
         @@match_tag_nne = %w[texarea select option form fieldset]
@@ -69,7 +69,7 @@ module Meteor
         @@pattern_get_attrs_map2 = Regexp.new(GET_ATTRS_MAP2)
 
         # @@pattern_match_tag = Regexp.new(@@match_tag)
-        # @@pattern_match_tag2 = Regexp.new(@@match_tag_2)
+        # @@pattern_match_tag2 = Regexp.new(@@match_tag_two)
 
         #
         # initializer (イニシャライザ)

@@ -57,7 +57,7 @@ module Meteor
         def initialize(*args)
           super()
           @@match_tag = MATCH_TAG
-          @@MATCH_TAG_NNE = MATCH_TAG_NNE
+          @@match_tag_nne = MATCH_TAG_NNE
           @@attr_bool = ATTR_BOOL
           @doc_type = Parser::HTML
           case args.length

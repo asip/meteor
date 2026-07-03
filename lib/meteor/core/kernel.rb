@@ -17,33 +17,33 @@ module Meteor
     class Kernel < Meteor::Parser
       # find
       # E
-      PATTERN_FIND_1 = '^([^,\\[\\]#\\.]+)$'
+      PATTERN_FIND_one = '^([^,\\[\\]#\\.]+)$'
       # # id_attribute_value
-      PATTERN_FIND_2_1 = '^#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_two_one = '^#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
       # .class_attribute_value
-      PATTERN_FIND_2_2 = '^\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_two_two = '^\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
       # [attribute_name=attribute_value]
-      PATTERN_FIND_2_3 = '^\\[([^\\[\\],]+)=([^\\[\\],]+)\\]$'
+      PATTERN_FIND_two_three = '^\\[([^\\[\\],]+)=([^\\[\\],]+)\\]$'
       # E[attribute_name=attribute_value]
-      PATTERN_FIND_3_1 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,\\[\\]]+)=([^,\\[\\]]+)\\]$'
+      PATTERN_FIND_three_one = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,\\[\\]]+)=([^,\\[\\]]+)\\]$'
       # E# id_attribute_value
-      PATTERN_FIND_3_2 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_three_two = '^([^\\.,\\[\\]#][^,\\[\\]#]+)#([^\\.,\\[\\]#][^,\\[\\]#]*)$'
       # E.class_attribute_value
-      PATTERN_FIND_3_3 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
+      PATTERN_FIND_three_three = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\.([^\\.,\\[\\]#][^,\\[\\]#]*)$'
       # [attribute_name1=attribute_value1][attribute_name2=attribute_value2]
-      PATTERN_FIND_4 = '^\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
+      PATTERN_FIND_four = '^\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
       # E[attribute_name1=attribute_value1][attribute_name2=attribute_value2]
-      PATTERN_FIND_5 = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
+      PATTERN_FIND_five = '^([^\\.,\\[\\]#][^,\\[\\]#]+)\\[([^,]+)=([^,]+)\\]\\[([^,]+)=([^,]+)\\]$'
 
-      @@pattern_find_1 = Regexp.new(PATTERN_FIND_1)
-      @@pattern_find_2_1 = Regexp.new(PATTERN_FIND_2_1)
-      @@pattern_find_2_2 = Regexp.new(PATTERN_FIND_2_2)
-      @@pattern_find_2_3 = Regexp.new(PATTERN_FIND_2_3)
-      @@pattern_find_3_1 = Regexp.new(PATTERN_FIND_3_1)
-      @@pattern_find_3_2 = Regexp.new(PATTERN_FIND_3_2)
-      @@pattern_find_3_3 = Regexp.new(PATTERN_FIND_3_3)
-      @@pattern_find_4 = Regexp.new(PATTERN_FIND_4)
-      @@pattern_find_5 = Regexp.new(PATTERN_FIND_5)
+      @@pattern_find_one = Regexp.new(PATTERN_FIND_one)
+      @@pattern_find_two_one = Regexp.new(PATTERN_FIND_two_one)
+      @@pattern_find_two_two = Regexp.new(PATTERN_FIND_two_two)
+      @@pattern_find_two_three = Regexp.new(PATTERN_FIND_two_three)
+      @@pattern_find_three_one = Regexp.new(PATTERN_FIND_three_one)
+      @@pattern_find_three_two = Regexp.new(PATTERN_FIND_three_two)
+      @@pattern_find_three_three = Regexp.new(PATTERN_FIND_three_three)
+      @@pattern_find_four = Regexp.new(PATTERN_FIND_four)
+      @@pattern_find_five = Regexp.new(PATTERN_FIND_five)
 
       @@pattern_set_mono1 = Regexp.new('\\A[^<>]*\\Z')
 
@@ -83,7 +83,7 @@ module Meteor
 
       PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt|nbsp);'
       @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
-      @@pattern_br_2 = Regexp.new(BR_RE)
+      @@pattern_br_two = Regexp.new(BR_RE)
 
       attr_accessor :element_cache, :doc_type, :document_hook, :element_hook
 
@@ -297,7 +297,7 @@ module Meteor
           if @res[1]
             element_void_one(name)
           else
-            # puts '---element_normal_1'
+            # puts '---element_normal_one'
             element_normal_one(name)
           end
           # else
@@ -377,14 +377,14 @@ module Meteor
           quote_name(name)
         end
 
-        @pattern_cc_1 = element_pattern_three
+        @pattern_cc_one = element_pattern_three
 
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_one)
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
           @res2 = element_normal_three_two
-          @pattern_cc_2 = @pattern_cc
+          @pattern_cc_two = @pattern_cc
 
           # puts @res2.captures.length
           # puts @res2.regexp.to_s
@@ -393,7 +393,7 @@ module Meteor
         if @res1 && @res2
           if @res1.begin(0) < @res2.begin(0)
             @res = @res1
-            # @pattern_cc = @pattern_cc_1
+            # @pattern_cc = @pattern_cc_one
             if @res[1]
               element_void_three(name)
             else
@@ -401,12 +401,12 @@ module Meteor
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
-            # @pattern_cc = @pattern_cc_2
+            # @pattern_cc = @pattern_cc_two
             element_normal_three_one(name)
           end
         elsif @res1 && !@res2
           @res = @res1
-          # @pattern_cc = @pattern_cc_1
+          # @pattern_cc = @pattern_cc_one
           if @res[1]
             element_void_three(name)
           else
@@ -414,7 +414,7 @@ module Meteor
           end
         elsif @res2 && !@res1
           @res = @res2
-          # @pattern_cc = @pattern_cc_2
+          # @pattern_cc = @pattern_cc_two
           element_normal_three_one(name)
         else
           puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
@@ -525,31 +525,31 @@ module Meteor
       private :element_normal_three_two
 
       def element_pattern_normal_three_two
-        # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-        # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
-        @pattern_cc_1 = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
-        @pattern_cc_1b = String.new('') << '<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-        # @pattern_cc_1b = "<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-        # @pattern_cc_1_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-        # @pattern_cc_1_1 << @_attr_value << '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
-        @pattern_cc_1_1 = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
-        @pattern_cc_1_2 = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-        # @pattern_cc_1_2 = ".*?<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+        # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
+        # @pattern_cc_one << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
+        @pattern_cc_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
+        @pattern_cc_oneb = String.new('') << '<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+        # @pattern_cc_oneb = "<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+        # @pattern_cc_one_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
+        # @pattern_cc_one_one << @_attr_value << '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
+        @pattern_cc_one_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+        @pattern_cc_one_two = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+        # @pattern_cc_one_two = ".*?<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
 
-        @pattern_cc_2 = String.new('') << '<\\/' << @_name << '>'
-        # @pattern_cc_2 = String.new('') << "<\\/#{@_name}>"
-        @pattern_cc_2_1 = String.new('') << '.*?<\\/' << @_name << '>'
-        # @pattern_cc_2_1 = ".*?<\\/#{@_name}>"
-        @pattern_cc_2_2 = String.new('') << '.*?)<\\/' << @_name << '>'
-        # @pattern_cc_2_2 = ".*?)<\\/#{@_name}>"
+        @pattern_cc_two = String.new('') << '<\\/' << @_name << '>'
+        # @pattern_cc_two = String.new('') << "<\\/#{@_name}>"
+        @pattern_cc_two_one = String.new('') << '.*?<\\/' << @_name << '>'
+        # @pattern_cc_two_one = ".*?<\\/#{@_name}>"
+        @pattern_cc_two_two = String.new('') << '.*?)<\\/' << @_name << '>'
+        # @pattern_cc_two_two = ".*?)<\\/#{@_name}>"
 
         # search of normal element (内容あり要素検索)
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_one)
 
         @sbuf = String.new('')
 
-        @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+        @pattern_two = Meteor::Core::Util::PatternCache.get(@pattern_cc_two)
+        @pattern_oneb = Meteor::Core::Util::PatternCache.get(@pattern_cc_oneb)
 
         @cnt = 0
 
@@ -606,14 +606,14 @@ module Meteor
           @elm_ = nil
         end
 
-        #         @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(\\3[^<>]*>)).)*)<\\/\\3>"
+        #         @pattern_cc_one = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(\\3[^<>]*>)).)*)<\\/\\3>"
         #
-        #         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+        #         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_one)
         #         @res1 = @pattern.match(@root.document)
         #
         #         if @res1 && @res1[1] || !@res1
         #           @res2 = element_normal_two_two
-        #           @pattern_cc_2 = @pattern_cc
+        #           @pattern_cc_two = @pattern_cc
         #
         #           # puts @res2.captures.length
         #           # puts @res2.regexp.to_s
@@ -622,7 +622,7 @@ module Meteor
         #         if @res1 && @res2
         #           if @res1.begin(0) < @res2.begin(0)
         #             @res = @res1
-        #             # @pattern_cc = @pattern_cc_1
+        #             # @pattern_cc = @pattern_cc_one
         #             if @res[1]
         #               element_void_two
         #             else
@@ -630,12 +630,12 @@ module Meteor
         #             end
         #           elsif @res1.begin(0) > @res2.begin(0)
         #             @res = @res2
-        #             # @pattern_cc = @pattern_cc_2
+        #             # @pattern_cc = @pattern_cc_two
         #             element_normal_two_one
         #           end
         #         elsif @res1 && !@res2
         #           @res = @res1
-        #           # @pattern_cc = @pattern_cc_1
+        #           # @pattern_cc = @pattern_cc_one
         #           if @res[1]
         #             element_void_two
         #           else
@@ -643,7 +643,7 @@ module Meteor
         #           end
         #         elsif @res2 && !@res1
         #           @res = @res2
-        #           # @pattern_cc = @pattern_cc_2
+        #           # @pattern_cc = @pattern_cc_two
         #           element_normal_two_one
         #         else
         #           if @error_check
@@ -743,12 +743,12 @@ module Meteor
       #       private :element_normal_two_one
       #
       #       def element_normal_two_two
-      #         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-      #         # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
-      #         @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
+      #         # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
+      #         # @pattern_cc_one << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
+      #         @pattern_cc_one = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
       #
       #         # search of normal element (内容あり要素検索)
-      #         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+      #         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_one)
       #         @sbuf = String.new('')
       #
       #         @cnt = 0
@@ -768,18 +768,18 @@ module Meteor
       #       private :element_normal_two_two
       #
       #       def create_pattern_two(args_cnt)
-      #         @pattern_cc_1b = String.new('') << "<" << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      #         @pattern_cc_oneb = String.new('') << "<" << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       #
-      #         # @pattern_cc_1_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-      #         # @pattern_cc_1_1 << @_attr_value << '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
-      #         @pattern_cc_1_1 = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
-      #         @pattern_cc_1_2 = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-      #         @pattern_cc_2 = String.new('') << '<\\/' << @_name << '>'
-      #         @pattern_cc_2_1 = String.new('') << '.*?<\/' << @_name << '>'
-      #         @pattern_cc_2_2 = String.new('') << '.*?)<\/' << @_name << '>'
+      #         # @pattern_cc_one_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
+      #         # @pattern_cc_one_one << @_attr_value << '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
+      #         @pattern_cc_one_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+      #         @pattern_cc_one_two = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+      #         @pattern_cc_two = String.new('') << '<\\/' << @_name << '>'
+      #         @pattern_cc_two_one = String.new('') << '.*?<\/' << @_name << '>'
+      #         @pattern_cc_two_two = String.new('') << '.*?)<\/' << @_name << '>'
       #
-      #         @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-      #         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+      #         @pattern_two = Meteor::Core::Util::PatternCache.get(@pattern_cc_two)
+      #         @pattern_oneb = Meteor::Core::Util::PatternCache.get(@pattern_cc_oneb)
       #       end
       #
       #       def element_void_two
@@ -817,14 +817,14 @@ module Meteor
       def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
         quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
-        @pattern_cc_1 = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
+        @pattern_cc_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_one)
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
           @res2 = element_normal_five_two
-          @pattern_cc_2 = @pattern_cc
+          @pattern_cc_two = @pattern_cc
 
           # puts @res2.captures.length
           # puts @res2.regexp.to_s
@@ -833,7 +833,7 @@ module Meteor
         if @res1 && @res2
           if @res1.begin(0) < @res2.begin(0)
             @res = @res1
-            # @pattern_cc = @pattern_cc_1
+            # @pattern_cc = @pattern_cc_one
             if @res[1]
               element_void_five(name)
             else
@@ -841,12 +841,12 @@ module Meteor
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
-            # @pattern_cc = @pattern_cc_2
+            # @pattern_cc = @pattern_cc_two
             element_normal_five_one(name)
           end
         elsif @res1 && !@res2
           @res = @res1
-          # @pattern_cc = @pattern_cc_1
+          # @pattern_cc = @pattern_cc_one
           if @res[1]
             element_void_five(name)
           else
@@ -854,7 +854,7 @@ module Meteor
           end
         elsif @res2 && !@res1
           @res = @res2
-          # @pattern_cc = @pattern_cc_2
+          # @pattern_cc = @pattern_cc_two
           element_normal_five_one(name)
         else
           puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
@@ -958,38 +958,38 @@ module Meteor
       private :element_normal_five_two
 
       def element_pattern_normal_five_two
-        # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
-        # @pattern_cc_1 << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-        # @pattern_cc_1 << @_attr_value2 << '"|' << @_attr_name2 << '="'
-        # @pattern_cc_1 << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-        # @pattern_cc_1 << @_attr_value1 << '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'
-        @pattern_cc_1 = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))"
-        @pattern_cc_1b = String.new('') << '<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-        # @pattern_cc_1b = "<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+        # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
+        # @pattern_cc_one << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
+        # @pattern_cc_one << @_attr_value2 << '"|' << @_attr_name2 << '="'
+        # @pattern_cc_one << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
+        # @pattern_cc_one << @_attr_value1 << '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'
+        @pattern_cc_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))"
+        @pattern_cc_oneb = String.new('') << '<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+        # @pattern_cc_oneb = "<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
 
-        # @pattern_cc_1_1 = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
-        # @pattern_cc_1_1 << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-        # @pattern_cc_1_1 << @_attr_value2 << '"|' << @_attr_name2 << '="'
-        # @pattern_cc_1_1 << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-        # @pattern_cc_1_1 << @_attr_value1 << '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
-        @pattern_cc_1_1 = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
-        @pattern_cc_1_2 = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-        @pattern_cc_2 = String.new('') << '<\\/' << @_name << '>'
-        @pattern_cc_2_1 = String.new('') << '.*?<\\/' << @_name << '>'
-        @pattern_cc_2_2 = String.new('') << '.*?)<\\/' << @_name << '>'
+        # @pattern_cc_one_one = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
+        # @pattern_cc_one_one << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
+        # @pattern_cc_one_one << @_attr_value2 << '"|' << @_attr_name2 << '="'
+        # @pattern_cc_one_one << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
+        # @pattern_cc_one_one << @_attr_value1 << '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
+        @pattern_cc_one_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))("
+        @pattern_cc_one_two = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
+        @pattern_cc_two = String.new('') << '<\\/' << @_name << '>'
+        @pattern_cc_two_one = String.new('') << '.*?<\\/' << @_name << '>'
+        @pattern_cc_two_two = String.new('') << '.*?)<\\/' << @_name << '>'
 
-        # @pattern_cc_1_2 = ".*?<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-        # @pattern_cc_2 = String.new('') << "<\\/#{@_name}>"
-        # @pattern_cc_2_1 = ".*?<\\/#{@_name}>"
-        # @pattern_cc_2_2 = ".*?)<\\/#{@_name}>"
+        # @pattern_cc_one_two = ".*?<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
+        # @pattern_cc_two = String.new('') << "<\\/#{@_name}>"
+        # @pattern_cc_two_one = ".*?<\\/#{@_name}>"
+        # @pattern_cc_two_two = ".*?)<\\/#{@_name}>"
 
         # search of normal element (内容あり要素検索)
-        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
+        @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_one)
 
         @sbuf = String.new('')
 
-        @pattern_2 = Meteor::Core::Util::PatternCache.get(@pattern_cc_2)
-        @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
+        @pattern_two = Meteor::Core::Util::PatternCache.get(@pattern_cc_two)
+        @pattern_oneb = Meteor::Core::Util::PatternCache.get(@pattern_cc_oneb)
         @cnt = 0
 
         create_element_pattern
@@ -1037,7 +1037,7 @@ module Meteor
       def element_four(attr_name1, attr_value1, attr_name2, attr_value2)
         quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
-        element_pattern_4
+        element_pattern_four
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         @res = @pattern.match(@root.document)
@@ -1087,48 +1087,48 @@ module Meteor
           if @res
             if @cnt > ZERO
               @position2 = @res.end(0)
-              @res = @pattern_2.match(@root.document, @position)
+              @res = @pattern_two.match(@root.document, @position)
 
               if @res
                 @position = @res.end(0)
 
                 if @position > @position2
-                  @sbuf << @pattern_cc_1_2
+                  @sbuf << @pattern_cc_one_two
                   @cnt += 1
                   @position = @position2
                 else
                   @cnt -= ONE
 
                   if @cnt != ZERO
-                    @sbuf << @pattern_cc_2_1
+                    @sbuf << @pattern_cc_two_one
                   else
-                    @sbuf << @pattern_cc_2_2
+                    @sbuf << @pattern_cc_two_two
                     break
                   end
                 end
               else
-                @sbuf << @pattern_cc_1_2
+                @sbuf << @pattern_cc_one_two
                 @cnt += 1
                 @position = @position2
               end
             else
               @position = @res.end(0)
-              @sbuf << @pattern_cc_1_1
+              @sbuf << @pattern_cc_one_one
               @cnt += ONE
             end
           else
             break if @cnt == ZERO
 
-            @res = @pattern_2.match(@root.document, @position)
+            @res = @pattern_two.match(@root.document, @position)
 
             break unless @res
 
             @cnt -= ONE
 
             if @cnt != ZERO
-              @sbuf << @pattern_cc_2_1
+              @sbuf << @pattern_cc_two_one
             else
-              @sbuf << @pattern_cc_2_2
+              @sbuf << @pattern_cc_two_two
               break
             end
 
@@ -1136,7 +1136,7 @@ module Meteor
 
           end
 
-          @pattern = @pattern_1b
+          @pattern = @pattern_oneb
         end
       end
 
@@ -1149,27 +1149,27 @@ module Meteor
       #           if @res
       #             if @cnt > ZERO
       #               @position2 = @res.end(0)
-      #               @res = @pattern_2.match(@root.document, @position)
+      #               @res = @pattern_two.match(@root.document, @position)
       #
       #               if @res
       #                 @position = @res.end(0)
       #
       #                 if @position > @position2
-      #                   @sbuf << @pattern_cc_1_2
+      #                   @sbuf << @pattern_cc_one_two
       #                   @cnt += 1
       #                   @position = @position2
       #                 else
       #                   @cnt -= ONE
       #
       #                   if @cnt != ZERO
-      #                     @sbuf << @pattern_cc_2_1
+      #                     @sbuf << @pattern_cc_two_one
       #                   else
-      #                     @sbuf << @pattern_cc_2_2
+      #                     @sbuf << @pattern_cc_two_two
       #                     break
       #                   end
       #                 end
       #               else
-      #                 @sbuf << @pattern_cc_1_2
+      #                 @sbuf << @pattern_cc_one_two
       #                 @cnt += 1
       #                 @position = @position2
       #               end
@@ -1179,7 +1179,7 @@ module Meteor
       #
       #               create_pattern_two(args_cnt)
       #
-      #               @sbuf << @pattern_cc_1_1
+      #               @sbuf << @pattern_cc_one_one
       #               @cnt += ONE
       #             end
       #           else
@@ -1187,15 +1187,15 @@ module Meteor
       #               break
       #             end
       #
-      #             @res = @pattern_2.match(@root.document, @position)
+      #             @res = @pattern_two.match(@root.document, @position)
       #
       #             if @res
       #               @cnt -= ONE
       #
       #               if @cnt != ZERO
-      #                 @sbuf << @pattern_cc_2_1
+      #                 @sbuf << @pattern_cc_two_one
       #               else
-      #                 @sbuf << @pattern_cc_2_2
+      #                 @sbuf << @pattern_cc_two_two
       #                 break
       #               end
       #
@@ -1205,16 +1205,16 @@ module Meteor
       #             end
       #           end
       #
-      #           @pattern = @pattern_1b
+      #           @pattern = @pattern_oneb
       #         end
       #       end
       #
-      #       private :create_element_pattern_2
+      #       private :create_element_pattern_two
       #
-      #       # def create_pattern_2
+      #       # def create_pattern_two
       #       # end
       #
-      #       # private :create_pattern_2
+      #       # private :create_pattern_two
 
       # get elements (要素を取得する)
       # @overload elements(name)
@@ -1383,31 +1383,31 @@ module Meteor
         case open_count
         when ZERO
           if selector.count('#.').zero?
-            elements_(@res[1]) if (@res = @@pattern_find_1.match(selector))
+            elements_(@res[1]) if (@res = @@pattern_find_one.match(selector))
           elsif selector.count('#') == 1
             if selector[0] == '#'
-              elements_('id', @res[1]) if (@res = @@pattern_find_2_1.match(selector))
-            elsif (@res = @@pattern_find_3_2.match(selector))
+              elements_('id', @res[1]) if (@res = @@pattern_find_two_one.match(selector))
+            elsif (@res = @@pattern_find_three_two.match(selector))
               elements_(@res[1], 'id', @res[2])
             end
           elsif selector.count('.') == 1
             if selector[0] == '.'
-              elements_('class', @res[1]) if (@res = @@pattern_find_2_2.match(selector))
-            elsif (@res = @@pattern_find_3_3.match(selector))
+              elements_('class', @res[1]) if (@res = @@pattern_find_two_two.match(selector))
+            elsif (@res = @@pattern_find_three_three.match(selector))
               elements_(@res[1], 'class', @res[2])
             end
           end
 
         when ONE
           if selector[0] == '['
-            elements_(@res[1], @res[2]) if (@res = @@pattern_find_2_3.match(selector))
-          elsif (@res = @@pattern_find_3_1.match(selector))
+            elements_(@res[1], @res[2]) if (@res = @@pattern_find_two_three.match(selector))
+          elsif (@res = @@pattern_find_three_one.match(selector))
             elements_(@res[1], @res[2], @res[3])
           end
         when 2
           if selector[0] == '['
-            elements_(@res[1], @res[2], @res[3], @res[4]) if (@res = @@pattern_find_4.match(selector))
-          elsif (@res = @@pattern_find_5.match(selector))
+            elements_(@res[1], @res[2], @res[3], @res[4]) if (@res = @@pattern_find_four.match(selector))
+          elsif (@res = @@pattern_find_five.match(selector))
             elements_(@res[1], @res[2], @res[3], @res[4], @res[5])
           end
         end
@@ -2136,10 +2136,10 @@ module Meteor
       private :unescape
 
       def br_to_newline(content)
-        return unless (elm.cx || !is_match(@@match_tag_2, elm.name)) && content.include?(BR)
+        return unless (elm.cx || !is_match(@@match_tag_two, elm.name)) && content.include?(BR)
 
         # 「<br>」->「¥r?¥n」
-        content.gsub!(@@pattern_br_2, @root.newline)
+        content.gsub!(@@pattern_br_two, @root.newline)
       end
 
       private :br_to_newline

@@ -13,9 +13,9 @@ module Meteor
         BR = '<br/>'
         BR_RE = '<br\\/>'
 
-        # @@match_tag_2 = "textarea|option|pre"
+        # @@match_tag_two = "textarea|option|pre"
         # [Array] elements where line breaks do not need to be converted to <br> (改行を<br/>に変換する必要のない要素)
-        @@match_tag_2 = %w[textarea option pre]
+        @@match_tag_two = %w[textarea option pre]
 
         # [Array] boolean attributes (論理値で指定する属性)
         @@attr_bool = %w[disabled readonly checked selected multiple]
@@ -65,7 +65,7 @@ module Meteor
         @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
 
         # @@pattern_match_tag = Regexp.new(@@match_tag)
-        # @@pattern_match_tag2 = Regexp.new(@@match_tag_2)
+        # @@pattern_match_tag2 = Regexp.new(@@match_tag_two)
 
         #
         # initializer (イニシャライザ)

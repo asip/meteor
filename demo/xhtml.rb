@@ -8,7 +8,7 @@ require 'meteor'
 Meteor::Elements.add(:xhtml, 'ml/sample_xhtml.html')
 root = Meteor::Elements.get('/ml/sample_xhtml')
 
-startTime = Time.new.to_f
+start_time = Time.new.to_f
 
 elm_hello = root.element(id: 'hello')
 # elm_hello.attr(class: "red")
@@ -85,11 +85,11 @@ end
 
 root.flash
 
-endTime = Time.new.to_f
+end_time = Time.new.to_f
 
 puts(root.document)
 
 puts("charset:#{root.charset}")
 puts("content-type:#{root.content_type}")
 
-puts("#{endTime - startTime} sec")
+puts("#{end_time - start_time} sec")

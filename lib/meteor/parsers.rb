@@ -211,11 +211,9 @@ module Meteor
     # @return [Meteor::Parser] parser(パーサ)
     #
     def add_file_3(type, relative_path, enc = "UTF-8")
-      ps = new_parser(type)
-      ps.read(File.expand_path(relative_path, @root), enc)
-
       relative_url = path_to_url(relative_path)
-      @cache[relative_url] = ps
+
+      add_template_3(type, relative_url, Meteor::Core::Util::FileReader.read(File.expand_path(relative_path, @root), enc))
     end
 
     private :add_file_3

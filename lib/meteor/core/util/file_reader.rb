@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Meteor
   module Core
     module Util
@@ -11,12 +13,12 @@ module Meteor
         # @param [String] enc character encoding of input file (入力ファイルの文字コード)
         #
         def self.read(file_path, enc)
-          mode = if enc == "UTF-8"
-            # String.new("") << "r:" << enc
-            "r:UTF-8"
-          else
-            String.new("") << "r:" << enc << ":utf-8"
-          end
+          mode = if enc == 'UTF-8'
+                   # String.new("") << "r:" << enc
+                   'r:UTF-8'
+                 else
+                   String.new('') << 'r:' << enc << ':utf-8'
+                 end
 
           # open file (ファイルのオープン)
           io = File.open(file_path, mode)

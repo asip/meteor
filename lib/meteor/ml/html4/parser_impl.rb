@@ -10,50 +10,50 @@ module Meteor
       class ParserImpl < Meteor::Core::Kernel
         # KAIGYO_CODE = "\r?\n|\r"
         # KAIGYO_CODE = "\r\n|\n|\r"
-        KAIGYO_CODE = ["\r\n", "\n", "\r"]
-        BR = "<br>"
+        KAIGYO_CODE = ["\r\n", "\n", "\r"].freeze
+        BR = '<br>'
         BR_RE = BR
 
         # @@match_tag = "br|hr|img|input|meta|base"
-        #[Array] void elemets (空要素)
-        @@match_tag = ["br", "hr", "img", "input", "meta", "base"]
+        # [Array] void elemets (空要素)
+        @@match_tag = %w[br hr img input meta base]
         # @@match_tag_2 = "textarea|option|pre"
-        #[Array] elements where line breaks do not need to be converted to <br> (改行を<br>に変換する必要のない要素)
-        @@match_tag_2 = ["textarea", "option", "pre"]
+        # [Array] elements where line breaks do not need to be converted to <br> (改行を<br>に変換する必要のない要素)
+        @@match_tag_2 = %w[textarea option pre]
 
-        #[Array] non-nestable elements (入れ子にできない要素)
-        @@match_tag_nne = ["texarea", "select", "option", "form", "fieldset"]
+        # [Array] non-nestable elements (入れ子にできない要素)
+        @@match_tag_nne = %w[texarea select option form fieldset]
 
-        #[Array] boolean attributes (論理値で指定する属性)
-        @@attr_bool = ["disabled", "readonly", "checked", "selected", "multiple"]
+        # [Array] boolean attributes (論理値で指定する属性)
+        @@attr_bool = %w[disabled readonly checked selected multiple]
 
         # DISABLE_ELEMENT = "input|textarea|select|optgroup"
-        #[Array] elements with the disabled attribute (disabled属性のある要素)
-        DISABLE_ELEMENT = ["input", "textarea", "select", "optgroup"]
+        # [Array] elements with the disabled attribute (disabled属性のある要素)
+        DISABLE_ELEMENT = %w[input textarea select optgroup].freeze
         # READONLY_TYPE = "text|password"
-        #[Array] the type of an input element with a readonly attribute (readonly属性のあるinput要素のタイプ)
-        READONLY_TYPE = ["text", "password"]
+        # [Array] the type of an input element with a readonly attribute (readonly属性のあるinput要素のタイプ)
+        READONLY_TYPE = %w[text password].freeze
 
-        SELECTED_M = "\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$"
+        SELECTED_M = '\\sselected\\s|\\sselected$|\\sSELECTED\\s|\\sSELECTED$'
         # SELECTED_M = [' selected ',' selected',' SELECTED ',' SELECTED']
-        SELECTED_R = "selected\\s|selected$|SELECTED\\s|SELECTED$"
-        CHECKED_M = "\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$"
+        SELECTED_R = 'selected\\s|selected$|SELECTED\\s|SELECTED$'
+        CHECKED_M = '\\schecked\\s|\\schecked$|\\sCHECKED\\s|\\sCHECKED$'
         # CHECKED_M = [' checked ',' checked',' CHECKED ',' CHECKED']
-        CHECKED_R = "checked\\s|checked$|CHECKED\\s|CHECKED$"
-        DISABLED_M = "\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$"
+        CHECKED_R = 'checked\\s|checked$|CHECKED\\s|CHECKED$'
+        DISABLED_M = '\\sdisabled\\s|\\sdisabled$|\\sDISABLED\\s|\\sDISABLED$'
         # DISABLED_M = [' disabled ',' disiabled',' DISABLED ',' DISABLED']
-        DISABLED_R = "disabled\\s|disabled$|DISABLED\\s|DISABLED$"
-        READONLY_M = "\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$"
+        DISABLED_R = 'disabled\\s|disabled$|DISABLED\\s|DISABLED$'
+        READONLY_M = '\\sreadonly\\s|\\sreadonly$|\\sREADONLY\\s|\\sREADONLY$'
         # READONLY_M = [' readonly ',' readonly',' READONLY ',' READONLY']
-        READONLY_R = "readonly\\s|readonly$|READONLY\\s|READONLY$"
-        MULTIPLE_M = "\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$"
+        READONLY_R = 'readonly\\s|readonly$|READONLY\\s|READONLY$'
+        MULTIPLE_M = '\\smultiple\\s|\\smultiple$|\\sMULTIPLE\\s|\\sMULTIPLE$'
         # MULTIPLE_M = [' multiple ',' multiple',' MULTIPLE ',' MULTIPLE']
-        MULTIPLE_R = "multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$"
+        MULTIPLE_R = 'multiple\\s|multiple$|MULTIPLE\\s|MULTIPLE$'
 
         # @@pattern_true = Regexp.new("true")
         # @@pattern_false = Regexp.new("false")
 
-        GET_ATTRS_MAP2 = "\\s(disabled|readonly|checked|selected|multiple)"
+        GET_ATTRS_MAP2 = '\\s(disabled|readonly|checked|selected|multiple)'
 
         @@pattern_selected_m = Regexp.new(SELECTED_M)
         @@pattern_selected_r = Regexp.new(SELECTED_R)
@@ -147,21 +147,19 @@ module Meteor
         def analyze_content_type
           @error_check = false
 
-          element_3("meta", "http-equiv", "Content-Type")
+          element_3('meta', 'http-equiv', 'Content-Type')
 
-          if !@elm_
-            element_3("meta", "http-equiv", "Content-Type")
-          end
+          element_3('meta', 'http-equiv', 'Content-Type') unless @elm_
 
           @error_check = true
 
           if @elm_
-            content = @elm_.attr("content")
-            content_arr = content&.split(";")
-            @root.content_type = content_arr&.at(0) || ""
-            @root.charset = content_arr&.at(1)&.split("=")&.at(1) || ""
+            content = @elm_.attr('content')
+            content_arr = content&.split(';')
+            @root.content_type = content_arr&.at(0) || ''
+            @root.charset = content_arr&.at(1)&.split('=')&.at(1) || ''
           else
-            @root.content_type = ""
+            @root.content_type = ''
           end
         end
 
@@ -171,7 +169,7 @@ module Meteor
         # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
         def analyze_newline
-          for a in KAIGYO_CODE
+          KAIGYO_CODE.each do |a|
             if @root.document.include?(a)
               @root.newline = a
               # puts "kaigyo:" << @root.newline
@@ -192,16 +190,14 @@ module Meteor
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if is_match(@@match_tag, name)
             # void element search pattern (空要素検索用パターン)
-            @pattern_cc = String.new("") << "<" << @_name << "(|\\s[^<>]*)>"
+            @pattern_cc = String.new('') << '<' << @_name << '(|\\s[^<>]*)>'
             # @pattern_cc = "<#{@_name}(|\\s[^<>]*)>"
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             @res = @pattern.match(@root.document)
             if @res
               element_void_1(name)
             else
-              if @error_check
-                puts(Meteor::Exception::NoSuchElementException.new(name).message)
-              end
+              puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
 
               @elm_ = nil
             end
@@ -219,9 +215,7 @@ module Meteor
               @on_search = true
               element_normal_1(name)
             else
-              if @error_check
-                puts(Meteor::Exception::NoSuchElementException.new(name).message)
-              end
+              puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
 
               @elm_ = nil
             end
@@ -274,9 +268,7 @@ module Meteor
             if @res
               element_void_3(name)
             else
-              if @error_check
-                puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message)
-              end
+              puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
 
               @elm_ = nil
             end
@@ -291,16 +283,12 @@ module Meteor
             # search of normal element (内容あり要素検索)
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(@@match_tag_nne, name)
-              @res = element_normal_3_2
-            end
+            @res = element_normal_3_2 if !@res && !is_match(@@match_tag_nne, name)
 
             if @res
               element_normal_3_1(name)
             else
-              if @error_check
-                puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message)
-              end
+              puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
 
               @elm_ = nil
             end
@@ -312,7 +300,7 @@ module Meteor
         private :element_3
 
         def element_void_3(name)
-          element_void_3_1(name, "\"[^<>]*)>")
+          element_void_3_1(name, '"[^<>]*)>')
         end
 
         private :element_void_3
@@ -336,9 +324,7 @@ module Meteor
           if @res
             element_3(@res[1], attr_name, attr_value)
           else
-            if @error_check
-              puts(Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message)
-            end
+            puts(Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message) if @error_check
 
             @elm_ = nil
           end
@@ -401,9 +387,7 @@ module Meteor
             # search of normal element (内容あり要素検索)
             @res = @pattern.match(@root.document)
 
-            if !@res && !is_match(@@match_tag_nne, tag)
-              @res = element_normal_5_2
-            end
+            @res = element_normal_5_2 if !@res && !is_match(@@match_tag_nne, tag)
 
             if @res
               element_normal_5_1(name)
@@ -426,7 +410,7 @@ module Meteor
         private :element_5
 
         def element_void_5(name)
-          element_void_5_1(name, "\")[^<>]*)>")
+          element_void_5_1(name, '")[^<>]*)>')
         end
 
         private :element_void_5
@@ -472,16 +456,17 @@ module Meteor
         private :element_4
 
         def edit_attrs_(elm, attr_name, attr_value)
-          if is_match("selected", attr_name) && is_match("option", elm.name)
+          if is_match('selected', attr_name) && is_match('option', elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_selected_m, @@pattern_selected_r)
-          elsif is_match("multiple", attr_name) && is_match("select", elm.name)
+          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_multiple_m, @@pattern_multiple_r)
-          elsif is_match("disabled", attr_name) && is_match(DISABLE_ELEMENT, elm.name)
+          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_disabled_m, @@pattern_disabled_r)
-          elsif is_match("checked", attr_name) && is_match("input", elm.name) && is_match("radio", get_type(elm))
+          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_checked_m, @@pattern_checked_r)
-          elsif is_match("readonly", attr_name) &&
-              (is_match("textarea", elm.name) || (is_match("input", elm.name) && is_match(READONLY_TYPE, get_type(elm))))
+          elsif is_match('readonly', attr_name) &&
+                (is_match('textarea',
+                          elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
             edit_attrs_5(elm, attr_name, attr_value, @@pattern_readonly_m, @@pattern_readonly_r)
           else
             super(elm, attr_name, attr_value)
@@ -491,43 +476,44 @@ module Meteor
         private :edit_attrs_
 
         def edit_attrs_5(elm, attr_name, attr_value, match_p, replace)
-          if true.equal?(attr_value) || is_match("true", attr_value)
+          if true.equal?(attr_value) || is_match('true', attr_value)
             @res = match_p.match(elm.attributes)
 
-            if !@res
-              if elm.attributes != "" && elm.attributes.strip != ""
-                elm.attributes = String.new("") << " " << elm.attributes.strip
-              else
-                elm.attributes = String.new("")
-              end
+            unless @res
+              elm.attributes = if elm.attributes != '' && elm.attributes.strip != ''
+                                 String.new('') << ' ' << elm.attributes.strip
+                               else
+                                 String.new('')
+                               end
 
-              elm.attributes << " " << attr_name
+              elm.attributes << ' ' << attr_name
               # else
             end
-          elsif false.equal?(attr_value) || is_match("false", attr_value)
-            elm.attributes.sub!(replace, "")
+          elsif false.equal?(attr_value) || is_match('false', attr_value)
+            elm.attributes.sub!(replace, '')
           end
         end
 
         private :edit_attrs_5
 
         def edit_document_1(elm)
-          edit_document_2(elm, ">")
+          edit_document_2(elm, '>')
         end
 
         private :edit_document_1
 
         def get_attr_value_(elm, attr_name)
-          if is_match("selected", attr_name) && is_match("option", elm.name)
+          if is_match('selected', attr_name) && is_match('option', elm.name)
             get_attr_value_r(elm, @@pattern_selected_m)
-          elsif is_match("multiple", attr_name) && is_match("select", elm.name)
+          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
             get_attr_value_r(elm, @@pattern_multiple_m)
-          elsif is_match("disabled", attr_name) && is_match(DISABLE_ELEMENT, elm.name)
+          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
             get_attr_value_r(elm, @@pattern_disabled_m)
-          elsif is_match("checked", attr_name) && is_match("input", elm.name) && is_match("radio", get_type(elm))
+          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
             get_attr_value_r(elm, @@pattern_checked_m)
-          elsif is_match("readonly", attr_name) &&
-              (is_match("textarea", elm.name) || (is_match("input", elm.name) && is_match(READONLY_TYPE, get_type(elm))))
+          elsif is_match('readonly', attr_name) &&
+                (is_match('textarea',
+                          elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
             get_attr_value_r(elm, @@pattern_readonly_m)
           else
             super(elm, attr_name)
@@ -537,11 +523,9 @@ module Meteor
         private :get_attr_value_
 
         def get_type(elm)
-          if !elm.type_value
-            elm.type_value = get_attr_value_(elm, "type")
-            if !elm.type_value
-              elm.type_value = get_attr_value_(elm, "TYPE")
-            end
+          unless elm.type_value
+            elm.type_value = get_attr_value_(elm, 'type')
+            elm.type_value = get_attr_value_(elm, 'TYPE') unless elm.type_value
           end
 
           elm.type_value
@@ -553,9 +537,9 @@ module Meteor
           @res = match_p.match(elm.attributes)
 
           if @res
-            "true"
+            'true'
           else
-            "false"
+            'false'
           end
         end
 
@@ -567,14 +551,14 @@ module Meteor
         # @return [Hash] attribute map (属性マップ)
         #
         def get_attrs(elm)
-          attrs = Hash.new
+          attrs = {}
 
           elm.attributes.scan(@@pattern_get_attrs_map) do |a, b|
             attrs.store(a, unescape(b))
           end
 
           elm.attributes.scan(@@pattern_get_attrs_map2) do |a|
-            attrs.store(a[0], "true")
+            attrs.store(a[0], 'true')
           end
 
           attrs
@@ -595,7 +579,7 @@ module Meteor
           end
 
           elm.attributes.scan(@@pattern_get_attrs_map2) do |a|
-            attrs.store(a[0], "true")
+            attrs.store(a[0], 'true')
           end
 
           attrs.recordable = true
@@ -606,16 +590,15 @@ module Meteor
         private :get_attr_map
 
         def remove_attrs_(elm, attr_name)
-          if !is_match(@@attr_bool, attr_name)
-            # attribute search pattern (属性検索用パターン)
-            @pattern = Meteor::Core::Util::PatternCache.get(String.new("") << attr_name << "=\"[^\"]*\"\\s?")
-            # @pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"\\s?")
-            elm.attributes.sub!(@pattern, "")
-          else
-            # attribute search pattern (属性検索用パターン)
-            @pattern = Meteor::Core::Util::PatternCache.get(attr_name)
-            elm.attributes.sub!(@pattern, "")
-          end
+          @pattern = if !is_match(@@attr_bool, attr_name)
+                       # attribute search pattern (属性検索用パターン)
+                       Meteor::Core::Util::PatternCache.get(String.new('') << attr_name << '="[^"]*"\\s?')
+                     # @pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"\\s?")
+                     else
+                       # attribute search pattern (属性検索用パターン)
+                       Meteor::Core::Util::PatternCache.get(attr_name)
+                     end
+          elm.attributes.sub!(@pattern, '')
         end
 
         private :remove_attrs_

@@ -1,22 +1,22 @@
 # -* coding: UTF-8 -*-
 # frozen_string_literal: true
 
-require "meteor/element"
-require "meteor/root_element"
-require "meteor/attribute"
-require "meteor/attribute_map"
-require "meteor/parser"
-require "meteor/parsers"
-require "meteor/elements"
-require "meteor/exception/no_such_element_exception"
-require "meteor/core/kernel"
-require "meteor/core/util/file_reader"
-require "meteor/core/util/pattern_cache"
-require "meteor/ml/html4/parser_impl"
-require "meteor/ml/html/parser_impl"
-require "meteor/ml/xhtml4/parser_impl"
-require "meteor/ml/xhtml/parser_impl"
-require "meteor/ml/xml/parser_impl"
+require 'meteor/element'
+require 'meteor/root_element'
+require 'meteor/attribute'
+require 'meteor/attribute_map'
+require 'meteor/parser'
+require 'meteor/parsers'
+require 'meteor/elements'
+require 'meteor/exception/no_such_element_exception'
+require 'meteor/core/kernel'
+require 'meteor/core/util/file_reader'
+require 'meteor/core/util/pattern_cache'
+require 'meteor/ml/html4/parser_impl'
+require 'meteor/ml/html/parser_impl'
+require 'meteor/ml/xhtml4/parser_impl'
+require 'meteor/ml/xhtml/parser_impl'
+require 'meteor/ml/xml/parser_impl'
 
 # Meteor -  A lightweight (X)HTML(5) & XML parser
 #
@@ -41,7 +41,7 @@ require "meteor/ml/xml/parser_impl"
 #
 
 module Meteor
-  VERSION = "0.9.30"
+  VERSION = '0.9.30'
 
   # require 'fileutils'
 

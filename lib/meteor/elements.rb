@@ -23,13 +23,13 @@ module Meteor
     end
 
     #
-    #@overload add(type,relative_path,enc)
+    # @overload add(type,relative_path,enc)
     # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload add(type,relative_path)
+    # @overload add(type,relative_path)
     # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
@@ -57,9 +57,9 @@ module Meteor
     end
 
     class << self
-      alias_method :link, :add
-      alias_method :add_str, :add_template
-      alias_method :link_str, :add_template
+      alias link add
+      alias add_str add_template
+      alias link_str add_template
     end
 
     #
@@ -72,7 +72,7 @@ module Meteor
     end
 
     class << self
-      alias_method :element, :get
+      alias element get
     end
   end
 

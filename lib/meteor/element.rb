@@ -37,27 +37,14 @@ module Meteor
   #  @return [true,false] deletion flag (削除フラグ)
   #
   class Element
-    attr_accessor :name
-    attr_accessor :attributes
-    attr_accessor :mixed_content
-    attr_accessor :raw_content
-    attr_accessor :pattern
-    attr_accessor :document_sync
-    attr_accessor :normal
-    attr_accessor :cx
-    attr_accessor :mono
-    attr_accessor :parser
-    attr_accessor :type_value
-    attr_accessor :usable
-    attr_accessor :origin
-    attr_accessor :copy
-    attr_accessor :removed
+    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :mono,
+                  :parser, :type_value, :usable, :origin, :copy, :removed
 
-    alias_method :tag, :name
-    alias_method :tag=, :name=
+    alias tag name
+    alias tag= name=
 
-    alias_method :empty, :normal
-    alias_method :empty=, :normal=
+    alias empty normal
+    alias empty= normal=
 
     #
     # initializer (イニシャライザ)
@@ -72,9 +59,9 @@ module Meteor
     def initialize(*args)
       case args.length
       when Meteor::ONE
-        if args[0].kind_of?(String)
+        if args[0].is_a?(String)
           initialize_s(args[0])
-        elsif args[0].kind_of?(Meteor::Element)
+        elsif args[0].is_a?(Meteor::Element)
           initialize_e(args[0])
         else
           raise ArgumentError
@@ -120,7 +107,7 @@ module Meteor
 
     def initialize_2(elm, ps)
       @parser = ps
-      if self.normal
+      if normal
         ps.element(elm)
       else
         @name = elm.name
@@ -162,19 +149,18 @@ module Meteor
     # @return [Meteor::Element] element (要素)
     #
     def clone_0
-      obj = self.parser.element_cache[self.object_id]
+      obj = parser.element_cache[object_id]
       if obj
-        obj.attributes = String.new(self.attributes)
-        obj.mixed_content = String.new(self.mixed_content)
+        obj.attributes = String.new(attributes)
+        obj.mixed_content = String.new(mixed_content)
         # obj.pattern = String.new(self.pattern)
-        obj.document = String.new(self.document)
+        obj.document = String.new(document)
         obj.usable = true
-        obj
       else
         obj = self.class.new(self)
-        self.parser.element_cache[self.object_id] = obj
-        obj
+        parser.element_cache[object_id] = obj
       end
+      obj
     end
 
     private :clone_0
@@ -187,16 +173,15 @@ module Meteor
     def clone_1(ps)
       obj = ps.element_hook
       if obj
-        obj.attributes = String.new(self.attributes)
-        obj.mixed_content = String.new(self.mixed_content)
+        obj.attributes = String.new(attributes)
+        obj.mixed_content = String.new(mixed_content)
         # obj.pattern = String.new(self.pattern)
-        obj.document = String.new(self.document)
-        obj
+        obj.document = String.new(document)
       else
         obj = self.class.new(self, ps)
         ps.element_hook = obj
-        obj
       end
+      obj
     end
 
     private :clone_1
@@ -222,27 +207,23 @@ module Meteor
           if @cx
             # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
             @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+          elsif @normal
+            # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
+            @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
           else
-            if @normal
-              # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
-              @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
-            else
-              @document = String.new("") << "<" << @name << @attributes << ">"
-              # @document = "<#{@name}#{@attributes}>"
-            end
+            @document = String.new('') << '<' << @name << @attributes << '>'
+            # @document = "<#{@name}#{@attributes}>"
           end
         when Parser::XHTML, Parser::XHTML4, Parser::XML
           if @cx
             # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
             @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+          elsif @normal
+            # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
+            @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
           else
-            if @normal
-              # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
-              @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
-            else
-              @document = String.new("") << "<" << @name << @attributes << "/>"
-              # @document = "<#{@name}#{@attributes}/>"
-            end
+            @document = String.new('') << '<' << @name << @attributes << '/>'
+            # @document = "<#{@name}#{@attributes}/>"
           end
         end
       else
@@ -309,7 +290,7 @@ module Meteor
       end
     end
 
-    alias_method :child, :element
+    alias child element
 
     #
     # get elements (要素を取得する)
@@ -367,7 +348,7 @@ module Meteor
       @parser.find(selector)
     end
 
-    alias_method :css, :find
+    alias css find
 
     #
     # get cx(comment extension) tag (CX(コメント拡張)タグを取得する)
@@ -473,7 +454,7 @@ module Meteor
       @parser.content(self, *args)
     end
 
-    alias_method :text, :content
+    alias text content
 
     #
     # set content of element (要素の内容をセットする)
@@ -484,7 +465,7 @@ module Meteor
       @parser.content(self, value)
     end
 
-    alias_method :text=, :content=
+    alias text= content=
 
     #
     # set content of element (要素の内容をセットする)
@@ -495,7 +476,7 @@ module Meteor
       @parser.content(self, value, false)
     end
 
-    alias_method :unsafe_text=, :unsafe_content=
+    alias unsafe_text= unsafe_content=
 
     #
     # set attribute (属性をセットする)
@@ -504,7 +485,7 @@ module Meteor
     # @return [Meteor::Element] element (要素)
     #
     def []=(name, value)
-      if value != nil
+      if !value.nil?
         @parser.attr(self, name, value)
       else
         @parser.remove_attr(self, name)
@@ -543,7 +524,7 @@ module Meteor
       @parser.flash
     end
 
-    alias_method :flush, :flash
+    alias flush flash
 
     #
     # @overload execute(hook)

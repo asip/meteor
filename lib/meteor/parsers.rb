@@ -13,19 +13,17 @@ module Meteor
   #  @return [String] default character encoding (デフォルトエンコーディング)
   #
   class Parsers
-    attr_accessor :type
-    attr_accessor :root
-    attr_accessor :enc
+    attr_accessor :type, :root, :enc
 
-    alias_method :base_type, :type
-    alias_method :base_type=, :type=
-    alias_method :base_dir, :root
-    alias_method :base_dir=, :root=
-    alias_method :base_enc, :enc
-    alias_method :base_enc=, :enc=
+    alias base_type type
+    alias base_type= type=
+    alias base_dir root
+    alias base_dir= root=
+    alias base_enc enc
+    alias base_enc= enc=
 
-    alias_method :base_encoding, :enc
-    alias_method :base_encoding=, :enc=
+    alias base_encoding enc
+    alias base_encoding= enc=
 
     #
     # initializer (イニシャライザ)
@@ -79,8 +77,8 @@ module Meteor
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_2(root = ".", enc = "UTF-8")
-      @cache = Hash.new
+    def initialize_2(root = '.', enc = 'UTF-8')
+      @cache = {}
       @root = root
       @enc = enc
     end
@@ -93,8 +91,8 @@ module Meteor
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_3(type, root=".", enc = "UTF-8")
-      @cache = Hash.new
+    def initialize_3(type, root = '.', enc = 'UTF-8')
+      @cache = {}
       @type = type
       @root = root
       @enc = enc
@@ -113,46 +111,44 @@ module Meteor
     # @option @deprecated opts [Integer | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
     def options=(opts)
-      if opts.kind_of?(Hash)
-        if opts.include?(:root)
-          @root = opts[:root]
-        elsif opts.include?(:base_dir)
-          @root = opts[:base_dir]
-        end
+      raise ArgumentError unless opts.is_a?(Hash)
 
-        if opts.include?(:enc)
-          @enc = opts[:enc]
-        elsif opts.include?(:base_enc)
-          @enc = opts[:base_enc]
-        end
+      if opts.include?(:root)
+        @root = opts[:root]
+      elsif opts.include?(:base_dir)
+        @root = opts[:base_dir]
+      end
 
-        if opts.include?(:type)
-          @type = opts[:type]
-        elsif opts.include?(:base_type)
-          @type = opts[:base_type]
-        end
-      else
-        raise ArgumentError
+      if opts.include?(:enc)
+        @enc = opts[:enc]
+      elsif opts.include?(:base_enc)
+        @enc = opts[:base_enc]
+      end
+
+      if opts.include?(:type)
+        @type = opts[:type]
+      elsif opts.include?(:base_type)
+        @type = opts[:base_type]
       end
     end
 
     #
-    #@overload add(relative_path,enc)
+    # @overload add(relative_path,enc)
     # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload add(relative_path)
+    # @overload add(relative_path)
     # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload add(type,relative_path,enc)
+    # @overload add(type,relative_path,enc)
     # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload add(type,relative_path)
+    # @overload add(type,relative_path)
     # add parser (パーサを追加する)
     # @param [Integer,Symbol] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
@@ -163,9 +159,9 @@ module Meteor
       when 1
         add_file_1(args[0])
       when 2
-        if args[0].kind_of?(Integer) || args[0].kind_of?(Symbol)
+        if args[0].is_a?(Integer) || args[0].is_a?(Symbol)
           add_file_2_n(args[0], args[1])
-        elsif args[0].kind_of?(String)
+        elsif args[0].is_a?(String)
           add_file_2_s(args[0], args[1])
         else
           raise ArgumentError
@@ -177,7 +173,7 @@ module Meteor
       end
     end
 
-    alias_method :link, :add
+    alias link add
 
     #
     # change relative path to relative url (相対パスを相対URLにする)
@@ -188,16 +184,14 @@ module Meteor
       paths = File.split(path)
 
       if paths.length == 1
-        return File.basename(paths[0], ".*")
+        File.basename(paths[0], '.*')
+      elsif paths[0] == '.'
+        paths.delete_at(0)
+        paths[paths.length - 1] = File.basename(paths[paths.length - 1], '.*')
+        String.new('') << '/' << paths.join('/')
       else
-        if paths[0] == "."
-          paths.delete_at(0)
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ".*")
-          return String.new("") << "/" << paths.join("/")
-        else
-          paths[paths.length - 1] = File.basename(paths[paths.length - 1], ".*")
-          return String.new("") << "/" << paths.join("/")
-        end
+        paths[paths.length - 1] = File.basename(paths[paths.length - 1], '.*')
+        String.new('') << '/' << paths.join('/')
       end
     end
 
@@ -210,10 +204,11 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser(パーサ)
     #
-    def add_file_3(type, relative_path, enc = "UTF-8")
+    def add_file_3(type, relative_path, enc = 'UTF-8')
       relative_url = path_to_url(relative_path)
 
-      add_template_3(type, relative_url, Meteor::Core::Util::FileReader.read(File.expand_path(relative_path, @root), enc))
+      add_template_3(type, relative_url,
+                     Meteor::Core::Util::FileReader.read(File.expand_path(relative_path, @root), enc))
     end
 
     private :add_file_3
@@ -305,23 +300,23 @@ module Meteor
 
     private :add_template_2
 
-    alias_method :link_str, :add_template
-    alias_method :add_str, :add_template
-    alias_method :parser_str, :add_template
+    alias link_str add_template
+    alias add_str add_template
+    alias parser_str add_template
 
     #
-    #@overload parser(key)
+    # @overload parser(key)
     # get parser (パーサを取得する)
     # @param [String,Symbol] key identifier (キー)
     # @return [Meteor::Parser] parser (パーサ)
-    #@overload parser(type,relative_path,enc)
+    # @overload parser(type,relative_path,enc)
     # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @param [String] enc character encoding (エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     # @deprecated
-    #@overload parser(type,relative_path)
+    # @overload parser(type,relative_path)
     # add parser (パーサを追加する)
     # @param [Integer] type type of parser (パーサ・タイプ)
     # @param [String] relative_path relative file path (相対ファイルパス)
@@ -403,7 +398,7 @@ module Meteor
     # @return [Meteor::Parser] parser (パーサ)
     #
     def [](key)
-      self.parser(key)
+      parser(key)
     end
   end
 

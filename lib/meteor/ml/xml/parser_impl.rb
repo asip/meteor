@@ -9,20 +9,20 @@ module Meteor
       #
       class ParserImpl < Meteor::Core::Kernel
         # KAIGYO_CODE = "\r?\n|\r"
-        KAIGYO_CODE = ["\r\n", "\n", "\r"]
+        KAIGYO_CODE = ["\r\n", "\n", "\r"].freeze
 
         TABLE_FOR_ESCAPE_ = {
-          "&" => "&amp;",
-          "\"" => "&quot;",
-          "'" => "&apos;",
-          "<" => "&lt;",
-          ">" => "&gt;"
-        }
+          '&' => '&amp;',
+          '"' => '&quot;',
+          "'" => '&apos;',
+          '<' => '&lt;',
+          '>' => '&gt;'
+        }.freeze
 
         PATTERN_ESCAPE = "[&\\\"'<>]"
         @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
 
-        PATTERN_UNESCAPE = "&(amp|quot|apos|gt|lt);"
+        PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
         @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
 
         #
@@ -98,7 +98,7 @@ module Meteor
         # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
         def analyze_newline
-          for a in KAIGYO_CODE
+          KAIGYO_CODE.each do |a|
             if @root.document.include?(a)
               @root.newline = a
               # puts "kaigyo:" << @root.newline
@@ -112,16 +112,14 @@ module Meteor
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
         def analyze_content_type
-          @root.content_type = "text/xml"
+          @root.content_type = 'text/xml'
         end
 
         private :analyze_content_type
 
         def escape(content)
           # replace special character (特殊文字の置換)
-          content = content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
-
-          content
+          content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
         end
 
         private :escape
@@ -140,17 +138,17 @@ module Meteor
           # 「'」<-「&apos;」
           # 「&」<-「&amp;」
           content.gsub(@@pattern_unescape) do
-            case $1
-            when "amp"
-              "&"
-            when "quot"
-              "\""
-            when "apos"
+            case ::Regexp.last_match(1)
+            when 'amp'
+              '&'
+            when 'quot'
+              '"'
+            when 'apos'
               "'"
-            when "gt"
-              ">"
-            when "lt"
-              "<"
+            when 'gt'
+              '>'
+            when 'lt'
+              '<'
             end
           end
 

@@ -15,16 +15,13 @@ module Meteor
   #  @return [String] character encoding (文字エンコーディング)
   #
   class RootElement < Element
-    attr_accessor :content_type
-    attr_accessor :newline
-    attr_accessor :charset
-    attr_accessor :enc
+    attr_accessor :content_type, :newline, :charset, :enc
     # attr_accessor :document #[String] document (ドキュメント)
 
-    alias_method :character_encoding, :enc
-    alias_method :character_encoding=, :enc=
+    alias character_encoding enc
+    alias character_encoding= enc=
 
-    alias_method :kaigyo_code, :newline
-    alias_method :kaigyo_code=, :newline=
+    alias kaigyo_code newline
+    alias kaigyo_code= newline=
   end
 end

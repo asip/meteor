@@ -8,7 +8,7 @@ module Meteor
       # Pattern Cache Class (パターン・キャッシュ クラス)
       #
       class PatternCache
-        @@regex_cache = Hash.new
+        @@regex_cache = {}
 
         ##
         ## intializer (イニシャライザ)

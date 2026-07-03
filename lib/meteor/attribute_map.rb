@@ -27,7 +27,7 @@ module Meteor
     # initializer (イニシャライザ)
     #
     def initialize_0
-      @map = Hash.new
+      @map = {}
       @recordable = false
     end
 
@@ -86,9 +86,9 @@ module Meteor
     # @return [String] attribute value (属性値)
     #
     def fetch(name)
-      if @map[name] && !@map[name].removed
-        @map[name].value
-      end
+      return unless @map[name] && !@map[name].removed
+
+      @map[name].value
     end
 
     #
@@ -96,10 +96,10 @@ module Meteor
     # @param name attribute name (属性名)
     #
     def delete(name)
-      if @recordable && @map[name]
-        @map[name].removed = true
-        @map[name].changed = false
-      end
+      return unless @recordable && @map[name]
+
+      @map[name].removed = true
+      @map[name].changed = false
     end
 
     #
@@ -107,9 +107,9 @@ module Meteor
     # @return [true,false] update flag of attribute (属性の変更状況)
     #
     def changed(name)
-      if @map[name]
-        @map[name].changed
-      end
+      return unless @map[name]
+
+      @map[name].changed
     end
 
     #
@@ -117,13 +117,12 @@ module Meteor
     # @return [true,false] delete flag of attribute (属性の削除状況)
     #
     def removed(name)
-      if @map[name]
-        @map[name].removed
-      end
+      return unless @map[name]
+
+      @map[name].removed
     end
 
-    attr_accessor :map
-    attr_accessor :recordable
+    attr_accessor :map, :recordable
 
     #
     # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)

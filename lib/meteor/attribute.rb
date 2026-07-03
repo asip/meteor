@@ -15,10 +15,7 @@ module Meteor
   #  @return [true,false] deletion flag (削除フラグ)
   #
   class Attribute
-    attr_accessor :name
-    attr_accessor :value
-    attr_accessor :changed
-    attr_accessor :removed
+    attr_accessor :name, :value, :changed, :removed
 
     ##
     ## initializer (イニシャライザ)

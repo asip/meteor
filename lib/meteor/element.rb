@@ -67,7 +67,7 @@ module Meteor
           raise ArgumentError
         end
       when Meteor::TWO
-        initialize_2(args[0], args[1])
+        initialize_two(args[0], args[1])
       when Meteor::ZERO
       else
         raise ArgumentError
@@ -99,13 +99,13 @@ module Meteor
     # @param [Meteor::Element] elm element (要素)
     #
     def initialize_e(elm)
-      initialize_2(elm, elm.parser)
+      initialize_two(elm, elm.parser)
       @usable = true
     end
 
     private :initialize_e
 
-    def initialize_2(elm, ps)
+    def initialize_two(elm, ps)
       @parser = ps
       if normal
         ps.element(elm)
@@ -125,7 +125,7 @@ module Meteor
       end
     end
 
-    private :initialize_2
+    private :initialize_two
 
     #
     # clone (複製する)
@@ -138,9 +138,9 @@ module Meteor
     def clone(*args)
       case args.length
       when Meteor::ZERO
-        clone_0
+        clone_zero
       when Meteor::ONE
-        clone_1(args[0])
+        clone_one(args[0])
       end
     end
 
@@ -148,7 +148,7 @@ module Meteor
     # clone (複製する)
     # @return [Meteor::Element] element (要素)
     #
-    def clone_0
+    def clone_zero
       obj = parser.element_cache[object_id]
       if obj
         obj.attributes = String.new(attributes)
@@ -163,14 +163,14 @@ module Meteor
       obj
     end
 
-    private :clone_0
+    private :clone_zero
 
     #
     # clone (複製する)
     # @param [Meteor::Parser] ps parser (パーサ)
     # @return [Meteor::Element] element (要素)
     #
-    def clone_1(ps)
+    def clone_one(ps)
       obj = ps.element_hook
       if obj
         obj.attributes = String.new(attributes)
@@ -184,7 +184,7 @@ module Meteor
       obj
     end
 
-    private :clone_1
+    private :clone_one
 
     #
     # set document (ドキュメントをセットする)

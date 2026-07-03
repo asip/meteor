@@ -36,9 +36,9 @@ module Meteor
           @doc_type = Parser::XML
           case args.length
           when ZERO
-            # initialize_0
+            # initialize_zero
           when ONE
-            initialize_1(args[0])
+            initialize_one(args[0])
           else
             raise ArgumentError
           end
@@ -47,23 +47,23 @@ module Meteor
         #
         # initializer (イニシャライザ)
         #
-        # def initialize_0
+        # def initialize_zero
         # end
         #
-        # private :initialize_0
+        # private :initialize_zero
 
         #
         # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
-        def initialize_1(ps)
+        def initialize_one(ps)
           @root.document = String.new(ps.document)
           ps.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
           @root.newline = ps.root_element.newline
         end
 
-        private :initialize_1
+        private :initialize_one
 
         #
         # parse document (ドキュメントを解析する)

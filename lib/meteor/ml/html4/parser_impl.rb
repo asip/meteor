@@ -82,9 +82,9 @@ module Meteor
           @doc_type = Parser::HTML4
           case args.length
           when ZERO
-            # initialize_0
+            # initialize_zero
           when ONE
-            initialize_1(args[0])
+            initialize_one(args[0])
           else
             raise ArgumentError
           end
@@ -93,16 +93,16 @@ module Meteor
         #
         # initializer (イニシャライザ)
         #
-        # def initialize_0
+        # def initialize_zero
         # end
         #
-        # private :initialize_0
+        # private :initialize_zero
 
         #
         # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps paser (パーサ)
         #
-        def initialize_1(ps)
+        def initialize_one(ps)
           @root.document = String.new(ps.document)
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
@@ -110,7 +110,7 @@ module Meteor
           @root.newline = ps.root_element.newline
         end
 
-        private :initialize_1
+        private :initialize_one
 
         #
         # parse document (ドキュメントを解析する)
@@ -147,9 +147,9 @@ module Meteor
         def analyze_content_type
           @error_check = false
 
-          element_3('meta', 'http-equiv', 'Content-Type')
+          element_three('meta', 'http-equiv', 'Content-Type')
 
-          element_3('meta', 'http-equiv', 'Content-Type') unless @elm_
+          element_three('meta', 'http-equiv', 'Content-Type') unless @elm_
 
           @error_check = true
 
@@ -184,7 +184,7 @@ module Meteor
         # @param [String] name tag name (タグ名)
         # @return [Meteor::Element] element (要素)
         #
-        def element_1(name)
+        def element_one(name)
           quote_name(name)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
@@ -195,7 +195,7 @@ module Meteor
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
             @res = @pattern.match(@root.document)
             if @res
-              element_void_1(name)
+              element_void_one(name)
             else
               puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
 
@@ -213,7 +213,7 @@ module Meteor
             # case of normal element (内容あり要素の場合)
             if @res
               @on_search = true
-              element_normal_1(name)
+              element_normal_one(name)
             else
               puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
 
@@ -224,9 +224,9 @@ module Meteor
           @elm_
         end
 
-        private :element_1
+        private :element_one
 
-        def element_void_1(name)
+        def element_void_one(name)
           @elm_ = Meteor::Element.new(name)
           # attribute (属性)
           @elm_.attributes = @res[1]
@@ -238,7 +238,7 @@ module Meteor
           @elm_.parser = self
         end
 
-        private :element_void_1
+        private :element_void_one
 
         #
         # get element using tag name and attribute(name="value") (要素のタグ名、属性(属性名="属性値")で検索し、要素を取得する)
@@ -248,9 +248,9 @@ module Meteor
         # @param [true,false] quote quote flag (クオート・フラグ)
         # @return [Meteor::Element] element (要素)
         #
-        def element_3(name, attr_name, attr_value, quote = true)
+        def element_three(name, attr_name, attr_value, quote = true)
           if quote
-            quote_element_3(name, attr_name, attr_value)
+            quote_element_three(name, attr_name, attr_value)
           else
             quote_name(name)
           end
@@ -266,7 +266,7 @@ module Meteor
             # void element search (空要素検索)
             @res = @pattern.match(@root.document)
             if @res
-              element_void_3(name)
+              element_void_three(name)
             else
               puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
 
@@ -283,10 +283,10 @@ module Meteor
             # search of normal element (内容あり要素検索)
             @res = @pattern.match(@root.document)
 
-            @res = element_normal_3_2 if !@res && !is_match(@@match_tag_nne, name)
+            @res = element_normal_three_two if !@res && !is_match(@@match_tag_nne, name)
 
             if @res
-              element_normal_3_1(name)
+              element_normal_three_one(name)
             else
               puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
 
@@ -297,13 +297,13 @@ module Meteor
           @elm_
         end
 
-        private :element_3
+        private :element_three
 
-        def element_void_3(name)
-          element_void_3_1(name, '"[^<>]*)>')
+        def element_void_three(name)
+          element_void_three_one(name, '"[^<>]*)>')
         end
 
-        private :element_void_3
+        private :element_void_three
 
         #
         # get element using attribute(name="value") (属性(属性名="属性値")で検索し、要素を取得する)
@@ -311,7 +311,7 @@ module Meteor
         # @param [String] attr_value attribute value (属性値)
         # @return [Meteor::Element] element (要素)
         #
-        def element_2(attr_name, attr_value)
+        def element_two(attr_name, attr_value)
           quote_attribute(attr_name, attr_value)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value
@@ -322,7 +322,7 @@ module Meteor
           @res = @pattern.match(@root.document)
 
           if @res
-            element_3(@res[1], attr_name, attr_value)
+            element_three(@res[1], attr_name, attr_value)
           else
             puts(Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message) if @error_check
 
@@ -332,7 +332,7 @@ module Meteor
           @elm_
         end
 
-        private :element_2
+        private :element_two
 
         #
         # get element using tag name and attribute1,2(name="value") (要素のタグ名と属性1・属性2(属性名="属性値")で検索し、要素を取得する)
@@ -343,8 +343,8 @@ module Meteor
         # @param [String] attr_value2 attribute value2 (属性値2)
         # @return [Meteor::Element] element (要素)
         #
-        def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
-          quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+        def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
+          quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if is_match(@@match_tag, name)
@@ -361,7 +361,7 @@ module Meteor
             @res = @pattern.match(@root.document)
 
             if @res
-              element_void_5(name)
+              element_void_five(name)
             else
               if @error_check
                 puts(
@@ -387,10 +387,10 @@ module Meteor
             # search of normal element (内容あり要素検索)
             @res = @pattern.match(@root.document)
 
-            @res = element_normal_5_2 if !@res && !is_match(@@match_tag_nne, tag)
+            @res = element_normal_five_two if !@res && !is_match(@@match_tag_nne, tag)
 
             if @res
-              element_normal_5_1(name)
+              element_normal_five_one(name)
             else
               if @error_check
                 puts(
@@ -407,13 +407,13 @@ module Meteor
           @elm_
         end
 
-        private :element_5
+        private :element_five
 
-        def element_void_5(name)
-          element_void_5_1(name, '")[^<>]*)>')
+        def element_void_five(name)
+          element_void_five_one(name, '")[^<>]*)>')
         end
 
-        private :element_void_5
+        private :element_void_five
 
         #
         # get element using attribute1,2(name="value") (属性1・属性2(属性名="属性値")で検索し、要素を取得する)
@@ -424,8 +424,8 @@ module Meteor
         # @param [String] attr_value2 attribute value2 (属性値2)
         # @return [Meteor::Element] element (要素)
         #
-        def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
-          quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
+        def element_four(attr_name1, attr_value1, attr_name2, attr_value2)
+          quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="' << @_attr_value1
           # @pattern_cc << '"[^<>]*' << @_attr_name2 << '="' << @_attr_value2
@@ -439,7 +439,7 @@ module Meteor
           @res = @pattern.match(@root.document)
 
           if @res
-            element_5(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
+            element_five(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
           else
             if @error_check
               puts(
@@ -453,21 +453,21 @@ module Meteor
           @elm_
         end
 
-        private :element_4
+        private :element_four
 
         def edit_attrs_(elm, attr_name, attr_value)
           if is_match('selected', attr_name) && is_match('option', elm.name)
-            edit_attrs_5(elm, attr_name, attr_value, @@pattern_selected_m, @@pattern_selected_r)
+            edit_attrs_five(elm, attr_name, attr_value, @@pattern_selected_m, @@pattern_selected_r)
           elsif is_match('multiple', attr_name) && is_match('select', elm.name)
-            edit_attrs_5(elm, attr_name, attr_value, @@pattern_multiple_m, @@pattern_multiple_r)
+            edit_attrs_five(elm, attr_name, attr_value, @@pattern_multiple_m, @@pattern_multiple_r)
           elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
-            edit_attrs_5(elm, attr_name, attr_value, @@pattern_disabled_m, @@pattern_disabled_r)
+            edit_attrs_five(elm, attr_name, attr_value, @@pattern_disabled_m, @@pattern_disabled_r)
           elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
-            edit_attrs_5(elm, attr_name, attr_value, @@pattern_checked_m, @@pattern_checked_r)
+            edit_attrs_five(elm, attr_name, attr_value, @@pattern_checked_m, @@pattern_checked_r)
           elsif is_match('readonly', attr_name) &&
                 (is_match('textarea',
                           elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
-            edit_attrs_5(elm, attr_name, attr_value, @@pattern_readonly_m, @@pattern_readonly_r)
+            edit_attrs_five(elm, attr_name, attr_value, @@pattern_readonly_m, @@pattern_readonly_r)
           else
             super(elm, attr_name, attr_value)
           end
@@ -475,7 +475,7 @@ module Meteor
 
         private :edit_attrs_
 
-        def edit_attrs_5(elm, attr_name, attr_value, match_p, replace)
+        def edit_attrs_five(elm, attr_name, attr_value, match_p, replace)
           if true.equal?(attr_value) || is_match('true', attr_value)
             @res = match_p.match(elm.attributes)
 
@@ -494,13 +494,13 @@ module Meteor
           end
         end
 
-        private :edit_attrs_5
+        private :edit_attrs_five
 
-        def edit_document_1(elm)
-          edit_document_2(elm, '>')
+        def edit_document_one(elm)
+          edit_document_two(elm, '>')
         end
 
-        private :edit_document_1
+        private :edit_document_one
 
         def get_attr_value_(elm, attr_name)
           if is_match('selected', attr_name) && is_match('option', elm.name)

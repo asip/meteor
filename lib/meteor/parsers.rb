@@ -41,13 +41,13 @@ module Meteor
     def initialize(*args)
       case args.length
       when 0
-        initialize_0
+        initialize_zero
       when 1
-        initialize_1(args[0])
+        initialize_one(args[0])
       when 2
-        initialize_2(args[0], args[1])
+        initialize_two(args[0], args[1])
       when 3
-        initialize_3(args[0], args[1], args[2])
+        initialize_three(args[0], args[1], args[2])
       else
         raise ArgumentError
       end
@@ -56,34 +56,34 @@ module Meteor
     #
     # initializer (イニシャライザ)
     #
-    def initialize_0
-      initialize_2
+    def initialize_zero
+      initialize_two
     end
 
-    private :initialize_0
+    private :initialize_zero
 
     #
     # initializer (イニシャライザ)
     # @param [String] root root directory (基準ディレクトリ)
     #
-    def initialize_1(root)
-      initialize_2(root)
+    def initialize_one(root)
+      initialize_two(root)
     end
 
-    private :initialize_1
+    private :initialize_one
 
     #
     # initializer (イニシャライザ)
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_2(root = '.', enc = 'UTF-8')
+    def initialize_two(root = '.', enc = 'UTF-8')
       @cache = {}
       @root = root
       @enc = enc
     end
 
-    private :initialize_2
+    private :initialize_two
 
     #
     # initializer (イニシャライザ)
@@ -91,14 +91,14 @@ module Meteor
     # @param [String] root root directory (基準ディレクトリ)
     # @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize_3(type, root = '.', enc = 'UTF-8')
+    def initialize_three(type, root = '.', enc = 'UTF-8')
       @cache = {}
       @type = type
       @root = root
       @enc = enc
     end
 
-    private :initialize_3
+    private :initialize_three
 
     #
     # set options (オプションをセットする)
@@ -157,17 +157,17 @@ module Meteor
     def add(*args)
       case args.length
       when 1
-        add_file_1(args[0])
+        add_file_one(args[0])
       when 2
         if args[0].is_a?(Integer) || args[0].is_a?(Symbol)
-          add_file_2_n(args[0], args[1])
+          add_file_two_n(args[0], args[1])
         elsif args[0].is_a?(String)
-          add_file_2_s(args[0], args[1])
+          add_file_two_s(args[0], args[1])
         else
           raise ArgumentError
         end
       when 3
-        add_file_3(args[0], args[1], args[2])
+        add_file_three(args[0], args[1], args[2])
       else
         raise ArgumentError
       end
@@ -204,14 +204,14 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser(パーサ)
     #
-    def add_file_3(type, relative_path, enc = 'UTF-8')
+    def add_file_three(type, relative_path, enc = 'UTF-8')
       relative_url = path_to_url(relative_path)
 
-      add_template_3(type, relative_url,
-                     Meteor::Core::Util::FileReader.read(File.expand_path(relative_path, @root), enc))
+      add_template_three(type, relative_url,
+                         Meteor::Core::Util::FileReader.read(File.expand_path(relative_path, @root), enc))
     end
 
-    private :add_file_3
+    private :add_file_three
 
     #
     # add parser (パーサを追加する)
@@ -219,11 +219,11 @@ module Meteor
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_file_2_n(type, relative_path)
-      add_file_3(type, relative_path, @enc)
+    def add_file_two_n(type, relative_path)
+      add_file_three(type, relative_path, @enc)
     end
 
-    private :add_file_2_n
+    private :add_file_two_n
 
     #
     # add parser (パーサを追加する)
@@ -231,22 +231,22 @@ module Meteor
     # @param [String] enc character encoding (文字エンコーディング)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_file_2_s(relative_path, enc)
-      add_file_3(@type, relative_path, enc)
+    def add_file_two_s(relative_path, enc)
+      add_file_three(@type, relative_path, enc)
     end
 
-    private :add_file_2_s
+    private :add_file_two_s
 
     #
     # add parser (パーサを追加する)
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_file_1(relative_path)
-      add_file_3(@type, relative_path, @enc)
+    def add_file_one(relative_path)
+      add_file_three(@type, relative_path, @enc)
     end
 
-    private :add_file_1
+    private :add_file_one
 
     #
     # @overload add_template(type, relative_url, doc)
@@ -264,9 +264,9 @@ module Meteor
     def add_template(*args)
       case args.length
       when 2
-        add_template_2(args[0], args[1])
+        add_template_two(args[0], args[1])
       when 3
-        add_template_3(args[0], args[1], args[2])
+        add_template_three(args[0], args[1], args[2])
       else
         raise ArgumentError
       end
@@ -279,14 +279,14 @@ module Meteor
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_template_3(type, relative_url, doc)
+    def add_template_three(type, relative_url, doc)
       ps = new_parser(type)
       ps.document = doc
 
       @cache[relative_url] = ps
     end
 
-    private :add_template_3
+    private :add_template_three
 
     #
     # add parser (パーサを追加する)
@@ -294,11 +294,11 @@ module Meteor
     # @param [String] doc document (ドキュメント)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add_template_2(relative_url, doc)
-      add_template_3(@type, relative_url, doc)
+    def add_template_two(relative_url, doc)
+      add_template_three(@type, relative_url, doc)
     end
 
-    private :add_template_2
+    private :add_template_two
 
     alias link_str add_template
     alias add_str add_template
@@ -325,11 +325,11 @@ module Meteor
     def parser(*args)
       case args.length
       when 1
-        parser_1(args[0])
+        parser_one(args[0])
       when 2, 3
         add(args)
       end
-      # parser_1(key)
+      # parser_one(key)
     end
 
     #
@@ -337,7 +337,7 @@ module Meteor
     # @param [String] key identifier (キー)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def parser_1(key)
+    def parser_one(key)
       @pif = @cache[key.to_s]
       case @pif.doc_type
       when Meteor::Parser::HTML
@@ -353,7 +353,7 @@ module Meteor
       end
     end
 
-    private :parser_1
+    private :parser_one
 
     #
     # get root element (ルート要素を取得する)
@@ -361,7 +361,7 @@ module Meteor
     # @return [Meteor::RootElement] root element (ルート要素)
     #
     def element(key)
-      parser_1(key).root_element
+      parser_one(key).root_element
     end
 
     def new_parser(type)

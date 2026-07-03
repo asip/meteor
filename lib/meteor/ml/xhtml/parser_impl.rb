@@ -38,9 +38,9 @@ module Meteor
           @doc_type = Parser::XHTML
           case args.length
           when ZERO
-            # initialize_0
+            # initialize_zero
           when ONE
-            initialize_1(args[0])
+            initialize_one(args[0])
           else
             raise ArgumentError
           end
@@ -49,16 +49,16 @@ module Meteor
         #
         # initializer (イニシャライザ)
         #
-        # def initialize_0
+        # def initialize_zero
         # end
         #
-        # private :initialize_0
+        # private :initialize_zero
 
         #
         # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
-        def initialize_1(ps)
+        def initialize_one(ps)
           @root.document = String.new(ps.document)
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
@@ -66,7 +66,7 @@ module Meteor
           @root.newline = ps.root_element.newline
         end
 
-        private :initialize_1
+        private :initialize_one
 
         #
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
@@ -74,9 +74,9 @@ module Meteor
         def analyze_content_type
           @error_check = false
 
-          element_3('meta', 'charset', '[a-zA-Z-]+', false)
+          element_three('meta', 'charset', '[a-zA-Z-]+', false)
 
-          element_3('meta', 'charset', '[a-zA-Z-]+', false) unless @elm_
+          element_three('meta', 'charset', '[a-zA-Z-]+', false) unless @elm_
 
           @error_check = true
 
@@ -94,19 +94,19 @@ module Meteor
 
         def edit_attrs_(elm, attr_name, attr_value)
           if is_match('selected', attr_name) && is_match('option', elm.name)
-            edit_attrs_5(elm, attr_value, @@pattern_selected_m, @@pattern_selected_r, SELECTED_U)
+            edit_attrs_five(elm, attr_value, @@pattern_selected_m, @@pattern_selected_r, SELECTED_U)
           elsif is_match('multiple', attr_name) && is_match('select', elm.name)
-            edit_attrs_5(elm, attr_value, @@pattern_multiple_m, @@pattern_multiple_r, MULTIPLE_U)
+            edit_attrs_five(elm, attr_value, @@pattern_multiple_m, @@pattern_multiple_r, MULTIPLE_U)
           elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
-            edit_attrs_5(elm, attr_value, @@pattern_disabled_m, @@pattern_disabled_r, DISABLED_U)
+            edit_attrs_five(elm, attr_value, @@pattern_disabled_m, @@pattern_disabled_r, DISABLED_U)
           elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
-            edit_attrs_5(elm, attr_value, @@pattern_checked_m, @@pattern_checked_r, CHECKED_U)
+            edit_attrs_five(elm, attr_value, @@pattern_checked_m, @@pattern_checked_r, CHECKED_U)
           elsif is_match('readonly', attr_name) &&
                 (is_match('textarea',
                           elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
-            edit_attrs_5(elm, attr_value, @@pattern_readonly_m, @@pattern_readonly_r, READONLY_U)
+            edit_attrs_five(elm, attr_value, @@pattern_readonly_m, @@pattern_readonly_r, READONLY_U)
           elsif is_match('required', attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
-            edit_attrs_5(elm, attr_value, @@pattern_required_m, @@pattern_required_r, REQUIRED_U)
+            edit_attrs_five(elm, attr_value, @@pattern_required_m, @@pattern_required_r, REQUIRED_U)
           else
             super(elm, attr_name, attr_value)
           end

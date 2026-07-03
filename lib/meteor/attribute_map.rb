@@ -15,9 +15,9 @@ module Meteor
     def initialize(*args)
       case args.length
       when ZERO
-        initialize_0
+        initialize_zero
       when ONE
-        initialize_1(args[0])
+        initialize_one(args[0])
       else
         raise ArgumentError
       end
@@ -26,24 +26,24 @@ module Meteor
     #
     # initializer (イニシャライザ)
     #
-    def initialize_0
+    def initialize_zero
       @map = {}
       @recordable = false
     end
 
-    private :initialize_0
+    private :initialize_zero
 
     #
     # initializer (イニシャライザ)
     # @param [Meteor::AttributeMap] attr_map attribute map (属性マップ)
     #
-    def initialize_1(attr_map)
+    def initialize_one(attr_map)
       # @map = Marshal.load(Marshal.dump(attr_map.map))
       @map = attr_map.map.dup
       @recordable = attr_map.recordable
     end
 
-    private :initialize_1
+    private :initialize_one
 
     #
     # set a couple of attribute name and attribute value (属性名と属性値を対としてセットする)

@@ -225,16 +225,16 @@ module Meteor
         if !attrs
           case elm
           when String, Symbol
-            element_1(elm.to_s)
+            element_one(elm.to_s)
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
           when Meteor::Element
             shadow(elm)
           when Hash
             if elm.size == ONE
-              element_2(elm.keys[0].to_s, elm.values[0])
+              element_two(elm.keys[0].to_s, elm.values[0])
               @element_cache.store(@elm_.object_id, @elm_) if @elm_
             elsif elm.size == TWO
-              element_4(elm.keys[0].to_s, elm.values[0], elm.keys[1].to_s, elm.values[1])
+              element_four(elm.keys[0].to_s, elm.values[0], elm.keys[1].to_s, elm.values[1])
               @element_cache.store(@elm_.object_id, @elm_) if @elm_
             else
               raise ArgumentError
@@ -244,10 +244,10 @@ module Meteor
           end
         elsif attrs.is_a?(Hash)
           if attrs.size == ONE
-            element_3(elm.to_s, attrs.keys[0].to_s, attrs.values[0])
+            element_three(elm.to_s, attrs.keys[0].to_s, attrs.values[0])
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
           elsif attrs.size == TWO
-            element_5(elm.to_s, attrs.keys[0].to_s, attrs.values[0], attrs.keys[1].to_s, attrs.values[1])
+            element_five(elm.to_s, attrs.keys[0].to_s, attrs.values[0], attrs.keys[1].to_s, attrs.values[1])
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
           else
             @elm_ = nil
@@ -256,17 +256,17 @@ module Meteor
         elsif attrs.is_a?(String) || attrs.is_a?(Symbol)
           case args.length
           when ZERO
-            element_2(elm.to_s, attrs.to_s)
+            element_two(elm.to_s, attrs.to_s)
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
 
           when ONE
-            element_3(elm.to_s, attrs.to_s, args[0])
+            element_three(elm.to_s, attrs.to_s, args[0])
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
           when TWO
-            element_4(elm.to_s, attrs.to_s, args[0].to_s, args[1])
+            element_four(elm.to_s, attrs.to_s, args[0].to_s, args[1])
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
           when THREE
-            element_5(elm.to_s, attrs.to_s, args[0], args[1].to_s, args[2])
+            element_five(elm.to_s, attrs.to_s, args[0], args[1].to_s, args[2])
             @element_cache.store(@elm_.object_id, @elm_) if @elm_
           else
             @elm_ = nil
@@ -283,7 +283,7 @@ module Meteor
       # @param [String,Symbol] name tag name (タグ名)
       # @return [Meteor::Element] element(要素)
       #
-      def element_1(name)
+      def element_one(name)
         quote_name(name)
 
         # element search pattern (要素検索用パターン)
@@ -295,10 +295,10 @@ module Meteor
 
         if @res
           if @res[1]
-            element_void_1(name)
+            element_void_one(name)
           else
             # puts '---element_normal_1'
-            element_normal_1(name)
+            element_normal_one(name)
           end
           # else
         end
@@ -306,9 +306,9 @@ module Meteor
         @elm_
       end
 
-      private :element_1
+      private :element_one
 
-      def element_normal_1(name)
+      def element_normal_one(name)
         @elm_ = Meteor::Element.new(name)
 
         if @on_search
@@ -340,9 +340,9 @@ module Meteor
         @elm_
       end
 
-      private :element_normal_1
+      private :element_normal_one
 
-      def element_void_1(name)
+      def element_void_one(name)
         # element (要素)
         @elm_ = Meteor::Element.new(name)
         # attribute (属性)
@@ -361,7 +361,7 @@ module Meteor
         @elm_
       end
 
-      private :element_void_1
+      private :element_void_one
 
       #
       # get element using tag name and attribute(name="value") (要素のタグ名と属性(属性名="属性値")で検索し、要素を取得する)
@@ -370,20 +370,20 @@ module Meteor
       # @param [String] attr_value attribute value (属性値)
       # @param [true,false] quote flag (クオート・フラグ)
       # @return [Meteor::Element] element (要素)
-      def element_3(name, attr_name, attr_value, quote = true)
+      def element_three(name, attr_name, attr_value, quote = true)
         if quote
-          quote_element_3(name, attr_name, attr_value)
+          quote_element_three(name, attr_name, attr_value)
         else
           quote_name(name)
         end
 
-        @pattern_cc_1 = element_pattern_3
+        @pattern_cc_1 = element_pattern_three
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc_1)
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
-          @res2 = element_normal_3_2
+          @res2 = element_normal_three_two
           @pattern_cc_2 = @pattern_cc
 
           # puts @res2.captures.length
@@ -395,27 +395,27 @@ module Meteor
             @res = @res1
             # @pattern_cc = @pattern_cc_1
             if @res[1]
-              element_void_3(name)
+              element_void_three(name)
             else
-              element_normal_3_1(name)
+              element_normal_three_one(name)
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             # @pattern_cc = @pattern_cc_2
-            element_normal_3_1(name)
+            element_normal_three_one(name)
           end
         elsif @res1 && !@res2
           @res = @res1
           # @pattern_cc = @pattern_cc_1
           if @res[1]
-            element_void_3(name)
+            element_void_three(name)
           else
-            element_normal_3_1(name)
+            element_normal_three_one(name)
           end
         elsif @res2 && !@res1
           @res = @res2
           # @pattern_cc = @pattern_cc_2
-          element_normal_3_1(name)
+          element_normal_three_one(name)
         else
           puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
 
@@ -425,22 +425,22 @@ module Meteor
         @elm_
       end
 
-      private :element_3
+      private :element_three
 
-      def element_pattern_3
+      def element_pattern_three
         "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)\\/>|<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
       end
 
-      private :element_pattern_3
+      private :element_pattern_three
 
-      def quote_element_3(name, attr_name, attr_value)
+      def quote_element_three(name, attr_name, attr_value)
         quote_name(name)
         quote_attribute(attr_name, attr_value)
       end
 
-      private :quote_element_3
+      private :quote_element_three
 
-      def element_normal_3_1(name)
+      def element_normal_three_one(name)
         # puts  @res.captures.length
         case @res.captures.length
         when FOUR
@@ -488,13 +488,13 @@ module Meteor
           # element (要素)
           @elm_ = Meteor::Element.new(name)
           @elm_.attributes = @res[1].chop
-          if @on_search
-          # attribute (属性)
-          # content (内容)
-          else
-            # attribute (属性)
-            # content (内容)
-          end
+          # if @on_search
+          # # attribute (属性)
+          # # content (内容)
+          # else
+          #   # attribute (属性)
+          #   # content (内容)
+          # end
           @elm_.mixed_content = @res[3]
           # document (全体)
           @elm_.document = @res[0]
@@ -509,10 +509,10 @@ module Meteor
         @elm_
       end
 
-      private :element_normal_3_1
+      private :element_normal_three_one
 
-      def element_normal_3_2
-        element_pattern_normal_3_2
+      def element_normal_three_two
+        element_pattern_normal_three_two
 
         return nil if @sbuf.length == ZERO || @cnt != ZERO
 
@@ -522,9 +522,9 @@ module Meteor
         @res
       end
 
-      private :element_normal_3_2
+      private :element_normal_three_two
 
-      def element_pattern_normal_3_2
+      def element_pattern_normal_three_two
         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
         # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_1 = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
@@ -558,15 +558,15 @@ module Meteor
         @pattern_cc = @sbuf
       end
 
-      private :element_pattern_normal_3_2
+      private :element_pattern_normal_three_two
 
-      def element_void_3(name)
-        element_void_3_1(name, '"[^<>]*)\\/>')
+      def element_void_three(name)
+        element_void_three_one(name, '"[^<>]*)\\/>')
       end
 
-      private :element_void_3
+      private :element_void_three
 
-      def element_void_3_1(name, closer)
+      def element_void_three_one(name, closer)
         # element (要素)
         @elm_ = Meteor::Element.new(name)
         # attribute (属性)
@@ -582,7 +582,7 @@ module Meteor
         @elm_
       end
 
-      private :element_void_3_1
+      private :element_void_three_one
 
       #
       # get element using attribute(name="value") (属性(属性名="属性値")で検索し、要素を取得する)
@@ -590,16 +590,16 @@ module Meteor
       # @param [String] attr_value attribute value (属性値)
       # @return [Meteor::Element] element (要素)
       #
-      def element_2(attr_name, attr_value)
+      def element_two(attr_name, attr_value)
         quote_attribute(attr_name, attr_value)
 
-        element_pattern_2
+        element_pattern_two
 
         @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
         @res = @pattern.match(@root.document)
 
         if @res
-          element_3(@res[1], attr_name, attr_value)
+          element_three(@res[1], attr_name, attr_value)
         else
           puts(Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message) if @error_check
 
@@ -612,7 +612,7 @@ module Meteor
         #         @res1 = @pattern.match(@root.document)
         #
         #         if @res1 && @res1[1] || !@res1
-        #           @res2 = element_normal_2_2
+        #           @res2 = element_normal_two_two
         #           @pattern_cc_2 = @pattern_cc
         #
         #           # puts @res2.captures.length
@@ -624,27 +624,27 @@ module Meteor
         #             @res = @res1
         #             # @pattern_cc = @pattern_cc_1
         #             if @res[1]
-        #               element_void_2
+        #               element_void_two
         #             else
-        #               element_normal_2_1
+        #               element_normal_two_one
         #             end
         #           elsif @res1.begin(0) > @res2.begin(0)
         #             @res = @res2
         #             # @pattern_cc = @pattern_cc_2
-        #             element_normal_2_1
+        #             element_normal_two_one
         #           end
         #         elsif @res1 && !@res2
         #           @res = @res1
         #           # @pattern_cc = @pattern_cc_1
         #           if @res[1]
-        #             element_void_2
+        #             element_void_two
         #           else
-        #             element_normal_2_1
+        #             element_normal_two_one
         #           end
         #         elsif @res2 && !@res1
         #           @res = @res2
         #           # @pattern_cc = @pattern_cc_2
-        #           element_normal_2_1
+        #           element_normal_two_one
         #         else
         #           if @error_check
         #             puts Meteor::Exception::NoSuchElementException.new(attr_name, attr_value).message
@@ -655,7 +655,7 @@ module Meteor
         @elm_
       end
 
-      private :element_2
+      private :element_two
 
       def quote_name(name)
         @_name = Regexp.quote(name)
@@ -670,15 +670,15 @@ module Meteor
 
       private :quote_attribute
 
-      def element_pattern_2
+      def element_pattern_two
         # # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value << '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
         # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value << '"'
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\""
       end
 
-      private :element_pattern_2
+      private :element_pattern_two
 
-      #       def element_normal_2_1
+      #       def element_normal_two_one
       #         # puts @res.captures.length
       #         case @res.captures.length
       #           when FOUR
@@ -740,9 +740,9 @@ module Meteor
       #         @elm_
       #       end
       #
-      #       private :element_normal_2_1
+      #       private :element_normal_two_one
       #
-      #       def element_normal_2_2
+      #       def element_normal_two_two
       #         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
       #         # @pattern_cc_1 << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
       #         @pattern_cc_1 = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))"
@@ -753,7 +753,7 @@ module Meteor
       #
       #         @cnt = 0
       #
-      #         create_element_pattern_2(2)
+      #         create_element_pattern_two(2)
       #
       #         @pattern_cc = @sbuf
       #
@@ -765,9 +765,9 @@ module Meteor
       #         @res = @pattern.match(@root.document)
       #       end
       #
-      #       private :element_normal_2_2
+      #       private :element_normal_two_two
       #
-      #       def create_pattern_2(args_cnt)
+      #       def create_pattern_two(args_cnt)
       #         @pattern_cc_1b = String.new('') << "<" << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       #
       #         # @pattern_cc_1_1 = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
@@ -782,13 +782,13 @@ module Meteor
       #         @pattern_1b = Meteor::Core::Util::PatternCache.get(@pattern_cc_1b)
       #       end
       #
-      #       def element_void_2
-      #         element_void_2_1('"[^<>]*\\/>')
+      #       def element_void_two
+      #         element_void_two_one('"[^<>]*\\/>')
       #       end
       #
-      #       private :element_void_2
+      #       private :element_void_two
       #
-      #       def element_void_2_1(closer)
+      #       def element_void_two_one(closer)
       #         # element (要素)
       #         @elm_ = Element.new(@res[1])
       #         # attribute (属性)
@@ -803,7 +803,7 @@ module Meteor
       #         @elm_
       #       end
       #
-      #       private :element_void_2_1
+      #       private :element_void_two_one
 
       #
       # get element using tag name and attribute1,2(name="value") (要素のタグ名と属性1・属性2(属性名="属性値")で検索し、要素を取得する)
@@ -814,8 +814,8 @@ module Meteor
       # @param [String] attr_value2 attribute value2 (属性値2)
       # @return [Meteor::Element] element (要素)
       #
-      def element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
-        quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+      def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
         @pattern_cc_1 = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
@@ -823,7 +823,7 @@ module Meteor
         @res1 = @pattern.match(@root.document)
 
         if @res1 && @res1[1] || !@res1
-          @res2 = element_normal_5_2
+          @res2 = element_normal_five_two
           @pattern_cc_2 = @pattern_cc
 
           # puts @res2.captures.length
@@ -835,27 +835,27 @@ module Meteor
             @res = @res1
             # @pattern_cc = @pattern_cc_1
             if @res[1]
-              element_void_5(name)
+              element_void_five(name)
             else
-              element_normal_5_1(name)
+              element_normal_five_one(name)
             end
           elsif @res1.begin(0) > @res2.begin(0)
             @res = @res2
             # @pattern_cc = @pattern_cc_2
-            element_normal_5_1(name)
+            element_normal_five_one(name)
           end
         elsif @res1 && !@res2
           @res = @res1
           # @pattern_cc = @pattern_cc_1
           if @res[1]
-            element_void_5(name)
+            element_void_five(name)
           else
-            element_normal_5_1(name)
+            element_normal_five_one(name)
           end
         elsif @res2 && !@res1
           @res = @res2
           # @pattern_cc = @pattern_cc_2
-          element_normal_5_1(name)
+          element_normal_five_one(name)
         else
           puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
 
@@ -865,9 +865,9 @@ module Meteor
         @elm_
       end
 
-      private :element_5
+      private :element_five
 
-      def quote_element_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+      def quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
         quote_name(name)
         @_attr_name1 = Regexp.quote(attr_name1)
         @_attr_name2 = Regexp.quote(attr_name2)
@@ -875,9 +875,9 @@ module Meteor
         @_attr_value2 = Regexp.quote(attr_value2)
       end
 
-      private :quote_element_5
+      private :quote_element_five
 
-      def element_normal_5_1(name)
+      def element_normal_five_one(name)
         # puts @res.captures.length
         case @res.captures.length
         when FOUR
@@ -942,10 +942,10 @@ module Meteor
         @elm_
       end
 
-      private :element_normal_5_1
+      private :element_normal_five_one
 
-      def element_normal_5_2
-        element_pattern_normal_5_2
+      def element_normal_five_two
+        element_pattern_normal_five_two
 
         return nil if @sbuf.length == ZERO || @cnt != ZERO
 
@@ -955,9 +955,9 @@ module Meteor
         @res
       end
 
-      private :element_normal_5_2
+      private :element_normal_five_two
 
-      def element_pattern_normal_5_2
+      def element_pattern_normal_five_two
         # @pattern_cc_1 = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
         # @pattern_cc_1 << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
         # @pattern_cc_1 << @_attr_value2 << '"|' << @_attr_name2 << '="'
@@ -996,15 +996,15 @@ module Meteor
         @pattern_cc = @sbuf
       end
 
-      private :element_pattern_normal_5_2
+      private :element_pattern_normal_five_two
 
-      def element_void_5(name)
-        element_void_5_1(name, '")[^<>]*)\\/>')
+      def element_void_five(name)
+        element_void_five_one(name, '")[^<>]*)\\/>')
       end
 
-      private :element_void_5
+      private :element_void_five
 
-      def element_void_5_1(name, closer)
+      def element_void_five_one(name, closer)
         # element (要素)
         @elm_ = Meteor::Element.new(name)
         # attribute (属性)
@@ -1024,7 +1024,7 @@ module Meteor
         @elm_
       end
 
-      private :element_void_5_1
+      private :element_void_five_one
 
       #
       # get element using attribute1,2(name="value") (属性1・属性2(属性名="属性値")で検索し、要素を取得する)
@@ -1034,8 +1034,8 @@ module Meteor
       # @param [String]attr_value2 attribute value2 (属性値2)
       # @return [Meteor::Element] element (要素)
       #
-      def element_4(attr_name1, attr_value1, attr_name2, attr_value2)
-        quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
+      def element_four(attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
         element_pattern_4
 
@@ -1043,8 +1043,8 @@ module Meteor
         @res = @pattern.match(@root.document)
 
         if @res
-          # @elm_ = element_5(@res[1], attr_name1, attr_value1,attr_name2, attr_value2)
-          element_5(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
+          # @elm_ = element_five(@res[1], attr_name1, attr_value1,attr_name2, attr_value2)
+          element_five(@res[1], attr_name1, attr_value1, attr_name2, attr_value2)
         else
           if @error_check
             puts(
@@ -1058,18 +1058,18 @@ module Meteor
         @elm_
       end
 
-      private :element_4
+      private :element_four
 
-      def quote_element_4(attr_name1, attr_value1, attr_name2, attr_value2)
+      def quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
         @_attr_name1 = Regexp.quote(attr_name1)
         @_attr_name2 = Regexp.quote(attr_name2)
         @_attr_value1 = Regexp.quote(attr_value1)
         @_attr_value2 = Regexp.quote(attr_value2)
       end
 
-      private :quote_element_4
+      private :quote_element_four
 
-      def element_pattern_4
+      def element_pattern_four
         # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="'
         # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
         # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
@@ -1078,7 +1078,7 @@ module Meteor
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")"
       end
 
-      private :element_pattern_4
+      private :element_pattern_four
 
       def create_element_pattern
         @position = 0
@@ -1142,7 +1142,7 @@ module Meteor
 
       private :create_element_pattern
 
-      #       def create_element_pattern_2(args_cnt)
+      #       def create_element_pattern_two(args_cnt)
       #         @position = 0
       #
       #         while (@res = @pattern.match(@root.document, @position)) || @cnt > ZERO
@@ -1177,7 +1177,7 @@ module Meteor
       #               @position = @res.end(0)
       #               @_name = @res[1]
       #
-      #               create_pattern_2(args_cnt)
+      #               create_pattern_two(args_cnt)
       #
       #               @sbuf << @pattern_cc_1_1
       #               @cnt += ONE
@@ -1308,15 +1308,15 @@ module Meteor
 
         case args.size
         when ONE
-          @elm_ = element_1(*args)
+          @elm_ = element_one(*args)
         when TWO
-          @elm_ = element_2(*args)
+          @elm_ = element_two(*args)
         when THREE
-          @elm_ = element_3(*args)
+          @elm_ = element_three(*args)
         when FOUR
-          @elm_ = element_4(*args)
+          @elm_ = element_four(*args)
         when FIVE
-          @elm_ = element_5(*args)
+          @elm_ = element_five(*args)
         end
 
         return elm_arr unless @elm_
@@ -1336,23 +1336,23 @@ module Meteor
           case args.size
           when ONE
             if @elm_.normal
-              element_normal_1(@elm_.name)
+              element_normal_one(@elm_.name)
             else
-              element_void_1(@elm_.name)
+              element_void_one(@elm_.name)
             end
 
           when TWO, THREE
             if @elm_.normal
-              element_normal_3_1(@elm_.name)
+              element_normal_three_one(@elm_.name)
             else
-              element_void_3(@elm_.name)
+              element_void_three(@elm_.name)
             end
 
           when FOUR, FIVE
             if @elm_.normal
-              element_normal_5_1(@elm_.name)
+              element_normal_five_one(@elm_.name)
             else
-              element_void_5(@elm_.name)
+              element_void_five(@elm_.name)
             end
           end
 
@@ -1439,7 +1439,7 @@ module Meteor
           when ONE
             if !args[0].nil?
               elm.document_sync = true
-              set_attribute_3(elm, attr.to_s, args[0])
+              set_attribute_three(elm, attr.to_s, args[0])
             else
               remove_attr(elm, attr.to_s)
             end
@@ -1447,14 +1447,14 @@ module Meteor
         elsif attr.is_a?(Hash) && attr.size == 1
           if !attr.values[0].nil?
             elm.document_sync = true
-            set_attribute_3(elm, attr.keys[0].to_s, attr.values[0])
+            set_attribute_three(elm, attr.keys[0].to_s, attr.values[0])
           else
             remove_attr(elm, attr.keys[0].to_s)
           end
           # elsif attrs.kind_of?(Hash) && attrs.size >= 1
           #  elm.document_sync = true
           #  attrs.each{|name,value|
-          #    set_attribute_3(elm,name,value)
+          #    set_attribute_three(elm,name,value)
           #  }
         else
           raise ArgumentError
@@ -1468,7 +1468,7 @@ module Meteor
       # @param [String,true,false] attr_value attribute value (属性値)
       # @return [Meteor::Element] element (要素)
       #
-      def set_attribute_3(elm, attr_name, attr_value)
+      def set_attribute_three(elm, attr_name, attr_value)
         unless elm.cx
           attr_value = escape(attr_value.to_s)
           # update attributes (属性群の更新)
@@ -1478,7 +1478,7 @@ module Meteor
         elm
       end
 
-      private :set_attribute_3
+      private :set_attribute_three
 
       def edit_attrs_(elm, attr_name, attr_value)
         # attribute search (属性検索)
@@ -1553,7 +1553,7 @@ module Meteor
 
           if args[0].size == 1
             elm.document_sync = true
-            set_attribute_3(elm, args[0].keys[0].to_s, args[0].values[0])
+            set_attribute_three(elm, args[0].keys[0].to_s, args[0].values[0])
           elsif args[0].size >= 1
             set_attrs(elm, args[0])
           else
@@ -1592,7 +1592,7 @@ module Meteor
         unless elm.cx
           elm.document_sync = true
           attr_map.each do |name, value|
-            set_attribute_3(elm, name.to_s, value)
+            set_attribute_three(elm, name.to_s, value)
           end
         end
 
@@ -1689,20 +1689,20 @@ module Meteor
         case args.length
         when ONE
           # if args[0].kind_of?(Meteor::Element)
-          get_content_1(args[0])
+          get_content_one(args[0])
           # else
           #  raise ArgumentError
           # end
         when TWO
           # if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String)
           args[0].document_sync = true
-          set_content_2(args[0], args[1].to_s)
+          set_content_two(args[0], args[1].to_s)
           # else
           #  raise ArgumentError
           # end
         when THREE
           args[0].document_sync = true
-          set_content_3(args[0], args[1].to_s, args[2])
+          set_content_three(args[0], args[1].to_s, args[2])
         else
           raise ArgumentError
         end
@@ -1715,14 +1715,14 @@ module Meteor
       # @param [true,false] entity_ref entity reference flag (エンティティ参照フラグ)
       # @return [Meteor::Element] element (要素)
       #
-      def set_content_3(elm, content, entity_ref = true)
+      def set_content_three(elm, content, entity_ref = true)
         escape_content(content, elm) if entity_ref || !elm.raw_content
 
         elm.mixed_content = content
         elm
       end
 
-      private :set_content_3
+      private :set_content_three
 
       #
       # set content of element (要素の内容をセットする)
@@ -1730,22 +1730,22 @@ module Meteor
       # @param [String] content content of element (要素の内容)
       # @return [Meteor::Element] element (要素)
       #
-      def set_content_2(elm, content)
-        # set_content_3(elm, content)
+      def set_content_two(elm, content)
+        # set_content_three(elm, content)
         escape_content(content, elm) unless elm.raw_content
 
         elm.mixed_content = content
         elm
       end
 
-      private :set_content_2
+      private :set_content_two
 
       #
       # get content of element (要素の内容を取得する)
       # @param [Meteor::Element] elm element (要素)
       # @return [String] content (内容)
       #
-      def get_content_1(elm)
+      def get_content_one(elm)
         if !elm.cx
           unescape_content(elm.mixed_content, elm) if elm.normal
         else
@@ -1753,7 +1753,7 @@ module Meteor
         end
       end
 
-      private :get_content_1
+      private :get_content_one
 
       #
       # remove attribute of element (要素の属性を消す)
@@ -1804,10 +1804,10 @@ module Meteor
       def cxtag(*args)
         case args.length
         when ONE
-          cxtag_1(args[0].to_s)
+          cxtag_one(args[0].to_s)
           @element_cache.store(@elm_.object_id, @elm_) if @elm_
         when TWO
-          cxtag_2(args[0].to_s, args[1].to_s)
+          cxtag_two(args[0].to_s, args[1].to_s)
           @element_cache.store(@elm_.object_id, @elm_) if @elm_
         else
           raise ArgumentError
@@ -1820,7 +1820,7 @@ module Meteor
       # @param [String] id id attribute value (ID属性値)
       # @return [Meteor::Element] element (要素)
       #
-      def cxtag_2(name, id)
+      def cxtag_two(name, id)
         quote_name(name)
         @_id = Regexp.quote(id)
 
@@ -1858,14 +1858,14 @@ module Meteor
         @elm_
       end
 
-      private :cxtag_2
+      private :cxtag_two
 
       #
       # get cx(comment extension) tag using id attribute (ID属性(id="ID属性値")で検索し、CX(コメント拡張)タグを取得する)
       # @param [String] id id attribute value (ID属性値)
       # @return [Meteor::Element] element (要素)
       #
-      def cxtag_1(id)
+      def cxtag_one(id)
         @_id = Regexp.quote(id)
 
         @pattern_cc = String.new('') << '<!--\\s@([^<>]*)\\s[^<>]*id="' << @_id << '"'
@@ -1885,7 +1885,7 @@ module Meteor
         @elm_
       end
 
-      private :cxtag_1
+      private :cxtag_one
 
       #
       # replace element (要素を置換する)
@@ -1914,7 +1914,7 @@ module Meteor
               # item.copy.parser.element_cache.clear
               item.copy = nil
             else
-              edit_document_1(item)
+              edit_document_one(item)
               # edit_pattern_(item)
             end
           else
@@ -1927,19 +1927,19 @@ module Meteor
 
       protected :reflect
 
-      def edit_document_1(elm)
-        edit_document_2(elm, '/>')
+      def edit_document_one(elm)
+        edit_document_two(elm, '/>')
       end
 
-      private :edit_document_1
+      private :edit_document_one
 
-      def edit_document_2(elm, _closer)
+      def edit_document_two(elm, _closer)
         # replace tag (タグ置換)
         @pattern = Meteor::Core::Util::PatternCache.get(elm.pattern)
         @root.document.sub!(@pattern, elm.document)
       end
 
-      private :edit_document_2
+      private :edit_document_two
 
       #
       # reflect (反映する)

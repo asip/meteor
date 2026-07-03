@@ -29,9 +29,9 @@ module Meteor
         def self.get(*args)
           case args.length
           when ONE
-            get_1(args[0])
+            get_one(args[0])
           when TWO
-            get_2(args[0], args[1])
+            get_two(args[0], args[1])
           else
             raise ArgumentError
           end
@@ -42,7 +42,7 @@ module Meteor
         # @param [String] regex regular expression (正規表現)
         # @return [Regexp] pattern (パターン)
         #
-        def self.get_1(regex)
+        def self.get_one(regex)
           if @@regex_cache[regex.to_sym]
             @@regex_cache[regex.to_sym]
           else
@@ -56,7 +56,7 @@ module Meteor
         # @param [Integer] option (オプション)
         # @return [Regexp] psttern (パターン)
         #
-        def self.get_2(regex, option)
+        def self.get_two(regex, option)
           if @@regex_cache[regex.to_sym]
             @@regex_cache[regex.to_sym]
           else
@@ -65,8 +65,8 @@ module Meteor
         end
 
         class << self
-          private :get_1
-          private :get_2
+          private :get_one
+          private :get_two
         end
       end
     end

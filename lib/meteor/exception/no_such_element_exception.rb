@@ -38,47 +38,47 @@ module Meteor
       def initialize(*args)
         case args.length
         when ONE
-          initialize_1(args[0])
+          initialize_one(args[0])
         when TWO
-          initialize_2(args[0], args[1])
+          initialize_two(args[0], args[1])
         when THREE
-          initialize_3(args[0], args[1], args[2])
+          initialize_three(args[0], args[1], args[2])
         when FOUR
-          initialize_4(args[0], args[1], args[2], args[3])
+          initialize_four(args[0], args[1], args[2], args[3])
         when FIVE
-          initialize_5(args[0], args[1], args[2], args[3], args[4])
+          initialize_five(args[0], args[1], args[2], args[3], args[4])
         end
       end
 
-      def initialize_1(name)
+      def initialize_one(name)
         self.message = "element not found : #{name}"
       end
 
-      private :initialize_1
+      private :initialize_one
 
-      def initialize_2(attr_name, attr_value)
+      def initialize_two(attr_name, attr_value)
         self.message = "element not found : [#{attr_name}=#{attr_value}]"
       end
 
-      private :initialize_2
+      private :initialize_two
 
-      def initialize_3(name, attr_name, attr_value)
+      def initialize_three(name, attr_name, attr_value)
         self.message = "element not found : #{name}[#{attr_name}=#{attr_value}]"
       end
 
-      private :initialize_3
+      private :initialize_three
 
-      def initialize_4(attr_name1, attr_value1, attr_name2, attr_value2)
+      def initialize_four(attr_name1, attr_value1, attr_name2, attr_value2)
         self.message = "element not found : [#{attr_name1}=#{attr_value1}][#{attr_name2}=#{attr_value2}]"
       end
 
-      private :initialize_4
+      private :initialize_four
 
-      def initialize_5(name, attr_name1, attr_value1, attr_name2, attr_value2)
+      def initialize_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
         self.message = "element not found : #{name}[#{attr_name1}=#{attr_value1}][#{attr_name2}=#{attr_value2}]"
       end
 
-      private :initialize_5
+      private :initialize_five
     end
   end
 end

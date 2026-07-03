@@ -3,29 +3,29 @@
 # frozen_string_literal: true
 
 # require 'rubygems'
-require "meteor"
+require 'meteor'
 
-Meteor::Elements.add(:html, "ml/sample_html.html")
-root = Meteor::Elements.get("/ml/sample_html")
+Meteor::Elements.add(:html, 'ml/sample_html.html')
+root = Meteor::Elements.get('/ml/sample_html')
 
 start_time = Time.new.to_f
 
-elm_hello = root.element(id: "hello")
+elm_hello = root.element(id: 'hello')
 # elm_hello.attr(class: 'red')
-elm_hello["class"] = "red"
+elm_hello['class'] = 'red'
 # elm_hello['class'] = nil  # elm_hello.remove_attr('class')
 
-elm_hello2 = root.element(id: "hello2")
+elm_hello2 = root.element(id: 'hello2')
 # elm_hello2.content('Hello,Tester')
-elm_hello2.content = "Hello,Tester"
+elm_hello2.content = 'Hello,Tester'
 
-elm_text1 = root.element(id: "text1")
+elm_text1 = root.element(id: 'text1')
 # elm_text1.attr(value: めも')
-elm_text1["value"] = "めも"
+elm_text1['value'] = 'めも'
 # elm_text1.attr(disabled: true)
-elm_text1["disabled"] = true
+elm_text1['disabled'] = true
 # elm_text1.attr(required: true)
-elm_text1["required"] = true
+elm_text1['required'] = true
 
 # elm_text1['disabled'] = nil  # elm_text1.remove_attr('disabled')
 # map = elm_text1.attr_map
@@ -51,35 +51,29 @@ elm_text1["required"] = true
 # puts elm_option1['selected']    # puts elm_option1.attr('selected')
 # puts elm_text1['readonly']      # puts elm_text1.attr('readonly')
 
-elm_select2 = root.element("select", id: "select2")
-elm_select2["multiple"] = true
-elm_option2 = elm_select2.element("option", id: "option2")
+elm_select2 = root.element('select', id: 'select2')
+elm_select2['multiple'] = true
+elm_option2 = elm_select2.element('option', id: 'option2')
 co_elm = elm_option2.element
-10.times { |i|
+10.times do |i|
   # co_elm.attr(value: i)
-  co_elm["value"] = i
+  co_elm['value'] = i
   # '<' +
-  if i == 1
-    # co_elm.attr(selected: true)
-    co_elm["selected"] = true
-  else
-    # co_elm.attr(selected: false)
-    co_elm["selected"] = false
-  end
+  co_elm['selected'] = i == 1
   # co_elm.content(i)
   co_elm.content = i
   # co_elm.remove_attr('id')
-  co_elm["id"] = nil
+  co_elm['id'] = nil
   co_elm.flash
-}
+end
 
-elm_tr1 = root.element("tr", id: "loop")
+elm_tr1 = root.element('tr', id: 'loop')
 elm_ = root.element(elm_tr1)
-elm_dt1_ = elm_.element(id: "aa")
-elm_dt2_ = elm_.element(id: "bb")
-elm_dt3_ = elm_.element(id: "cc")
+elm_dt1_ = elm_.element(id: 'aa')
+elm_dt2_ = elm_.element(id: 'bb')
+elm_dt3_ = elm_.element(id: 'cc')
 10.times do |i|
-  elm_["loop"] = i
+  elm_['loop'] = i
   elm_dt1 = elm_dt1_.clone
   elm_dt2 = elm_dt2_.clone
   elm_dt3 = elm_dt3_.clone
@@ -96,21 +90,21 @@ end_time = Time.new.to_f
 
 puts(root.document)
 
-elms = root.elements("tr", id: "loop")
+elms = root.elements('tr', id: 'loop')
 # elms = root.elements("tr")
 # elms = root.elements('input', id: 'radio1', type: 'radio')
 # elms = root.css('input[id=radio1][type=radio]')
-elms.each { |elm|
-  puts("-------")
-  puts("doc----")
+elms.each do |elm|
+  puts('-------')
+  puts('doc----')
   puts(elm.document)
-  puts("attrs--")
+  puts('attrs--')
   puts(elm.attributes)
-  puts("mixed--")
+  puts('mixed--')
   puts(elm.mixed_content)
-}
+end
 
 puts("charset:#{root.charset}")
 puts("content-type:#{root.content_type}")
 
-puts("" + (end_time - start_time).to_s + " sec")
+puts("#{end_time - start_time} sec")

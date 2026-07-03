@@ -3,10 +3,10 @@
 # frozen_string_literal: true
 
 # require 'rubygems'
-require "meteor"
+require 'meteor'
 
-Meteor::Elements.add(Meteor::XML, "ml/sample.xml", "UTF-8")
-root = Meteor::Elements.get("/ml/sample")
+Meteor::Elements.add(Meteor::XML, 'ml/sample.xml', 'UTF-8')
+root = Meteor::Elements.get('/ml/sample')
 
 start_time = Time.new.to_f
 
@@ -22,12 +22,12 @@ start_time = Time.new.to_f
 # puts elm_.mixed_content
 
 # elm1 = root.element(manbo: "manbo")
-elm1 = root.element("test", manbo: "manbo")
+elm1 = root.element('test', manbo: 'manbo')
 # elm2 = root.element(id: "aa", id2: "bb")    # elm2 = root.element(id: "aa")
 # elm3 = root.element("potato", id: "aa")
 # elm4 = root.element("potato", id: "aa", id2: "bb")  # elm4 = root.element("potato", id2: "bb")
 
-elm7 = root.element("kobe")
+elm7 = root.element('kobe')
 # elm7 = root.element(momo: "mono")
 # elm8 = root.element(manbo: "mango")
 # elm8 = root.element(momo: "momo")
@@ -59,11 +59,11 @@ elm7 = root.element("kobe")
 # }
 
 elm_ = root.element(elm1)
-elm5_ = elm_.element("tech")
+elm5_ = elm_.element('tech')
 10.times do |i|
-  elm_["manbo"] = i.to_s
+  elm_['manbo'] = i.to_s
   elm5 = elm5_.clone
-  elm5["mono"] = i.to_s
+  elm5['mono'] = i.to_s
   elm5.content = i.to_s
   elm_.flash
 end
@@ -76,13 +76,13 @@ end
 
 elm_ = root.element(elm7)
 
-10.times { |i|
-  elm_["momo"] = i
-  elm_["eco"] = "えま"
+10.times do |i|
+  elm_['momo'] = i
+  elm_['eco'] = 'えま'
   # elm_["content"] = i.to_s
   elm_.content = i
   elm_.flash
-}
+end
 
 # co_elm = root.element(elm_c1)
 #
@@ -104,20 +104,20 @@ puts(root.document)
 # elms = root.elements("potato")
 
 # elms = root.css('test')
-elms = root.elements("test")
-elms.each { |elm, i|
-  puts("-------")
-  puts("doc----")
+elms = root.elements('test')
+elms.each do |elm|
+  puts('-------')
+  puts('doc----')
   puts(elm.document)
-  puts("attrs--")
+  puts('attrs--')
   puts(elm.attributes)
-  puts("mixed--")
+  puts('mixed--')
   puts(elm.mixed_content)
-}
+end
 
 puts("content-type:#{root.content_type}")
 
-puts("" + (end_time - start_time).to_s + " sec")
+puts("#{end_time - start_time} sec")
 
 # start_time = Time.new.to_f
 # obj = eval("\"#{elm3.name}\"")

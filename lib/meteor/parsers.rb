@@ -289,7 +289,6 @@ module Meteor
     def add_template_3(type, relative_url, doc)
       ps = new_parser(type)
       ps.document = doc
-      ps.parse
 
       @cache[relative_url] = ps
     end

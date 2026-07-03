@@ -115,6 +115,8 @@ module Meteor
           analyze_ml
         end
 
+        protected :parse
+
         #
         # analyze document (ドキュメントをパースする)
         #

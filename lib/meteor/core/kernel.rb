@@ -97,6 +97,8 @@ module Meteor
       #
       def document=(doc)
         @root.document = doc
+
+        parse
       end
 
       #
@@ -161,25 +163,9 @@ module Meteor
       # @param [String] enc character encoding of input file (入力ファイルの文字コード)
       #
       def read(file_path, enc)
-        # try {
         self.enc = enc
-        mode = if enc == "UTF-8"
-          # String.new("") << "r:" << enc
-          "r:UTF-8"
-        else
-          String.new("") << "r:" << enc << ":utf-8"
-        end
 
-        # open file (ファイルのオープン)
-        io = File.open(file_path, mode)
-
-        # load and save (読込及び格納)
-        @root.document = io.read
-
-        # close file (ファイルのクローズ)
-        io.close
-
-        parse
+        self.document = Meteor::Core::Util::FileReader.read(file_path, enc)
 
         return @root.document
       end
@@ -190,6 +176,8 @@ module Meteor
       #
       def parse
       end
+
+      protected :parse
 
       #
       # get element (要素を取得する)

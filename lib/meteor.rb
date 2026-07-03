@@ -18,7 +18,7 @@ require 'meteor/ml/xhtml4/parser_impl'
 require 'meteor/ml/xhtml/parser_impl'
 require 'meteor/ml/xml/parser_impl'
 
-# Meteor -  A lightweight (X)HTML(5) & XML parser
+# Meteor -  A lightweight (X)HTML & XML parser
 #
 # Copyright (C) 2008-present Yasumasa Ashida.
 #

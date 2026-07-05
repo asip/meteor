@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    meteor (0.9.33)
+    meteor (0.9.34)
 
 GEM
   remote: https://rubygems.org/

@@ -45,7 +45,7 @@ module Meteor
       @@pattern_find_four = Regexp.new(PATTERN_FIND_four)
       @@pattern_find_five = Regexp.new(PATTERN_FIND_five)
 
-      @@pattern_set_mono1 = Regexp.new('\\A[^<>]*\\Z')
+      @@pattern_non_nest  = Regexp.new('\\A[^<>]*\\Z')
 
       @@pattern_get_attrs_map = Regexp.new('([^\\s]*)="([^\"]*)"')
 
@@ -1946,7 +1946,7 @@ module Meteor
       #
       def flash
         if element_hook
-          if element_hook.origin.mono
+          if element_hook.origin.non_nest
             if element_hook.origin.cx
               # @root.hookDocument << '<!-- @' << @root.element.name << ' '
               # @root.hookDocument << @root.element.attributes << '-->'
@@ -2020,13 +2020,13 @@ module Meteor
         return unless elm.normal
 
         # case of normal element (内容あり要素の場合)
-        set_mono_info(elm)
+        self.non_nest = elm
 
         pif2 = self.class.new(self)
 
         @elm_ = elm.clone(pif2)
 
-        pif2.root_element.document = if !elm.mono
+        pif2.root_element.document = if !elm.non_nest
                                        String.new(elm.mixed_content)
                                      else
                                        String.new(elm.document)
@@ -2039,13 +2039,13 @@ module Meteor
 
       # private :shadow
 
-      def set_mono_info(elm)
-        @res = @@pattern_set_mono1.match(elm.mixed_content)
+      def non_nest=(elm)
+        @res = @@pattern_non_nest.match(elm.mixed_content)
 
-        elm.mono = true if @res
+        elm.non_nest = true if @res
       end
 
-      private :set_mono_info
+      private :non_nest=
 
       def is_match(regex, str)
         case regex

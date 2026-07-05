@@ -21,8 +21,8 @@ module Meteor
   #  @return [true,false] content normal flag (内容存在フラグ)
   # @!attribute [rw] cx
   #  @return [true,false] comment extension tag flag (コメント拡張タグフラグ)
-  # @!attribute [rw] mono
-  #  @return [true,false] child element existance flag (子要素存在フラグ)
+  # @!attribute [rw] non_nest
+  #  @return [true,false] child non-nest flag (非入れ子フラグ)
   # @!attribute [rw] parser
   #  @return [Meteor::Parser] parser(パーサ)
   # @!attribute [rw] type_value
@@ -37,7 +37,7 @@ module Meteor
   #  @return [true,false] deletion flag (削除フラグ)
   #
   class Element
-    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :mono,
+    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :non_nest,
                   :parser, :type_value, :usable, :origin, :copy, :removed
 
     alias tag name
@@ -45,6 +45,9 @@ module Meteor
 
     alias empty normal
     alias empty= normal=
+
+    alias mono non_nest
+    alias mono= non_nest=
 
     #
     # initializer (イニシャライザ)
@@ -87,7 +90,7 @@ module Meteor
       # @parser=nil
       # @normal = false
       # @cx = false
-      # @mono = false
+      # @non_nest = false
       # @parent = false
       @usable = true
     end
@@ -118,7 +121,7 @@ module Meteor
         @document = String.new(elm.document)
         @normal = elm.normal
         @cx = elm.cx
-        @mono = elm.mono
+        @non_nest = elm.non_nest
         @origin = elm
         # @usable = false
         elm.copy = self

@@ -7,18 +7,18 @@ module Meteor
       #
       # XHTML4 parser (XHTML4パーサ)
       #
-      class ParserImpl < Meteor::Core::Kernel
+      class ParserImpl < Meteor::Core::Kernel # rubocop:disable Metrics/ClassLength
         # KAIGYO_CODE = "\r?\n|\r"
         KAIGYO_CODE = ["\r\n", "\n", "\r"].freeze
         BR = '<br/>'
         BR_RE = '<br\\/>'
 
-        # @@match_tag_two = "textarea|option|pre"
+        # MATCH_TAG_TWO = "textarea|option|pre"
         # [Array] elements where line breaks do not need to be converted to <br> (改行を<br/>に変換する必要のない要素)
-        @@match_tag_two = %w[textarea option pre]
+        MATCH_TAG_TWO = %w[textarea option pre].freeze
 
         # [Array] boolean attributes (論理値で指定する属性)
-        @@attr_bool = %w[disabled readonly checked selected multiple]
+        ATTR_BOOL = %w[disabled readonly checked selected multiple].freeze
 
         # DISABLE_ELEMENT = "input|textarea|select|optgroup"
         # [Array] element with disablled attribute (disabled属性のある要素)
@@ -48,24 +48,24 @@ module Meteor
         MULTIPLE_R = 'multiple="[^"]*"'
         MULTIPLE_U = 'multiple="multiple"'
 
-        @@pattern_selected_m = Regexp.new(SELECTED_M)
-        @@pattern_selected_m1 = Regexp.new(SELECTED_M1)
-        @@pattern_selected_r = Regexp.new(SELECTED_R)
-        @@pattern_checked_m = Regexp.new(CHECKED_M)
-        @@pattern_checked_m1 = Regexp.new(CHECKED_M1)
-        @@pattern_checked_r = Regexp.new(CHECKED_R)
-        @@pattern_disabled_m = Regexp.new(DISABLED_M)
-        @@pattern_disabled_m1 = Regexp.new(DISABLED_M1)
-        @@pattern_disabled_r = Regexp.new(DISABLED_R)
-        @@pattern_readonly_m = Regexp.new(READONLY_M)
-        @@pattern_readonly_m1 = Regexp.new(READONLY_M1)
-        @@pattern_readonly_r = Regexp.new(READONLY_R)
-        @@pattern_multiple_m = Regexp.new(MULTIPLE_M)
-        @@pattern_multiple_m1 = Regexp.new(MULTIPLE_M1)
-        @@pattern_multiple_r = Regexp.new(MULTIPLE_R)
+        RE_SELECTED_M = Regexp.new(SELECTED_M)
+        RE_SELECTED_M1 = Regexp.new(SELECTED_M1)
+        RE_SELECTED_R = Regexp.new(SELECTED_R)
+        RE_CHECKED_M = Regexp.new(CHECKED_M)
+        RE_CHECKED_M1 = Regexp.new(CHECKED_M1)
+        RE_CHECKED_R = Regexp.new(CHECKED_R)
+        RE_DISABLED_M = Regexp.new(DISABLED_M)
+        RE_DISABLED_M1 = Regexp.new(DISABLED_M1)
+        RE_DISABLED_R = Regexp.new(DISABLED_R)
+        RE_READONLY_M = Regexp.new(READONLY_M)
+        RE_READONLY_M1 = Regexp.new(READONLY_M1)
+        RE_READONLY_R = Regexp.new(READONLY_R)
+        RE_MULTIPLE_M = Regexp.new(MULTIPLE_M)
+        RE_MULTIPLE_M1 = Regexp.new(MULTIPLE_M1)
+        RE_MULTIPLE_R = Regexp.new(MULTIPLE_R)
 
-        # @@pattern_match_tag = Regexp.new(@@match_tag)
-        # @@pattern_match_tag2 = Regexp.new(@@match_tag_two)
+        # RE_MATCH_TAG = Regexp.new(MATCH_TAG)
+        # RE_MATCH_TAG_TWO = Regexp.new(MATCH_TAG_TWO)
 
         #
         # initializer (イニシャライザ)
@@ -172,18 +172,18 @@ module Meteor
         private :analyze_newline
 
         def edit_attrs_(elm, attr_name, attr_value)
-          if is_match('selected', attr_name) && is_match('option', elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_selected_m, @@pattern_selected_r, SELECTED_U)
-          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_multiple_m, @@pattern_multiple_r, MULTIPLE_U)
-          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_disabled_m, @@pattern_disabled_r, DISABLED_U)
-          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
-            edit_attrs_five(elm, attr_value, @@pattern_checked_m, @@pattern_checked_r, CHECKED_U)
-          elsif is_match('readonly', attr_name) &&
-                (is_match('textarea',
-                          elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
-            edit_attrs_five(elm, attr_value, @@pattern_readonly_m, @@pattern_readonly_r, READONLY_U)
+          if match?('selected', attr_name) && match?('option', elm.name)
+            edit_attrs_five(elm, attr_value, RE_SELECTED_M, RE_SELECTED_R, SELECTED_U)
+          elsif match?('multiple', attr_name) && match?('select', elm.name)
+            edit_attrs_five(elm, attr_value, RE_MULTIPLE_M, RE_MULTIPLE_R, MULTIPLE_U)
+          elsif match?('disabled', attr_name) && match?(DISABLE_ELEMENT, elm.name)
+            edit_attrs_five(elm, attr_value, RE_DISABLED_M, RE_DISABLED_R, DISABLED_U)
+          elsif match?('checked', attr_name) && match?('input', elm.name) && match?('radio', get_type(elm))
+            edit_attrs_five(elm, attr_value, RE_CHECKED_M, RE_CHECKED_R, CHECKED_U)
+          elsif match?('readonly', attr_name) &&
+                (match?('textarea',
+                        elm.name) || (match?('input', elm.name) && match?(READONLY_TYPE, get_type(elm))))
+            edit_attrs_five(elm, attr_value, RE_READONLY_M, RE_READONLY_R, READONLY_U)
           else
             super(elm, attr_name, attr_value)
           end
@@ -194,7 +194,7 @@ module Meteor
         def edit_attrs_five(elm, attr_value, match_p, replace_regex, replace_update)
           # attr_value = escape(attr_value)
 
-          if true.equal?(attr_value) || is_match('true', attr_value)
+          if true.equal?(attr_value) || match?('true', attr_value)
             @res = match_p.match(elm.attributes)
 
             if !@res
@@ -209,7 +209,7 @@ module Meteor
               # replace attribute (属性の置換)
               elm.attributes.gsub!(replace_regex, replace_update)
             end
-          elsif false.equal?(attr_value) || is_match('false', attr_value)
+          elsif false.equal?(attr_value) || match?('false', attr_value)
             # delete if attribute_name attrubute exeists (attr_name属性が存在するなら削除)
             # replace attribute (属性の置換)
             elm.attributes.gsub!(replace_regex, '')
@@ -219,18 +219,18 @@ module Meteor
         private :edit_attrs_five
 
         def get_attr_value_(elm, attr_name)
-          if is_match('selected', attr_name) && is_match('option', elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_selected_m1)
-          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_multiple_m1)
-          elsif is_match('diabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_disabled_m1)
-          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
-            get_attr_value_r(elm, attr_name, @@pattern_checked_m1)
-          elsif is_match('readonly', attr_name) &&
-                (is_match('textarea',
-                          elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
-            get_attr_value_r(elm, attr_name, @@pattern_readonly_m1)
+          if match?('selected', attr_name) && match?('option', elm.name)
+            get_attr_value_r(elm, attr_name, RE_SELECTED_M1)
+          elsif match?('multiple', attr_name) && match?('select', elm.name)
+            get_attr_value_r(elm, attr_name, RE_MULTIPLE_M1)
+          elsif match?('diabled', attr_name) && match?(DISABLE_ELEMENT, elm.name)
+            get_attr_value_r(elm, attr_name, RE_DISABLED_M1)
+          elsif match?('checked', attr_name) && match?('input', elm.name) && match?('radio', get_type(elm))
+            get_attr_value_r(elm, attr_name, RE_CHECKED_M1)
+          elsif match?('readonly', attr_name) &&
+                (match?('textarea',
+                        elm.name) || (match?('input', elm.name) && match?(READONLY_TYPE, get_type(elm))))
+            get_attr_value_r(elm, attr_name, RE_READONLY_M1)
           else
             super(elm, attr_name)
           end
@@ -293,8 +293,8 @@ module Meteor
         def get_attr_map(elm)
           attrs = Meteor::AttributeMap.new
 
-          elm.attributes.scan(@@pattern_get_attrs_map) do |a, b|
-            if is_match(@@attr_bool, a) && a == b
+          elm.attributes.scan(RE_GET_ATTRS_MAP) do |a, b|
+            if match?(ATTR_BOOL, a) && a == b
               attrs.store(a, 'true')
             else
               attrs.store(a, unescape(b))

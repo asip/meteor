@@ -22,9 +22,9 @@ module Meteor
         REQUIRED_R = 'required="[^"]*"'
         REQUIRED_U = 'required="required"'
 
-        @@pattern_required_m = Regexp.new(REQUIRED_M)
-        @@pattern_required_m1 = Regexp.new(REQUIRED_M1)
-        @@pattern_required_r = Regexp.new(REQUIRED_R)
+        RE_REQUIRED_M = Regexp.new(REQUIRED_M)
+        RE_REQUIRED_M1 = Regexp.new(REQUIRED_M1)
+        RE_REQUIRED_R  = Regexp.new(REQUIRED_R)
 
         #
         # initializer (イニシャライザ)
@@ -34,7 +34,6 @@ module Meteor
         #
         def initialize(*args)
           super()
-          @@attr_bool = ATTR_BOOL
           @doc_type = Parser::XHTML
           case args.length
           when ZERO
@@ -76,8 +75,6 @@ module Meteor
 
           element_three('meta', 'charset', '[a-zA-Z-]+', false)
 
-          element_three('meta', 'charset', '[a-zA-Z-]+', false) unless @elm_
-
           @error_check = true
 
           if @elm_
@@ -93,20 +90,20 @@ module Meteor
         private :analyze_content_type
 
         def edit_attrs_(elm, attr_name, attr_value)
-          if is_match('selected', attr_name) && is_match('option', elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_selected_m, @@pattern_selected_r, SELECTED_U)
-          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_multiple_m, @@pattern_multiple_r, MULTIPLE_U)
-          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_disabled_m, @@pattern_disabled_r, DISABLED_U)
-          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
-            edit_attrs_five(elm, attr_value, @@pattern_checked_m, @@pattern_checked_r, CHECKED_U)
-          elsif is_match('readonly', attr_name) &&
-                (is_match('textarea',
-                          elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
-            edit_attrs_five(elm, attr_value, @@pattern_readonly_m, @@pattern_readonly_r, READONLY_U)
-          elsif is_match('required', attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
-            edit_attrs_five(elm, attr_value, @@pattern_required_m, @@pattern_required_r, REQUIRED_U)
+          if match?('selected', attr_name) && match?('option', elm.name)
+            edit_attrs_five(elm, attr_value, RE_SELECTED_M, RE_SELECTED_R, SELECTED_U)
+          elsif match?('multiple', attr_name) && match?('select', elm.name)
+            edit_attrs_five(elm, attr_value, RE_MULTIPLE_M, RE_MULTIPLE_R, MULTIPLE_U)
+          elsif match?('disabled', attr_name) && match?(DISABLE_ELEMENT, elm.name)
+            edit_attrs_five(elm, attr_value, RE_DISABLED_M, RE_DISABLED_R, DISABLED_U)
+          elsif match?('checked', attr_name) && match?('input', elm.name) && match?('radio', get_type(elm))
+            edit_attrs_five(elm, attr_value, RE_CHECKED_M, RE_CHECKED_R, CHECKED_U)
+          elsif match?('readonly', attr_name) &&
+                (match?('textarea',
+                        elm.name) || (match?('input', elm.name) && match?(READONLY_TYPE, get_type(elm))))
+            edit_attrs_five(elm, attr_value, RE_READONLY_M, RE_READONLY_R, READONLY_U)
+          elsif match?('required', attr_name) && match?(REQUIRE_ELEMENT, elm.name)
+            edit_attrs_five(elm, attr_value, RE_REQUIRED_M, RE_REQUIRED_R, REQUIRED_U)
           else
             super(elm, attr_name, attr_value)
           end
@@ -115,20 +112,20 @@ module Meteor
         private :edit_attrs_
 
         def get_attr_value_(elm, attr_name)
-          if is_match('selected', attr_name) && is_match('option', elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_selected_m1)
-          elsif is_match('multiple', attr_name) && is_match('select', elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_multiple_m1)
-          elsif is_match('disabled', attr_name) && is_match(DISABLE_ELEMENT, elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_disabled_m1)
-          elsif is_match('checked', attr_name) && is_match('input', elm.name) && is_match('radio', get_type(elm))
-            get_attr_value_r(elm, attr_name, @@pattern_checked_m1)
-          elsif is_match('readonly', attr_name) &&
-                (is_match('textarea',
-                          elm.name) || (is_match('input', elm.name) && is_match(READONLY_TYPE, get_type(elm))))
-            get_attr_value_r(elm, attr_name, @@pattern_readonly_m1)
-          elsif is_match('required', attr_name) && is_match(REQUIRE_ELEMENT, elm.name)
-            get_attr_value_r(elm, attr_name, @@pattern_required_m1)
+          if match?('selected', attr_name) && match?('option', elm.name)
+            get_attr_value_r(elm, attr_name, RE_SELECTED_M1)
+          elsif match?('multiple', attr_name) && match?('select', elm.name)
+            get_attr_value_r(elm, attr_name, RE_MULTIPLE_M1)
+          elsif match?('disabled', attr_name) && match?(DISABLE_ELEMENT, elm.name)
+            get_attr_value_r(elm, attr_name, RE_DISABLED_M1)
+          elsif match?('checked', attr_name) && match?('input', elm.name) && match?('radio', get_type(elm))
+            get_attr_value_r(elm, attr_name, RE_CHECKED_M1)
+          elsif match?('readonly', attr_name) &&
+                (match?('textarea',
+                        elm.name) || (match?('input', elm.name) && match?(READONLY_TYPE, get_type(elm))))
+            get_attr_value_r(elm, attr_name, RE_READONLY_M1)
+          elsif match?('required', attr_name) && match?(REQUIRE_ELEMENT, elm.name)
+            get_attr_value_r(elm, attr_name, RE_REQUIRED_M1)
           else
             super(elm, attr_name)
           end

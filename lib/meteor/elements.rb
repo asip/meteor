@@ -6,7 +6,7 @@ module Meteor
   # Elements Class (要素ファクトリ クラス)
   #
   class Elements
-    @@pf = Meteor::Parsers.new
+    @@pf = Meteor::Parsers.new # rubocop:disable Style/ClassVars
 
     #
     # set options (オプションをセットする)

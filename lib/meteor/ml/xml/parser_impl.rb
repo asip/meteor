@@ -20,10 +20,11 @@ module Meteor
         }.freeze
 
         PATTERN_ESCAPE = "[&\\\"'<>]"
-        @@pattern_escape = Regexp.new(PATTERN_ESCAPE)
 
         PATTERN_UNESCAPE = '&(amp|quot|apos|gt|lt);'
-        @@pattern_unescape = Regexp.new(PATTERN_UNESCAPE)
+
+        RE_ESCAPE = Regexp.new(PATTERN_ESCAPE)
+        RE_UNESCAPE = Regexp.new(PATTERN_UNESCAPE)
 
         #
         # initializer (イニシャライザ)
@@ -119,7 +120,7 @@ module Meteor
 
         def escape(content)
           # replace special character (特殊文字の置換)
-          content.gsub(@@pattern_escape, TABLE_FOR_ESCAPE_)
+          content.gsub(RE_ESCAPE, TABLE_FOR_ESCAPE_)
         end
 
         private :escape
@@ -137,7 +138,7 @@ module Meteor
           # 「"」<-「&quot;」
           # 「'」<-「&apos;」
           # 「&」<-「&amp;」
-          content.gsub(@@pattern_unescape) do
+          content.gsub(RE_UNESCAPE) do
             case ::Regexp.last_match(1)
             when 'amp'
               '&'

@@ -36,7 +36,7 @@ module Meteor
   # @!attribute [rw] removed
   #  @return [true,false] deletion flag (削除フラグ)
   #
-  class Element
+  class Element # rubocop:disable Metrics/ClassLength
     attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :non_nest,
                   :parser, :type_value, :usable, :origin, :copy, :removed
 
@@ -61,6 +61,7 @@ module Meteor
     #
     def initialize(*args)
       case args.length
+      when Meteor::ZERO
       when Meteor::ONE
         if args[0].is_a?(String)
           initialize_s(args[0])
@@ -71,7 +72,6 @@ module Meteor
         end
       when Meteor::TWO
         initialize_two(args[0], args[1])
-      when Meteor::ZERO
       else
         raise ArgumentError
       end
@@ -207,27 +207,31 @@ module Meteor
         @document_sync = false
         case @parser.doc_type
         when Parser::HTML, Parser::HTML4
-          if @cx
-            # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
-            @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
-          elsif @normal
-            # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
-            @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
-          else
-            @document = String.new('') << '<' << @name << @attributes << '>'
-            # @document = "<#{@name}#{@attributes}>"
-          end
+          @document = if @cx
+                        # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->'
+                        #  << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
+                        "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+                      elsif @normal
+                        # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>'
+                        #  << elm.mixed_content << '</' << elm.name << '>'
+                        "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+                      else
+                        String.new('') << '<' << @name << @attributes << '>'
+                        # @document = "<#{@name}#{@attributes}>"
+                      end
         when Parser::XHTML, Parser::XHTML4, Parser::XML
-          if @cx
-            # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->' << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
-            @document = "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
-          elsif @normal
-            # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content << '</' << elm.name << '>'
-            @document = "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
-          else
-            @document = String.new('') << '<' << @name << @attributes << '/>'
-            # @document = "<#{@name}#{@attributes}/>"
-          end
+          @document = if @cx
+                        # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->'
+                        #  << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
+                        "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+                      elsif @normal
+                        # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content
+                        #  << '</' << elm.name << '>'
+                        "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+                      else
+                        String.new('') << '<' << @name << @attributes << '/>'
+                        # @document = "<#{@name}#{@attributes}/>"
+                      end
         end
       else
         @document

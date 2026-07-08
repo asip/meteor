@@ -8,9 +8,9 @@ module Meteor
       # HTML4 parser (HTMLパーサ)
       #
       class ParserImpl < Meteor::Core::Kernel # rubocop:disable Metrics/ClassLength
-        # KAIGYO_CODE = "\r?\n|\r"
-        # KAIGYO_CODE = "\r\n|\n|\r"
-        KAIGYO_CODE = ["\r\n", "\n", "\r"].freeze
+        # NEWLINE = "\r?\n|\r"
+        # NEWLINE = "\r\n|\n|\r"
+        NEWLINE = ["\r\n", "\n", "\r"].freeze
         BR = '<br>'
         BR_RE = BR
 
@@ -172,11 +172,8 @@ module Meteor
         # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
         #
         def analyze_newline
-          KAIGYO_CODE.each do |a|
-            if @root.document.include?(a)
-              @root.newline = a
-              # puts "kaigyo:" << @root.newline
-            end
+          NEWLINE.each do |a|
+            @root.newline = a if @root.document.include?(a)
           end
         end
 

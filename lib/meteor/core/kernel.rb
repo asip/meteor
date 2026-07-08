@@ -138,6 +138,7 @@ module Meteor
       # initializer (イニシャライザ)
       #
       def initialize
+        super
         # parent element (親要素)
         # @parent = nil
 
@@ -168,7 +169,7 @@ module Meteor
       end
 
       #
-      # psrse document (ドキュメントを解析する)
+      # parse document (ドキュメントを解析する)
       # @param [String] document document (ドキュメント)
       #
       def parse; end

@@ -45,7 +45,7 @@ module Meteor
       RE_FIND_FOUR = Regexp.new(PATTERN_FIND_FOUR)
       RE_FIND_FIVE = Regexp.new(PATTERN_FIND_FIVE)
 
-      RE_NON_NEST = Regexp.new('\\A[^<>]*\\Z')
+      RE_CHILDLESS = Regexp.new('\\A[^<>]*\\Z')
 
       RE_GET_ATTRS_MAP = Regexp.new('([^\\s]*)="([^\"]*)"')
 
@@ -1949,7 +1949,7 @@ module Meteor
       #
       def flash
         if element_hook
-          if element_hook.origin.non_nest
+          if element_hook.origin.childless
             if element_hook.origin.cx
               # @root.hookDocument << '<!-- @' << @root.element.name << ' '
               # @root.hookDocument << @root.element.attributes << '-->'
@@ -2025,13 +2025,13 @@ module Meteor
         return unless elm.normal
 
         # case of normal element (内容あり要素の場合)
-        self.non_nest = elm
+        self.childless = elm
 
         pif2 = self.class.new(self)
 
         @elm_ = elm.clone(pif2)
 
-        pif2.root_element.document = if !elm.non_nest
+        pif2.root_element.document = if !elm.childless
                                        String.new(elm.mixed_content)
                                      else
                                        String.new(elm.document)
@@ -2044,13 +2044,13 @@ module Meteor
 
       # private :shadow
 
-      def non_nest=(elm)
-        @res = RE_NON_NEST.match(elm.mixed_content)
+      def childless=(elm)
+        @res = RE_CHILDLESS.match(elm.mixed_content)
 
-        elm.non_nest = true if @res
+        elm.childless = true if @res
       end
 
-      private :non_nest=
+      private :childless=
 
       def match?(regex, str)
         case regex

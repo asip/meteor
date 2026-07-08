@@ -21,8 +21,8 @@ module Meteor
   #  @return [true,false] content normal flag (内容存在フラグ)
   # @!attribute [rw] cx
   #  @return [true,false] comment extension tag flag (コメント拡張タグフラグ)
-  # @!attribute [rw] non_nest
-  #  @return [true,false] child non-nest flag (非入れ子フラグ)
+  # @!attribute [rw] childless
+  #  @return [true,false] child childless flag (子要素なしフラグ)
   # @!attribute [rw] parser
   #  @return [Meteor::Parser] parser(パーサ)
   # @!attribute [rw] type_value
@@ -37,7 +37,7 @@ module Meteor
   #  @return [true,false] deletion flag (削除フラグ)
   #
   class Element # rubocop:disable Metrics/ClassLength
-    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :non_nest,
+    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :childless,
                   :parser, :type_value, :usable, :origin, :copy, :removed
 
     alias tag name
@@ -46,8 +46,8 @@ module Meteor
     alias empty normal
     alias empty= normal=
 
-    alias mono non_nest
-    alias mono= non_nest=
+    alias mono childless
+    alias mono= childless=
 
     #
     # initializer (イニシャライザ)
@@ -90,7 +90,7 @@ module Meteor
       # @parser=nil
       # @normal = false
       # @cx = false
-      # @non_nest = false
+      # @childless = false
       # @parent = false
       @usable = true
     end
@@ -121,7 +121,7 @@ module Meteor
         @document = String.new(elm.document)
         @normal = elm.normal
         @cx = elm.cx
-        @non_nest = elm.non_nest
+        @childless = elm.childless
         @origin = elm
         # @usable = false
         elm.copy = self

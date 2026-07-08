@@ -37,11 +37,11 @@ require 'meteor/ml/xml/parser_impl'
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # @author Yasumasa Ashida
-# @version 0.9.37
+# @version 0.9.38
 #
 
 module Meteor
-  VERSION = '0.9.37'
+  VERSION = '0.9.38'
 
   # require 'fileutils'
 

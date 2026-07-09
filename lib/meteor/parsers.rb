@@ -339,18 +339,7 @@ module Meteor
     #
     def parser_one(key)
       @pif = @cache[key.to_s]
-      case @pif.doc_type
-      when Meteor::Parser::HTML
-        Meteor::Ml::Html::ParserImpl.new(@pif)
-      when Meteor::Parser::XML
-        Meteor::Ml::Xml::ParserImpl.new(@pif)
-      when Meteor::Parser::XHTML
-        Meteor::Ml::Xhtml::ParserImpl.new(@pif)
-      when Meteor::Parser::HTML4
-        Meteor::Ml::Html4::ParserImpl.new(@pif)
-      when Meteor::Parser::XHTML4
-        Meteor::Ml::Xhtml4::ParserImpl.new(@pif)
-      end
+      new_parser(@pif)
     end
 
     private :parser_one
@@ -364,7 +353,17 @@ module Meteor
       parser_one(key).root_element
     end
 
-    def new_parser(type)
+    def new_parser(val)
+      if val.is_a?(Integer) || val.is_a?(Symbol)
+        new_parser_type(val)
+      elsif val.is_a?(Meteor::Core::Kernel)
+        new_parser_ps(val)
+      end
+    end
+
+    private :new_parser
+
+    def new_parser_type(type)
       case type
       when Parser::HTML, :html
         Meteor::Ml::Html::ParserImpl.new
@@ -381,7 +380,24 @@ module Meteor
       end
     end
 
-    private :new_parser
+    private :new_parser_type
+
+    def new_parser_ps(pif)
+      case pif.doc_type
+      when Meteor::Parser::HTML
+        Meteor::Ml::Html::ParserImpl.new(pif)
+      when Meteor::Parser::XML
+        Meteor::Ml::Xml::ParserImpl.new(pif)
+      when Meteor::Parser::XHTML
+        Meteor::Ml::Xhtml::ParserImpl.new(pif)
+      when Meteor::Parser::HTML4
+        Meteor::Ml::Html4::ParserImpl.new(pif)
+      when Meteor::Parser::XHTML4
+        Meteor::Ml::Xhtml4::ParserImpl.new(pif)
+      end
+    end
+
+    private :new_parser_ps
 
     #
     # set parser (パーサをセットする)

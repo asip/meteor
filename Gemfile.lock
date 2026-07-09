@@ -18,7 +18,7 @@ GEM
     racc (1.8.1)
     rainbow (3.1.1)
     regexp_parser (2.12.0)
-    rubocop (1.88.1)
+    rubocop (1.88.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -41,9 +41,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 4.0.13)
+  bundler (~> 4.0.15)
   meteor!
-  rubocop (~> 1.88.1)
+  rubocop (~> 1.88.2)
 
 BUNDLED WITH
-  4.0.13
+  4.0.15

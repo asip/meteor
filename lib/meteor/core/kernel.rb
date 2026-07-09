@@ -1455,7 +1455,7 @@ module Meteor
           else
             remove_attr(elm, attr.keys[0].to_s)
           end
-          # elsif attrs.kind_of?(Hash) && attrs.size >= 1
+          # elsif attrs.is_a?(Hash) && attrs.size >= 1
           #  elm.document_sync = true
           #  attrs.each{|name,value|
           #    set_attribute_three(elm,name,value)
@@ -1621,7 +1621,7 @@ module Meteor
         when ZERO
           get_attr_map(elm)
         when ONE
-          # if elm.kind_of?(Meteor::Element) && args[0].kind_of?(Meteor::AttributeMap)
+          # if elm.is_a?(Meteor::Element) && args[0].is_a?(Meteor::AttributeMap)
           elm.document_sync = true
           set_attr_map(elm, args[0])
           # end
@@ -1692,13 +1692,13 @@ module Meteor
       def content(*args)
         case args.length
         when ONE
-          # if args[0].kind_of?(Meteor::Element)
+          # if args[0].is_a?(Meteor::Element)
           get_content_one(args[0])
           # else
           #  raise ArgumentError
           # end
         when TWO
-          # if args[0].kind_of?(Meteor::Element) && args[1].kind_of?(String)
+          # if args[0].is_a?(Meteor::Element) && args[1].is_a?(String)
           args[0].document_sync = true
           set_content_two(args[0], args[1].to_s)
           # else

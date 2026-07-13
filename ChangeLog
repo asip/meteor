@@ -1,3 +1,7 @@
+== 0.9.40 / 2026-07-13 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Fix comments
+
 == 0.9.39 / 2026-07-09 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Refactor Meteor::Parsers

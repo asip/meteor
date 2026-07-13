@@ -12,7 +12,7 @@ module Meteor
   # @!attribute [rw] enc
   #  @return [String] default character encoding (デフォルトエンコーディング)
   #
-  class Parsers
+  class Parsers # rubocop:disable Metrics/ClassLength
     attr_accessor :type, :root, :enc
 
     alias base_type type
@@ -38,7 +38,7 @@ module Meteor
     #  @param [String] root root directory (基準ディレクトリ)
     #  @param [String] enc default character encoding (デフォルト文字エンコーディング)
     #
-    def initialize(*args)
+    def initialize(*args) # rubocop:disable Metrics/MethodLength
       case args.length
       when 0
         initialize_zero
@@ -110,7 +110,7 @@ module Meteor
     # @option opts [Integer,Symbol] :type default type of parser (デフォルトのパーサ・タイプ)
     # @option @deprecated opts [Integer | Symbol] :base_type default type of parser (デフォルトのパーサ・タイプ)
     #
-    def options=(opts)
+    def options=(opts) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
       raise ArgumentError unless opts.is_a?(Hash)
 
       if opts.include?(:root)
@@ -154,7 +154,7 @@ module Meteor
     # @param [String] relative_path relative file path (相対ファイルパス)
     # @return [Meteor::Parser] parser (パーサ)
     #
-    def add(*args)
+    def add(*args) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       case args.length
       when 1
         add_file_one(args[0])
@@ -180,7 +180,7 @@ module Meteor
     # @param [String] path relative path (相対パス)
     # @return [String] relative url (相対URL)
     #
-    def path_to_url(path)
+    def path_to_url(path) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       paths = File.split(path)
 
       if paths.length == 1
@@ -363,7 +363,7 @@ module Meteor
 
     private :new_parser
 
-    def new_parser_type(type)
+    def new_parser_type(type) # rubocop:disable Metrics/MethodLength
       case type
       when Parser::HTML, :html
         Meteor::Ml::Html::ParserImpl.new
@@ -382,7 +382,7 @@ module Meteor
 
     private :new_parser_type
 
-    def new_parser_ps(pif)
+    def new_parser_ps(pif) # rubocop:disable Metrics/MethodLength
       case pif.doc_type
       when Meteor::Parser::HTML
         Meteor::Ml::Html::ParserImpl.new(pif)
@@ -404,7 +404,7 @@ module Meteor
     # @param [String,Symbol] key identifier (キー)
     # @param [Meteor::Parser] ps parser (パーサ)
     #
-    def []=(key, ps)
+    def []=(key, ps) # rubocop:disable Naming/MethodParameterName
       @cache[key] = ps
     end
 

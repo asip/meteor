@@ -57,7 +57,7 @@ module Meteor
         # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
-        def initialize_one(ps)
+        def initialize_one(ps) # rubocop:disable Naming/MethodParameterName
           @root.document = String.new(ps.document)
           ps.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
@@ -128,7 +128,7 @@ module Meteor
 
         private :escape_content
 
-        def unescape(content)
+        def unescape(content) # rubocop:disable Metrics/MethodLength
           # replace special character (特殊文字の置換)
           # 「<」<-「&lt;」
           # 「>」<-「&gt;」
@@ -136,7 +136,7 @@ module Meteor
           # 「'」<-「&apos;」
           # 「&」<-「&amp;」
           content.gsub(RE_UNESCAPE) do
-            case ::Regexp.last_match(1)
+            case ::Regexp.last_match(1) # rubocop:disable Style/HashLikeCase
             when 'amp'
               '&'
             when 'quot'

@@ -222,7 +222,7 @@ module Meteor
       #  @param [Meteor::Element] elm element (要素)
       #  @return [Meteor::Element] element (要素)
       #
-      def element(elm, attrs = nil, *args)
+      def element(elm, attrs = nil, *args) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         if !attrs
           case elm
           when String, Symbol
@@ -284,7 +284,7 @@ module Meteor
       # @param [String,Symbol] name tag name (タグ名)
       # @return [Meteor::Element] element(要素)
       #
-      def element_one(name)
+      def element_one(name) # rubocop:disable Metrics/MethodLength
         quote_name(name)
 
         # element search pattern (要素検索用パターン)
@@ -309,7 +309,7 @@ module Meteor
 
       private :element_one
 
-      def element_normal_one(name)
+      def element_normal_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         @elm_ = Meteor::Element.new(name)
 
         if @on_search
@@ -371,7 +371,7 @@ module Meteor
       # @param [String] attr_value attribute value (属性値)
       # @param [true,false] quote flag (クオート・フラグ)
       # @return [Meteor::Element] element (要素)
-      def element_three(name, attr_name, attr_value, quote = true)
+      def element_three(name, attr_name, attr_value, quote = true) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Style/OptionalBooleanParameter
         if quote
           quote_element_three(name, attr_name, attr_value)
         else
@@ -441,7 +441,7 @@ module Meteor
 
       private :quote_element_three
 
-      def element_normal_three_one(name)
+      def element_normal_three_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # puts  @res.captures.length
         case @res.captures.length
         when FOUR
@@ -525,7 +525,7 @@ module Meteor
 
       private :element_normal_three_two
 
-      def element_pattern_normal_three_two
+      def element_pattern_normal_three_two # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
         # @pattern_cc_one << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))" # rubocop:disable Layout/LineLength
@@ -592,7 +592,7 @@ module Meteor
       # @param [String] attr_value attribute value (属性値)
       # @return [Meteor::Element] element (要素)
       #
-      def element_two(attr_name, attr_value)
+      def element_two(attr_name, attr_value) # rubocop:disable Metrics/MethodLength
         quote_attribute(attr_name, attr_value)
 
         element_pattern_two
@@ -818,7 +818,7 @@ module Meteor
       # @param [String] attr_value2 attribute value2 (属性値2)
       # @return [Meteor::Element] element (要素)
       #
-      def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
+      def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
         @pattern_cc_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
@@ -881,7 +881,7 @@ module Meteor
 
       private :quote_element_five
 
-      def element_normal_five_one(name)
+      def element_normal_five_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # puts @res.captures.length
         case @res.captures.length
         when FOUR
@@ -961,7 +961,7 @@ module Meteor
 
       private :element_normal_five_two
 
-      def element_pattern_normal_five_two
+      def element_pattern_normal_five_two # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
         # @pattern_cc_one << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
         # @pattern_cc_one << @_attr_value2 << '"|' << @_attr_name2 << '="'
@@ -1038,7 +1038,7 @@ module Meteor
       # @param [String]attr_value2 attribute value2 (属性値2)
       # @return [Meteor::Element] element (要素)
       #
-      def element_four(attr_name1, attr_value1, attr_name2, attr_value2)
+      def element_four(attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/MethodLength
         quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
         element_pattern_four
@@ -1084,7 +1084,7 @@ module Meteor
 
       private :element_pattern_four
 
-      def create_element_pattern
+      def create_element_pattern # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         @position = 0
 
         while (@res = @pattern.match(@root.document, @position)) || @cnt > ZERO
@@ -1093,17 +1093,17 @@ module Meteor
               @position2 = @res.end(0)
               @res = @pattern_two.match(@root.document, @position)
 
-              if @res
+              if @res # rubocop:disable Metrics/BlockNesting
                 @position = @res.end(0)
 
-                if @position > @position2
+                if @position > @position2 # rubocop:disable Metrics/BlockNesting
                   @sbuf << @pattern_cc_one_two
                   @cnt += 1
                   @position = @position2
                 else
                   @cnt -= ONE
 
-                  if @cnt != ZERO
+                  if @cnt != ZERO # rubocop:disable Metrics/BlockNesting
                     @sbuf << @pattern_cc_two_one
                   else
                     @sbuf << @pattern_cc_two_two
@@ -1137,7 +1137,6 @@ module Meteor
             end
 
             @position = @res.end(0)
-
           end
 
           @pattern = @pattern_oneb
@@ -1261,7 +1260,7 @@ module Meteor
       #  @param [String] attr_value2 attribute value2 (属性値2)
       #  @return [Array<Meteor::Element>] element array (要素配列)
       #
-      def elements(elm, attrs = nil, *args)
+      def elements(elm, attrs = nil, *args) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         if !attrs
           if elm.is_a?(String)
             elements_(elm)
@@ -1305,7 +1304,7 @@ module Meteor
         end
       end
 
-      def elements_(*args)
+      def elements_(*args) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         elm_arr = []
 
         @on_search = true
@@ -1381,7 +1380,7 @@ module Meteor
       # @param [String] selector selector (セレクタ)
       # @return [Array<Meteor::Element>] element array (要素配列)
       #
-      def find(selector)
+      def find(selector) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         open_count = selector.count('[')
 
         case open_count
@@ -1435,7 +1434,7 @@ module Meteor
       #  @param [String,Symbol] attr_name attribute name (属性名)
       #  @return [String] attribute value (属性値)
       #
-      def attr(elm, attr, *args)
+      def attr(elm, attr, *args) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
         if attr.is_a?(String) || attr.is_a?(Symbol)
           case args.length
           when ZERO
@@ -1484,7 +1483,7 @@ module Meteor
 
       private :set_attribute_three
 
-      def edit_attrs_(elm, attr_name, attr_value)
+      def edit_attrs_(elm, attr_name, attr_value) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # attribute search (属性検索)
         # @res = @pattern.match(elm.attributes)
 
@@ -1548,7 +1547,7 @@ module Meteor
       #  @param [Meteor::element] elm element (要素)
       #  @return [Hash<String,String>] attribute map (要素マップ)
       #
-      def attrs(elm, *args)
+      def attrs(elm, *args) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         case args.length
         when ZERO
           get_attrs(elm)
@@ -1689,7 +1688,7 @@ module Meteor
       #  @param [Meteor::Element] elm element (要素)
       #  @return [String] content (内容)
       #
-      def content(*args)
+      def content(*args) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         case args.length
         when ONE
           # if args[0].is_a?(Meteor::Element)
@@ -1719,7 +1718,7 @@ module Meteor
       # @param [true,false] entity_ref entity reference flag (エンティティ参照フラグ)
       # @return [Meteor::Element] element (要素)
       #
-      def set_content_three(elm, content, entity_ref = true)
+      def set_content_three(elm, content, entity_ref = true) # rubocop:disable Style/OptionalBooleanParameter
         escape_content(content, elm) if entity_ref || !elm.raw_content
 
         elm.mixed_content = content
@@ -1824,7 +1823,7 @@ module Meteor
       # @param [String] id id attribute value (ID属性値)
       # @return [Meteor::Element] element (要素)
       #
-      def cxtag_two(name, id)
+      def cxtag_two(name, id) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         quote_name(name)
         @_id = Regexp.quote(id)
 
@@ -1905,7 +1904,7 @@ module Meteor
 
       private :replace
 
-      def reflect
+      def reflect # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # puts @element_cache.size.to_s
         @element_cache.each_value do |item|
           next unless item.usable
@@ -1948,7 +1947,7 @@ module Meteor
       #
       # reflect (反映する)
       #
-      def flash
+      def flash # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
         if element_hook
           if element_hook.origin.childless
             if element_hook.origin.cx
@@ -2022,7 +2021,7 @@ module Meteor
       # @param [Meteor::Element] elm element (要素)
       # @return [Meteor::Element] element (要素)
       #
-      def shadow(elm)
+      def shadow(elm) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         return unless elm.normal
 
         # case of normal element (内容あり要素の場合)
@@ -2108,7 +2107,7 @@ module Meteor
       private :escape
       private :escape_content
 
-      def unescape(content)
+      def unescape(content) # rubocop:disable Metrics/MethodLength
         # replace special character (特殊文字の置換)
         # 「<」<-「&lt;」
         # 「>」<-「&gt;」
@@ -2116,7 +2115,7 @@ module Meteor
         # 「 」<-「&nbsp;」
         # 「&」<-「&amp;」
         content.gsub(RE_UNESCAPE) do
-          case ::Regexp.last_match(1)
+          case ::Regexp.last_match(1) # rubocop:disable Style/HashLikeCase
           when 'amp'
             '&'
           when 'quot'

@@ -98,7 +98,7 @@ module Meteor
         # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
-        def initialize_one(ps)
+        def initialize_one(ps) # rubocop:disable Naming/MethodParameterName
           @root.document = String.new(ps.document)
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
@@ -139,7 +139,7 @@ module Meteor
         #
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
-        def analyze_content_type
+        def analyze_content_type # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           @error_check = false
 
           element_three('meta', 'http-equiv', 'Content-Type')
@@ -171,7 +171,7 @@ module Meteor
 
         private :analyze_newline
 
-        def edit_attrs_(elm, attr_name, attr_value)
+        def edit_attrs_(elm, attr_name, attr_value) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           if match?('selected', attr_name) && match?('option', elm.name)
             edit_attrs_five(elm, attr_value, RE_SELECTED_M, RE_SELECTED_R, SELECTED_U)
           elsif match?('multiple', attr_name) && match?('select', elm.name)
@@ -191,7 +191,7 @@ module Meteor
 
         private :edit_attrs_
 
-        def edit_attrs_five(elm, attr_value, match_p, replace_regex, replace_update)
+        def edit_attrs_five(elm, attr_value, match_p, replace_regex, replace_update) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
           # attr_value = escape(attr_value)
 
           if true.equal?(attr_value) || match?('true', attr_value)
@@ -218,7 +218,7 @@ module Meteor
 
         private :edit_attrs_five
 
-        def get_attr_value_(elm, attr_name)
+        def get_attr_value_(elm, attr_name) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           if match?('selected', attr_name) && match?('option', elm.name)
             get_attr_value_r(elm, attr_name, RE_SELECTED_M1)
           elsif match?('multiple', attr_name) && match?('select', elm.name)
@@ -249,7 +249,7 @@ module Meteor
 
         private :get_type
 
-        def get_attr_value_r(elm, attr_name, match_p)
+        def get_attr_value_r(elm, attr_name, match_p) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           @res = match_p.match(elm.attributes)
 
           if @res

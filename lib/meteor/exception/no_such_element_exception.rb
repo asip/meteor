@@ -35,7 +35,7 @@ module Meteor
       #  @param [String,Symbol] attr_name2 attribute name2 (属性名２)
       #  @param [String] attr_value2 attribute value2 (属性値２)
       #
-      def initialize(*args)
+      def initialize(*args) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         case args.length
         when ONE
           initialize_one(args[0])

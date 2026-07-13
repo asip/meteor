@@ -105,9 +105,9 @@ module Meteor
 
         #
         # initializer (イニシャライザ)
-        # @param [Meteor::Parser] ps paser (パーサ)
+        # @param [Meteor::Parser] ps parser (パーサ)
         #
-        def initialize_one(ps)
+        def initialize_one(ps) # rubocop:disable Naming/MethodParameterName
           @root.document = String.new(ps.document)
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
@@ -149,7 +149,7 @@ module Meteor
         #
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)
         #
-        def analyze_content_type
+        def analyze_content_type # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           @error_check = false
 
           element_three('meta', 'http-equiv', 'Content-Type')
@@ -184,7 +184,7 @@ module Meteor
         # @param [String] name tag name (タグ名)
         # @return [Meteor::Element] element (要素)
         #
-        def element_one(name)
+        def element_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
           quote_name(name)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
@@ -248,7 +248,7 @@ module Meteor
         # @param [true,false] quote quote flag (クオート・フラグ)
         # @return [Meteor::Element] element (要素)
         #
-        def element_three(name, attr_name, attr_value, quote = true)
+        def element_three(name, attr_name, attr_value, quote = true) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Style/OptionalBooleanParameter
           if quote
             quote_element_three(name, attr_name, attr_value)
           else
@@ -311,7 +311,7 @@ module Meteor
         # @param [String] attr_value attribute value (属性値)
         # @return [Meteor::Element] element (要素)
         #
-        def element_two(attr_name, attr_value)
+        def element_two(attr_name, attr_value) # rubocop:disable Metrics/MethodLength
           quote_attribute(attr_name, attr_value)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value
@@ -343,7 +343,7 @@ module Meteor
         # @param [String] attr_value2 attribute value2 (属性値2)
         # @return [Meteor::Element] element (要素)
         #
-        def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
+        def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
@@ -424,7 +424,7 @@ module Meteor
         # @param [String] attr_value2 attribute value2 (属性値2)
         # @return [Meteor::Element] element (要素)
         #
-        def element_four(attr_name1, attr_value1, attr_name2, attr_value2)
+        def element_four(attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/MethodLength
           quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
           # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="' << @_attr_value1
@@ -455,7 +455,7 @@ module Meteor
 
         private :element_four
 
-        def edit_attrs_(elm, attr_name, attr_value)
+        def edit_attrs_(elm, attr_name, attr_value) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           if match?('selected', attr_name) && match?('option', elm.name)
             edit_attrs_five(elm, attr_name, attr_value, RE_SELECTED_M, RE_SELECTED_R)
           elsif match?('multiple', attr_name) && match?('select', elm.name)
@@ -475,7 +475,7 @@ module Meteor
 
         private :edit_attrs_
 
-        def edit_attrs_five(elm, attr_name, attr_value, match_p, replace)
+        def edit_attrs_five(elm, attr_name, attr_value, match_p, replace) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           if true.equal?(attr_value) || match?('true', attr_value)
             @res = match_p.match(elm.attributes)
 
@@ -502,7 +502,7 @@ module Meteor
 
         private :edit_document_one
 
-        def get_attr_value_(elm, attr_name)
+        def get_attr_value_(elm, attr_name) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           if match?('selected', attr_name) && match?('option', elm.name)
             get_attr_value_r(elm, RE_SELECTED_M)
           elsif match?('multiple', attr_name) && match?('select', elm.name)

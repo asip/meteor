@@ -50,7 +50,7 @@ module Meteor
     # @param [String,Symbol] name attribute name (属性名)
     # @param [String] value attribute value (属性値)
     #
-    def store(name, value)
+    def store(name, value) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       if !@map[name]
         attr = Attribute.new
         attr.name = name

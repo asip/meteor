@@ -57,7 +57,7 @@ module Meteor
         # initializer (イニシャライザ)
         # @param [Meteor::Parser] ps parser (パーサ)
         #
-        def initialize_one(ps)
+        def initialize_one(ps) # rubocop:disable Naming/MethodParameterName
           @root.document = String.new(ps.document)
           self.document_hook = String.new(ps.document_hook)
           @root.content_type = String.new(ps.root_element.content_type)
@@ -89,7 +89,7 @@ module Meteor
 
         private :analyze_content_type
 
-        def edit_attrs_(elm, attr_name, attr_value)
+        def edit_attrs_(elm, attr_name, attr_value) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
           if match?('selected', attr_name) && match?('option', elm.name)
             edit_attrs_five(elm, attr_value, RE_SELECTED_M, RE_SELECTED_R, SELECTED_U)
           elsif match?('multiple', attr_name) && match?('select', elm.name)
@@ -111,7 +111,7 @@ module Meteor
 
         private :edit_attrs_
 
-        def get_attr_value_(elm, attr_name)
+        def get_attr_value_(elm, attr_name) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
           if match?('selected', attr_name) && match?('option', elm.name)
             get_attr_value_r(elm, attr_name, RE_SELECTED_M1)
           elsif match?('multiple', attr_name) && match?('select', elm.name)

@@ -59,9 +59,9 @@ module Meteor
     #  @param [Meteor::Element] elm element (要素)
     #  @param [Meteor::Parser] ps parser (パーサ)
     #
-    def initialize(*args)
+    def initialize(*args) # rubocop:disable Metrics/MethodLength
       case args.length
-      when Meteor::ZERO
+      when Meteor::ZERO # rubocop:disable Lint/EmptyWhen
       when Meteor::ONE
         if args[0].is_a?(String)
           initialize_s(args[0])
@@ -108,7 +108,7 @@ module Meteor
 
     private :initialize_e
 
-    def initialize_two(elm, ps)
+    def initialize_two(elm, ps) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Naming/MethodParameterName
       @parser = ps
       if normal
         ps.element(elm)
@@ -151,8 +151,8 @@ module Meteor
     # clone (複製する)
     # @return [Meteor::Element] element (要素)
     #
-    def clone_zero
-      obj = parser.element_cache[object_id]
+    def clone_zero # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+      obj = parser.element_cache[object_id] # rubocop:disable Lint/HashCompareByIdentity
       if obj
         obj.attributes = String.new(attributes)
         obj.mixed_content = String.new(mixed_content)
@@ -161,7 +161,7 @@ module Meteor
         obj.usable = true
       else
         obj = self.class.new(self)
-        parser.element_cache[object_id] = obj
+        parser.element_cache[object_id] = obj # rubocop:disable Lint/HashCompareByIdentity
       end
       obj
     end
@@ -173,7 +173,7 @@ module Meteor
     # @param [Meteor::Parser] ps parser (パーサ)
     # @return [Meteor::Element] element (要素)
     #
-    def clone_one(ps)
+    def clone_one(ps) # rubocop:disable Naming/MethodParameterName
       obj = ps.element_hook
       if obj
         obj.attributes = String.new(attributes)
@@ -202,7 +202,7 @@ module Meteor
     # get document (ドキュメントを取得する)
     # @return [String] document (ドキュメント)
     #
-    def document
+    def document # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
       if @document_sync
         @document_sync = false
         case @parser.doc_type

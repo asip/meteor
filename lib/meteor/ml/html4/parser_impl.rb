@@ -203,8 +203,6 @@ module Meteor
             end
           else
             # normal element search pattern (内容あり要素検索用パターン()
-            # @pattern_cc = String.new('') << "<" << @_name << '(|\\s[^<>]*)>(((?!(' << @_name
-            # @pattern_cc << '[^<>]*>)).)*)<\\/' << @_name << '>'
             @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -258,8 +256,6 @@ module Meteor
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if match?(MATCH_TAG, name)
             # void element search pattern (空要素検索パターン)
-            # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-            # @pattern_cc << @_attr_value << '"[^<>]*)>'
             @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>"
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -274,9 +270,6 @@ module Meteor
             end
           else
             # normal element search pattern (内容あり要素検索パターン)
-            # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-            # @pattern_cc << @_attr_value << '"[^<>]*)>(((?!(' << @_name
-            # @pattern_cc << '[^<>]*>)).)*)<\\/' << @_name << '>'
             @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -314,8 +307,6 @@ module Meteor
         def element_two(attr_name, attr_value) # rubocop:disable Metrics/MethodLength
           quote_attribute(attr_name, attr_value)
 
-          # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*' << @_attr_name << '="' << @_attr_value
-          # @pattern_cc << '"[^<>]*>'
           @pattern_cc = "<([^<>\"]*)\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>"
 
           @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -349,11 +340,6 @@ module Meteor
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if match?(MATCH_TAG, name)
             # void element search pattern (空要素検索パターン)
-            # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
-            # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-            # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
-            # @pattern_cc << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-            # @pattern_cc << @_attr_value1 << '")[^<>]*)>'
             @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>" # rubocop:disable Layout/LineLength
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -375,12 +361,6 @@ module Meteor
             end
           else
             # normal element search pattern (内容あり要素検索パターン)
-            # @pattern_cc = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
-            # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-            # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
-            # @pattern_cc << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-            # @pattern_cc << @_attr_value1 << '")[^<>]*)>(((?!(' << @_name
-            # @pattern_cc << '[^<>]*>)).)*)<\\/' << @_name << '>'
             @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
             @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
@@ -427,11 +407,6 @@ module Meteor
         def element_four(attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/MethodLength
           quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
-          # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="' << @_attr_value1
-          # @pattern_cc << '"[^<>]*' << @_attr_name2 << '="' << @_attr_value2
-          # @pattern_cc << '"|' << @_attr_name2 << '="' << @_attr_value2
-          # @pattern_cc << '"[^<>]*' << @_attr_name1 << '="' << @_attr_value1
-          # @pattern_cc << '")[^<>]*)>'
           @pattern_cc = "<([^<>\"]*)\\s([^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>" # rubocop:disable Layout/LineLength
 
           @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)

@@ -330,8 +330,6 @@ module Meteor
         end
         @elm_.document = @res[0]
         # normal element search pattern (内容あり要素検索用パターン)
-        # @pattern_cc = String.new('') << "<" << @_name << '(?:|\\s[^<>]*)>((?!(' << @_name
-        # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
         @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
 
         @elm_.pattern = @pattern_cc
@@ -454,9 +452,6 @@ module Meteor
           # document (全体)
           @elm_.document = @res[0]
           # normal element search pattern (内容あり要素検索用パターン)
-          # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
-          # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
-          # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
           @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
           @elm_.pattern = @pattern_cc
@@ -474,9 +469,6 @@ module Meteor
           # document (全体)
           @elm_.document = @res[0]
           # normal element search pattern (内容あり要素検索用パターン)
-          # @pattern_cc = String.new('')<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
-          # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
-          # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
           @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>((?!(#{@_name}[^<>]*>)).)*<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
           @elm_.pattern = @pattern_cc
@@ -526,13 +518,9 @@ module Meteor
       private :element_normal_three_two
 
       def element_pattern_normal_three_two # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-        # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-        # @pattern_cc_one << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))" # rubocop:disable Layout/LineLength
         @pattern_cc_oneb = String.new('') << '<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
         # @pattern_cc_oneb = "<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
-        # @pattern_cc_one_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-        # @pattern_cc_one_one << @_attr_value << '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
         @pattern_cc_one_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))(" # rubocop:disable Layout/LineLength
         @pattern_cc_one_two = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
         # @pattern_cc_one_two = ".*?<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
@@ -575,8 +563,6 @@ module Meteor
         # document (全体)
         @elm_.document = @res[0]
         # pattern (空要素検索用パターン)
-        # @pattern_cc = String.new("") << "<" << @_name << "(\\s[^<>]*"
-        #  << @_attr_name << "=\"" << @_attr_value << closer
         @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}#{closer}"
         @elm_.pattern = @pattern_cc
         @elm_.parser = self
@@ -673,10 +659,8 @@ module Meteor
       private :quote_attribute
 
       def element_pattern_two
-        # # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*'
-        #  << @_attr_name << '="' << @_attr_value << '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
-        # @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*'
-        #  << @_attr_name << '="' << @_attr_value << '"'
+        ## @pattern_cc = String.new('') << '<([^<>"]*)\\s[^<>]*'
+        ##  << @_attr_name << '="' << @_attr_value << '(?:[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\""
       end
 
@@ -696,9 +680,6 @@ module Meteor
       #             # document (全体)
       #             @elm_.document = @res[0]
       #             # pattern (内容あり要素検索用パターン)
-      #             # @pattern_cc = String.new('') << "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
-      #             # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
-      #             # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
       #             @ pattern_cc = "<#{@_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_name}[^<>]*>)).)*<\\/#{@_name}>" # rubocop:disable Layout/LineLength
       #
       #             @elm_.pattern = @pattern_cc
@@ -715,9 +696,6 @@ module Meteor
       #             # document (全体)
       #             @elm_.document = @res[0]
       #             # pattern (内容あり要素検索用パターン)
-      #             # @pattern_cc = String.new()<< "<" << @_name << '\\s[^<>]*' << @_attr_name << '="'
-      #             # @pattern_cc << @_attr_value << '"[^<>]*>((?!(' << @_name
-      #             # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
       #             @pattern_cc = "<#{@_name}\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*>((?!(#{@_name}[^<>]*>)).)*<\\/#{@_name}>" # rubocop:disable Layout/LineLength
       #
       #             @elm_.pattern = @pattern_cc
@@ -747,8 +725,6 @@ module Meteor
       #       private :element_normal_two_one
       #
       #       def element_normal_two_two
-      #         # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-      #         # @pattern_cc_one << @_attr_value << '(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))'
       #         @pattern_cc_one = "<([^<>\"]*)(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}(?:[^<>\\/]*>|(?:(?!([^<>]*\\/>))[^<>]*>)))" # rubocop:disable Layout/LineLength
       #
       #         # search of normal element (内容あり要素検索)
@@ -774,8 +750,6 @@ module Meteor
       #       def create_pattern_two(args_cnt)
       #         @pattern_cc_oneb = String.new('') << "<" << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       #
-      #         # @pattern_cc_one_one = String.new('') << "<" << @_name << '(\\s[^<>]*' << @_attr_name << '="'
-      #         # @pattern_cc_one_one << @_attr_value << '"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
       #         @pattern_cc_one_one = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))(" # rubocop:disable Layout/LineLength
       #         @pattern_cc_one_two = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
       #         @pattern_cc_two = String.new('') << '<\\/' << @_name << '>'
@@ -894,12 +868,6 @@ module Meteor
           # document (全体)
           @elm_.document = @res[0]
           # pattern (内容あり要素検索用パターン)
-          # @pattern_cc = String.new('') << "<" << @_name << '\\s[^<>]*(?:' << @_attr_name1 << '="'
-          # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-          # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
-          # @pattern_cc << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-          # @pattern_cc << @_attr_value1 << '")[^<>]*>((?!(' << @_name
-          # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
           @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
           @elm_.pattern = @pattern_cc
@@ -915,12 +883,6 @@ module Meteor
           # documement (全体)
           @elm_.document = @res[0]
           # pattern (内容あり要素検索用パターン)
-          # @pattern_cc = String.new('') << "<" << @_name << '\\s[^<>]*(?:' << @_attr_name1 << '="'
-          # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-          # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
-          # @pattern_cc << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-          # @pattern_cc << @_attr_value1 << '")[^<>]*>((?!(' << @_name
-          # @pattern_cc << '[^<>]*>)).)*<\\/' << @_name << '>'
           @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
           @elm_.pattern = @pattern_cc
@@ -962,20 +924,10 @@ module Meteor
       private :element_normal_five_two
 
       def element_pattern_normal_five_two # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-        # @pattern_cc_one = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
-        # @pattern_cc_one << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-        # @pattern_cc_one << @_attr_value2 << '"|' << @_attr_name2 << '="'
-        # @pattern_cc_one << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-        # @pattern_cc_one << @_attr_value1 << '")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))'
         @pattern_cc_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")([^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>)))" # rubocop:disable Layout/LineLength
         @pattern_cc_oneb = String.new('') << '<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
         # @pattern_cc_oneb = "<#{@_name}(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))"
 
-        # @pattern_cc_one_one = String.new('') << "<" << @_name << '(\\s[^<>]*(?:' << @_attr_name1 << '="'
-        # @pattern_cc_one_one << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-        # @pattern_cc_one_one << @_attr_value2 << '"|' << @_attr_name2 << '="'
-        # @pattern_cc_one_one << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-        # @pattern_cc_one_one << @_attr_value1 << '")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))('
         @pattern_cc_one_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")(?:[^<>\\/]*>|(?!([^<>]*\\/>))[^<>]*>))(" # rubocop:disable Layout/LineLength
         @pattern_cc_one_two = String.new('') << '.*?<' << @_name << '(\\s[^<>\\/]*>|((?!([^<>]*\\/>))[^<>]*>))'
         @pattern_cc_two = String.new('') << '<\\/' << @_name << '>'
@@ -1016,11 +968,6 @@ module Meteor
         # document (全体)
         @elm_.document = @res[0]
         # pattern (空要素検索用パターン)
-        # @pattern_cc = String.new('') << "<" << @_name << '\\s[^<>]*(?:' << @_attr_name1 << '="'
-        # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-        # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
-        # @pattern_cc << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-        # @pattern_cc << @_attr_value1 << closer
         @pattern_cc = "<#{@_name}(\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}#{closer}" # rubocop:disable Layout/LineLength
         @elm_.pattern = @pattern_cc
         @elm_.parser = self
@@ -1074,11 +1021,6 @@ module Meteor
       private :quote_element_four
 
       def element_pattern_four
-        # @pattern_cc = String.new('') << '<([^<>"]*)\\s([^<>]*(' << @_attr_name1 << '="'
-        # @pattern_cc << @_attr_value1 << '"[^<>]*' << @_attr_name2 << '="'
-        # @pattern_cc << @_attr_value2 << '"|' << @_attr_name2 << '="'
-        # @pattern_cc << @_attr_value2 << '"[^<>]*' << @_attr_name1 << '="'
-        # @pattern_cc << @_attr_value1 << '"'
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")" # rubocop:disable Layout/LineLength
       end
 
@@ -1495,8 +1437,8 @@ module Meteor
           @pattern = Meteor::Core::Util::PatternCache.get(String.new('') << attr_name << '="[^"]*"')
           # @pattern = Meteor::Core::Util::PatternCache.get("#{attr_name}=\"[^\"]*\"")
 
+          # elm.attributes.sub!(@pattern, "#{attr_name}=\"#{@_attr_value}\"")
           elm.attributes.sub!(@pattern, String.new('') << attr_name << '="' << @_attr_value << '"')
-        # elm.attributes.sub!(@pattern, "#{attr_name}=\"#{@_attr_value}\"")
         else
           # add an attribute to attrubutes (属性文字列の最後に新規の属性を追加する)
 
@@ -1828,8 +1770,6 @@ module Meteor
         @_id = Regexp.quote(id)
 
         # CX tag search pattern (CXタグ検索用パターン)
-        # @pattern_cc = String.new('') << "<!--\\s@" << @_name << '\\s([^<>]*id="'
-        # @pattern_cc << id << '"[^<>]*)-->(((?!(<!--\\s/@' << @_name << ")).)*)<!--\\s/@" << @_name << "\\s-->"
         # @pattern_cc = "<!--\\s@#{@_name}\\s([^<>]*id=\"#{@_id}\"[^<>]*)-->(((?!(<!--\\s\\/@#{@_name})).)*)<!--\\s\\/@#{@_name}\\s-->" # rubocop:disable Layout/LineLength
         @pattern_cc = "<!--\\s@#{@_name}\\s([^<>]*id=\"#{@_id}\"[^<>]*)-->(((?!(<!--\\s/@#{@_name})).)*)<!--\\s/@#{@_name}\\s-->" # rubocop:disable Layout/LineLength
 
@@ -1951,19 +1891,12 @@ module Meteor
         if element_hook
           if element_hook.origin.childless
             if element_hook.origin.cx
-              # @root.hookDocument << '<!-- @' << @root.element.name << ' '
-              # @root.hookDocument << @root.element.attributes << '-->'
-              # @root.hookDocument << @root.element.mixed_content << '<!-- /@'
-              # @root.hookDocument << @root.element.name << ' -->'
               document_hook <<
                 "<!-- @#{element_hook.name} #{element_hook.attributes}-->#{element_hook.mixed_content}<!-- /@#{element_hook.name} -->" # rubocop:disable Layout/LineLength
 
               # self.document_hook << @root.newline <<
               # "<!-- @#{self.element_hook.name} #{self.element_hook.attributes}-->#{self.element_hook.mixed_content}<!-- /@#{self.element_hook.name} -->" # rubocop:disable Layout/LineLength
             else
-              # @root.hookDocument << "<" << @root.element.name
-              # @root.hookDocument << @root.element.attributes << '>' << @root.element.mixed_content
-              # @root.hookDocument << '</' << @root.element.name << '>'
               document_hook <<
                 "<#{element_hook.name}#{element_hook.attributes}>#{element_hook.mixed_content}</#{element_hook.name}>"
 
@@ -1976,22 +1909,15 @@ module Meteor
             @_attributes = element_hook.attributes
 
             if element_hook.origin.cx
-              # @root.hookDocument << '<!-- @' << @root.element.name << ' '
-              # @root.hookDocument << @_attributes << '-->'
-              # @root.hookDocument << @root.document << '<!-- /@'
-              # @root.hookDocument << @root.element.name << ' -->'
               document_hook <<
                 "<!-- @#{element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{element_hook.name} -->"
 
-              # self.document_hook << @root.newline << "<!-- @#{self.element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{self.element_hook.name} -->" # rubocop:disable Layout/LineLength
+              # self.document_hook << @root.newline << "<!-- @#{element_hook.name} #{@_attributes}-->#{@root.document}<!-- /@#{element_hook.name} -->" # rubocop:disable Layout/LineLength
             else
-              # @root.hookDocument << "<" << @root.element.name
-              # @root.hookDocument << @_attributes << '>' << @root.document
-              # @root.hookDocument << '</' << @root.element.name << '>'
               document_hook <<
                 "<#{element_hook.name}#{@_attributes}>#{@root.document}</#{element_hook.name}>"
 
-              # self.document_hook << @root.newline << "<#{self.element_hook.name}#{@_attributes}>#{@root.document}</#{self.element_hook.name}>" # rubocop:disable Layout/LineLength
+              # document_hook << @root.newline << "<#{element_hook.name}#{@_attributes}>#{@root.document}</#{element_hook.name}>" # rubocop:disable Layout/LineLength
             end
 
           end

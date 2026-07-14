@@ -208,12 +208,8 @@ module Meteor
         case @parser.doc_type
         when Parser::HTML, Parser::HTML4
           @document = if @cx
-                        # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->'
-                        #  << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
                         "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
                       elsif @normal
-                        # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>'
-                        #  << elm.mixed_content << '</' << elm.name << '>'
                         "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
                       else
                         String.new('') << '<' << @name << @attributes << '>'
@@ -221,16 +217,12 @@ module Meteor
                       end
         when Parser::XHTML, Parser::XHTML4, Parser::XML
           @document = if @cx
-                        # @pattern_cc = String.new('') << '<!-- @' << elm.name << ' ' << elm.attributes << '-->'
-                        #  << elm.mixed_content << '<!-- /@' << elm.name << ' -->'
                         "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
                       elsif @normal
-                        # @pattern_cc = String.new('') << "<" << elm.name << elm.attributes << '>' << elm.mixed_content
-                        #  << '</' << elm.name << '>'
                         "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
                       else
                         String.new('') << '<' << @name << @attributes << '/>'
-                        # @document = "<#{@name}#{@attributes}/>"
+                        # "<#{@name}#{@attributes}/>"
                       end
         end
       else

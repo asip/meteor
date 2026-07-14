@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    meteor (0.9.40)
+    meteor (0.9.41)
 
 GEM
   remote: https://rubygems.org/
@@ -41,9 +41,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 4.0.15)
+  bundler (~> 4.0.16)
   meteor!
   rubocop (~> 1.88.2)
 
 BUNDLED WITH
-  4.0.15
+  4.0.16

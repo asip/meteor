@@ -45,8 +45,6 @@ module Meteor
       RE_FIND_FOUR = Regexp.new(PATTERN_FIND_FOUR)
       RE_FIND_FIVE = Regexp.new(PATTERN_FIND_FIVE)
 
-      RE_CHILDLESS = Regexp.new('\\A[^<>]*\\Z')
-
       RE_GET_ATTRS_MAP = Regexp.new('([^\\s]*)="([^\"]*)"')
 
       RE_CLEAN_ONE = Regexp.new('<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->')
@@ -1947,11 +1945,8 @@ module Meteor
       # @param [Meteor::Element] elm element (要素)
       # @return [Meteor::Element] element (要素)
       #
-      def shadow(elm) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+      def shadow(elm) # rubocop:disable Metrics/AbcSize
         return unless elm.normal
-
-        # case of normal element (内容あり要素の場合)
-        self.childless = elm
 
         pif2 = self.class.new(self)
 
@@ -1969,14 +1964,6 @@ module Meteor
       end
 
       # private :shadow
-
-      def childless=(elm)
-        @res = RE_CHILDLESS.match(elm.mixed_content)
-
-        elm.childless = true if @res
-      end
-
-      private :childless=
 
       def match?(regex, str)
         case regex

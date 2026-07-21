@@ -77,7 +77,7 @@ module Meteor
   end
 
   #
-  # Elements Class (要素ファクトリ クラス)
+  # Elements Factory Class (要素ファクトリ クラス)
   #
   ElementFactory = Elements
 end

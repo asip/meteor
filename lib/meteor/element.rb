@@ -21,8 +21,6 @@ module Meteor
   #  @return [true,false] content normal flag (内容存在フラグ)
   # @!attribute [rw] cx
   #  @return [true,false] comment extension tag flag (コメント拡張タグフラグ)
-  # @!attribute [rw] childless
-  #  @return [true,false] child childless flag (子要素なしフラグ)
   # @!attribute [rw] parser
   #  @return [Meteor::Parser] parser(パーサ)
   # @!attribute [rw] type_value
@@ -37,7 +35,7 @@ module Meteor
   #  @return [true,false] deletion flag (削除フラグ)
   #
   class Element # rubocop:disable Metrics/ClassLength
-    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx, :childless,
+    attr_accessor :name, :attributes, :mixed_content, :raw_content, :pattern, :document_sync, :normal, :cx,
                   :parser, :type_value, :usable, :origin, :copy, :removed
 
     alias tag name
@@ -46,8 +44,7 @@ module Meteor
     alias empty normal
     alias empty= normal=
 
-    alias mono childless
-    alias mono= childless=
+    RE_CHILDLESS = Regexp.new('\\A[^<>]*\\Z')
 
     #
     # initializer (イニシャライザ)
@@ -90,7 +87,6 @@ module Meteor
       # @parser=nil
       # @normal = false
       # @cx = false
-      # @childless = false
       # @parent = false
       @usable = true
     end
@@ -108,7 +104,7 @@ module Meteor
 
     private :initialize_e
 
-    def initialize_two(elm, ps) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Naming/MethodParameterName
+    def initialize_two(elm, ps) # rubocop:disable Metrics/MethodLength,Naming/MethodParameterName
       @parser = ps
       if normal
         ps.element(elm)
@@ -121,7 +117,6 @@ module Meteor
         @document = String.new(elm.document)
         @normal = elm.normal
         @cx = elm.cx
-        @childless = elm.childless
         @origin = elm
         # @usable = false
         elm.copy = self
@@ -188,6 +183,25 @@ module Meteor
     end
 
     private :clone_one
+
+    #
+    # get childless flag (子要素なしフラグを取得する)
+    # @return [true,false] childless flag (子要素なしフラグ)
+    #
+    def childless
+      if @childless.nil?
+        @res = RE_CHILDLESS.match(mixed_content)
+
+        @childless = if @res
+                       true
+                     else
+                       false
+                     end
+      end
+      @childless
+    end
+
+    alias mono childless
 
     #
     # set document (ドキュメントをセットする)

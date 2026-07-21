@@ -1,3 +1,7 @@
+== 0.9.42 / 2026-07-21 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Refactor Meteor::Element
+
 == 0.9.41 / 2026-07-14 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Remove unnecessary comments

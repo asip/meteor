@@ -219,21 +219,22 @@ module Meteor
     def document # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
       if @document_sync
         @document_sync = false
+        @_mixed_content = @mixed_content ? Regexp.quote(@mixed_content) : ''
         case @parser.doc_type
         when Parser::HTML, Parser::HTML4
           @document = if @cx
-                        "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+                        "<!-- @#{@name} #{@attributes} -->#{@_mixed_content}<!-- /@#{@name} -->"
                       elsif @normal
-                        "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+                        "<#{@name}#{@attributes}>#{@_mixed_content}</#{@name}>"
                       else
                         String.new('') << '<' << @name << @attributes << '>'
                         # @document = "<#{@name}#{@attributes}>"
                       end
         when Parser::XHTML, Parser::XHTML4, Parser::XML
           @document = if @cx
-                        "<!-- @#{@name} #{@attributes} -->#{@mixed_content}<!-- /@#{@name} -->"
+                        "<!-- @#{@name} #{@attributes} -->#{@_mixed_content}<!-- /@#{@name} -->"
                       elsif @normal
-                        "<#{@name}#{@attributes}>#{@mixed_content}</#{@name}>"
+                        "<#{@name}#{@attributes}>#{@_mixed_content}</#{@name}>"
                       else
                         String.new('') << '<' << @name << @attributes << '/>'
                         # "<#{@name}#{@attributes}/>"

@@ -32,7 +32,7 @@ elm7 = root.element('kobe')
 # elm8 = root.element(manbo: "mango")
 # elm8 = root.element(momo: "momo")
 
-# elm9 = root.element("hamachi",id: "aa",id2: 'bb')
+elm9 = root.element('hamachi', id: 'aa', id2: 'bb')
 # elm_c1 = root.cxtag("cs")
 
 # puts elm8.name
@@ -43,7 +43,7 @@ elm7 = root.element('kobe')
 # elm1["id2"] = "cc"
 
 # elm8['mango'] = "mangoo"  # elm8.attr(manbo: "mangoo")
-# elm9.content = "\\1"      # elm9.content("\\1")
+elm9.content = '\\1' # elm9.content("\\1")
 
 # elm2.attr(id3: 'cc')
 

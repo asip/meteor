@@ -8,9 +8,6 @@ module Meteor
       # XML parser (XMLパーサ)
       #
       class ParserImpl < Meteor::Core::Kernel
-        # NEWLINE = "\r?\n|\r"
-        NEWLINE = ["\r\n", "\n", "\r"].freeze
-
         TABLE_FOR_ESCAPE_ = {
           '&' => '&amp;',
           '"' => '&quot;',
@@ -67,21 +64,11 @@ module Meteor
         private :initialize_one
 
         #
-        # parse document (ドキュメントを解析する)
-        #
-        def parse
-          analyze_ml
-        end
-
-        protected :parse
-
-        #
         # analyze document (ドキュメントをパースする)
         #
         def analyze_ml
-          analyze_newline
+          super
           analyze_content_type
-
           @res = nil
         end
 
@@ -94,17 +81,6 @@ module Meteor
         def content_type
           @root.content_type
         end
-
-        #
-        # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
-        #
-        def analyze_newline
-          NEWLINE.each do |a|
-            @root.newline = a if @root.document.include?(a)
-          end
-        end
-
-        private :analyze_newline
 
         #
         # analyze document , set content type (ドキュメントをパースし、コンテントタイプをセットする)

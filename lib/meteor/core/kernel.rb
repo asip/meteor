@@ -50,6 +50,9 @@ module Meteor
       RE_CLEAN_ONE = Regexp.new('<!--\\s@[^<>]*\\s[^<>]*(\\s)*-->')
       RE_CLEAN_TWO = Regexp.new('<!--\\s\\/@[^<>]*(\\s)*-->')
 
+      # NEWLINE = "\r?\n|\r"
+      NEWLINE = ["\r\n", "\n", "\r"].freeze
+
       BR = '<br>'
       BR_RE = BR
 
@@ -170,9 +173,31 @@ module Meteor
       # parse document (ドキュメントを解析する)
       # @param [String] document document (ドキュメント)
       #
-      def parse; end
+      def parse
+        analyze_ml
+      end
 
       protected :parse
+
+      #
+      # analyze document (ドキュメントをパースする)
+      #
+      def analyze_ml
+        analyze_newline
+      end
+
+      protected :analyze_ml
+
+      #
+      # analyze document , set newline (ドキュメントをパースし、改行コードをセットする)
+      #
+      def analyze_newline
+        NEWLINE.each do |a|
+          @root.newline = a if @root.document.include?(a)
+        end
+      end
+
+      private :analyze_newline
 
       #
       # get element (要素を取得する)

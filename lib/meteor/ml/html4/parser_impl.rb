@@ -8,9 +8,6 @@ module Meteor
       # HTML4 parser (HTMLパーサ)
       #
       class ParserImpl < Meteor::Core::Kernel # rubocop:disable Metrics/ClassLength
-        # NEWLINE = "\r?\n|\r"
-        # NEWLINE = "\r\n|\n|\r"
-        NEWLINE = ["\r\n", "\n", "\r"].freeze
         BR = '<br>'
         BR_RE = BR
 
@@ -118,21 +115,11 @@ module Meteor
         private :initialize_one
 
         #
-        # parse document (ドキュメントを解析する)
-        #
-        def parse
-          analyze_ml
-        end
-
-        protected :parse
-
-        #
         # analyze document (ドキュメントをパースする)
         #
         def analyze_ml
+          super
           analyze_content_type
-          analyze_newline
-
           @res = nil
         end
 
@@ -167,17 +154,6 @@ module Meteor
         end
 
         protected :analyze_content_type
-
-        #
-        # analuze document , set newline (ドキュメントをパースし、改行コードをセットする)
-        #
-        def analyze_newline
-          NEWLINE.each do |a|
-            @root.newline = a if @root.document.include?(a)
-          end
-        end
-
-        protected :analyze_newline
 
         #
         # get element using tag name (要素のタグ名で検索し、要素を取得する)

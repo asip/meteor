@@ -1312,7 +1312,6 @@ module Meteor
             else
               element_void_one(@elm_.name)
             end
-
           when TWO, THREE
             if @elm_.normal
               element_normal_three_one(@elm_.name)

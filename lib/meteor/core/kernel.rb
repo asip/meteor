@@ -995,7 +995,7 @@ module Meteor
         # document (全体)
         @elm_.document = @res[0]
         # pattern (空要素検索用パターン)
-        @pattern_cc = "<#{@_name}(\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}#{closer}" # rubocop:disable Layout/LineLength
+        @pattern_cc = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}#{closer}" # rubocop:disable Layout/LineLength
         @elm_.pattern = @pattern_cc
         @elm_.parser = self
 
@@ -1048,7 +1048,7 @@ module Meteor
       private :quote_element_four
 
       def element_pattern_four
-        @pattern_cc = "<([^<>\"]*)\\s[^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")" # rubocop:disable Layout/LineLength
+        @pattern_cc = "<([^<>\"]*)\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")" # rubocop:disable Layout/LineLength
       end
 
       private :element_pattern_four

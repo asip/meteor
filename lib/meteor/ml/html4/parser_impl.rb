@@ -383,7 +383,7 @@ module Meteor
         def element_four(attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/MethodLength
           quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
 
-          @pattern_cc = "<([^<>\"]*)\\s([^<>]*(#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>" # rubocop:disable Layout/LineLength
+          @pattern_cc = "<([^<>\"]*)\\s([^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>" # rubocop:disable Layout/LineLength
 
           @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
 

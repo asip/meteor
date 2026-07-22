@@ -694,7 +694,7 @@ module Meteor
       #         case @res.captures.length
       #           when FOUR
       #             @_name = @res[1]
-      #             # eleement (要素)
+      #             # element (要素)
       #             @elm_ = Element.new(@_name)
       #             # attribute (属性)
       #             @elm_.attributes = @res[2]
@@ -879,10 +879,14 @@ module Meteor
       private :quote_element_five
 
       def element_normal_five_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+        # @res.to_a.each_with_index do |capture, i|
+        #   puts i
+        #   puts capture
+        # end
         # puts @res.captures.length
         case @res.captures.length
         when FOUR
-          # eleemnt (要素)
+          # element (要素)
           @elm_ = Meteor::Element.new(name)
           # attribute (属性)
           @elm_.attributes = @res[1]

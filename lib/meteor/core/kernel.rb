@@ -393,11 +393,8 @@ module Meteor
       # @param [true,false] quote flag (クオート・フラグ)
       # @return [Meteor::Element] element (要素)
       def element_three(name, attr_name, attr_value, quote = true) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Style/OptionalBooleanParameter
-        if quote
-          quote_element_three(name, attr_name, attr_value)
-        else
-          quote_name(name)
-        end
+        quote_name(name)
+        quote_attribute(attr_name, attr_value) if quote
 
         @pattern_cc_one = element_pattern_three
 
@@ -454,13 +451,6 @@ module Meteor
       end
 
       private :element_pattern_three
-
-      def quote_element_three(name, attr_name, attr_value)
-        quote_name(name)
-        quote_attribute(attr_name, attr_value)
-      end
-
-      private :quote_element_three
 
       def element_normal_three_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # puts  @res.captures.length
@@ -816,7 +806,8 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
-        quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_name(name)
+        quote_attribute_one_two(attr_name1, attr_value1, attr_name2, attr_value2)
 
         @pattern_cc_one = "<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)\\/>|<#{@_name}(\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
 
@@ -868,15 +859,26 @@ module Meteor
 
       private :element_five
 
-      def quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
-        quote_name(name)
-        @_attr_name1 = Regexp.quote(attr_name1)
-        @_attr_name2 = Regexp.quote(attr_name2)
-        @_attr_value1 = Regexp.quote(attr_value1)
-        @_attr_value2 = Regexp.quote(attr_value2)
+      def quote_attribute_one_two(attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_attribute_one(attr_name1, attr_value1)
+        quote_attribute_two(attr_name2, attr_value2)
       end
 
-      private :quote_element_five
+      private :quote_attribute_one_two
+
+      def quote_attribute_one(attr_name1, attr_value1)
+        @_attr_name1 = Regexp.quote(attr_name1)
+        @_attr_value1 = Regexp.quote(attr_value1)
+      end
+
+      private :quote_attribute_one
+
+      def quote_attribute_two(attr_name2, attr_value2)
+        @_attr_value2 = Regexp.quote(attr_value2)
+        @_attr_name2 = Regexp.quote(attr_name2)
+      end
+
+      private :quote_attribute_two
 
       def element_normal_five_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         # @res.to_a.each_with_index do |capture, i|
@@ -1013,7 +1015,7 @@ module Meteor
       # @return [Meteor::Element] element (要素)
       #
       def element_four(attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/MethodLength
-        quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
+        quote_attribute_one_two(attr_name1, attr_value1, attr_name2, attr_value2)
 
         element_pattern_four
 
@@ -1037,15 +1039,6 @@ module Meteor
       end
 
       private :element_four
-
-      def quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
-        @_attr_name1 = Regexp.quote(attr_name1)
-        @_attr_name2 = Regexp.quote(attr_name2)
-        @_attr_value1 = Regexp.quote(attr_value1)
-        @_attr_value2 = Regexp.quote(attr_value2)
-      end
-
-      private :quote_element_four
 
       def element_pattern_four
         @pattern_cc = "<([^<>\"]*)\\s[^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")" # rubocop:disable Layout/LineLength

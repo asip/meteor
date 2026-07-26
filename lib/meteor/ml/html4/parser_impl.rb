@@ -223,11 +223,8 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_three(name, attr_name, attr_value, quote = true) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Style/OptionalBooleanParameter
-          if quote
-            quote_element_three(name, attr_name, attr_value)
-          else
-            quote_name(name)
-          end
+          quote_name(name)
+          quote_attribute(attr_name, attr_value) if quote
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if match?(MATCH_TAG, name)
@@ -311,7 +308,8 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_five(name, attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
-          quote_element_five(name, attr_name1, attr_value1, attr_name2, attr_value2)
+          quote_name(name)
+          quote_attribute_one_two(attr_name1, attr_value1, attr_name2, attr_value2)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if match?(MATCH_TAG, name)
@@ -381,7 +379,7 @@ module Meteor
         # @return [Meteor::Element] element (要素)
         #
         def element_four(attr_name1, attr_value1, attr_name2, attr_value2) # rubocop:disable Metrics/MethodLength
-          quote_element_four(attr_name1, attr_value1, attr_name2, attr_value2)
+          quote_attribute_one_two(attr_name1, attr_value1, attr_name2, attr_value2)
 
           @pattern_cc = "<([^<>\"]*)\\s([^<>]*(?:#{@_attr_name1}=\"#{@_attr_value1}\"[^<>]*#{@_attr_name2}=\"#{@_attr_value2}\"|#{@_attr_name2}=\"#{@_attr_value2}\"[^<>]*#{@_attr_name1}=\"#{@_attr_value1}\")[^<>]*)>" # rubocop:disable Layout/LineLength
 

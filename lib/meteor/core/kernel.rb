@@ -453,7 +453,7 @@ module Meteor
       private :element_pattern_three
 
       def element_normal_three_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-        # puts  @res.captures.length
+        # puts @res.captures.length
         case @res.captures.length
         when FOUR
           # element (要素)

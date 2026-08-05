@@ -216,10 +216,14 @@ module Meteor
     # get document (ドキュメントを取得する)
     # @return [String] document (ドキュメント)
     #
-    def document # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+    def document # rubocop:disable Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/AbcSize
       if @document_sync
         @document_sync = false
-        @_mixed_content = @mixed_content ? Regexp.quote(@mixed_content) : ''
+        @_mixed_content = if @mixed_content
+                            childless ? Regexp.quote(@mixed_content) : @mixed_content
+                          else
+                            ''
+                          end
         case @parser.doc_type
         when Parser::HTML, Parser::HTML4
           @document = if @cx

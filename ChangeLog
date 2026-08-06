@@ -1,3 +1,7 @@
+== 0.9.46 / 2026-08-06 Yasumasa Ashida <ys.ashida@gmail.com>
+
+* Refactor Meteor::Ml::(Html4|Xhtml4)::ParserImpl
+
 == 0.9.45 / 2026-08-05 Yasumasa Ashida <ys.ashida@gmail.com>
 
 * Refactor Meteor::Ml::Html4::ParserImpl

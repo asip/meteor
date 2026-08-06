@@ -160,45 +160,55 @@ module Meteor
         # @param [String] name tag name (タグ名)
         # @return [Meteor::Element] element (要素)
         #
-        def element_one(name) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/PerceivedComplexity
+        def element_one(name)
           quote_name(name)
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if match?(MATCH_TAG, name)
-            # void element search pattern (空要素検索用パターン)
-            @pattern_cc = String.new('') << '<' << @_name << '(|\\s[^<>]*)>'
-            # @pattern_cc = "<#{@_name}(|\\s[^<>]*)>"
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-            @res = @pattern.match(@root.document)
-            if @res
-              element_void_one(name)
-            else
-              puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
-
-              @elm_ = nil
-            end
+            element_one_void(name)
           else
-            # normal element search pattern (内容あり要素検索用パターン()
-            @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
-
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-            # search of normal element (内容あり要素検索)
-            @res = @pattern.match(@root.document)
-            # case of normal element (内容あり要素の場合)
-            if @res
-              @on_search = true
-              element_normal_one(name)
-            else
-              puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
-
-              @elm_ = nil
-            end
+            element_one_normal(name)
           end
 
           @elm_
         end
 
         private :element_one
+
+        def element_one_void(name)
+          # void element search pattern (空要素検索用パターン)
+          @pattern_cc = String.new('') << '<' << @_name << '(|\\s[^<>]*)>'
+          # @pattern_cc = "<#{@_name}(|\\s[^<>]*)>"
+          @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+          @res = @pattern.match(@root.document)
+          if @res
+            element_void_one(name)
+          else
+            puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
+
+            @elm_ = nil
+          end
+        end
+
+        private :element_one_void
+
+        def element_one_normal(name)
+          # normal element search pattern (内容あり要素検索用パターン()
+          @pattern_cc = "<#{@_name}(|\\s[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>"
+
+          @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+          # search of normal element (内容あり要素検索)
+          @res = @pattern.match(@root.document)
+          # case of normal element (内容あり要素の場合)
+          if @res
+            @on_search = true
+            element_normal_one(name)
+          else
+            puts(Meteor::Exception::NoSuchElementException.new(name).message) if @error_check
+
+            @elm_ = nil
+          end
+        end
 
         def element_void_one(name)
           @elm_ = Meteor::Element.new(name)
@@ -222,42 +232,15 @@ module Meteor
         # @param [true,false] quote quote flag (クオート・フラグ)
         # @return [Meteor::Element] element (要素)
         #
-        def element_three(name, attr_name, attr_value, quote = true) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Style/OptionalBooleanParameter
+        def element_three(name, attr_name, attr_value, quote = true) # rubocop:disable Style/OptionalBooleanParameter
           quote_name(name)
           quote_attribute(attr_name, attr_value) if quote
 
           # case of void element (空要素の場合(<->内容あり要素の場合))
           if match?(MATCH_TAG, name)
-            # void element search pattern (空要素検索パターン)
-            @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>"
-
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-            # void element search (空要素検索)
-            @res = @pattern.match(@root.document)
-            if @res
-              element_void_three(name)
-            else
-              puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
-
-              @elm_ = nil
-            end
+            element_three_void(name, attr_name, attr_value)
           else
-            # normal element search pattern (内容あり要素検索パターン)
-            @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
-
-            @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
-            # search of normal element (内容あり要素検索)
-            @res = @pattern.match(@root.document)
-
-            @res = element_normal_three_two if !@res && !match?(MATCH_TAG_NNE, name)
-
-            if @res
-              element_normal_three_one(name)
-            else
-              puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
-
-              @elm_ = nil
-            end
+            element_three_normal(name, attr_name, attr_value)
           end
 
           @elm_
@@ -265,11 +248,50 @@ module Meteor
 
         private :element_three
 
+        def element_three_void(name, attr_name, attr_value)
+          # void element search pattern (空要素検索パターン)
+          @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>"
+
+          @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+          # void element search (空要素検索)
+          @res = @pattern.match(@root.document)
+          if @res
+            element_void_three(name)
+          else
+            puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
+
+            @elm_ = nil
+          end
+        end
+
+        private :element_three_void
+
         def element_void_three(name)
           element_void_three_one(name, '"[^<>]*)>')
         end
 
         private :element_void_three
+
+        def element_three_normal(name, attr_name, attr_value)
+          # normal element search pattern (内容あり要素検索パターン)
+          @pattern_cc = "<#{@_name}(\\s[^<>]*#{@_attr_name}=\"#{@_attr_value}\"[^<>]*)>(((?!(#{@_name}[^<>]*>)).)*)<\\/#{@_name}>" # rubocop:disable Layout/LineLength
+
+          @pattern = Meteor::Core::Util::PatternCache.get(@pattern_cc)
+          # search of normal element (内容あり要素検索)
+          @res = @pattern.match(@root.document)
+
+          @res = element_normal_three_two if !@res && !match?(MATCH_TAG_NNE, name)
+
+          if @res
+            element_normal_three_one(name)
+          else
+            puts(Meteor::Exception::NoSuchElementException.new(name, attr_name, attr_value).message) if @error_check
+
+            @elm_ = nil
+          end
+        end
+
+        private :element_three_normal
 
         #
         # get element using attribute(name="value") (属性(属性名="属性値")で検索し、要素を取得する)

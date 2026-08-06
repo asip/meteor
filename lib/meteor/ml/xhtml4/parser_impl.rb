@@ -133,8 +133,6 @@ module Meteor
 
           element_three('meta', 'http-equiv', 'Content-Type')
 
-          element_three('meta', 'http-equiv', 'Content-Type') unless @elm_
-
           @error_check = true
 
           if @elm_

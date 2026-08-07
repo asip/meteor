@@ -41,9 +41,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 4.0.16)
+  bundler (~> 4.0.18)
   meteor!
   rubocop (~> 1.88.2)
 
 BUNDLED WITH
-  4.0.16
+  4.0.18
